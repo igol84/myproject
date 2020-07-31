@@ -1,7 +1,7 @@
 """
     >>> pr = ProductDesc(item_id=2, desc='item2', price=700)  # Create product
     >>> print(pr)                                             # print product object
-    <Product: id=2, desc=item2, price=700>
+    <Product: id=2, desc=item2, price=700.0>
     >>> pr.id                                                 # Get id
     2
     >>> pr.desc = 'newitem'                                   # Change desc
@@ -9,21 +9,22 @@
     'newitem'
     >>> pr.price = 750                                        # Change price
     >>> pr.price                                              # Get price
-    750
+    750.0
     >>> pr.edit(desc='item3', price=500)                      # Edit product
     >>> print(pr)
-    <Product: id=2, desc=item3, price=500>
+    <Product: id=2, desc=item3, price=500.0>
 
     >>> pr2 = ProductDesc(desc='item3', price=800)            # Create new product with new generated id
     >>> print(pr2)
-    <Product: id=3, desc=item3, price=800>
+    <Product: id=3, desc=item3, price=800.0>
 
 
 """
 from contracts import contract
+from abc import ABCMeta, abstractmethod
 
 
-class ProductDesc:
+class ProductDesc(metaclass=ABCMeta):
     __lid = 1  # counter of id product
 
     @contract
@@ -58,7 +59,6 @@ class ProductDesc:
 
     desc = property(get_desc, set_desc)
 
-    def edit(self, desc=None, price = None):
+    def edit(self, desc=None, price=None):
         if desc: self.set_desc(desc)
         if price: self.set_price(price)
-
