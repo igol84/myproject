@@ -37,7 +37,7 @@
 """
 from contracts import contract
 from abc import ABCMeta, abstractmethod
-from money import Money  # pip install money
+from money import Money  # pip install money  https://pypi.org/project/money-lib/
 from util.setings import default_currency
 
 
