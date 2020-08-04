@@ -10,6 +10,9 @@
     >>> pr.price = 750.50                                     # Change price
     >>> print(pr.price)                                       # Get price
     UAH 750.50
+    >>> pr.convert_price()                                    # Convert Price
+    >>> print(pr.price)
+    USD 27.29
     >>> pr.edit(desc='item3', price=500, currency='USD')      # Edit product
     >>> pr
     <Product: id=2, desc=item3, price=USD 500.00>
@@ -32,7 +35,7 @@
 """
 from contracts import contract
 from abc import ABCMeta
-from util.money_my import MoneyMy
+from util.money_my import MoneyMy, get_converted_Money
 
 
 class ProductDesc(metaclass=ABCMeta):
@@ -62,6 +65,9 @@ class ProductDesc(metaclass=ABCMeta):
         self._price = MoneyMy(amount=str(price), currency=curr)
 
     price = property(get_price, set_price)
+
+    def convert_price(self):
+        self._price = get_converted_Money(self._price)
 
     def get_desc(self):
         return self._desc
