@@ -35,7 +35,7 @@
 """
 from contracts import contract
 from abc import ABCMeta
-from util.money_my import MoneyMy, get_converted_Money
+from util.money_my import MoneyMy
 
 
 class ProductDesc(metaclass=ABCMeta):
@@ -67,7 +67,7 @@ class ProductDesc(metaclass=ABCMeta):
     price = property(get_price, set_price)
 
     def convert_price(self):
-        self._price = get_converted_Money(self._price)
+        self._price = MoneyMy.get_converted_Money(self._price)
 
     def get_desc(self):
         return self._desc
