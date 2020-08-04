@@ -6,12 +6,14 @@
     750.5
     >>> print(money.currency)                          # Get price currency
     UAH
-    >>> print(money.format('uk_UA'))                   # Get price currency
+    >>> print(money.format('uk_UA'))                   # Get format price
     750,50 ₴
 
-    >>> convert_money = get_converted_Money(money)     # New converted price
+    >>> convert_money = get_converted_Money(money)     # New converted price+
     >>> print(convert_money)
     USD 27.29
+    >>> print(convert_money.format('en_US'))           # Get format price
+    $27.29
     >>> money = get_converted_Money(convert_money)     # Reverse
     >>> print(money)
     UAH 750.50
