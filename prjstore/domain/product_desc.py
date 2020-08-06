@@ -5,11 +5,11 @@ from util.money_my import MoneyMy
 
 class ProductDesc(metaclass=ABCMeta):
     """
-        >>> pr = ProductDesc(item_id=2, desc='item2', price=700)  # Create product
+        >>> pr = ProductDesc(item_id='2', desc='item2', price=700)  # Create product
         >>> pr                                                    # Get product
         <Product: id=2, desc=item2, price=UAH 700.00>
         >>> pr.id                                                 # Get id
-        2
+        '2'
         >>> pr.desc = 'new item'                                  # Change desc
         >>> print(pr.desc)                                        # Get desc
         new item
@@ -42,10 +42,10 @@ class ProductDesc(metaclass=ABCMeta):
 
     @contract
     def __init__(self, item_id=None, desc: 'str' = 'item', price=0, currency=_default_curr):
-        self._item_id = item_id if item_id else ProductDesc.__lid
+        self._item_id = str(item_id) if item_id else str(ProductDesc.__lid)
         self._desc = desc
         self._price = MoneyMy(amount=str(price), currency=currency)
-        ProductDesc.__lid = self._item_id + 1
+        ProductDesc.__lid = int(self._item_id) + 1
 
     def __repr__(self):
         return f'<Product: id={self._item_id}, desc={self._desc}, price={self._price}>'
