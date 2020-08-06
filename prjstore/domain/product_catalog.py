@@ -8,12 +8,12 @@ class ProductCatalog(dict):
     >>> pc.set_product(ProductDesc(desc='item2', price=300))
     >>> pc                              # get products
     {'1': <Product: id=1, desc=item, price=UAH 0.00>, '2': <Product: id=2, desc=item2, price=UAH 300.00>}
-    >>> pc['2']                                                # get product with id='2'
+    >>> pc['2']                                              # get product with id='2'
     <Product: id=2, desc=item2, price=UAH 300.00>
     >>> pc.set_product(ProductDesc(desc='prod', price=500))
     >>> pc.search(desc='item')                               # search products whose name contains "item"
     [<Product: id=1, desc=item, price=UAH 0.00>, <Product: id=2, desc=item2, price=UAH 300.00>]
-    >>> pc.quantity()                                        # count of products
+    >>> pc.count()                                           # count of products
     3
 
 
@@ -31,6 +31,6 @@ class ProductCatalog(dict):
             return products
         return False
 
-    def quantity(self):
+    def count(self):
         return len(self)
 
