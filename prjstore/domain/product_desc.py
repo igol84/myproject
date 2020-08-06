@@ -1,44 +1,42 @@
-"""
-    >>> pr = ProductDesc(item_id=2, desc='item2', price=700)  # Create product
-    >>> pr                                                    # Get product
-    <Product: id=2, desc=item2, price=UAH 700.00>
-    >>> pr.id                                                 # Get id
-    2
-    >>> pr.desc = 'new item'                                  # Change desc
-    >>> print(pr.desc)                                        # Get desc
-    new item
-    >>> pr.price = 750.50                                     # Change price
-    >>> print(pr.price)                                       # Get price
-    UAH 750.50
-    >>> pr.convert_price()                                    # Convert Price
-    >>> print(pr.price)
-    USD 27.29
-    >>> pr.edit(desc='item3', price=500, currency='USD')      # Edit product
-    >>> pr
-    <Product: id=2, desc=item3, price=USD 500.00>
-    >>> pr.edit(desc='item2')                                 # Edit name
-    >>> pr
-    <Product: id=2, desc=item2, price=USD 500.00>
-    >>> pr.edit(price=300)                                    # Edit desc
-    >>> pr
-    <Product: id=2, desc=item2, price=USD 300.00>
-    >>> pr.edit(currency='UAH')                               # Edit currency
-    >>> pr
-    <Product: id=2, desc=item2, price=UAH 300.00>
-
-
-    >>> pr2 = ProductDesc(desc='item3', price=800, currency='USD')  # Create new product with new generated id
-    >>> pr2
-    <Product: id=3, desc=item3, price=USD 800.00>
-
-
-"""
 from contracts import contract
 from abc import ABCMeta
 from util.money_my import MoneyMy
 
 
 class ProductDesc(metaclass=ABCMeta):
+    """
+        >>> pr = ProductDesc(item_id=2, desc='item2', price=700)  # Create product
+        >>> pr                                                    # Get product
+        <Product: id=2, desc=item2, price=UAH 700.00>
+        >>> pr.id                                                 # Get id
+        2
+        >>> pr.desc = 'new item'                                  # Change desc
+        >>> print(pr.desc)                                        # Get desc
+        new item
+        >>> pr.price = 750.50                                     # Change price
+        >>> print(pr.price)                                       # Get price
+        UAH 750.50
+        >>> pr.convert_price()                                    # Convert Price
+        >>> print(pr.price)
+        USD 27.29
+        >>> pr.edit(desc='item3', price=500, currency='USD')      # Edit product
+        >>> pr
+        <Product: id=2, desc=item3, price=USD 500.00>
+        >>> pr.edit(desc='item2')                                 # Edit name
+        >>> pr
+        <Product: id=2, desc=item2, price=USD 500.00>
+        >>> pr.edit(price=300)                                    # Edit desc
+        >>> pr
+        <Product: id=2, desc=item2, price=USD 300.00>
+        >>> pr.edit(currency='UAH')                               # Edit currency
+        >>> pr
+        <Product: id=2, desc=item2, price=UAH 300.00>
+
+
+        >>> pr2 = ProductDesc(desc='item3', price=800, currency='USD')  # Create new product with new generated id
+        >>> pr2
+        <Product: id=3, desc=item3, price=USD 800.00>
+    """
     __lid = 1  # counter of id product
     _default_curr = MoneyMy.default_currency
 
