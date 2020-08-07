@@ -5,7 +5,7 @@ from util.money_my import MoneyMy
 
 class ProductDesc(metaclass=ABCMeta):
     """
-        >>> pr = ProductDesc(item_id='2', desc='item2', price=700)  # Create product
+        >>> pr = ProductDesc(item_id='2', desc='item2', price=700)# Create product
         >>> pr                                                    # Get product
         <Product: id=2, desc=item2, price=UAH 700.00>
         >>> pr.id                                                 # Get id
@@ -29,23 +29,14 @@ class ProductDesc(metaclass=ABCMeta):
         >>> pr
         <Product: id=2, desc=item2, price=USD 300.00>
         >>> pr.edit(currency='UAH')                               # Edit currency
-        >>> pr
-        <Product: id=2, desc=item2, price=UAH 300.00>
-
-
-        >>> pr2 = ProductDesc(desc='item3', price=800, currency='USD')  # Create new product with new generated id
-        >>> pr2
-        <Product: id=3, desc=item3, price=USD 800.00>
     """
-    __lid = 1  # counter of id product
     _default_curr = MoneyMy.default_currency
 
     @contract
-    def __init__(self, item_id=None, desc: 'str' = 'item', price=0, currency=_default_curr):
-        self._item_id = str(item_id) if item_id else str(ProductDesc.__lid)
+    def __init__(self, item_id: 'str', desc: 'str' = 'item', price=0, currency: 'str' = _default_curr):
+        self._item_id = item_id
         self._desc = desc
         self._price = MoneyMy(amount=str(price), currency=currency)
-        ProductDesc.__lid = int(self._item_id) + 1
 
     def __repr__(self):
         return f'<Product: id={self._item_id}, desc={self._desc}, price={self._price}>'
