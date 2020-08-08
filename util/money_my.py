@@ -27,7 +27,7 @@ class MoneyMy(Money):
     rate_USD_to_UAH = 27.5
 
     @staticmethod
-    def get_converted_money(money):
+    def get_converted_money(money) -> 'MoneyMy':
         if money.currency == 'UAH':
             currency = 'USD'
             amount = money.amount / Decimal(money.rate_USD_to_UAH)

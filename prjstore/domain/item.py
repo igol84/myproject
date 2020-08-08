@@ -1,7 +1,8 @@
 from product_catalog import ProductCatalog, ProductDesc
-from contracts import contract, new_contract
+from contracts import contract
 
-class Item():
+
+class Item:
     """
 >>> test_product_catalog=ProductCatalog().get_products_for_test() # Get test product catalog
 >>> test_product_catalog
@@ -22,28 +23,29 @@ class Item():
 >>> item.qty
 2
     """
+
     @contract()
     def __init__(self, pc: "isinstance(ProductDesc)", qty: 'int, >0'):
         self._product = pc
         self._qty = qty
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<{self.__class__.__name__}: product={self._product}, qty={self._qty}>'
 
-    def get_product(self):
+    def get_product(self) -> ProductDesc:
         return self._product
 
     @contract
-    def set_product(self, pc: "isinstance(ProductDesc)"):
+    def set_product(self, pc: "isinstance(ProductDesc)") -> None:
         self._product = pc
 
     product = property(get_product, set_product)
 
-    def get_qty(self):
+    def get_qty(self) -> int:
         return self._qty
 
     @contract
-    def set_qty(self, qty: 'int, >0'):
+    def set_qty(self, qty: 'int, >0') -> None:
         self._qty = qty
 
     qty = property(get_qty, set_qty)

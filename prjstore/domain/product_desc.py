@@ -38,36 +38,36 @@ class ProductDesc(metaclass=ABCMeta):
         self._desc = desc
         self._price = MoneyMy(amount=str(price), currency=currency)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'<Product: id={self._item_id}, desc={self._desc}, price={self._price}>'
 
-    def get_id(self):
+    def get_id(self) -> str:
         return self._item_id
 
     id = property(get_id)
 
-    def get_price(self):
+    def get_price(self) -> MoneyMy:
         return self._price
 
-    def set_price(self, price, currency=None):
+    def set_price(self, price, currency=None) -> None:
         curr = currency if currency else self._price.currency
         self._price = MoneyMy(amount=str(price), currency=curr)
 
     price = property(get_price, set_price)
 
-    def convert_price(self):
+    def convert_price(self) -> None:
         self._price = MoneyMy.get_converted_money(self._price)
 
-    def get_desc(self):
+    def get_desc(self) -> str:
         return self._desc
 
     @contract
-    def set_desc(self, desc: 'str'):
+    def set_desc(self, desc: 'str') -> None:
         self._desc = desc
 
     desc = property(get_desc, set_desc)
 
-    def edit(self, desc=None, price=None, currency=None):
+    def edit(self, desc=None, price=None, currency=None) -> None:
         if desc:
             self.set_desc(desc)
         if price:

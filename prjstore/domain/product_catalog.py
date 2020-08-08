@@ -39,30 +39,28 @@ class ProductCatalog(dict):
     def __init__(self):
         super().__init__()
 
-
-    def set_product(self, pr):
+    def set_product(self, pr) -> None:
         dict.__setitem__(self, pr.id, pr)
 
-    def search(self, desc=None):
+    def search(self, desc=None) -> list:
+        products = []
         if desc:
-            products = []
             for key, product in self.items():
                 if desc in product.desc:
                     products.append(self[key])
-            return products
-        return False
+        return products
 
-    def count(self):
+    def count(self) -> int:
         return len(self)
 
     count = property(count)
 
-    def last_id(self):
+    def last_id(self) -> int:
         return sorted([int(key) for key in self])[-1]
 
     last_id = property(last_id)
 
-    def new_id(self):
+    def new_id(self) -> str:
         return str(self.last_id + 1)
 
     new_id = property(new_id)
