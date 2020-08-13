@@ -2,7 +2,7 @@ from contracts import contract
 
 
 class Currencies(dict):
-    '''
+    """
 >>> UAH = Currency(code='UAH', rate=27.5, sign='₴')
 >>> UAH
 <Currency UAH rate 27.5 ₴>
@@ -19,10 +19,7 @@ class Currencies(dict):
 True
 >>> currencies['USD']
 <Currency USD rate 1 $>
-
-
-
-    '''
+    """
 
     def __init__(self):
         super().__init__()
@@ -32,9 +29,9 @@ True
     def set_currency(self, currency: "isinstance(Currency)"):
         assert currency.code != 'USD', f"'{self.__class__.__name__}' has currency 'USD'"
         dict.__setitem__(self, currency.code, currency)
+
     def __setitem__(self, key, value):
         self.set_currency(value)
-
 
     def get_currencies_for_test(self):
         self.set_currency(Currency(code='UAH', rate=27.5, sign='₴'))
@@ -42,16 +39,16 @@ True
         return self
 
 
-
-class Currency():
+class Currency:
     """
 
     """
+
     @contract
-    def __init__(self, code: 'str', rate: '>0', sign=''):
+    def __init__(self, code: 'str', rate: "float|int, >0", sign=''):
         self.code = code
         self.rate = rate
         self.sign = sign
+
     def __repr__(self):
         return f'<{self.__class__.__name__} {self.code} rate {self.rate} {self.sign}>'
-

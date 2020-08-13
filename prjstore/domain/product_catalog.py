@@ -1,4 +1,5 @@
 from product_desc import *
+from contracts import contract
 
 
 class ProductCatalog(dict):
@@ -45,8 +46,13 @@ class ProductCatalog(dict):
     def __init__(self):
         super().__init__()
 
-    def set_product(self, pr) -> None:
+    @contract
+    def set_product(self, pr: "isinstance(ProductDesc)") -> None:
         dict.__setitem__(self, pr.id, pr)
+
+    @contract
+    def __setitem__(self, key: "str", value: "isinstance(ProductDesc)"):
+        self.set_product(value)
 
     def search(self, desc=None) -> list:
         products = []
