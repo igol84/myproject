@@ -6,40 +6,50 @@ from currency import Currencies
 
 class MoneyMy(Money):
     """
->>> money = MoneyMy(amount=1750.5, currency='UAH')          # Create price
+>>> money_UAH = MoneyMy(amount=1750.5, currency='UAH')          # Create price
 >>>
->>> print(money)                                           # Get price
+>>> print(money_UAH)                                           # Get price
 UAH 1,750.50
 
->>> print(money.amount)                                    # Get price amount
+>>> print(money_UAH.amount)                                    # Get price amount
 1750.5
->>> print(money.currency)                                  # Get price currency
+>>> print(money_UAH.currency)                                  # Get price currency
 UAH
->>> print(money.USD)                                       # Get price in USD
+>>> print(money_UAH.USD)                                       # Get price in USD
 USD 63.65
->>> print(money.format('uk_UA'))                           # Get format price
+>>> print(money_UAH.format('uk_UA'))                           # Get format price
 1 750,50 ₴
 
->>> convert_money = MoneyMy.get_converted_money(money)     # New converted price+
->>> print(convert_money)
+>>> money_USD = MoneyMy.get_converted_money(money_UAH, 'USD')     # New converted price+
+>>> print(money_USD)
 USD 63.65
->>> print(convert_money.UAH)                               # Get price in UAH
+>>> print(money_USD.UAH)                               # Get price in UAH
 UAH 1,750.38
->>> print(convert_money.format('en_US'))                   # Get format price
+>>> print(money_USD.format('en_US'))                   # Get format price
 $63.65
->>> MoneyMy.currencies['UAH'].rate=35                           # Edit currency
->>> money = MoneyMy.get_converted_money(convert_money)     # Reverse
->>> print(money)
+>>> print(money_USD.format_my())                       # Get format price
+63.65$
+>>> MoneyMy.currencies['UAH'].rate=35                      # Edit currency
+>>> money_UAH = MoneyMy.get_converted_money(money_USD, 'UAH')     # Reverse
+>>> print(money_UAH)
 UAH 2,227.75
->>> print(money.USD)                                       # Get price in USD
+>>> print(money_UAH.USD)                                       # Get price in USD
 USD 63.65
->>> print(money.USD.format_my())                           # Get price in USD in formatting string
+>>> print(money_UAH.USD.format_my())                           # Get price in USD in formatting string
 63.65$
 >>> MoneyMy.currencies['UAH'].rate=29
->>> print(convert_money.UAH)                               # Get price in UAH
+>>> print(money_USD.UAH)                                       # Get price in UAH
 UAH 1,845.85
->>> print(money.format_my())                               # Get price in UAH in formatting string
+>>> print(money_UAH.format_my())                               # Get price in UAH in formatting string
 2,227.75₴
+
+>>> money_CNY = MoneyMy.get_converted_money(money_USD, 'CNY')     # USD -> CNY
+>>> print(money_CNY.format_my())
+394.63¥
+>>> money_UAH = MoneyMy.get_converted_money(money_CNY, 'UAH')     # CNY -> UAH
+>>> print(money_UAH.format_my())
+1,845.85₴
+
     """
     currencies = Currencies().get_currencies_for_test()  # currency : rate for 1 USD {'USD': 1, 'UAH': 27.5}
     default_currency = 'UAH'
@@ -63,14 +73,16 @@ UAH 1,845.85
 
     @classmethod
     @contract
-    def get_converted_money(cls, money_my: "isinstance(MoneyMy)", to_currency: 'str' = ''):
-        """"USD -> UAH or UAH -> USD"""
-        assert to_currency == '' or to_currency in cls.currencies, f"'{cls.__name__}' has no currency '{to_currency}'"
+    def get_converted_money(cls, money_my: "isinstance(MoneyMy)", to_currency: 'str') -> "isinstance(MoneyMy)":
+        assert to_currency in cls.currencies, f"'{cls.__name__}' has no currency '{to_currency}'"
         to_currency = to_currency if to_currency else (set(money_my.currencies) - {money_my.currency}).pop()
-        if money_my.currency == 'UAH' and to_currency == 'USD':
-            amount = round(money_my.amount / Decimal(money_my.currencies['UAH'].rate), 2)
-        elif money_my.currency == 'USD' and to_currency == 'UAH':
-            amount = round(money_my.amount * Decimal(money_my.currencies['UAH'].rate), 2)
-        else:  # money_my.currency == to_currency
+        if to_currency == 'USD':
+            amount = round(money_my.amount / Decimal(money_my.currencies[money_my.currency].rate), 2)
+        elif money_my.currency == 'USD':
+            amount = round(money_my.amount * Decimal(money_my.currencies[to_currency].rate), 2)
+        elif money_my.currency == to_currency:
             amount = money_my.amount
+        else:  # money_my.currency =! 'USD' and to_currency=! 'USD'
+            amount = round(money_my.amount / Decimal(money_my.currencies[money_my.currency].rate)
+                           * Decimal(money_my.currencies[to_currency].rate), 2)
         return MoneyMy(amount=amount, currency=to_currency)

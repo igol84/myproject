@@ -16,7 +16,7 @@ new item
 >>> pr.price = 750.50                                     # Change price
 >>> print(pr.price)                                       # Get price
 UAH 750.50
->>> pr.convert_price()                                    # Convert Price
+>>> pr.convert_price('USD')                                    # Convert Price
 >>> print(pr.price)
 USD 27.29
 >>> pr.edit(desc='item3', price=500, currency='USD')      # Edit product
@@ -55,8 +55,8 @@ USD 27.29
 
     price = property(get_price, set_price)
 
-    def convert_price(self) -> None:
-        self._price = MoneyMy.get_converted_money(self._price)
+    def convert_price(self, to_currency) -> None:
+        self._price = MoneyMy.get_converted_money(self._price, to_currency)
 
     def get_desc(self) -> str:
         return self._desc

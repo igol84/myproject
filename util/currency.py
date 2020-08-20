@@ -14,7 +14,7 @@ class Currencies(dict):
 '₴'
 >>> currencies = Currencies().get_currencies_for_test()
 >>> currencies
-{'USD': <Currency USD rate 1 $>, 'UAH': <Currency UAH rate 27.5 ₴>}
+{'USD': <Currency USD rate 1 $>, 'UAH': <Currency UAH rate 27.5 ₴>, 'CNY': <Currency CNY rate 6.2 ¥>}
 >>> 'UAH' in  currencies
 True
 >>> currencies['USD']
@@ -27,7 +27,7 @@ True
 
     @contract
     def set_currency(self, currency: "isinstance(Currency)"):
-        assert currency.code != 'USD', f"'{self.__class__.__name__}' has currency 'USD'"
+        assert currency.code != 'USD', f"'{self.__class__.__name__}' already have currency 'USD'"
         dict.__setitem__(self, currency.code, currency)
 
     def __setitem__(self, key, value):
@@ -35,7 +35,7 @@ True
 
     def get_currencies_for_test(self):
         self.set_currency(Currency(code='UAH', rate=27.5, sign='₴'))
-        # self.set_currency(Currency(code='CNY', rate=6.2, sign='¥'))
+        self.set_currency(Currency(code='CNY', rate=6.2, sign='¥'))
         return self
 
 
