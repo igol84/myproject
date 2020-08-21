@@ -9,7 +9,7 @@ class Item:
 {'1': <Product: id=1, desc=item1, price=UAH 100.00>, '6': <Product: id=6, desc=item2, price=UAH 500.00>, \
 '2': <Product: id=2, desc=item23, price=UAH 600.00>, '3': <Product: id=3, desc=item4, price=UAH 700.00>, \
 '4': <Product: id=4, desc=item5, price=UAH 300.00>}
->>> item = Item(pc=test_product_catalog['2'], qty=3)              # Create new item
+>>> item = Item(pr=test_product_catalog['2'], qty=3)              # Create new item
 >>> item                                                          # get item
 <Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>
 >>> item.product                                                  # get items product
@@ -24,9 +24,9 @@ class Item:
 2
     """
 
-    @contract()
-    def __init__(self, pc: "isinstance(ProductDesc)", qty: 'int, >0'):
-        self._product = pc
+    @contract
+    def __init__(self, pr: "isinstance(ProductDesc)", qty: 'int, >0'):
+        self._product = pr
         self._qty = qty
 
     def __repr__(self) -> str:
@@ -36,8 +36,8 @@ class Item:
         return self._product
 
     @contract
-    def set_product(self, pc: "isinstance(ProductDesc)") -> None:
-        self._product = pc
+    def set_product(self, pr: "isinstance(ProductDesc)") -> None:
+        self._product = pr
 
     product = property(get_product, set_product)
 

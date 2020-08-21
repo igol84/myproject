@@ -20,7 +20,7 @@ USD 63.65
 >>> print(money_UAH.format('uk_UA'))                           # Get format price
 1 750,50 ₴
 
->>> money_USD = MoneyMy.get_converted_money(money_UAH, 'USD')     # New converted price+
+>>> money_USD = MoneyMy.get_converted_money(money_UAH, currency_to='USD')     # New converted price+
 >>> print(money_USD)
 USD 63.65
 >>> print(money_USD.UAH)                               # Get price in UAH
@@ -29,24 +29,23 @@ UAH 1,750.38
 $63.65
 >>> print(money_USD.format_my())                       # Get format price
 63.65$
+
 >>> MoneyMy.currencies['UAH'].rate=35                      # Edit currency
->>> money_UAH = MoneyMy.get_converted_money(money_USD, 'UAH')     # Reverse
+>>> money_UAH = MoneyMy.get_converted_money(money_USD, currency_to='UAH')     # Reverse
 >>> print(money_UAH)
 UAH 2,227.75
 >>> print(money_UAH.USD)                                       # Get price in USD
 USD 63.65
->>> print(money_UAH.USD.format_my())                           # Get price in USD in formatting string
-63.65$
 >>> MoneyMy.currencies['UAH'].rate=29
 >>> print(money_USD.UAH)                                       # Get price in UAH
 UAH 1,845.85
 >>> print(money_UAH.format_my())                               # Get price in UAH in formatting string
 2,227.75₴
 
->>> money_CNY = MoneyMy.get_converted_money(money_USD, 'CNY')     # USD -> CNY
+>>> money_CNY = MoneyMy.get_converted_money(money_USD, currency_to='CNY')     # USD -> CNY
 >>> print(money_CNY.format_my())
 394.63¥
->>> money_UAH = MoneyMy.get_converted_money(money_CNY, 'UAH')     # CNY -> UAH
+>>> money_UAH = MoneyMy.get_converted_money(money_CNY, currency_to='UAH')     # CNY -> UAH
 >>> print(money_UAH.format_my())
 1,845.85₴
 
@@ -73,16 +72,11 @@ UAH 1,845.85
 
     @classmethod
     @contract
-    def get_converted_money(cls, money_my: "isinstance(MoneyMy)", to_currency: 'str') -> "isinstance(MoneyMy)":
-        assert to_currency in cls.currencies, f"'{cls.__name__}' has no currency '{to_currency}'"
-        to_currency = to_currency if to_currency else (set(money_my.currencies) - {money_my.currency}).pop()
-        if to_currency == 'USD':
-            amount = round(money_my.amount / Decimal(money_my.currencies[money_my.currency].rate), 2)
-        elif money_my.currency == 'USD':
-            amount = round(money_my.amount * Decimal(money_my.currencies[to_currency].rate), 2)
-        elif money_my.currency == to_currency:
+    def get_converted_money(cls, money_my: "isinstance(MoneyMy)", currency_to: 'str') -> "isinstance(MoneyMy)":
+        assert currency_to in cls.currencies, f"'{cls.__name__}' has no currency '{currency_to}'"
+        if money_my.currency == currency_to:
             amount = money_my.amount
-        else:  # money_my.currency =! 'USD' and to_currency=! 'USD'
+        else:
             amount = round(money_my.amount / Decimal(money_my.currencies[money_my.currency].rate)
-                           * Decimal(money_my.currencies[to_currency].rate), 2)
-        return MoneyMy(amount=amount, currency=to_currency)
+                           * Decimal(money_my.currencies[currency_to].rate), 2)
+        return MoneyMy(amount=amount, currency=currency_to)
