@@ -24,7 +24,7 @@ class SaleLineItem:
     '''
 
     @contract
-    def __init__(self, pd: "isinstance(ProductDesc)", qty: "int"=1) -> None:
+    def __init__(self, pd: "isinstance(ProductDesc)", qty: "int" = 1) -> None:
         self._product = pd
         self._qty = qty
 
