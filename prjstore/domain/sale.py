@@ -32,10 +32,13 @@ class Sale:
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
 <SaleLineItem: product=<Product: id=1, desc=item1, price=UAH 100.00>, qty=4>
 <SaleLineItem: product=<Product: id=3, desc=item4, price=UAH 700.00>, qty=3>>
->>> sale.complete                                                                # is complete?
+>>> sale.completed()                                                                  # completed
+>>> sale.is_complete()
+True
+>>> sale.not_completed()                                                              # not completed
+>>> sale.is_complete()
 False
->>> sale.complete = True                                                         # complete
->>> sale.line_items                                                         # get sale line items
+>>> sale.line_items                                                                   # get sale line items
 {'1': <SaleLineItem: product=<Product: id=1, desc=item1, price=UAH 100.00>, qty=4>,\
  '3': <SaleLineItem: product=<Product: id=3, desc=item4, price=UAH 700.00>, qty=3>}
 
@@ -64,11 +67,12 @@ False
     def is_complete(self) -> bool:
         return self._is_complete
 
-    @contract
-    def change_complete(self, val: "bool") -> None:
-        self._is_complete = val
 
-    complete = property(is_complete, change_complete)
+    def completed(self):
+        self._is_complete = True
+
+    def not_completed(self):
+        self._is_complete = False
 
     def is_already_set(self, pr) -> bool:
         return pr.id in self._list_sli
