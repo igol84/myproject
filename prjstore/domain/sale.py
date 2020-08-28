@@ -75,10 +75,8 @@ False
                 if sli.item.product == item.product:
                     sli.qty += qty
 
-
     def is_complete(self) -> bool:
         return self._is_complete
-
 
     def completed(self):
         self._is_complete = True

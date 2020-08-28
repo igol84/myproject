@@ -1,10 +1,10 @@
 from contracts import contract
-from product_catalog import ProductDesc, ProductCatalog
+from product_catalog import ProductCatalog
 from item import Item
 
 
 class SaleLineItem:
-    '''
+    """
 >>> test_pc=ProductCatalog().get_products_for_test() # Get test product catalog
 >>> test_pc
 [<Product: id=1, desc=item1, price=UAH 100.00>,\
@@ -31,11 +31,11 @@ class SaleLineItem:
 >>> sli
 <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=2>
 
-    '''
+    """
 
     @contract
-    def __init__(self, Item: "isinstance(Item)", qty: "int" = 1) -> None:
-        self._item = Item
+    def __init__(self, item: "isinstance(Item)", qty: "int" = 1) -> None:
+        self._item = item
         self._qty = qty
 
     def __repr__(self):
@@ -59,6 +59,5 @@ class SaleLineItem:
             self._qty = qty
         else:
             raise ValueError(f'sly.qty({qty}) should not be more than item.qty({self._item.qty})!')
-
 
     qty = property(get_qty, set_qty)
