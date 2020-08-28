@@ -41,6 +41,8 @@ class Sale:
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
 <SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
 <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>>
+>>> sale['4']                                                    # get line item by product id "4"
+<SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
 >>> sale.completed()                                                                  # completed
 >>> sale.is_complete()
 True
@@ -50,6 +52,7 @@ False
 >>> sale.line_items                                                                   # get sale line items
 [<SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>,\
  <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>]
+
 
 
     """
@@ -71,12 +74,10 @@ False
         if not self.is_already_set(item):  # is a new product in line items
             self._list_sli.append(SaleLineItem(item, qty))
         else:  # a same product in line items
-            for sli in self._list_sli:
-                if sli.item.product == item.product:
-                    sli.qty += qty
+            self[item.product.id].qty += qty
 
     def is_already_set(self, item) -> bool:
-        return item.product in [sli.item.product for sli in self._list_sli]
+        return item.product in self
 
     def is_complete(self) -> bool:
         return self._is_complete
@@ -101,3 +102,15 @@ False
         completed = 'completed' if self._is_complete else 'not completed'
         time = self._time.strftime("%m/%d/%Y, %H:%M:%S")
         return f"<{self.__class__.__name__}: time: {time}, {completed}, line items:{sale_line_items}>"
+
+    def __getitem__(self, key):  # get line item by product id
+        for sli in self._list_sli:
+            if sli.item.product.id == key:
+                return sli
+        raise IndexError(f"Invalid product id: {key}")
+
+    def __contains__(self, product):  # Does Sale contain this product in line items?
+        for sli in self._list_sli:
+            if product == sli.item.product:
+                return True
+        return False
