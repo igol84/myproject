@@ -7,10 +7,12 @@ class ProductCatalog(list):
 >>> pc = ProductCatalog().get_products_for_test()  # create get test products
 >>> pc                         #
 [<Product: id=1, desc=item1, price=UAH 100.00>,\
- <Product: id=6, desc=item2, price=UAH 500.00>,\
  <Product: id=2, desc=item23, price=UAH 600.00>,\
  <Product: id=3, desc=item4, price=UAH 700.00>,\
- <Product: id=4, desc=item5, price=UAH 300.00>]
+ <Product: id=4, desc=item5, price=UAH 300.00>,\
+ <Product: id=6, desc=item2, price=UAH 500.00>]
+>>> pc.quantity                                           # count of products
+5
 >>> pc.last_id                                           # get last id
 6
 >>> pc.new_id                                            # get new generated id  "last id + 1"
@@ -19,10 +21,10 @@ class ProductCatalog(list):
 >>> pc.set_product(ProductDesc(item_id=pc.new_id, desc='item12', price=300))
 >>> pc                                                   # get catalog
 [<Product: id=1, desc=item1, price=UAH 100.00>,\
- <Product: id=6, desc=item2, price=UAH 500.00>,\
  <Product: id=2, desc=item23, price=UAH 600.00>,\
  <Product: id=3, desc=item4, price=UAH 700.00>,\
- <Product: id=4, desc=item5, price=UAH 300.00>, \
+ <Product: id=4, desc=item5, price=UAH 300.00>,\
+ <Product: id=6, desc=item2, price=UAH 500.00>, \
 <Product: id=7, desc=item, price=UAH 0.00>, \
 <Product: id=8, desc=item12, price=UAH 300.00>]
 >>> pc['2']                                              # get product by id='2'
@@ -36,18 +38,16 @@ class ProductCatalog(list):
 >>> pc.set_product(ProductDesc(item_id=pc.new_id, desc='prod', price=500))
 >>> pc                                                   # get catalog
 [<Product: id=1, desc=item1, price=UAH 100.00>,\
- <Product: id=6, desc=item2, price=UAH 500.00>,\
  <Product: id=2, desc=item23, price=UAH 600.00>,\
  <Product: id=3, desc=item4, price=UAH 700.00>,\
  <Product: id=4, desc=item5, price=UAH 300.00>,\
+ <Product: id=6, desc=item2, price=UAH 500.00>,\
  <Product: id=7, desc=item, price=UAH 0.00>,\
  <Product: id=8, desc=item12, price=UAH 300.00>, \
 <Product: id=9, desc=prod, price=UAH 500.00>]
 >>> pc.search(desc='item2')                               # search products by name containing "item"
-[<Product: id=6, desc=item2, price=UAH 500.00>,\
- <Product: id=2, desc=item23, price=UAH 600.00>]
->>> pc.quantity                                           # count of products
-8
+[<Product: id=2, desc=item23, price=UAH 600.00>,\
+ <Product: id=6, desc=item2, price=UAH 500.00>]
 
 
     """
@@ -95,8 +95,8 @@ class ProductCatalog(list):
     def get_products_for_test(self):
         self.clear()
         self.set_product(ProductDesc(item_id='1', desc='item1', price=100))
-        self.set_product(ProductDesc(item_id='6', desc='item2', price=500))
         self.set_product(ProductDesc(item_id='2', desc='item23', price=600))
         self.set_product(ProductDesc(item_id='3', desc='item4', price=700))
         self.set_product(ProductDesc(item_id='4', desc='item5', price=300))
+        self.set_product(ProductDesc(item_id='6', desc='item2', price=500))
         return self

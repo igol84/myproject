@@ -12,10 +12,10 @@ class Sale:
 >>> test_pc=ProductCatalog().get_products_for_test()                            # Get test product catalog
 >>> test_pc                                                                     # get catalog
 [<Product: id=1, desc=item1, price=UAH 100.00>,\
- <Product: id=6, desc=item2, price=UAH 500.00>,\
  <Product: id=2, desc=item23, price=UAH 600.00>,\
  <Product: id=3, desc=item4, price=UAH 700.00>,\
- <Product: id=4, desc=item5, price=UAH 300.00>]
+ <Product: id=4, desc=item5, price=UAH 300.00>,\
+ <Product: id=6, desc=item2, price=UAH 500.00>]
 >>> sale = Sale(test_pc['1'])                                                    # Create sale
 >>> sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')    # set time
 >>> sale.time.strftime("%m/%d/%Y, %H:%M:%S")                                            # get time
