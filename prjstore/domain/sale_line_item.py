@@ -1,14 +1,22 @@
 from contracts import contract
 from product_catalog import ProductDesc, ProductCatalog
+from item import Item
 
 
 class SaleLineItem:
     '''
 >>> test_product_catalog=ProductCatalog().get_products_for_test() # Get test product catalog
 >>> test_product_catalog
-{'1': <Product: id=1, desc=item1, price=UAH 100.00>, '6': <Product: id=6, desc=item2, price=UAH 500.00>, \
-'2': <Product: id=2, desc=item23, price=UAH 600.00>, '3': <Product: id=3, desc=item4, price=UAH 700.00>, \
-'4': <Product: id=4, desc=item5, price=UAH 300.00>}
+[<Product: id=1, desc=item1, price=UAH 100.00>,\
+ <Product: id=6, desc=item2, price=UAH 500.00>,\
+ <Product: id=2, desc=item23, price=UAH 600.00>,\
+ <Product: id=3, desc=item4, price=UAH 700.00>,\
+ <Product: id=4, desc=item5, price=UAH 300.00>]
+>>> items = [Item(pr=test_product_catalog['2'], qty=3), \
+             Item(pr=test_product_catalog['4'], qty=2)]              # Create new item
+>>> items                                                          # get item
+[<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
+ <Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=2>]
 >>> sli = SaleLineItem(test_product_catalog['1'])                                 # Create saleLineItem
 >>> sli
 <SaleLineItem: product=<Product: id=1, desc=item1, price=UAH 100.00>, qty=1>

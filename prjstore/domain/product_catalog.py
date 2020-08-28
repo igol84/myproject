@@ -2,13 +2,15 @@ from product_desc import *
 from contracts import contract
 
 
-class ProductCatalog(dict):
+class ProductCatalog(list):
     """
 >>> pc = ProductCatalog().get_products_for_test()  # create get test products
 >>> pc                         #
-{'1': <Product: id=1, desc=item1, price=UAH 100.00>, '6': <Product: id=6, desc=item2, price=UAH 500.00>,\
- '2': <Product: id=2, desc=item23, price=UAH 600.00>, '3': <Product: id=3, desc=item4, price=UAH 700.00>,\
- '4': <Product: id=4, desc=item5, price=UAH 300.00>}
+[<Product: id=1, desc=item1, price=UAH 100.00>,\
+ <Product: id=6, desc=item2, price=UAH 500.00>,\
+ <Product: id=2, desc=item23, price=UAH 600.00>,\
+ <Product: id=3, desc=item4, price=UAH 700.00>,\
+ <Product: id=4, desc=item5, price=UAH 300.00>]
 >>> pc.last_id                                           # get last id
 6
 >>> pc.new_id                                            # get new generated id  "last id + 1"
@@ -16,29 +18,36 @@ class ProductCatalog(dict):
 >>> pc.set_product(ProductDesc(item_id=pc.new_id))
 >>> pc.set_product(ProductDesc(item_id=pc.new_id, desc='item12', price=300))
 >>> pc                                                   # get catalog
-{'1': <Product: id=1, desc=item1, price=UAH 100.00>, '6': <Product: id=6, desc=item2, price=UAH 500.00>, \
-'2': <Product: id=2, desc=item23, price=UAH 600.00>, '3': <Product: id=3, desc=item4, price=UAH 700.00>, \
-'4': <Product: id=4, desc=item5, price=UAH 300.00>, '7': <Product: id=7, desc=item, price=UAH 0.00>, \
-'8': <Product: id=8, desc=item12, price=UAH 300.00>}
+[<Product: id=1, desc=item1, price=UAH 100.00>,\
+ <Product: id=6, desc=item2, price=UAH 500.00>,\
+ <Product: id=2, desc=item23, price=UAH 600.00>,\
+ <Product: id=3, desc=item4, price=UAH 700.00>,\
+ <Product: id=4, desc=item5, price=UAH 300.00>, \
+<Product: id=7, desc=item, price=UAH 0.00>, \
+<Product: id=8, desc=item12, price=UAH 300.00>]
 >>> pc['2']                                              # get product by id='2'
 <Product: id=2, desc=item23, price=UAH 600.00>
 >>> f_products = []
 >>> for pr in pc:                               # get products, where price > 500 UAH
-...     if pc[pr].price.UAH.amount > 500 :
-...         f_products.append((pc[pr].desc, pc[pr].price.USD))
+...     if pr.price.UAH.amount > 500 :
+...         f_products.append((pr.desc, pr.price.USD))
 >>> f_products
 [('item23', USD 21.82), ('item4', USD 25.45)]
 >>> pc.set_product(ProductDesc(item_id=pc.new_id, desc='prod', price=500))
->>> pc.search(desc='item2')                               # search products by name containing "item"
-[<Product: id=6, desc=item2, price=UAH 500.00>, <Product: id=2, desc=item23, price=UAH 600.00>]
->>> pc.count                                           # count of products
-8
 >>> pc                                                   # get catalog
-{'1': <Product: id=1, desc=item1, price=UAH 100.00>, '6': <Product: id=6, desc=item2, price=UAH 500.00>, \
-'2': <Product: id=2, desc=item23, price=UAH 600.00>, '3': <Product: id=3, desc=item4, price=UAH 700.00>, \
-'4': <Product: id=4, desc=item5, price=UAH 300.00>, '7': <Product: id=7, desc=item, price=UAH 0.00>, \
-'8': <Product: id=8, desc=item12, price=UAH 300.00>, '9': <Product: id=9, desc=prod, price=UAH 500.00>}
-
+[<Product: id=1, desc=item1, price=UAH 100.00>,\
+ <Product: id=6, desc=item2, price=UAH 500.00>,\
+ <Product: id=2, desc=item23, price=UAH 600.00>,\
+ <Product: id=3, desc=item4, price=UAH 700.00>,\
+ <Product: id=4, desc=item5, price=UAH 300.00>,\
+ <Product: id=7, desc=item, price=UAH 0.00>,\
+ <Product: id=8, desc=item12, price=UAH 300.00>, \
+<Product: id=9, desc=prod, price=UAH 500.00>]
+>>> pc.search(desc='item2')                               # search products by name containing "item"
+[<Product: id=6, desc=item2, price=UAH 500.00>,\
+ <Product: id=2, desc=item23, price=UAH 600.00>]
+>>> pc.quantity                                           # count of products
+8
 
 
     """
@@ -48,27 +57,33 @@ class ProductCatalog(dict):
 
     @contract
     def set_product(self, pr: "isinstance(ProductDesc)") -> None:
-        dict.__setitem__(self, pr.id, pr)
+        self.append(pr)
 
     @contract
     def __setitem__(self, key: "str", value: "isinstance(ProductDesc)"):
         self.set_product(value)
 
+    def __getitem__(self, key):
+        for pr in self:
+            if pr.id == key:
+                return pr
+        raise IndexError(f"Invalid product id: {key}")
+
     def search(self, desc=None) -> list:
         products = []
         if desc:
-            for key, product in self.items():
+            for product in self:
                 if desc in product.desc:
-                    products.append(self[key])
+                    products.append(product)
         return products
 
-    def count(self) -> int:
+    def quantity(self) -> int:
         return len(self)
 
-    count = property(count)
+    quantity = property(quantity)
 
     def last_id(self) -> int:
-        return sorted([int(key) for key in self])[-1]
+        return sorted([int(pr.id) for pr in self])[-1]
 
     last_id = property(last_id)
 
