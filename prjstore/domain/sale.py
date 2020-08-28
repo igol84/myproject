@@ -1,7 +1,7 @@
 from contracts import contract
 from item import Item
 from sale_line_item import SaleLineItem
-from product_catalog import ProductCatalog, ProductDesc
+from product_catalog import ProductCatalog
 import datetime
 import locale
 
@@ -9,7 +9,7 @@ locale.setlocale(locale.LC_TIME, 'ru_RU')
 
 
 class Sale:
-    '''
+    """
 >>> test_pc=ProductCatalog().get_products_for_test() # Get test product catalog
 >>> test_pc
 [<Product: id=1, desc=item1, price=UAH 100.00>,\
@@ -52,7 +52,7 @@ False
  <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>]
 
 
-    '''
+    """
 
     @contract
     def __init__(self, pr: "isinstance(Item)", gty: "int, >0" = 1) -> None:
@@ -67,13 +67,16 @@ False
     line_items = property(get_list_sli)
 
     @contract
-    def set_line_item(self, item: "isinstance(Item)", qty: "int, >0" = 1) -> None:
-        if item.product not in [sli.item.product for sli in self._list_sli]:
+    def set_line_item(self, item: "isinstance(Item)", qty: "int, >0" = 1) -> None:  # add new line items
+        if not self.is_already_set(item):  # is a new product in line items
             self._list_sli.append(SaleLineItem(item, qty))
-        else:
+        else:  # a same product in line items
             for sli in self._list_sli:
                 if sli.item.product == item.product:
                     sli.qty += qty
+
+    def is_already_set(self, item) -> bool:
+        return item.product in [sli.item.product for sli in self._list_sli]
 
     def is_complete(self) -> bool:
         return self._is_complete
@@ -83,9 +86,6 @@ False
 
     def not_completed(self):
         self._is_complete = False
-
-    def is_already_set(self, pr) -> bool:
-        return pr.id in self._list_sli
 
     def get_time(self) -> datetime:
         return self._time
