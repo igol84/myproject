@@ -62,10 +62,14 @@ False
 >>> sale.line_items
 [<SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>,\
  <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>]
->>> sale.unset_line_item_by_pr_id('2')                           # unset sale line pr id ='2' items 1-1=0 -> del
+>>> sale.unset_line_item_by_pr_id('6')                           # unset sale line pr id ='2' items 1-1=0 -> del
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
-<SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
+<SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>>
+>>> sale.set_line_item_by_product_id('2', 2)                           # unset sale line pr id ='2' items 1-1=0 -> del
+>>> sale
+<Sale: time: 06/06/2020, 12:19:55, not completed, line items:
+<SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>>
 
 
 
@@ -92,8 +96,18 @@ False
             self[item.product.id].qty += qty
 
     @contract
+    def set_line_item_by_product_id(self, pr_id: "str", qty: "int, >0" = 1) -> None:  # add new line items by product id
+        sli = None
+        try:
+            sli = self.get_line_item_by_product_id(pr_id)  # try to get line items by product id
+        except ValueError:    # is a new product in line items
+            pass
+        if sli: # a same product in line items
+            self[sli.item.product.id].qty += qty
+
+    @contract
     def unset_line_item_by_pr_id(self, pr_id: "str", qty: "int, >0" = 1) -> None:  # unset line items
-        sli = self.get_line_item_by_pro_id(pr_id)
+        sli = self.get_line_item_by_product_id(pr_id)
         if sli and qty <= sli.qty:  # a same product in line items
             if qty < sli.qty:
                 self[pr_id].qty -= qty
@@ -106,7 +120,7 @@ False
         return item.product in self
 
     @contract
-    def get_line_item_by_pro_id(self, pr_id: "str") -> SaleLineItem:
+    def get_line_item_by_product_id(self, pr_id: "str") -> SaleLineItem:
         for sli in self._list_sli:
             if sli.item.product.id == pr_id:
                 return sli
@@ -137,7 +151,7 @@ False
         return f"<{self.__class__.__name__}: time: {time}, {completed}, line items:{sale_line_items}>"
 
     def __getitem__(self, key):  # get line item by product id
-        return self.get_line_item_by_pro_id(key)
+        return self.get_line_item_by_product_id(key)
 
     def __delitem__(self, key):  # del sale line item by product id
         for i, sli in enumerate(self._list_sli):
