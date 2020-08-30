@@ -71,9 +71,6 @@ False
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
 <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>>
 
-
-
-
     """
 
     def __init__(self, pr=None, gty=1) -> None:
@@ -97,13 +94,11 @@ False
 
     @contract
     def set_line_item_by_product_id(self, pr_id: "str", qty: "int, >0" = 1) -> None:  # add new line items by product id
-        sli = None
         try:
-            sli = self.get_line_item_by_product_id(pr_id)  # try to get line items by product id
-        except ValueError:    # is a new product in line items
-            pass
-        if sli: # a same product in line items
-            self[sli.item.product.id].qty += qty
+            if self.get_line_item_by_product_id(pr_id):  # try to get line items by product id
+                self[pr_id].qty += qty
+        except IndexError:  # is a new product in line items
+            pass  # release after create class Store with attribute items
 
     @contract
     def unset_line_item_by_pr_id(self, pr_id: "str", qty: "int, >0" = 1) -> None:  # unset line items
@@ -116,7 +111,8 @@ False
         else:
             raise ValueError(f'quantity({qty}) should not be more than item.qty({self[pr_id].qty})!')
 
-    def is_item_already_set(self, item) -> bool:
+    @contract
+    def is_item_already_set(self, item: "isinstance(Item)") -> bool:
         return item.product in self
 
     @contract
