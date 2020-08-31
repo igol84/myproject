@@ -1,7 +1,7 @@
 from contracts import contract
 from item import Item
 from sale_line_item import SaleLineItem
-from product_catalog import ProductCatalog
+from product_catalog import ProductDesc, ProductCatalog
 import datetime
 import locale
 
@@ -101,6 +101,17 @@ False
             pass  # release after create class Store with attribute items
 
     @contract
+    def is_item_already_set(self, item: "isinstance(Item)") -> bool:
+        return item.product in self
+
+    @contract
+    def get_line_item_by_product_id(self, pr_id: "str") -> SaleLineItem:
+        for sli in self._list_sli:
+            if sli.item.product.id == pr_id:
+                return sli
+        raise IndexError(f"Invalid product id: {pr_id}")
+
+    @contract
     def unset_line_item_by_pr_id(self, pr_id: "str", qty: "int, >0" = 1) -> None:  # unset line items
         sli = self.get_line_item_by_product_id(pr_id)
         if sli and qty <= sli.qty:  # a same product in line items
@@ -112,23 +123,18 @@ False
             raise ValueError(f'quantity({qty}) should not be more than item.qty({self[pr_id].qty})!')
 
     @contract
-    def is_item_already_set(self, item: "isinstance(Item)") -> bool:
-        return item.product in self
-
-    @contract
-    def get_line_item_by_product_id(self, pr_id: "str") -> SaleLineItem:
-        for sli in self._list_sli:
+    def del_line_item_by_product_id(self, pr_id: "str") -> None:
+        for key, sli in enumerate(self._list_sli):
             if sli.item.product.id == pr_id:
-                return sli
-        raise IndexError(f"Invalid product id: {pr_id}")
+                del self._list_sli[key]
 
     def is_complete(self) -> bool:
         return self._is_complete
 
-    def completed(self):
+    def completed(self) -> bool:
         self._is_complete = True
 
-    def not_completed(self):
+    def not_completed(self) -> bool:
         self._is_complete = False
 
     def get_time(self) -> datetime:
@@ -140,6 +146,13 @@ False
 
     time = property(get_time, set_time)
 
+    @contract
+    def is_product_in_sale(self, product: "isinstance(ProductDesc)") -> bool:
+        for sli in self._list_sli:
+            if product == sli.item.product:
+                return True
+        return False
+
     def __repr__(self) -> str:
         sale_line_items = '\n' + '\n'.join([str(sli) for sli in self._list_sli])
         completed = 'completed' if self._is_complete else 'not completed'
@@ -150,12 +163,7 @@ False
         return self.get_line_item_by_product_id(key)
 
     def __delitem__(self, key):  # del sale line item by product id
-        for i, sli in enumerate(self._list_sli):
-            if sli.item.product.id == key:
-                del self._list_sli[i]
+        self.del_line_item_by_product_id(key)
 
-    def __contains__(self, product):  # Does Sale contain this product in line items?
-        for sli in self._list_sli:
-            if product == sli.item.product:
-                return True
-        return False
+    def __contains__(self, product) -> bool:  # Does Sale contain this product in line items?
+        return self.is_product_in_sale(product)
