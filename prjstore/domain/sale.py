@@ -1,7 +1,7 @@
 from contracts import contract
-from item import Item
+from item import Item, get_items_for_test
 from sale_line_item import SaleLineItem
-from product_catalog import ProductDesc, ProductCatalog
+from product_catalog import ProductDesc
 import datetime
 import locale
 
@@ -10,17 +10,8 @@ locale.setlocale(locale.LC_TIME, 'ru_RU')
 
 class Sale:
     """
->>> test_pc=ProductCatalog().get_products_for_test() # Get test product catalog
->>> test_pc
-[<Product: id=1, desc=item1, price=UAH 100.00>,\
- <Product: id=2, desc=item23, price=UAH 600.00>,\
- <Product: id=3, desc=item4, price=UAH 700.00>,\
- <Product: id=4, desc=item5, price=UAH 300.00>,\
- <Product: id=6, desc=item2, price=UAH 500.00>]
->>> items = [Item(pr=test_pc['2'], qty=3), \
-             Item(pr=test_pc['4'], qty=1), \
-             Item(pr=test_pc['6'], qty=2)]               # Create new items
->>> items                                                # get items
+>>> items = get_items_for_test()                                               # get items
+>>> items
 [<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
  <Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
  <Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>]
@@ -86,7 +77,7 @@ False
     line_items = property(get_list_sli)
 
     @contract
-    def set_line_item(self, item: "isinstance(Item)", qty: "int, >0" = 1) -> None:  # add new line items
+    def set_line_item(self, item: Item, qty: "int, >0" = 1) -> None:  # add new line items
         if not self.is_item_already_set(item):  # is a new product in line items
             self._list_sli.append(SaleLineItem(item, qty))
         else:  # a same product in line items
@@ -101,7 +92,7 @@ False
             pass  # release after create class Store with attribute items
 
     @contract
-    def is_item_already_set(self, item: "isinstance(Item)") -> bool:
+    def is_item_already_set(self, item: Item) -> bool:
         return item.product in self
 
     @contract
@@ -112,7 +103,7 @@ False
         raise IndexError(f"Invalid product id: {pr_id}")
 
     @contract
-    def unset_line_item_by_pr_id(self, pr_id: "str", qty: "int, >0" = 1) -> None:  # unset line items
+    def unset_line_item_by_pr_id(self, pr_id: str, qty: "int, >0" = 1) -> None:  # unset line items
         sli = self.get_line_item_by_product_id(pr_id)
         if sli and qty <= sli.qty:  # a same product in line items
             if qty < sli.qty:
@@ -123,7 +114,7 @@ False
             raise ValueError(f'quantity({qty}) should not be more than item.qty({self[pr_id].qty})!')
 
     @contract
-    def del_line_item_by_product_id(self, pr_id: "str") -> None:
+    def del_line_item_by_product_id(self, pr_id: str) -> None:
         for key, sli in enumerate(self._list_sli):
             if sli.item.product.id == pr_id:
                 del self._list_sli[key]
@@ -167,3 +158,19 @@ False
 
     def __contains__(self, product) -> bool:  # Does Sale contain this product in line items?
         return self.is_product_in_sale(product)
+
+def get_sale_for_test():
+    items = get_items_for_test()
+# [<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
+#  <Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
+#  <Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>]
+    sale = Sale()                                                    # Create sale
+    sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')    # set time
+    sale.set_line_item(items[1])                                          # Add product to sale
+    sale.set_line_item(items[0], 2)
+    sale.set_line_item(items[2])
+    # <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
+    # <SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
+    # <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>
+    # <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
+    return sale

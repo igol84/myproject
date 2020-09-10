@@ -1,20 +1,10 @@
 from contracts import contract
-from product_catalog import ProductCatalog
-from item import Item
+from item import Item, get_items_for_test
 
 
 class SaleLineItem:
     """
->>> test_pc=ProductCatalog().get_products_for_test() # Get test product catalog
->>> test_pc
-[<Product: id=1, desc=item1, price=UAH 100.00>,\
- <Product: id=2, desc=item23, price=UAH 600.00>,\
- <Product: id=3, desc=item4, price=UAH 700.00>,\
- <Product: id=4, desc=item5, price=UAH 300.00>,\
- <Product: id=6, desc=item2, price=UAH 500.00>]
->>> items = [Item(pr=test_pc['2'], qty=3), \
-             Item(pr=test_pc['4'], qty=1), \
-             Item(pr=test_pc['6'], qty=2)]               # Create new items
+>>> items = get_items_for_test()                  # Create new items
 >>> items                                                # get items
 [<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
  <Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>,\

@@ -1,10 +1,10 @@
-from product_desc import *
 from contracts import contract
+from product_desc import ProductDesc
 
 
 class ProductCatalog(list):
     """
->>> pc = ProductCatalog().get_products_for_test()  # create get test products
+>>> pc = get_products_for_test()  # create get test products
 >>> pc                         #
 [<Product: id=1, desc=item1, price=UAH 100.00>,\
  <Product: id=2, desc=item23, price=UAH 600.00>,\
@@ -92,11 +92,12 @@ class ProductCatalog(list):
 
     new_id = property(new_id)
 
-    def get_products_for_test(self):
-        self.clear()
-        self.set_product(ProductDesc(item_id='1', desc='item1', price=100))
-        self.set_product(ProductDesc(item_id='2', desc='item23', price=600))
-        self.set_product(ProductDesc(item_id='3', desc='item4', price=700))
-        self.set_product(ProductDesc(item_id='4', desc='item5', price=300))
-        self.set_product(ProductDesc(item_id='6', desc='item2', price=500))
-        return self
+
+def get_products_for_test():
+    pc = ProductCatalog()
+    pc.set_product(ProductDesc(item_id='1', desc='item1', price=100))
+    pc.set_product(ProductDesc(item_id='2', desc='item23', price=600))
+    pc.set_product(ProductDesc(item_id='3', desc='item4', price=700))
+    pc.set_product(ProductDesc(item_id='4', desc='item5', price=300))
+    pc.set_product(ProductDesc(item_id='6', desc='item2', price=500))
+    return pc
