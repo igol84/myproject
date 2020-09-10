@@ -21,20 +21,20 @@ class Sale:
 '06/06/2020, 12:19:55'
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
-<SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>>
+ <SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>>
 >>> sale.set_line_item(items[0])                                          # Add product to sale
 >>> sale.set_line_item(items[2])
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
-<SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
-<SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>
-<SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
+ <SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
+ <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>
+ <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
 >>> sale.set_line_item(items[0], 2)                                          # Add same product to sale
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
-<SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
-<SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>
-<SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
+ <SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
+ <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>
+ <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
 >>> sale['4']                                                    # get line item by product id "4"
 <SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
 >>> sale.completed()                                                                  # completed
@@ -56,11 +56,11 @@ False
 >>> sale.unset_line_item_by_pr_id('6')                           # unset sale line pr id ='2' items 1-1=0 -> del
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
-<SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>>
+ <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>>
 >>> sale.set_line_item_by_product_id('2', 2)                           # unset sale line pr id ='2' items 1-1=0 -> del
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
-<SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>>
+ <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>>
 
     """
 
@@ -77,7 +77,7 @@ False
     line_items = property(get_list_sli)
 
     @contract
-    def set_line_item(self, item: Item, qty: "int, >0" = 1) -> None:  # add new line items
+    def set_line_item(self, item: "isinstance(Item)", qty: "int, >0" = 1) -> None:  # add new line items
         if not self.is_item_already_set(item):  # is a new product in line items
             self._list_sli.append(SaleLineItem(item, qty))
         else:  # a same product in line items
@@ -92,7 +92,7 @@ False
             pass  # release after create class Store with attribute items
 
     @contract
-    def is_item_already_set(self, item: Item) -> bool:
+    def is_item_already_set(self, item: "isinstance(Item)") -> bool:
         return item.product in self
 
     @contract
@@ -145,7 +145,7 @@ False
         return False
 
     def __repr__(self) -> str:
-        sale_line_items = '\n' + '\n'.join([str(sli) for sli in self._list_sli])
+        sale_line_items = '\n ' + '\n '.join([str(sli) for sli in self._list_sli])
         completed = 'completed' if self._is_complete else 'not completed'
         time = self._time.strftime("%m/%d/%Y, %H:%M:%S")
         return f"<{self.__class__.__name__}: time: {time}, {completed}, line items:{sale_line_items}>"
@@ -158,19 +158,3 @@ False
 
     def __contains__(self, product) -> bool:  # Does Sale contain this product in line items?
         return self.is_product_in_sale(product)
-
-def get_sale_for_test():
-    items = get_items_for_test()
-# [<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
-#  <Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
-#  <Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>]
-    sale = Sale()                                                    # Create sale
-    sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')    # set time
-    sale.set_line_item(items[1])                                          # Add product to sale
-    sale.set_line_item(items[0], 2)
-    sale.set_line_item(items[2])
-    # <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
-    # <SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
-    # <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>
-    # <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
-    return sale
