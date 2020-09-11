@@ -78,7 +78,6 @@ class ProductCatalog(list):
     def __delitem__(self, key):
         self.unset_product_by_pr_id(key)
 
-
     def __getitem__(self, key):
         return self.get_product_by_id(key)
 

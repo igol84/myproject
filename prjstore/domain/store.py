@@ -47,8 +47,7 @@ class Store:
         for item in self._items:
             if item.product.id == pr_id:
                 return item
-        else:
-            raise IndexError(f"Invalid product id: {pr_id}")
+        raise IndexError(f"Invalid product id: {pr_id}")
 
     @contract
     def search(self, desc: "None | str" = None) -> list:

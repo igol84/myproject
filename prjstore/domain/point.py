@@ -67,7 +67,6 @@ class Point:
     def set_items_on_sale(self, item: "isinstance(Item)", qty: "int, >0" = 1) -> None:
         self._sale.set_line_item(item, qty)
 
-
     @contract
     def set_items_on_sale_by_pr_id(self, pr_id: str, qty: "int, >0" = 1, items: "None | list" = None) -> None:
         self._sale.set_line_item_by_product_id(pr_id, qty, items)

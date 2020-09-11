@@ -46,9 +46,7 @@ class SaleLineItem:
 
     @contract
     def set_qty(self, qty: 'int, >0') -> None:
-        if self._item.qty >= qty:
-            self._qty = qty
-        else:
-            raise ValueError(f'sly.qty({qty}) should not be more than item.qty({self._item.qty})!')
+        assert self._item.qty >= qty, f'sly.qty({qty}) should not be more than item.qty({self._item.qty})!'
+        self._qty = qty
 
     qty = property(get_qty, set_qty)
