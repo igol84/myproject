@@ -46,13 +46,13 @@ class ProductCatalog(list):
  <Product: id=7, desc=item, price=UAH 0.00>,\
  <Product: id=8, desc=item12, price=UAH 300.00>, \
 <Product: id=9, desc=prod, price=UAH 500.00>]
->>> pc.unset_product_by_pr_id('3')
+>>> pc.unset_product_by_pr_id('3')                       # del product by product id "7"
+>>> del pc['7']
 >>> pc                                                   # get catalog
 [<Product: id=1, desc=item1, price=UAH 100.00>,\
  <Product: id=2, desc=item23, price=UAH 600.00>,\
  <Product: id=4, desc=item5, price=UAH 300.00>,\
  <Product: id=6, desc=item2, price=UAH 500.00>,\
- <Product: id=7, desc=item, price=UAH 0.00>,\
  <Product: id=8, desc=item12, price=UAH 300.00>, \
 <Product: id=9, desc=prod, price=UAH 500.00>]
 >>> pc.search(desc='item2')                               # search products by name containing "item"
@@ -72,6 +72,9 @@ class ProductCatalog(list):
     @contract
     def unset_product_by_pr_id(self, pr_id: "str") -> None:
         self.remove(self[pr_id])
+
+    def __delitem__(self, key):
+        self.unset_product_by_pr_id(key)
 
     @contract
     def __setitem__(self, key: "str", value: "isinstance(ProductDesc)"):
