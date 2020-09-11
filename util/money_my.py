@@ -49,6 +49,9 @@ UAH 1,845.85
 >>> money_UAH = MoneyMy.get_converted_money(money_CNY, currency_to='UAH')     # CNY -> UAH
 >>> print(money_UAH.format_my())
 1,845.85₴
+>>> money_UAH = MoneyMy.get_converted_money(money_UAH, currency_to='UAH')     # UAH -> UAH
+>>> print(money_UAH.format_my())
+1,845.85₴
 
     """
     currencies = Currencies().get_currencies_for_test()  # currency : rate for 1 USD {'USD': 1, 'UAH': 27.5}
@@ -59,14 +62,13 @@ UAH 1,845.85
         assert currency in MoneyMy.currencies, f"'{self.__class__.__name__}' has no currency '{currency}'"
         Money.__init__(self, amount=amount, currency=currency)
 
-    def __getattr__(self, item):
+    def __getattr__(self, currency):
         """For get money in .USD or .UAH"""
-        assert item in MoneyMy.currencies, f"'{self.__class__.__name__}' object has no attribute '{item}'"
-        get_currency = item
-        if get_currency == self.currency:
+        assert currency in MoneyMy.currencies, f"'{self.__class__.__name__}' has no currency '{currency}'"
+        if currency == self.currency:
             return self
         else:
-            return MoneyMy.get_converted_money(self, get_currency)
+            return MoneyMy.get_converted_money(self, currency)
 
     def format_my(self):
         return f'{self.amount:,}{self.currencies[self.currency].sign}'

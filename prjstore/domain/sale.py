@@ -58,10 +58,13 @@ False
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>>
->>> sale.set_line_item_by_product_id('2', 2)                           # set sale line pr id ='2' items 1+2=3 -> del
+>>> sale.set_line_item_by_product_id('2', 2, items)        # set sale line pr id ='2' items 1+2=3 -> del
+>>> sale.set_line_item_by_product_id('6', 2, items)
+>>> sale.set_line_item_by_product_id('66', 2, items)
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>>
+ <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>
+ <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=2>>
 
     """
 
@@ -85,9 +88,9 @@ False
         else:  # a same product in line items
             self[item.product.id].qty += qty
 
-    @contract
-    def set_line_item_by_product_id(self, pr_id: "str", qty: "int, >0" = 1,
-                                    items: "None | list" = None) -> None:  # add new line items by product id
+    @contract(pr_id='str', qty='int, >0', items='None | list')
+    def set_line_item_by_product_id(
+            self, pr_id, qty=1, items=None) -> None:  # add new line items by product id
         try:
             if self.get_line_item_by_product_id(pr_id):  # try to get line items by product id
                 self[pr_id].qty += qty
@@ -97,7 +100,7 @@ False
                     if isinstance(item, Item) and item.product.id == pr_id:
                         self.set_line_item(item, qty)
                         return None
-                raise IndexError(f"Invalid product id: {pr_id}")
+            raise IndexError(f"Invalid product id: {pr_id}")
 
     @contract
     def is_item_already_set(self, item: "isinstance(Item)") -> bool:
