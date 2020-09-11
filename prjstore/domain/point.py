@@ -1,5 +1,6 @@
 import datetime
 from contracts import contract
+
 from sale import Sale, Item, get_items_for_test
 
 
@@ -22,7 +23,7 @@ class Point:
 >>> point.end_sale_items()
 >>> point.make_new_sale()
 >>> point.sale.time = datetime.datetime.strptime('11/7/20, 09:10:45', '%m/%d/%y, %H:%M:%S')
->>> point.set_items_on_sale(items[0], 2)
+>>> point.set_items_on_sale_by_pr_id('2', 2, items)
 >>> point
 <Point: desc: Магазин 2-й этаж, current sale:
 <Sale: time: 11/07/2020, 09:10:45, not completed, line items:
@@ -69,6 +70,10 @@ class Point:
     @contract
     def set_items_by_product_id_on_sale(self, pr_id: "str", qty: "int, >0" = 1) -> None:
         self._sale.set_line_item_by_product_id(pr_id, qty)
+
+    @contract
+    def set_items_on_sale_by_pr_id(self, pr_id: str, qty: "int, >0" = 1, items: "None | list" = None) -> None:
+        self._sale.set_line_item_by_product_id(pr_id, qty, items)
 
     @contract
     def unset_items_on_sale_by_pr_id(self, pr_id: str, qty: "int, >0" = 1) -> None:

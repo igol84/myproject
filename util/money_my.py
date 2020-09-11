@@ -1,6 +1,7 @@
 from contracts import contract
 from money import Money  # pip install money  https://github.com/carlospalol/money
 from decimal import Decimal
+
 from currency import Currencies
 
 

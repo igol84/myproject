@@ -1,5 +1,6 @@
-from product_catalog import ProductDesc, get_products_for_test
 from contracts import contract
+
+from product_catalog import ProductDesc, get_products_for_test
 
 
 class Item:

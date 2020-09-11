@@ -1,4 +1,5 @@
 from contracts import contract
+
 from item import Item, get_items_for_test
 
 

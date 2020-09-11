@@ -1,9 +1,10 @@
 from contracts import contract
+import datetime
+import locale
+
 from item import Item, get_items_for_test
 from sale_line_item import SaleLineItem
 from product_catalog import ProductDesc
-import datetime
-import locale
 
 locale.setlocale(locale.LC_TIME, 'ru_RU')
 
@@ -53,23 +54,24 @@ False
 >>> sale.line_items
 [<SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>,\
  <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>]
->>> sale.unset_line_item_by_pr_id('6')                           # unset sale line pr id ='2' items 1-1=0 -> del
+>>> sale.unset_line_item_by_pr_id('6')                           # unset sale line pr id ='6' items 1-1=0 -> del
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>>
->>> sale.set_line_item_by_product_id('2', 2)                           # unset sale line pr id ='2' items 1-1=0 -> del
+>>> sale.set_line_item_by_product_id('2', 2)                           # set sale line pr id ='2' items 1+2=3 -> del
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>>
 
     """
 
-    def __init__(self, pr=None, gty=1) -> None:
+    @contract
+    def __init__(self, item: "None | isinstance(Item)" = None, gty: "int, >0" = 1) -> None:
         self._list_sli = []
         self._is_complete = False
         self._time = datetime.datetime.now()
-        if pr:
-            self.set_line_item(pr, gty)
+        if item:
+            self.set_line_item(item, gty)
 
     def get_list_sli(self):
         return self._list_sli
@@ -84,12 +86,19 @@ False
             self[item.product.id].qty += qty
 
     @contract
-    def set_line_item_by_product_id(self, pr_id: "str", qty: "int, >0" = 1) -> None:  # add new line items by product id
+    def set_line_item_by_product_id(self, pr_id: "str", qty: "int, >0" = 1,
+                                    items: "None | list" = None) -> None:  # add new line items by product id
         try:
             if self.get_line_item_by_product_id(pr_id):  # try to get line items by product id
                 self[pr_id].qty += qty
-        except IndexError:  # is a new product in line items
-            pass  # release after create class Store with attribute items
+        except IndexError:  # is a new product in line items, must use items list
+            if items:
+                for item in items:
+                    if isinstance(item, Item) and item.product.id == pr_id:
+                        self.set_line_item(item, qty)
+                        break
+                else:
+                    raise IndexError(f"Invalid product id: {pr_id}")
 
     @contract
     def is_item_already_set(self, item: "isinstance(Item)") -> bool:
