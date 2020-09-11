@@ -30,6 +30,8 @@ class ProductCatalog(list):
 <Product: id=8, desc=item12, price=UAH 300.00>]
 >>> pc['2']                                              # get product by id='2'
 <Product: id=2, desc=item23, price=UAH 600.00>
+>>> pc.get_product_by_id('3')                            # get product by id='3'
+<Product: id=3, desc=item4, price=UAH 700.00>
 >>> f_products = []
 >>> for pr in pc:                               # get products, where price > 500 UAH
 ...     if pr.price.UAH.amount > 500 :
@@ -76,9 +78,6 @@ class ProductCatalog(list):
     def __delitem__(self, key):
         self.unset_product_by_pr_id(key)
 
-    @contract
-    def __setitem__(self, key: "str", value: "isinstance(ProductDesc)"):
-        self.set_product(value)
 
     def __getitem__(self, key):
         return self.get_product_by_id(key)

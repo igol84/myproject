@@ -19,6 +19,9 @@ class Currencies(dict):
 True
 >>> currencies['USD']
 <Currency USD rate 1 $>
+>>> currencies['UAH']=Currency(code='UAH', rate=25.5, sign='₴')
+>>> currencies['UAH']
+<Currency UAH rate 25.5 ₴>
     """
 
     def __init__(self):

@@ -96,9 +96,8 @@ False
                 for item in items:
                     if isinstance(item, Item) and item.product.id == pr_id:
                         self.set_line_item(item, qty)
-                        break
-                else:
-                    raise IndexError(f"Invalid product id: {pr_id}")
+                        return None
+                raise IndexError(f"Invalid product id: {pr_id}")
 
     @contract
     def is_item_already_set(self, item: "isinstance(Item)") -> bool:
@@ -114,13 +113,12 @@ False
     @contract
     def unset_line_item_by_pr_id(self, pr_id: str, qty: "int, >0" = 1) -> None:  # unset line items
         sli = self.get_line_item_by_product_id(pr_id)
-        if sli and qty <= sli.qty:  # a same product in line items
-            if qty < sli.qty:
-                self[pr_id].qty -= qty
-            elif qty == sli.qty:
-                del self[pr_id]
-        else:
-            raise ValueError(f'quantity({qty}) should not be more than item.qty({self[pr_id].qty})!')
+        assert sli and qty <= sli.qty, f"quantity({qty}) should not be more than item.qty({self[pr_id].qty})!"
+        # a same product in line items
+        if qty < sli.qty:
+            self[pr_id].qty -= qty
+        elif qty == sli.qty:
+            del self[pr_id]
 
     @contract
     def del_line_item_by_product_id(self, pr_id: str) -> None:

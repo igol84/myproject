@@ -15,7 +15,7 @@ class Point:
 >>> point.desc = 'Магазин 2-й этаж'
 >>> point.desc
 'Магазин 2-й этаж'
->>> point.make_new_sale()                                          # make new empty sale
+>>> point.make_new_sale(Sale())                                          # make new empty sale
 >>> point.sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
 >>> point.set_items_on_sale(items[1])                              # set items on sale
 >>> point.set_items_on_sale(items[0], 2)
@@ -67,9 +67,6 @@ class Point:
     def set_items_on_sale(self, item: "isinstance(Item)", qty: "int, >0" = 1) -> None:
         self._sale.set_line_item(item, qty)
 
-    @contract
-    def set_items_by_product_id_on_sale(self, pr_id: "str", qty: "int, >0" = 1) -> None:
-        self._sale.set_line_item_by_product_id(pr_id, qty)
 
     @contract
     def set_items_on_sale_by_pr_id(self, pr_id: str, qty: "int, >0" = 1, items: "None | list" = None) -> None:
