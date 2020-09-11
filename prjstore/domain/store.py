@@ -50,7 +50,8 @@ class Store:
         else:
             raise IndexError(f"Invalid product id: {pr_id}")
 
-    def search(self, desc=None) -> list:
+    @contract
+    def search(self, desc: "None | str" = None) -> list:
         items = []
         if desc:
             for item in self._items:
