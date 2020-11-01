@@ -1,6 +1,6 @@
 from contracts import contract
 
-from product_catalog import ProductDesc, get_products_for_test
+from prjstore.domain.product_catalog import ProductDesc, get_products_for_test
 
 
 class Item:

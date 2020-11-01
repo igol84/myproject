@@ -1,6 +1,6 @@
 from contracts import contract
 
-from product_desc import ProductDesc
+from prjstore.domain.product_desc import ProductDesc
 
 
 class ProductCatalog(list):
