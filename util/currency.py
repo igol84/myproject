@@ -1,4 +1,4 @@
-from contracts import contract
+from contracts import contract, new_contract
 
 
 class Currencies(dict):
@@ -19,7 +19,7 @@ class Currencies(dict):
 True
 >>> currencies['USD']
 <Currency USD rate 1 $>
->>> currencies['UAH']=Currency(code='UAH', rate=25.5, sign='₴')
+>>> currencies['UAH'] = Currency(code='UAH', rate=25.5, sign='₴')
 >>> currencies['UAH']
 <Currency UAH rate 25.5 ₴>
     """
@@ -47,11 +47,47 @@ class Currency:
 
     """
 
-    @contract
-    def __init__(self, code: 'str', rate: "float|int, >0", sign=''):
-        self.code = code
-        self.rate = rate
-        self.sign = sign
+    new_contract('code', lambda s: isinstance(s, str) and len(s) == 3)
+    new_contract('rate', 'float|int, >0')
+    new_contract('sign', lambda s: isinstance(s, str) and len(s) < 2)
+
+    @contract(code='code', rate='rate', sign='sign')
+    def __init__(self, code, rate, sign=''):
+        """
+
+        :param code: str, len(code) == 3 ("UAH", "USD" ...)
+        :param rate: int, float, >0  (27, 27.5)
+        :param sign: str ('¥', '₴')
+        """
+        self.__code = code.upper()
+        self.__rate = rate
+        self.__sign = sign
+    @contract(code='code')
+    def set_code(self, code):
+        self.__code = code
+
+    def get_code(self):
+        return self.__code
+
+    code = property(get_code, set_code)
+
+    def get_rate(self):
+        return self.__rate
+
+    @contract(rate='rate')
+    def set_rate(self, rate):
+        self.__rate = rate
+
+    rate = property(get_rate, set_rate)
+
+    def get_sign(self):
+        return self.__sign
+
+    @contract(sign='sign')
+    def set_sign(self, sign):
+        self.__sign = sign
+
+    sign = property(get_sign, set_sign)
 
     def __repr__(self):
         return f'<{self.__class__.__name__} {self.code} rate {self.rate} {self.sign}>'
