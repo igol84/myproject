@@ -24,10 +24,9 @@ class Test_01_InitCurrency(unittest.TestCase):
 
 class TestCurrencies(unittest.TestCase):
     def setUp(self):
-        currs = {}
-        currs['UAH'] = Currency(code='UAH', rate=27.5, sign='₴')
-        currs['CNY'] = Currency(code='CNY', rate=6.2, sign='¥')
-        self.currencies = Currencies(currs)
+        currencies = {'UAH': Currency(code='UAH', rate=27.5, sign='₴'),
+                      'CNY': Currency(code='CNY', rate=6.2, sign='¥')}
+        self.currencies = Currencies(currencies)
 
 
 class Test_02_InitCurrencies(TestCurrencies):
@@ -59,7 +58,3 @@ class Test_02_InitCurrencies(TestCurrencies):
         self.currencies['UAH'] = Currency(code='UAH', rate=25.5, sign='₴')
         self.assertEqual(str(self.currencies['UAH']), "<Currency UAH rate 25.5 ₴>")
         self.assertRaises(ContractNotRespected, self.currencies.set_currency, 'UAH')
-
-
-
-

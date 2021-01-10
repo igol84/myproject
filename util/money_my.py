@@ -11,54 +11,31 @@ class MoneyMy(Money):
 >>>
 >>> print(money_UAH)                                           # Get price
 UAH 1,750.50
-
 >>> print(money_UAH.amount)                                    # Get price amount
 1750.5
 >>> print(money_UAH.currency)                                  # Get price currency
 UAH
 >>> print(money_UAH.USD)                                       # Get price in USD
 USD 63.65
->>> print(money_UAH.format('uk_UA'))                           # Get format price
+>>> print(money_UAH.format('uk_UA'))                           # Get format price - 1 750,50 ₴
 1 750,50 ₴
-
->>> money_USD = MoneyMy.get_converted_money(money_UAH, currency_to='USD')     # New converted price+
+>>> print(money_UAH.format_my())                           # Get format price
+1,750.5₴
+>>> money_USD = MoneyMy.get_converted_money(money_UAH, currency_to='USD')     # New converted price
 >>> print(money_USD)
 USD 63.65
->>> print(money_USD.UAH)                               # Get price in UAH
-UAH 1,750.38
->>> print(money_USD.format('en_US'))                   # Get format price
-$63.65
->>> print(money_USD.format_my())                       # Get format price
-63.65$
-
->>> MoneyMy.currencies['UAH'].rate=35                      # Edit currency
->>> money_UAH = MoneyMy.get_converted_money(money_USD, currency_to='UAH')     # Reverse
->>> print(money_UAH)
-UAH 2,227.75
->>> print(money_UAH.USD)                                       # Get price in USD
-USD 63.65
->>> MoneyMy.currencies['UAH'].rate=29
->>> print(money_USD.UAH)                                       # Get price in UAH
-UAH 1,845.85
->>> print(money_UAH.format_my())                               # Get price in UAH in formatting string
-2,227.75₴
-
->>> money_CNY = MoneyMy.get_converted_money(money_USD, currency_to='CNY')     # USD -> CNY
->>> print(money_CNY.format_my())
-394.63¥
->>> money_UAH = MoneyMy.get_converted_money(money_CNY, currency_to='UAH')     # CNY -> UAH
->>> print(money_UAH.format_my())
-1,845.85₴
->>> money_UAH = MoneyMy.get_converted_money(money_UAH, currency_to='UAH')     # UAH -> UAH
->>> print(money_UAH.format_my())
-1,845.85₴
 
     """
-    currencies = Currencies().get_currencies_for_test()  # currency : rate for 1 USD {'USD': 1, 'UAH': 27.5}
+    # TODO: need to override this attribute
+    currencies = Currencies().get_currencies_for_test()
     default_currency = 'UAH'
 
-    @contract
-    def __init__(self, amount='0', currency: "str" = default_currency):
+    @contract(currency='str[3]')
+    def __init__(self, amount='0', currency=default_currency):
+        """
+        :param amount: int, float, Decimal
+        :param currency: str[3] ("UAH", "USD" ...)
+        """
         assert currency in MoneyMy.currencies, f"'{self.__class__.__name__}' has no currency '{currency}'"
         Money.__init__(self, amount=amount, currency=currency)
 

@@ -1,12 +1,18 @@
 from contracts import contract, new_contract
 
 
-
-
-
-
 class Currency:
-
+    """
+>>> UAH = Currency(code='UAH', rate=27.5, sign='₴')
+>>> UAH
+<Currency UAH rate 27.5 ₴>
+>>> UAH.code
+'UAH'
+>>> UAH.rate
+27.5
+>>> UAH.sign
+'₴'
+    """
     new_contract('code', 'str[3]')
     new_contract('rate', 'number, >0')
     new_contract('sign', 'str[<2]')
@@ -14,13 +20,14 @@ class Currency:
     @contract(code='code', rate='rate', sign='sign')
     def __init__(self, code, rate, sign=''):
         """
-        :param code: str, len(3)("UAH", "USD" ...)
+        :param code: str[3] ("UAH", "USD" ...)
         :param rate: int, float, >0  (27, 27.5)
         :param sign: str ('¥', '₴')
         """
         self.__code = code.upper()
         self.__rate = rate
         self.__sign = sign
+
     @contract(code='code')
     def set_code(self, code):
         self.__code = code
@@ -51,17 +58,9 @@ class Currency:
     def __repr__(self):
         return f'<{self.__class__.__name__} {self.code} rate {self.rate} {self.sign}>'
 
+
 class Currencies(dict):
     """
->>> UAH = Currency(code='UAH', rate=27.5, sign='₴')
->>> UAH
-<Currency UAH rate 27.5 ₴>
->>> UAH.code
-'UAH'
->>> UAH.rate
-27.5
->>> UAH.sign
-'₴'
 >>> currencies = Currencies().get_currencies_for_test()
 >>> currencies
 {'USD': <Currency USD rate 1 $>, 'UAH': <Currency UAH rate 27.5 ₴>, 'CNY': <Currency CNY rate 6.2 ¥>}
@@ -75,9 +74,8 @@ True
     """
 
     @contract(currencies='None | dict(str: $Currency)')
-    def __init__(self, currencies = None):
+    def __init__(self, currencies=None):
         """
-
         :param currencies: dict(: Currency)
         """
         super().__init__()
