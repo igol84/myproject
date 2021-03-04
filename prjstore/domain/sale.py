@@ -68,7 +68,7 @@ False
     """
 
     @contract
-    def __init__(self, item: "None | isinstance(Item)" = None, gty: "int, >0" = 1) -> None:
+    def __init__(self, item: "None | isinstance(Item)" = None, gty: "None | int, >0" = 1) -> None:
         self._list_sli = []
         self._is_complete = False
         self._time = datetime.datetime.now()

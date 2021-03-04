@@ -4,7 +4,7 @@ from util.currency import Currency, Currencies
 from util.money_my import MoneyMy
 
 
-class Test_01_InitMyMony(unittest.TestCase):
+class Test_01_InitMyMoney(unittest.TestCase):
     def setUp(self):
         currencies = {'UAH': Currency(code='UAH', rate=27.5, sign='₴'),
                       'CNY': Currency(code='CNY', rate=6.2, sign='¥')}

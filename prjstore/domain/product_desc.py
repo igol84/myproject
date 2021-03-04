@@ -1,4 +1,4 @@
-from contracts import contract
+from contracts import contract, new_contract
 from abc import ABCMeta
 from util.money_my import MoneyMy
 
@@ -29,6 +29,14 @@ USD 27.29
 >>> pr
 <Product: id=2, desc=item2, price=USD 300.00>
 >>> pr.edit(currency='UAH')                               # Edit currency
+>>> shoes = Shoes(item_id='6', desc='nike air force', price=900, size=44)# Create product
+>>> shoes                                                    # Get product
+<Shoes: id=6, desc=nike air force, price=UAH 900.00, size=44.0>
+>>> shoes.size                                                 # Get id
+44.0
+>>> pr.size = '43.2'                                     # Change price
+>>> print(pr.size)
+43.2
     """
     _default_curr = MoneyMy.default_currency
 
@@ -74,3 +82,28 @@ USD 27.29
             self.set_price(price, currency)
         elif currency:
             self.set_price(self._price.amount, currency)
+
+
+class Shoes(ProductDesc):
+    _default_curr = MoneyMy.default_currency
+
+    new_contract('valid_size', lambda size: float(size) and 0 < float(size) < 60)
+
+    @contract
+    def __init__(self, item_id: 'str', desc: 'str' = 'item', price=0, size: 'valid_size, *' = 40,
+                 currency: 'str' = _default_curr):
+        super().__init__(item_id, desc, price, currency)
+        self._size = float(size)
+
+    def get_size(self) -> float:
+        return self._size
+
+
+    @contract
+    def set_size(self, size: 'valid_size, *') -> None:
+        self._size = float(size)
+
+    size = property(get_size, set_size)
+
+    def __repr__(self) -> str:
+        return f'<Shoes: id={self._item_id}, desc={self._desc}, price={self._price}, size={self._size}>'
