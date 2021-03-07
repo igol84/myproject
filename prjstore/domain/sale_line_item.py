@@ -24,8 +24,8 @@ class SaleLineItem:
 
     """
 
-    @contract
-    def __init__(self, item: "isinstance(Item)", qty: "int" = 1) -> None:
+    @contract(item=Item, qty=int)
+    def __init__(self, item, qty=1) -> None:
         self._item = item
         self._qty = qty
 
@@ -35,8 +35,8 @@ class SaleLineItem:
     def get_item(self) -> Item:
         return self._item
 
-    @contract
-    def set_item(self, pr: "isinstance(Item)") -> None:
+    @contract(pr=Item)
+    def set_item(self, pr) -> None:
         self._item = pr
 
     item = property(get_item, set_item)
@@ -44,8 +44,8 @@ class SaleLineItem:
     def get_qty(self) -> int:
         return self._qty
 
-    @contract
-    def set_qty(self, qty: 'int, >0') -> None:
+    @contract(qty='int, >0')
+    def set_qty(self, qty) -> None:
         assert self._item.qty >= qty, f'sly.qty({qty}) should not be more than item.qty({self._item.qty})!'
         self._qty = qty
 

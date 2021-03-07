@@ -1,4 +1,4 @@
-from contracts import contract, new_contract
+from contracts import contract
 from abc import ABCMeta
 from util.money_my import MoneyMy
 
@@ -8,8 +8,8 @@ class AbstractProduct(metaclass=ABCMeta):
     """
     _default_curr = MoneyMy.default_currency
 
-    @contract
-    def __init__(self, item_id: 'str', desc: 'str' = 'item', price=0, currency: 'str' = _default_curr):
+    @contract(item_id='str', desc='str', currency='str')
+    def __init__(self, item_id, desc='item', price=0, currency=_default_curr):
         self._item_id = item_id
         self._desc = desc
         self._price = MoneyMy(amount=str(price), currency=currency)
@@ -34,8 +34,8 @@ class AbstractProduct(metaclass=ABCMeta):
     def get_desc(self) -> str:
         return self._desc
 
-    @contract
-    def set_desc(self, desc: 'str') -> None:
+    @contract(desc='str')
+    def set_desc(self, desc) -> None:
         self._desc = desc
 
     desc = property(get_desc, set_desc)

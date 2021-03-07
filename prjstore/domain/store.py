@@ -34,8 +34,8 @@ class Store:
     def get_items(self):
         return self._items
 
-    @contract
-    def set_item(self, item: "isinstance(Item)"):
+    @contract(item=Item)
+    def set_item(self, item):
         self._items.append(item)
 
     items = property(get_items, set_item)
@@ -43,15 +43,15 @@ class Store:
     def get_items(self):
         pass
 
-    @contract
-    def get_item_by_pr_id(self, pr_id: "str"):
+    @contract(pr_id=str)
+    def get_item_by_pr_id(self, pr_id):
         for item in self._items:
             if item.product.id == pr_id:
                 return item
         raise IndexError(f"Invalid product id: {pr_id}")
 
-    @contract
-    def search(self, desc: "None | str" = None) -> list:
+    @contract(desc="None | str")
+    def search(self, desc=None) -> list:
         items = []
         if desc:
             for item in self._items:

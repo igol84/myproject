@@ -1,8 +1,8 @@
 from contracts import contract
 
 from prjstore.domain.product_catalog import get_products_for_test
-from prjstore.domain.products import SimpleProduct, Shoes
 from prjstore.domain.abstract_product import AbstractProduct
+
 
 class Item:
     """
@@ -29,8 +29,8 @@ class Item:
 2
     """
 
-    @contract
-    def __init__(self, pr: "isinstance(AbstractProduct)", qty: 'int, >0'):
+    @contract(pr=AbstractProduct, qty='int, >0')
+    def __init__(self, pr, qty):
         self._product = pr
         self._qty = qty
 
@@ -40,8 +40,8 @@ class Item:
     def get_product(self) -> AbstractProduct:
         return self._product
 
-    @contract
-    def set_product(self, pr: "isinstance(AbstractProduct)") -> None:
+    @contract(pr=AbstractProduct)
+    def set_product(self, pr) -> None:
         self._product = pr
 
     product = property(get_product, set_product)

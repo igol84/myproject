@@ -80,16 +80,15 @@ False
 
     line_items = property(get_list_sli)
 
-    @contract
-    def set_line_item(self, item: "isinstance(Item)", qty: "int, >0" = 1) -> None:  # add new line items
+    @contract(item=Item, qty="int, >0")
+    def set_line_item(self, item, qty=1) -> None:  # add new line items
         if not self.is_item_already_set(item):  # is a new product in line items
             self._list_sli.append(SaleLineItem(item, qty))
         else:  # a same product in line items
             self[item.product.id].qty += qty
 
-    @contract(pr_id='str', qty='int, >0', items='None | list')
-    def set_line_item_by_product_id(
-            self, pr_id, qty=1, items=None) -> None:  # add new line items by product id
+    @contract(pr_id=str, qty='int, >0', items='None | list')
+    def set_line_item_by_product_id(self, pr_id, qty=1, items=None) -> None:  # add new line items by product id
         try:
             if self.get_line_item_by_product_id(pr_id):  # try to get line items by product id
                 self[pr_id].qty += qty
@@ -101,19 +100,19 @@ False
                         return None
             raise IndexError(f"Invalid product id: {pr_id}")
 
-    @contract
-    def is_item_already_set(self, item: "isinstance(Item)") -> bool:
+    @contract(item=Item)
+    def is_item_already_set(self, item) -> bool:
         return item.product in self
 
-    @contract
-    def get_line_item_by_product_id(self, pr_id: "str") -> SaleLineItem:
+    @contract(pr_id=str)
+    def get_line_item_by_product_id(self, pr_id) -> SaleLineItem:
         for sli in self._list_sli:
             if sli.item.product.id == pr_id:
                 return sli
         raise IndexError(f"Invalid product id: {pr_id}")
 
-    @contract
-    def unset_line_item_by_pr_id(self, pr_id: str, qty: "int, >0" = 1) -> None:  # unset line items
+    @contract(pr_id=str, qty='int, >0')
+    def unset_line_item_by_pr_id(self, pr_id, qty=1) -> None:  # unset line items
         sli = self.get_line_item_by_product_id(pr_id)
         assert sli and qty <= sli.qty, f"quantity({qty}) should not be more than item.qty({self[pr_id].qty})!"
         # a same product in line items
@@ -122,8 +121,8 @@ False
         elif qty == sli.qty:
             del self[pr_id]
 
-    @contract
-    def del_line_item_by_product_id(self, pr_id: str) -> None:
+    @contract(pr_id=str)
+    def del_line_item_by_product_id(self, pr_id) -> None:
         for key, sli in enumerate(self._list_sli):
             if sli.item.product.id == pr_id:
                 del self._list_sli[key]
@@ -140,14 +139,14 @@ False
     def get_time(self) -> datetime:
         return self._time
 
-    @contract
+    @contract(time=datetime.datetime)
     def set_time(self, time) -> None:
         self._time = time
 
     time = property(get_time, set_time)
 
-    @contract
-    def is_product_in_sale(self, product: "isinstance(SimpleProduct)") -> bool:
+    @contract(product=SimpleProduct)
+    def is_product_in_sale(self, product) -> bool:
         for sli in self._list_sli:
             if product == sli.item.product:
                 return True

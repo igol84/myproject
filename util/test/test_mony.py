@@ -2,14 +2,15 @@ import unittest
 from contracts import ContractNotRespected
 from util.currency import Currency, Currencies
 from util.money_my import MoneyMy
+from util.test.test_currecy import TestCurrencies
 
 
-class Test_01_InitMyMoney(unittest.TestCase):
+class Test_MyMoney(unittest.TestCase):
     def setUp(self):
-        currencies = {'UAH': Currency(code='UAH', rate=27.5, sign='₴'),
-                      'CNY': Currency(code='CNY', rate=6.2, sign='¥')}
-        MoneyMy.currencies = Currencies(currencies)
+        testCurrencies = TestCurrencies()
+        testCurrencies.setUp()
         self.money_UAH = MoneyMy(amount=1750.5, currency='UAH')
+        MoneyMy.currencies = Currencies(testCurrencies.currencies)
 
     def test_01_initial(self):
         money_UAH = self.money_UAH

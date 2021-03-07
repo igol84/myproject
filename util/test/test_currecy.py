@@ -3,18 +3,34 @@ from contracts import ContractNotRespected
 from util.currency import Currency, Currencies
 
 
-class Test_01_InitCurrency(unittest.TestCase):
+class Test_01_Currency(unittest.TestCase):
 
-    def test_initial_01(self):
-        UAH = Currency(code='uah', rate=27.5, sign='₴')
-        self.assertEqual(str(UAH), '<Currency UAH rate 27.5 ₴>')
-        self.assertEqual(UAH.code, 'UAH')
-        self.assertEqual(UAH.rate, 27.5)
-        self.assertEqual(UAH.sign, '₴')
+    def setUp(self):
+        self.UAH = Currency(code='uah', rate=27.5, sign='₴')
 
-    def test_initial_02(self):
-        UAH = Currency(code='UAH', rate=28, sign='₴')
-        self.assertEqual(UAH.rate, 28)
+    def test_01_initial(self):
+        curr = self.UAH
+        self.assertEqual(str(curr), '<Currency UAH rate 27.5 ₴>')
+        self.assertEqual(curr.code, 'UAH')
+        self.assertEqual(curr.rate, 27.5)
+        self.assertEqual(curr.sign, '₴')
+
+    def test_02_edit_code(self):
+        curr = self.UAH
+        curr.code = 'USD'
+        self.assertEqual(str(curr), '<Currency USD rate 27.5 ₴>')
+
+    def test_03_edit_rate(self):
+        curr = self.UAH
+        curr.rate = 28
+        self.assertEqual(str(curr), '<Currency UAH rate 28 ₴>')
+        curr.rate = 28.5
+        self.assertEqual(str(curr), '<Currency UAH rate 28.5 ₴>')
+
+    def test_04_edit_sign(self):
+        curr = self.UAH
+        curr.sign = '¥'
+        self.assertEqual(str(curr), '<Currency UAH rate 27.5 ¥>')
 
     def test_contract_raises(self):
         self.assertRaises(ContractNotRespected, Currency, code='UA', rate=27.5, sign='₴')
@@ -28,8 +44,11 @@ class TestCurrencies(unittest.TestCase):
                       'CNY': Currency(code='CNY', rate=6.2, sign='¥')}
         self.currencies = Currencies(currencies)
 
+    def getCurrencies(self):
+        return self.currencies
 
-class Test_02_InitCurrencies(TestCurrencies):
+
+class Test_02_Currencies(TestCurrencies):
     def test_01_initial(self):
         self.assertEqual(str(self.currencies), "{"
                                                "'USD': <Currency USD rate 1 $>, "
@@ -48,7 +67,7 @@ class Test_02_InitCurrencies(TestCurrencies):
         self.assertEqual(str(self.currencies['EUR']), '<Currency EUR rate 32 €>')
 
     def test_03_del_currency(self):
-        del(self.currencies['CNY'])
+        del (self.currencies['CNY'])
         self.assertEqual(str(self.currencies), "{"
                                                "'USD': <Currency USD rate 1 $>, "
                                                "'UAH': <Currency UAH rate 27.5 ₴>"

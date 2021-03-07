@@ -68,12 +68,12 @@ class ProductCatalog(list):
     def __init__(self):
         super().__init__()
 
-    @contract
-    def set_product(self, pr: "isinstance(AbstractProduct)") -> None:
+    @contract(pr=AbstractProduct)
+    def set_product(self, pr) -> None:
         self.append(pr)
 
-    @contract
-    def unset_product_by_pr_id(self, pr_id: "str") -> None:
+    @contract(pr_id=str)
+    def unset_product_by_pr_id(self, pr_id) -> None:
         self.remove(self[pr_id])
 
     def __delitem__(self, key):
