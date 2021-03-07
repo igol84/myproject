@@ -4,7 +4,7 @@ import locale
 
 from prjstore.domain.item import Item, get_items_for_test
 from prjstore.domain.sale_line_item import SaleLineItem
-from prjstore.domain.product_catalog import ProductDesc
+from prjstore.domain.product_catalog import SimpleProduct
 
 locale.setlocale(locale.LC_TIME, 'ru_RU')
 
@@ -13,31 +13,31 @@ class Sale:
     """
 >>> items = get_items_for_test()                                               # get items
 >>> items
-[<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
- <Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
- <Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>]
+[<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
+ <Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
+ <Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>]
 >>> sale = Sale(items[1])                                                    # Create sale
 >>> sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')    # set time
 >>> sale.time.strftime("%m/%d/%Y, %H:%M:%S")                                            # get time
 '06/06/2020, 12:19:55'
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>>
 >>> sale.set_line_item(items[0])                                          # Add product to sale
 >>> sale.set_line_item(items[2])
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
- <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>
- <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
 >>> sale.set_line_item(items[0], 2)                                          # Add same product to sale
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
- <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>
- <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
 >>> sale['4']                                                    # get line item by product id "4"
-<SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
+<SaleLineItem: item=<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
 >>> sale.completed()                                                                  # completed
 >>> sale.is_complete()
 True
@@ -46,24 +46,24 @@ True
 False
 >>> sale.unset_line_item_by_pr_id('2', 2)                                 # unset sale line pr id ='2'# items 3-2=1
 >>> sale.line_items                                                                   # get sale line items
-[<SaleLineItem: item=<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>,\
- <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>,\
- <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>]
+[<SaleLineItem: item=<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>,\
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>,\
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>]
 
 >>> del sale['4']                                                             # del sale line item by product id='4'
 >>> sale.line_items
-[<SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>,\
- <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>]
+[<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>,\
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>]
 >>> sale.unset_line_item_by_pr_id('6')                           # unset sale line pr id ='6' items 1-1=0 -> del
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>>
 >>> sale.set_line_item_by_product_id('2', 2, items)        # set sale line pr id ='2' items 1+2=3 -> del
 >>> sale.set_line_item_by_product_id('6', 2, items)
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>
- <SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=2>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=2>>
 
     """
 
@@ -147,7 +147,7 @@ False
     time = property(get_time, set_time)
 
     @contract
-    def is_product_in_sale(self, product: "isinstance(ProductDesc)") -> bool:
+    def is_product_in_sale(self, product: "isinstance(SimpleProduct)") -> bool:
         for sli in self._list_sli:
             if product == sli.item.product:
                 return True

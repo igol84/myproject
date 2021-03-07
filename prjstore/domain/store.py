@@ -8,14 +8,14 @@ class Store:
     """
 >>> store = Store(test=True)
 >>> store.items
-[<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
- <Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
- <Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>]
+[<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
+ <Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
+ <Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>]
 >>> store.get_item_by_pr_id('4')
-<Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>
+<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>
 >>> store.search(desc = 'item2')                                    # search items bu product description
-[<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
- <Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>\
+[<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
+ <Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>\
 ]
 
 

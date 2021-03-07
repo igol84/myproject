@@ -1,6 +1,7 @@
 from contracts import contract
 
-from prjstore.domain.product_desc import ProductDesc, Shoes
+from prjstore.domain.products import SimpleProduct, Shoes
+from prjstore.domain.abstract_product import AbstractProduct
 
 
 class ProductCatalog(list):
@@ -8,28 +9,28 @@ class ProductCatalog(list):
 >>> pc = get_products_for_test()  # create get test products
 >>> pc                         #
 [<Shoes: id=1, desc=item1, price=UAH 100.00, size=36.0>,\
- <Product: id=2, desc=item23, price=UAH 600.00>,\
+ <SimpleProduct: id=2, desc=item23, price=UAH 600.00>,\
  <Shoes: id=3, desc=item4, price=UAH 700.00, size=43.3>,\
- <Product: id=4, desc=item5, price=UAH 300.00>,\
- <Product: id=6, desc=item2, price=UAH 500.00>]
+ <SimpleProduct: id=4, desc=item5, price=UAH 300.00>,\
+ <SimpleProduct: id=6, desc=item2, price=UAH 500.00>]
 >>> pc.quantity                                           # count of products
 5
 >>> pc.last_id                                           # get last id
 6
 >>> pc.new_id                                            # get new generated id  "last id + 1"
 '7'
->>> pc.set_product(ProductDesc(item_id=pc.new_id))
+>>> pc.set_product(SimpleProduct(item_id=pc.new_id))
 >>> pc.set_product(Shoes(item_id=pc.new_id, desc='item12', price=300, size=40))
 >>> pc                                                   # get catalog
 [<Shoes: id=1, desc=item1, price=UAH 100.00, size=36.0>,\
- <Product: id=2, desc=item23, price=UAH 600.00>,\
+ <SimpleProduct: id=2, desc=item23, price=UAH 600.00>,\
  <Shoes: id=3, desc=item4, price=UAH 700.00, size=43.3>,\
- <Product: id=4, desc=item5, price=UAH 300.00>,\
- <Product: id=6, desc=item2, price=UAH 500.00>,\
- <Product: id=7, desc=item, price=UAH 0.00>, \
+ <SimpleProduct: id=4, desc=item5, price=UAH 300.00>,\
+ <SimpleProduct: id=6, desc=item2, price=UAH 500.00>,\
+ <SimpleProduct: id=7, desc=item, price=UAH 0.00>, \
 <Shoes: id=8, desc=item12, price=UAH 300.00, size=40.0>]
 >>> pc['2']                                              # get product by id='2'
-<Product: id=2, desc=item23, price=UAH 600.00>
+<SimpleProduct: id=2, desc=item23, price=UAH 600.00>
 >>> pc.get_product_by_id('3')                            # get product by id='3'
 <Shoes: id=3, desc=item4, price=UAH 700.00, size=43.3>
 >>> f_products = []
@@ -38,28 +39,28 @@ class ProductCatalog(list):
 ...         f_products.append((pr.desc, pr.price.USD))
 >>> f_products
 [('item23', USD 21.82), ('item4', USD 25.45)]
->>> pc.set_product(ProductDesc(item_id=pc.new_id, desc='prod', price=500))
+>>> pc.set_product(SimpleProduct(item_id=pc.new_id, desc='prod', price=500))
 >>> pc                                                   # get catalog
 [<Shoes: id=1, desc=item1, price=UAH 100.00, size=36.0>,\
- <Product: id=2, desc=item23, price=UAH 600.00>,\
+ <SimpleProduct: id=2, desc=item23, price=UAH 600.00>,\
  <Shoes: id=3, desc=item4, price=UAH 700.00, size=43.3>,\
- <Product: id=4, desc=item5, price=UAH 300.00>,\
- <Product: id=6, desc=item2, price=UAH 500.00>,\
- <Product: id=7, desc=item, price=UAH 0.00>,\
+ <SimpleProduct: id=4, desc=item5, price=UAH 300.00>,\
+ <SimpleProduct: id=6, desc=item2, price=UAH 500.00>,\
+ <SimpleProduct: id=7, desc=item, price=UAH 0.00>,\
  <Shoes: id=8, desc=item12, price=UAH 300.00, size=40.0>, \
-<Product: id=9, desc=prod, price=UAH 500.00>]
+<SimpleProduct: id=9, desc=prod, price=UAH 500.00>]
 >>> pc.unset_product_by_pr_id('3')                       # del product by product id "7"
 >>> del pc['7']
 >>> pc                                                   # get catalog
 [<Shoes: id=1, desc=item1, price=UAH 100.00, size=36.0>,\
- <Product: id=2, desc=item23, price=UAH 600.00>,\
- <Product: id=4, desc=item5, price=UAH 300.00>,\
- <Product: id=6, desc=item2, price=UAH 500.00>,\
+ <SimpleProduct: id=2, desc=item23, price=UAH 600.00>,\
+ <SimpleProduct: id=4, desc=item5, price=UAH 300.00>,\
+ <SimpleProduct: id=6, desc=item2, price=UAH 500.00>,\
  <Shoes: id=8, desc=item12, price=UAH 300.00, size=40.0>, \
-<Product: id=9, desc=prod, price=UAH 500.00>]
+<SimpleProduct: id=9, desc=prod, price=UAH 500.00>]
 >>> pc.search(desc='item2')                               # search products by name containing "item"
-[<Product: id=2, desc=item23, price=UAH 600.00>, \
-<Product: id=6, desc=item2, price=UAH 500.00>]
+[<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, \
+<SimpleProduct: id=6, desc=item2, price=UAH 500.00>]
 
 
     """
@@ -68,7 +69,7 @@ class ProductCatalog(list):
         super().__init__()
 
     @contract
-    def set_product(self, pr: "isinstance(ProductDesc)") -> None:
+    def set_product(self, pr: "isinstance(AbstractProduct)") -> None:
         self.append(pr)
 
     @contract
@@ -114,8 +115,8 @@ class ProductCatalog(list):
 def get_products_for_test():
     pc = ProductCatalog()
     pc.set_product(Shoes(item_id='1', desc='item1', price=100, size=36))
-    pc.set_product(ProductDesc(item_id='2', desc='item23', price=600))
+    pc.set_product(SimpleProduct(item_id='2', desc='item23', price=600))
     pc.set_product(Shoes(item_id='3', desc='item4', price=700, size=43.3))
-    pc.set_product(ProductDesc(item_id='4', desc='item5', price=300))
-    pc.set_product(ProductDesc(item_id='6', desc='item2', price=500))
+    pc.set_product(SimpleProduct(item_id='4', desc='item5', price=300))
+    pc.set_product(SimpleProduct(item_id='6', desc='item2', price=500))
     return pc

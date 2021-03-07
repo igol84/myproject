@@ -7,20 +7,20 @@ class SaleLineItem:
     """
 >>> items = get_items_for_test()                  # Create new items
 >>> items                                                # get items
-[<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
- <Item: product=<Product: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
- <Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>]
+[<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
+ <Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
+ <Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>]
 >>> sli = SaleLineItem(items[0])           # Create saleLineItem
 >>> sli
-<SaleLineItem: item=<Item: product=<Product: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>
+<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>
 >>> sli.item = items[2]                # set saleLineItem product
 >>> sli.item                                            # get saleLineItem product
-<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>
+<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>
 >>> sli.qty = 2                                            # set saleLineItem quantity
 >>> sli.qty                                                # get saleLineItem quantity
 2
 >>> sli
-<SaleLineItem: item=<Item: product=<Product: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=2>
+<SaleLineItem: item=<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=2>
 
     """
 
