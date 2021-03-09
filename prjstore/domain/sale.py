@@ -13,31 +13,31 @@ class Sale:
     """
 >>> items = get_items_for_test()                                               # get items
 >>> items
-[<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
- <Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
- <Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>]
+[<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,\
+ <Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>,\
+ <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>]
 >>> sale = Sale(items[1])                                                    # Create sale
 >>> sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')    # set time
 >>> sale.time.strftime("%m/%d/%Y, %H:%M:%S")                                            # get time
 '06/06/2020, 12:19:55'
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, qty=1>>
 >>> sale.set_line_item(items[0])                                          # Add product to sale
 >>> sale.set_line_item(items[2])
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, qty=1>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, qty=1>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, qty=1>>
 >>> sale.set_line_item(items[0], 2)                                          # Add same product to sale
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, qty=1>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, qty=3>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, qty=1>>
 >>> sale['4']                                                    # get line item by product id "4"
-<SaleLineItem: item=<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
+<SaleLineItem: item=<Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, qty=1>
 >>> sale.completed()                                                                  # completed
 >>> sale.is_complete()
 True
@@ -46,24 +46,24 @@ True
 False
 >>> sale.unset_line_item_by_pr_id('2', 2)                                 # unset sale line pr id ='2'# items 3-2=1
 >>> sale.line_items                                                                   # get sale line items
-[<SaleLineItem: item=<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>,\
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>,\
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>]
+[<SaleLineItem: item=<Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, qty=1>,\
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, qty=1>,\
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, qty=1>]
 
 >>> del sale['4']                                                             # del sale line item by product id='4'
 >>> sale.line_items
-[<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>,\
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=1>]
+[<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, qty=1>,\
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, qty=1>]
 >>> sale.unset_line_item_by_pr_id('6')                           # unset sale line pr id ='6' items 1-1=0 -> del
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, qty=1>>
 >>> sale.set_line_item_by_product_id('2',items,2)        # set sale line pr id ='2' items 1+2=3 -> del
 >>> sale.set_line_item_by_product_id('6',items,2)
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>, qty=2>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, qty=3>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, qty=2>>
 
     """
 

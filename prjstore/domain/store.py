@@ -8,14 +8,14 @@ class Store:
     """
 >>> store = Store(test=True)
 >>> store.items
-[<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
- <Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
- <Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>]
+[<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,\
+ <Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>,\
+ <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>]
 >>> store.get_item_by_pr_id('4')
-<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>
->>> store.search(desc = 'item2')                                    # search items bu product description
-[<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
- <Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>\
+<Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>
+>>> store.search(name = 'item2')                                    # search items bu product nameription
+[<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,\
+ <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>\
 ]
 
 
@@ -50,12 +50,12 @@ class Store:
                 return item
         raise IndexError(f"Invalid product id: {pr_id}")
 
-    @contract(desc="None | str")
-    def search(self, desc=None) -> list:
+    @contract(name="None | str")
+    def search(self, name=None) -> list:
         items = []
-        if desc:
+        if name:
             for item in self._items:
-                if desc in item.product.desc:
+                if name in item.product.name:
                     items.append(item)
         return items
 

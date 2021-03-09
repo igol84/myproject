@@ -8,14 +8,14 @@ class AbstractProduct(metaclass=ABCMeta):
     """
     _default_curr = MoneyMy.default_currency
 
-    @contract(item_id='str', desc='str', currency='str')
-    def __init__(self, item_id, desc='item', price=0, currency=_default_curr):
-        self._item_id = item_id
-        self.desc = desc
+    @contract(id='str', name='str', currency='str')
+    def __init__(self, id, name='item', price=0, currency=_default_curr):
+        self._id = id
+        self.name = name
         self.set_price(price, currency)
 
     def get_id(self) -> str:
-        return self._item_id
+        return self._id
 
     id = property(get_id)
 
@@ -31,18 +31,18 @@ class AbstractProduct(metaclass=ABCMeta):
     def convert_price(self, to_currency) -> None:
         self._price = MoneyMy.get_converted_money(self._price, to_currency)
 
-    def get_desc(self) -> str:
-        return self._desc
+    def get_name(self) -> str:
+        return self._name
 
-    @contract(desc='str')
-    def set_desc(self, desc) -> None:
-        self._desc = desc
+    @contract(name='str')
+    def set_name(self, name) -> None:
+        self._name = name
 
-    desc = property(get_desc, set_desc)
+    name = property(get_name, set_name)
 
-    def edit(self, desc=None, price=None, currency=None) -> None:
-        if desc:
-            self.set_desc(desc)
+    def edit(self, name=None, price=None, currency=None) -> None:
+        if name:
+            self.set_name(name)
         if price:
             self.set_price(price, currency)
         elif currency:

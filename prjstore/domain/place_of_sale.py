@@ -8,12 +8,12 @@ class PlaceOfSale:
     """
 >>> items = get_items_for_test()
 >>> items
-[<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>,\
- <Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>,\
- <Item: product=<SimpleProduct: id=6, desc=item2, price=UAH 500.00>, qty=2>]
+[<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,\
+ <Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>,\
+ <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>]
 >>> PlaceOfSale = PlaceOfSale('Бокс 47')
->>> PlaceOfSale.desc = 'Магазин 2-й этаж'
->>> PlaceOfSale.desc
+>>> PlaceOfSale.name = 'Магазин 2-й этаж'
+>>> PlaceOfSale.name
 'Магазин 2-й этаж'
 >>> PlaceOfSale.make_new_sale(Sale())                                          # make new empty sale
 >>> PlaceOfSale.sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
@@ -25,31 +25,31 @@ class PlaceOfSale:
 >>> PlaceOfSale.sale.time = datetime.datetime.strptime('11/7/20, 09:10:45', '%m/%d/%y, %H:%M:%S')
 >>> PlaceOfSale.set_items_on_sale_by_pr_id('2', 2, items)
 >>> PlaceOfSale
-<PlaceOfSale: desc: Магазин 2-й этаж, current sale:
+<PlaceOfSale: name: Магазин 2-й этаж, current sale:
 <Sale: time: 11/07/2020, 09:10:45, not completed, line items:
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=2>>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, qty=2>>>
 >>> PlaceOfSale.end_sale_items()
 >>> PlaceOfSale.show_sales()
 <Sale: time: 06/06/2020, 12:19:55, completed, line items:
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=4, desc=item5, price=UAH 300.00>, qty=1>, qty=1>
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, qty=1>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, qty=1>>
 <Sale: time: 11/07/2020, 09:10:45, completed, line items:
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=2>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, qty=2>>
 
     """
 
-    def __init__(self, desc):
-        self.desc = desc
+    def __init__(self, name):
+        self.name = name
         self._sales = []
         self._sale = None
 
-    def get_desc(self) -> str:
-        return self._desc
+    def get_name(self) -> str:
+        return self._name
 
-    def set_desc(self, value: str) -> None:
-        self._desc = value
+    def set_name(self, value: str) -> None:
+        self._name = value
 
-    desc = property(get_desc, set_desc)
+    name = property(get_name, set_name)
 
     def get_sale(self) -> Sale:
         return self._sale
@@ -81,7 +81,7 @@ class PlaceOfSale:
         self._sale = None
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__}: desc: {self._desc}, current sale:\n{self.sale}>"
+        return f"<{self.__class__.__name__}: name: {self._name}, current sale:\n{self.sale}>"
 
     def show_sales(self) -> None:
         sales = '\n'.join([str(sale) for sale in self._sales])
