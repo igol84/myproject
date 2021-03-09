@@ -58,8 +58,8 @@ False
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=1>>
->>> sale.set_line_item_by_product_id('2', 2, items)        # set sale line pr id ='2' items 1+2=3 -> del
->>> sale.set_line_item_by_product_id('6', 2, items)
+>>> sale.set_line_item_by_product_id('2',items,2)        # set sale line pr id ='2' items 1+2=3 -> del
+>>> sale.set_line_item_by_product_id('6',items,2)
 >>> sale
 <Sale: time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, desc=item23, price=UAH 600.00>, qty=3>, qty=3>
@@ -88,7 +88,7 @@ False
             self[item.product.id].qty += qty
 
     @contract(pr_id=str, qty='int, >0', items='None | list')
-    def set_line_item_by_product_id(self, pr_id, qty=1, items=None) -> None:  # add new line items by product id
+    def set_line_item_by_product_id(self, pr_id, items=None, qty=1) -> None:  # add new line items by product id
         try:
             if self.get_line_item_by_product_id(pr_id):  # try to get line items by product id
                 self[pr_id].qty += qty

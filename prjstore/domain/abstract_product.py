@@ -11,8 +11,8 @@ class AbstractProduct(metaclass=ABCMeta):
     @contract(item_id='str', desc='str', currency='str')
     def __init__(self, item_id, desc='item', price=0, currency=_default_curr):
         self._item_id = item_id
-        self._desc = desc
-        self._price = MoneyMy(amount=str(price), currency=currency)
+        self.desc = desc
+        self.set_price(price, currency)
 
     def get_id(self) -> str:
         return self._item_id

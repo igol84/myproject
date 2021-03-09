@@ -39,7 +39,7 @@ class PlaceOfSale:
     """
 
     def __init__(self, desc):
-        self._desc = desc
+        self.desc = desc
         self._sales = []
         self._sale = None
 
@@ -69,7 +69,7 @@ class PlaceOfSale:
 
     @contract(pr_id=str, qty="int, >0", items="None | list")
     def set_items_on_sale_by_pr_id(self, pr_id, qty=1, items=None) -> None:
-        self._sale.set_line_item_by_product_id(pr_id, qty, items)
+        self._sale.set_line_item_by_product_id(pr_id, items, qty)
 
     @contract(pr_id=str, qty="int, >0")
     def unset_items_on_sale_by_pr_id(self, pr_id: str, qty: "int, >0" = 1) -> None:

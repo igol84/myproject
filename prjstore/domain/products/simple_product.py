@@ -28,5 +28,8 @@ USD 27.29
 <SimpleProduct: id=2, desc=item2, price=USD 300.00>
     """
 
+    def edit(self, desc=None, price=None, currency=None) -> None:
+        AbstractProduct.edit(self, desc, price, currency)
+
     def __repr__(self) -> str:
-        return f'<{self.__class__.__name__}: id={self._item_id}, desc={self._desc}, price={self._price}>'
+        return f'<{self.__class__.__name__}: id={self.id}, desc={self.desc}, price={self.price}>'
