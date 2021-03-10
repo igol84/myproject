@@ -1,5 +1,5 @@
 from contracts import contract
-
+from util.money_my import MoneyMy
 from prjstore.domain.item import Item, get_items_for_test
 
 
@@ -12,7 +12,7 @@ class SaleLineItem:
  <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>]
 >>> sli = SaleLineItem(items[0])           # Create saleLineItem
 >>> sli
-<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, qty=1>
+<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=1>
 >>> sli.item = items[2]                # set saleLineItem product
 >>> sli.item                                            # get saleLineItem product
 <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>
@@ -20,17 +20,15 @@ class SaleLineItem:
 >>> sli.qty                                                # get saleLineItem quantity
 2
 >>> sli
-<SaleLineItem: item=<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, qty=2>
+<SaleLineItem: item=<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 600.00, qty=2>
 
     """
+    _default_curr = MoneyMy.default_currency
 
-    @contract(item=Item, qty=int)
-    def __init__(self, item, qty=1) -> None:
-        self._item = item
-        self._qty = qty
-
-    def __repr__(self):
-        return f"<{self.__class__.__name__}: item={self._item}, qty={self._qty}>"
+    def __init__(self, item, qty=1, sale_price=None, currency=_default_curr) -> None:
+        self.item = item
+        self.qty = qty
+        self.sale_price = sale_price if sale_price is not None else self.item.product.price
 
     def get_item(self) -> Item:
         return self._item
@@ -50,3 +48,18 @@ class SaleLineItem:
         self._qty = qty
 
     qty = property(get_qty, set_qty)
+
+    def get_sale_price(self) -> MoneyMy:
+        return self._sale_price
+
+    def set_sale_price(self, sale_price, currency=None) -> None:
+        if isinstance(sale_price, MoneyMy):
+            self._sale_price = sale_price
+        else:
+            curr = currency if currency else self._sale_price.currency
+            self._sale_price = MoneyMy(amount=str(sale_price), currency=curr)
+
+    sale_price = property(get_sale_price, set_sale_price)
+
+    def __repr__(self):
+        return f"<{self.__class__.__name__}: item={self.item}, sale_price={self.sale_price}, qty={self.qty}>"

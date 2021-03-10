@@ -8,31 +8,29 @@ class ProductCatalog(list):
     """
 >>> pc = get_products_for_test()  # create get test products
 >>> pc
-[<Shoes: id=1, name=item1, price=UAH 100.00, size=36.0, width=Medium>,\
+[<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, length_of_insole=11.0, width=Medium>,\
  <SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
- <Shoes: id=3, name=item4, price=UAH 700.00, size=43.3, width=Medium>,\
- <SimpleProduct: id=4, name=item5, price=UAH 300.00>,\
- <SimpleProduct: id=6, name=item2, price=UAH 500.00>]
->>> pc.quantity                                           # count of products
+ <Shoes: id=3, name=item4, price=UAH 700.00, color=red, size=43.3, length_of_insole=28.0, width=Medium>,\
+ <SimpleProduct: id=4, name=item5, price=UAH 300.00>, <SimpleProduct: id=6, name=item2, price=UAH 500.00>]
+>>> pc.quantity                                          # count of products
 5
 >>> pc.last_id                                           # get last id
 6
 >>> pc.new_id                                            # get new generated id  "last id + 1"
 '7'
 >>> pc.set_product(SimpleProduct(id=pc.new_id))
->>> pc.set_product(Shoes(id=pc.new_id, name='item12', price=300, size=40))
+>>> pc.set_product(Shoes(prod_id=pc.new_id, name='item12', price=300, color='white',  size=40, length_of_insole=25.5))
 >>> pc                                                   # get catalog
-[<Shoes: id=1, name=item1, price=UAH 100.00, size=36.0, width=Medium>,\
+[<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, length_of_insole=11.0, width=Medium>,\
  <SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
- <Shoes: id=3, name=item4, price=UAH 700.00, size=43.3, width=Medium>,\
+ <Shoes: id=3, name=item4, price=UAH 700.00, color=red, size=43.3, length_of_insole=28.0, width=Medium>,\
  <SimpleProduct: id=4, name=item5, price=UAH 300.00>,\
- <SimpleProduct: id=6, name=item2, price=UAH 500.00>,\
- <SimpleProduct: id=7, name=item, price=UAH 0.00>, \
-<Shoes: id=8, name=item12, price=UAH 300.00, size=40.0, width=Medium>]
+ <SimpleProduct: id=6, name=item2, price=UAH 500.00>, <SimpleProduct: id=7, name=item, price=UAH 0.00>,\
+ <Shoes: id=8, name=item12, price=UAH 300.00, color=white, size=40.0, length_of_insole=25.5, width=Medium>]
 >>> pc['2']                                              # get product by id='2'
 <SimpleProduct: id=2, name=item23, price=UAH 600.00>
 >>> pc.get_product_by_id('3')                            # get product by id='3'
-<Shoes: id=3, name=item4, price=UAH 700.00, size=43.3, width=Medium>
+<Shoes: id=3, name=item4, price=UAH 700.00, color=red, size=43.3, length_of_insole=28.0, width=Medium>
 >>> f_products = []
 >>> for pr in pc:                               # get products, where price > 500 UAH
 ...     if pr.price.UAH.amount > 500 :
@@ -41,28 +39,25 @@ class ProductCatalog(list):
 [('item23', USD 21.82), ('item4', USD 25.45)]
 >>> pc.set_product(SimpleProduct(id=pc.new_id, name='prod', price=500))
 >>> pc                                                   # get catalog
-[<Shoes: id=1, name=item1, price=UAH 100.00, size=36.0, width=Medium>,\
+[<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, length_of_insole=11.0, width=Medium>,\
  <SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
- <Shoes: id=3, name=item4, price=UAH 700.00, size=43.3, width=Medium>,\
- <SimpleProduct: id=4, name=item5, price=UAH 300.00>,\
- <SimpleProduct: id=6, name=item2, price=UAH 500.00>,\
+ <Shoes: id=3, name=item4, price=UAH 700.00, color=red, size=43.3, length_of_insole=28.0, width=Medium>,\
+ <SimpleProduct: id=4, name=item5, price=UAH 300.00>, <SimpleProduct: id=6, name=item2, price=UAH 500.00>,\
  <SimpleProduct: id=7, name=item, price=UAH 0.00>,\
- <Shoes: id=8, name=item12, price=UAH 300.00, size=40.0, width=Medium>, \
-<SimpleProduct: id=9, name=prod, price=UAH 500.00>]
+ <Shoes: id=8, name=item12, price=UAH 300.00, color=white, size=40.0, length_of_insole=25.5, width=Medium>,\
+ <SimpleProduct: id=9, name=prod, price=UAH 500.00>]
 >>> pc.unset_product_by_pr_id('3')                       # del product by product id "7"
 >>> del pc['7']
 >>> pc                                                   # get catalog
-[<Shoes: id=1, name=item1, price=UAH 100.00, size=36.0, width=Medium>,\
- <SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
- <SimpleProduct: id=4, name=item5, price=UAH 300.00>,\
+[<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, length_of_insole=11.0, width=Medium>,\
+ <SimpleProduct: id=2, name=item23, price=UAH 600.00>, <SimpleProduct: id=4, name=item5, price=UAH 300.00>,\
  <SimpleProduct: id=6, name=item2, price=UAH 500.00>,\
- <Shoes: id=8, name=item12, price=UAH 300.00, size=40.0, width=Medium>, \
-<SimpleProduct: id=9, name=prod, price=UAH 500.00>]
->>> pc.search(name='item2')                               # search products by name containing "item"
-[<SimpleProduct: id=2, name=item23, price=UAH 600.00>, \
-<SimpleProduct: id=6, name=item2, price=UAH 500.00>]
-
-
+ <Shoes: id=8, name=item12, price=UAH 300.00, color=white, size=40.0, length_of_insole=25.5, width=Medium>,\
+ <SimpleProduct: id=9, name=prod, price=UAH 500.00>]
+>>> pc.search(name='Item2')                               # search products by name containing "item"
+[<SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
+ <SimpleProduct: id=6, name=item2, price=UAH 500.00>\
+]
     """
 
     def __init__(self):
@@ -76,23 +71,23 @@ class ProductCatalog(list):
     def unset_product_by_pr_id(self, pr_id) -> None:
         self.remove(self[pr_id])
 
-    def __delitem__(self, key):
-        self.unset_product_by_pr_id(key)
+    def __delitem__(self, prod_id):
+        self.unset_product_by_pr_id(prod_id)
 
-    def __getitem__(self, key):
-        return self.get_product_by_id(key)
+    def __getitem__(self, prod_id):
+        return self.get_product_by_id(prod_id)
 
-    def get_product_by_id(self, key):
+    def get_product_by_id(self, prod_id):
         for pr in self:
-            if pr.id == key:
+            if pr.id == prod_id:
                 return pr
-        raise IndexError(f"Invalid product id: {key}")
+        raise IndexError(f"Invalid product id: {prod_id}")
 
     def search(self, name=None) -> list:
         products = []
         if name:
             for product in self:
-                if name in product.name:
+                if name.lower() in product.name.lower():
                     products.append(product)
         return products
 
@@ -114,9 +109,9 @@ class ProductCatalog(list):
 
 def get_products_for_test():
     pc = ProductCatalog()
-    pc.set_product(Shoes(id='1', name='item1', price=100, size=36))
+    pc.set_product(Shoes(prod_id='1', name='item1', price=100, size=36))
     pc.set_product(SimpleProduct(id='2', name='item23', price=600))
-    pc.set_product(Shoes(id='3', name='item4', price=700, size=43.3))
+    pc.set_product(Shoes(prod_id='3', name='item4', price=700, color='red', size=43.3, length_of_insole=28))
     pc.set_product(SimpleProduct(id='4', name='item5', price=300))
     pc.set_product(SimpleProduct(id='6', name='item2', price=500))
     return pc

@@ -4,20 +4,31 @@ from prjstore.domain.abstract_product import AbstractProduct
 
 class Shoes(AbstractProduct):
     """
->>> shoes = Shoes(id='6', name='nike air force', price=900, size=43, width='Wide')# Create product
->>> shoes                                                    # Get product
-<Shoes: id=6, name=nike air force, price=UAH 900.00, size=43.0, width=Wide>
+>>> shoes = Shoes(prod_id='6', name='nike air force', price=900, color='red', \
+size=43, width='Wide', length_of_insole=28.5)# Create product
+>>> shoes
+<Shoes: id=6, name=nike air force, price=UAH 900.00, color=red, size=43.0, length_of_insole=28.5, width=Wide>
+>>> shoes.color='black'
+>>> shoes.color
+'black'
+
 >>> shoes.size=44                                                 # Get size
 >>> shoes.size
 44.0
+
+>>> shoes.length_of_insole=28
+>>> shoes.length_of_insole
+28.0
+
 
 >>> shoes.width='Medium'                                                 # Get width
 >>> shoes.width
 'Medium'
 
->>> shoes.edit(name='nike air', price=500, size='42', width='Wide', currency='USD')      # Edit product
+>>> shoes.edit(name='nike air', price=500, color='red', size='42', \
+width='Wide', length_of_insole=28.5, currency='USD')      # Edit product
 >>> shoes
-<Shoes: id=6, name=nike air, price=USD 500.00, size=42.0, width=Wide>
+<Shoes: id=6, name=nike air, price=USD 500.00, color=red, size=42.0, length_of_insole=28.5, width=Wide>
     """
 
     @staticmethod
@@ -25,11 +36,28 @@ class Shoes(AbstractProduct):
     def valid_size(size):
         return float(size) and 0 < float(size) < 60
 
-    @contract(id=str, name=str, price='int | float', size='valid_size', currency=str)
-    def __init__(self, id, name='item', price=0, size=1, width='Medium', currency=AbstractProduct._default_curr):
-        super().__init__(id, name, price, currency)
+    @staticmethod
+    @new_contract
+    def valid_length_of_insole(length_of_insole):
+        return float(length_of_insole) and 10 < float(length_of_insole) < 40
+
+    @contract(prod_id=str, name=str, price='int | float', size='valid_size', currency=str)
+    def __init__(self, prod_id, name='item', price=0, color='default', size=1, length_of_insole=11, width='Medium',
+                 currency=AbstractProduct._default_curr):
+        super().__init__(prod_id, name, price, currency)
+        self.color = color
         self.size = size
+        self.length_of_insole = length_of_insole
         self.width = width
+
+    def get_color(self) -> str:
+        return self._color
+
+    @contract(color=str)
+    def set_color(self, color) -> None:
+        self._color = color
+
+    color = property(get_color, set_color)
 
     def get_size(self) -> float:
         return self._size
@@ -40,6 +68,15 @@ class Shoes(AbstractProduct):
 
     size = property(get_size, set_size)
 
+    def get_length_of_insole(self) -> float:
+        return self._length_of_insole
+
+    @contract(length_of_insole='valid_length_of_insole')
+    def set_length_of_insole(self, length_of_insole) -> None:
+        self._length_of_insole = float(length_of_insole)
+
+    length_of_insole = property(get_length_of_insole, set_length_of_insole)
+
     def get_width(self) -> str:
         return self._width
 
@@ -49,13 +86,18 @@ class Shoes(AbstractProduct):
 
     width = property(get_width, set_width)
 
-    def edit(self, name=None, price=None, currency=None, size=None, width=None) -> None:
+    def edit(self, name=None, price=None, currency=None, color=None, size=None,
+             length_of_insole=None, width=None) -> None:
         AbstractProduct.edit(self, name, price, currency)
+        if color:
+            self.set_color(color)
         if size:
             self.set_size(size)
+        if length_of_insole:
+            self.set_length_of_insole(length_of_insole)
         if width:
             self.set_width(width)
 
     def __repr__(self) -> str:
-        return f'<{self.__class__.__name__}: id={self.id}, name={self.name}, price={self.price}, size={self.size}, ' \
-               f'width={self.width}>'
+        return f'<{self.__class__.__name__}: id={self.id}, name={self.name}, price={self.price}, color={self.color}, ' \
+               f'size={self.size}, length_of_insole={self.length_of_insole}, width={self.width}>'

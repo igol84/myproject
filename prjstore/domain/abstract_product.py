@@ -8,7 +8,7 @@ class AbstractProduct(metaclass=ABCMeta):
     """
     _default_curr = MoneyMy.default_currency
 
-    @contract(id='str', name='str', currency='str')
+    @contract(id='str')
     def __init__(self, id, name='item', price=0, currency=_default_curr):
         self._id = id
         self.name = name

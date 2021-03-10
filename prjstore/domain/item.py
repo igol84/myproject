@@ -8,9 +8,9 @@ class Item:
     """
 >>> test_product_catalog=get_products_for_test() # Get test product catalog
 >>> test_product_catalog
-[<Shoes: id=1, name=item1, price=UAH 100.00, size=36.0, width=Medium>,\
+[<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, length_of_insole=11.0, width=Medium>,\
  <SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
- <Shoes: id=3, name=item4, price=UAH 700.00, size=43.3, width=Medium>,\
+ <Shoes: id=3, name=item4, price=UAH 700.00, color=red, size=43.3, length_of_insole=28.0, width=Medium>,\
  <SimpleProduct: id=4, name=item5, price=UAH 300.00>,\
  <SimpleProduct: id=6, name=item2, price=UAH 500.00>]
 
@@ -21,7 +21,7 @@ class Item:
 <SimpleProduct: id=2, name=item23, price=UAH 600.00>
 >>> item.product=test_product_catalog['3']                        # edit items product
 >>> item.product
-<Shoes: id=3, name=item4, price=UAH 700.00, size=43.3, width=Medium>
+<Shoes: id=3, name=item4, price=UAH 700.00, color=red, size=43.3, length_of_insole=28.0, width=Medium>
 >>> item.qty                                                      # get items quantity
 3
 >>> item.qty=2                                                    # edit items quantity
@@ -29,10 +29,9 @@ class Item:
 2
     """
 
-    @contract(pr=AbstractProduct, qty='int, >0')
     def __init__(self, pr, qty):
-        self._product = pr
-        self._qty = qty
+        self.product = pr
+        self.qty = qty
 
     def __repr__(self) -> str:
         return f'<{self.__class__.__name__}: product={self._product}, qty={self._qty}>'
@@ -49,8 +48,8 @@ class Item:
     def get_qty(self) -> int:
         return self._qty
 
-    @contract
-    def set_qty(self, qty: 'int, >0') -> None:
+    @contract(qty='int, >0')
+    def set_qty(self, qty) -> None:
         self._qty = qty
 
     qty = property(get_qty, set_qty)
