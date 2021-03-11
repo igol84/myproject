@@ -66,11 +66,11 @@ class PlaceOfSale:
 
     @contract(item=Item, qty="int, >0")
     def set_items_on_sale(self, item, qty=1) -> None:
-        self.sale.set_line_item(item, qty)
+        self.sale.add_line_item(item, qty)
 
     @contract(pr_id=str, qty="int, >0", items="None | list")
     def set_items_on_sale_by_pr_id(self, pr_id, qty=1, items=None) -> None:
-        self.sale.set_line_item_by_product_id(pr_id, items, qty)
+        self.sale.add_line_item_by_product_id(pr_id, items, qty)
 
     @contract(pr_id=str, qty="int, >0")
     def unset_items_on_sale_by_pr_id(self, pr_id, qty=1) -> None:
