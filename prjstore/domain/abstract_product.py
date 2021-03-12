@@ -1,6 +1,6 @@
 from contracts import contract
 from abc import ABCMeta
-from util.money_my import MoneyMy
+from util.money_my import MoneyMy, Decimal
 
 
 class AbstractProduct(metaclass=ABCMeta):
@@ -8,9 +8,9 @@ class AbstractProduct(metaclass=ABCMeta):
     """
     _default_curr = MoneyMy.default_currency
 
-    @contract(id='str')
+    @contract(id='str | int')
     def __init__(self, id, name='item', price=0, currency=_default_curr):
-        self._id = id
+        self._id = str(id)
         self.name = name
         self.set_price(price, currency)
 
@@ -22,9 +22,13 @@ class AbstractProduct(metaclass=ABCMeta):
     def get_price(self) -> MoneyMy:
         return self._price
 
+    @contract(price='$MoneyMy | int | float | $Decimal', currency='None | str')
     def set_price(self, price, currency=None) -> None:
-        curr = currency if currency else self._price.currency
-        self._price = MoneyMy(amount=str(price), currency=curr)
+        if isinstance(price, MoneyMy):
+            self._price = price
+        else:
+            curr = currency if currency else self._price.currency
+            self._price = MoneyMy(amount=str(price), currency=curr)
 
     price = property(get_price, set_price)
 
@@ -46,7 +50,7 @@ class AbstractProduct(metaclass=ABCMeta):
         if price:
             self.set_price(price, currency)
         elif currency:
-            self.set_price(self._price.amount, currency)
+            self.set_price(self.price.amount, currency)
 
     def __repr__(self) -> str:
         pass

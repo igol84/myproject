@@ -13,17 +13,15 @@ class Test_MyMoney(unittest.TestCase):
         MoneyMy.currencies = Currencies(testCurrencies.currencies)
 
     def test_01_initial(self):
-        money_UAH = self.money_UAH
-        self.assertEqual(str(money_UAH), 'UAH 1,750.50')
-        self.assertEqual(money_UAH.amount, 1750.5)
-        self.assertEqual(money_UAH.currency, 'UAH')
-        self.assertEqual(str(money_UAH.USD), 'USD 63.65')
-        self.assertEqual(str(money_UAH.format_my()), '1,750.5₴')
-        self.assertEqual(str(money_UAH.format('uk_UA')), '1 750,50 ₴')  # 1 750,50 ₴
+        self.assertEqual(str(self.money_UAH), 'UAH 1,750.50')
+        self.assertEqual(self.money_UAH.amount, 1750.5)
+        self.assertEqual(self.money_UAH.currency, 'UAH')
+        self.assertEqual(str(self.money_UAH.USD), 'USD 63.65')
+        self.assertEqual(str(self.money_UAH.format_my()), '1,750.5₴')
+        self.assertEqual(str(self.money_UAH.format('uk_UA')), '1 750,50 ₴')  # 1 750,50 ₴
 
     def test_02_converted(self):
-        money_UAH = self.money_UAH
-        money_USD = MoneyMy.get_converted_money(money_UAH, currency_to='USD')
+        money_USD = MoneyMy.get_converted_money(self.money_UAH, currency_to='USD')
         self.assertEqual(str(money_USD), 'USD 63.65')
         self.assertEqual(str(money_USD.UAH), 'UAH 1,750.38')
         self.assertEqual(str(money_USD.format('en_US')), '$63.65')
@@ -31,20 +29,18 @@ class Test_MyMoney(unittest.TestCase):
         self.assertEqual(str(money_USD.UAH.format_my()), '1,750.38₴')
 
     def test_03_edit_currency(self):
-        money_UAH = self.money_UAH
         MoneyMy.currencies['UAH'].rate = 35
-        money_USD = MoneyMy.get_converted_money(money_UAH, currency_to='USD')
+        money_USD = MoneyMy.get_converted_money(self.money_UAH, currency_to='USD')
         self.assertEqual(str(money_USD), 'USD 50.01')
         self.assertEqual(str(money_USD.UAH), 'UAH 1,750.35')
 
     def test_04_another_currency(self):
-        money_UAH = self.money_UAH
-        money_CNY = MoneyMy.get_converted_money(money_UAH, currency_to='CNY')
-        self.assertEqual(str(money_CNY), 'CNY 394.66')
-        money_UAH = MoneyMy.get_converted_money(money_CNY, currency_to='UAH')
-        self.assertEqual(str(money_UAH), 'UAH 1,750.51')
-        money_UAH = MoneyMy.get_converted_money(money_UAH, currency_to='UAH')
-        self.assertEqual(str(money_UAH), 'UAH 1,750.51')
+        self.money_CNY = MoneyMy.get_converted_money(self.money_UAH, currency_to='CNY')
+        self.assertEqual(str(self.money_CNY), 'CNY 394.66')
+        self.money_UAH = MoneyMy.get_converted_money(self.money_CNY, currency_to='UAH')
+        self.assertEqual(str(self.money_UAH), 'UAH 1,750.51')
+        self.money_UAH = MoneyMy.get_converted_money(self.money_UAH, currency_to='UAH')
+        self.assertEqual(str(self.money_UAH), 'UAH 1,750.51')
 
     def test_05_contract_raises(self):
         self.assertRaises(ContractNotRespected, MoneyMy, amount=1750.5, currency='UA')
