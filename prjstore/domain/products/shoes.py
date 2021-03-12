@@ -1,11 +1,11 @@
 from contracts import contract, new_contract
 from prjstore.domain.abstract_product import AbstractProduct
-
+from prjstore.domain.products.shoes_components import Width
 
 class Shoes(AbstractProduct):
     """
 >>> shoes = Shoes(prod_id='6', name='nike air force', price=900, color='red', \
-size=43, width='Wide', length_of_insole=28.5)# Create product
+size=43, width=Width(name='Wide', short_name='EE'), length_of_insole=28.5) # Create product
 >>> shoes
 <Shoes: id=6, name=nike air force, price=UAH 900.00, color=red, size=43.0, length_of_insole=28.5, width=Wide>
 >>> shoes.color='black'
@@ -21,12 +21,14 @@ size=43, width='Wide', length_of_insole=28.5)# Create product
 28.0
 
 
->>> shoes.width='Medium'                                                 # Get width
+>>> shoes.width = Width(name='Medium', short_name='D')                                                 # Get width
 >>> shoes.width
-'Medium'
+Medium
+>>> shoes.width.short_name
+'D'
 
 >>> shoes.edit(name='nike air', price=500, color='red', size='42', \
-width='Wide', length_of_insole=28.5, currency='USD')      # Edit product
+width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD')      # Edit product
 >>> shoes
 <Shoes: id=6, name=nike air, price=USD 500.00, color=red, size=42.0, length_of_insole=28.5, width=Wide>
     """
@@ -42,7 +44,8 @@ width='Wide', length_of_insole=28.5, currency='USD')      # Edit product
         return float(length_of_insole) and 10 < float(length_of_insole) < 40
 
     @contract(prod_id=str, name=str, price='int | float', size='valid_size', currency=str)
-    def __init__(self, prod_id, name='item', price=0, color='default', size=1, length_of_insole=11, width='Medium',
+    def __init__(self, prod_id, name='item', price=0, color='default', size=1, length_of_insole=11,
+                 width=Width(name='Medium', short_name='D'),
                  currency=AbstractProduct._default_curr):
         super().__init__(prod_id, name, price, currency)
         self.color = color
@@ -77,12 +80,12 @@ width='Wide', length_of_insole=28.5, currency='USD')      # Edit product
 
     length_of_insole = property(get_length_of_insole, set_length_of_insole)
 
-    def get_width(self) -> str:
+    def get_width(self) -> Width:
         return self._width
 
-    @contract(width=str)
+    @contract(width=Width)
     def set_width(self, width) -> None:
-        self._width = str(width)
+        self._width = width
 
     width = property(get_width, set_width)
 
