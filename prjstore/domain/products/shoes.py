@@ -27,11 +27,20 @@ Medium
 >>> shoes.width.short_name
 'D'
 
+>>> shoes.width = 'Extra Wide'
+>>> shoes.width
+Extra Wide
+>>> shoes.width.short_name
+'4E'
+
 >>> shoes.edit(name='nike air', price=500, color='red', size='42', \
 width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD')      # Edit product
 >>> shoes
 <Shoes: id=6, name=nike air, price=USD 500.00, color=red, size=42.0, length_of_insole=28.5, width=Wide>
     """
+    widths = {'Medium': Width(name='Medium', short_name='D'),
+              'Wide': Width(name='Wide', short_name='EE'),
+              'Extra Wide': Width(name='Extra Wide', short_name='4E')}
 
     @staticmethod
     @new_contract
@@ -83,9 +92,13 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
     def get_width(self) -> Width:
         return self._width
 
-    @contract(width=Width)
+    @contract(width='$Width | str')
     def set_width(self, width) -> None:
-        self._width = width
+        if isinstance(width, Width):
+            self._width = width
+        else:
+            if width in Shoes.widths:
+                self._width = Shoes.widths[width]
 
     width = property(get_width, set_width)
 

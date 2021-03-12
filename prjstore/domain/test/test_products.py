@@ -1,13 +1,11 @@
 from unittest import TestCase
 from util.money_my import MoneyMy, Decimal
-from prjstore.domain.products.simple_product import SimpleProduct
-from prjstore.domain.products.shoes import Shoes, Width
-
+from prjstore.domain.product_factory import product_factory
 
 
 class TestSimpleProduct(TestCase):
     def setUp(self) -> None:
-        self.simple_product = SimpleProduct(id='01', name='product1', price=25, currency='UAH')
+        self.simple_product = product_factory(id='01', name='product1', price=25, currency='UAH')
 
     def test_01_initial(self):
         self.assertEqual(str(self.simple_product), '<SimpleProduct: id=01, name=product1, price=UAH 25.00>')
@@ -16,7 +14,7 @@ class TestSimpleProduct(TestCase):
         self.assertEqual(str(self.simple_product.price), 'UAH 25.00')
 
     def test_01a_initial(self):
-        self.simple_product = SimpleProduct(id='02')
+        self.simple_product = product_factory(product_type='product', id='02')
         self.assertEqual(str(self.simple_product), '<SimpleProduct: id=02, name=item, price=UAH 0.00>')
 
     def test_02_edit_name(self):
@@ -48,8 +46,7 @@ class TestSimpleProduct(TestCase):
 
 class TestShoes(TestCase):
     def setUp(self) -> None:
-        self.shoes = Shoes(prod_id='6', name='nike air force', price=900, color='red', size=43, length_of_insole=28.5,
-                           width=Width(name='Wide', short_name='EE'))
+        self.shoes = product_factory(product_type='shoes', prod_id='6', name='nike air force', price=900, color='red', size=43, length_of_insole=28.5, width='Wide')
 
     def test_01_initial(self):
         self.assertEqual(str(self.shoes),
@@ -61,7 +58,7 @@ class TestShoes(TestCase):
         self.assertEqual(str(self.shoes.width), 'Wide')
 
     def test_02_initial(self):
-        self.shoes = Shoes(prod_id='02')
+        self.shoes = product_factory(product_type='shoes', prod_id='02')
         self.assertEqual(str(self.shoes), '<Shoes: id=02, name=item, price=UAH 0.00, color=default, size=1.0, '
                                           'length_of_insole=11.0, width=Medium>')
 
@@ -78,12 +75,12 @@ class TestShoes(TestCase):
         self.assertEqual(self.shoes.length_of_insole, 29)
 
     def test_02_edit_width(self):
-        self.shoes.width = Width(name='Extra Wide', short_name='4E')
+        self.shoes.width = 'Extra Wide'
         self.assertEqual(str(self.shoes.width), 'Extra Wide')
         self.assertEqual(self.shoes.width.short_name, '4E')
 
     def test_03_edit(self):
-        self.shoes.edit(color='black', size=44.5, length_of_insole=28.5, width=Width(name='Medium', short_name='D'))
+        self.shoes.edit(color='black', size=44.5, length_of_insole=28.5, width='Medium')
         self.assertEqual(str(self.shoes),
                          '<Shoes: id=6, name=nike air force, price=UAH 900.00, color=black, size=44.5, '
                          'length_of_insole=28.5, width=Medium>')
@@ -99,7 +96,7 @@ class TestShoes(TestCase):
         self.assertEqual(str(self.shoes),
                          '<Shoes: id=6, name=nike air force, price=UAH 900.00, color=pink, size=45.0, '
                          'length_of_insole=29.0, width=Medium>')
-        self.shoes.edit(width=Width(name='Extra Wide', short_name='4E'))
+        self.shoes.edit(width='Extra Wide')
         self.assertEqual(str(self.shoes),
                          '<Shoes: id=6, name=nike air force, price=UAH 900.00, color=pink, size=45.0, '
                          'length_of_insole=29.0, width=Extra Wide>')
