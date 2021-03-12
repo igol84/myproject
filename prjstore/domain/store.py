@@ -2,6 +2,7 @@ from contracts import contract
 
 from prjstore.domain.item import Item
 from prjstore.domain.product_catalog import ProductCatalog, get_products_for_test
+from prjstore.domain.product_factory import ProductFactory
 
 
 class Store:
@@ -25,6 +26,8 @@ class Store:
     def __init__(self, test=False):
         self._items = []
         self.is_test = test
+        self.factory = ProductFactory()
+
         if test:
             self.pc = get_products_for_test()
             self.get_test_items()

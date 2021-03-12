@@ -11,25 +11,25 @@ class PlaceOfSale:
 [<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,\
  <Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>,\
  <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>]
->>> PlaceOfSale = PlaceOfSale('Бокс 47')
->>> PlaceOfSale.name = 'Магазин 2-й этаж'
->>> PlaceOfSale.name
+>>> place_of_sale = PlaceOfSale('Бокс 47')
+>>> place_of_sale.name = 'Магазин 2-й этаж'
+>>> place_of_sale.name
 'Магазин 2-й этаж'
->>> PlaceOfSale.make_new_sale(Sale())                                          # make new empty sale
->>> PlaceOfSale.sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
->>> PlaceOfSale.set_items_on_sale(items[1])                              # set items on sale
->>> PlaceOfSale.set_items_on_sale(items[0], 2)
->>> PlaceOfSale.unset_items_on_sale_by_pr_id('2')                                 # unset item with product id "2" from sale
->>> PlaceOfSale.end_sale_items()
->>> PlaceOfSale.make_new_sale()
->>> PlaceOfSale.sale.time = datetime.datetime.strptime('11/7/20, 09:10:45', '%m/%d/%y, %H:%M:%S')
->>> PlaceOfSale.set_items_on_sale_by_pr_id('2', 2, items)
->>> PlaceOfSale
+>>> place_of_sale.make_new_sale(Sale())                                          # make new empty sale
+>>> place_of_sale.sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
+>>> place_of_sale.set_items_on_sale(items[1])                              # set items on sale
+>>> place_of_sale.set_items_on_sale(items[0], 2)
+>>> place_of_sale.unset_items_on_sale_by_pr_id('2')                         # unset item with product id "2" from sale
+>>> place_of_sale.end_sale_items()
+>>> place_of_sale.make_new_sale()
+>>> place_of_sale.sale.time = datetime.datetime.strptime('11/7/20, 09:10:45', '%m/%d/%y, %H:%M:%S')
+>>> place_of_sale.set_items_on_sale_by_pr_id('2', 2, items)
+>>> place_of_sale
 <PlaceOfSale: name: Магазин 2-й этаж, current sale:
 <Sale: time: 11/07/2020, 09:10:45, not completed, line items:
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=2>>>
->>> PlaceOfSale.end_sale_items()
-
+ <SaleLineItem: item=<Item: product=\
+<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=2>>>
+>>> place_of_sale.end_sale_items()
 
     """
 

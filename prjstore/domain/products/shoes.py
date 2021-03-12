@@ -2,6 +2,7 @@ from contracts import contract, new_contract
 from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.products.shoes_components import Width
 
+
 class Shoes(AbstractProduct):
     """
 >>> shoes = Shoes(prod_id='6', name='nike air force', price=900, color='red', \
@@ -99,6 +100,8 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
         else:
             if width in Shoes.widths:
                 self._width = Shoes.widths[width]
+            else:
+                raise IndexError(f"Invalid value width: {width}")
 
     width = property(get_width, set_width)
 

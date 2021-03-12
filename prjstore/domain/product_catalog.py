@@ -1,8 +1,7 @@
 from contracts import contract
 
 from prjstore.domain.abstract_product import AbstractProduct
-from prjstore.domain.products.shoes import Shoes
-from prjstore.domain.products.simple_product import SimpleProduct
+from prjstore.domain.product_factory import ProductFactory
 
 
 class ProductCatalog(list):
@@ -19,8 +18,9 @@ class ProductCatalog(list):
 6
 >>> pc.new_id                                            # get new generated id  "last id + 1"
 '7'
->>> pc.set_product(SimpleProduct(id=pc.new_id))
->>> pc.set_product(Shoes(prod_id=pc.new_id, name='item12', price=300, color='white',  size=40, length_of_insole=25.5))
+>>> pc.set_product(ProductFactory.create(id=pc.new_id))
+>>> pc.set_product(ProductFactory.create(product_type='shoes', prod_id=pc.new_id,\
+ name='item12', price=300, color='white',  size=40, length_of_insole=25.5))
 >>> pc                                                   # get catalog
 [<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, length_of_insole=11.0, width=Medium>,\
  <SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
@@ -38,7 +38,7 @@ class ProductCatalog(list):
 ...         f_products.append((pr.name, pr.price.USD))
 >>> f_products
 [('item23', USD 21.82), ('item4', USD 25.45)]
->>> pc.set_product(SimpleProduct(id=pc.new_id, name='prod', price=500))
+>>> pc.set_product(ProductFactory.create(id=pc.new_id, name='prod', price=500))
 >>> pc                                                   # get catalog
 [<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, length_of_insole=11.0, width=Medium>,\
  <SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
@@ -110,9 +110,11 @@ class ProductCatalog(list):
 
 def get_products_for_test():
     pc = ProductCatalog()
-    pc.set_product(Shoes(prod_id='1', name='item1', price=100, size=36))
-    pc.set_product(SimpleProduct(id='2', name='item23', price=600))
-    pc.set_product(Shoes(prod_id='3', name='item4', price=700, color='red', size=43.3, length_of_insole=28))
-    pc.set_product(SimpleProduct(id='4', name='item5', price=300))
-    pc.set_product(SimpleProduct(id='6', name='item2', price=500))
+    pc.set_product(ProductFactory.create(product_type='shoes', prod_id='1', name='item1', price=100, size=36))
+    pc.set_product(ProductFactory.create(id='2', name='item23', price=600))
+    pc.set_product(
+        ProductFactory.create(product_type='shoes', prod_id='3', name='item4', price=700, color='red', size=43.3,
+                              length_of_insole=28))
+    pc.set_product(ProductFactory.create(id='4', name='item5', price=300))
+    pc.set_product(ProductFactory.create(id='6', name='item2', price=500))
     return pc

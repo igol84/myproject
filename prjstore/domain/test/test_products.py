@@ -1,11 +1,11 @@
 from unittest import TestCase
 from util.money_my import MoneyMy, Decimal
-from prjstore.domain.product_factory import product_factory
+from prjstore.domain.product_factory import ProductFactory
 
 
 class TestSimpleProduct(TestCase):
     def setUp(self) -> None:
-        self.simple_product = product_factory(id='01', name='product1', price=25, currency='UAH')
+        self.simple_product = ProductFactory.create(id='01', name='product1', price=25, currency='UAH')
 
     def test_01_initial(self):
         self.assertEqual(str(self.simple_product), '<SimpleProduct: id=01, name=product1, price=UAH 25.00>')
@@ -14,7 +14,7 @@ class TestSimpleProduct(TestCase):
         self.assertEqual(str(self.simple_product.price), 'UAH 25.00')
 
     def test_01a_initial(self):
-        self.simple_product = product_factory(product_type='product', id='02')
+        self.simple_product = ProductFactory.create(product_type='product', id='02')
         self.assertEqual(str(self.simple_product), '<SimpleProduct: id=02, name=item, price=UAH 0.00>')
 
     def test_02_edit_name(self):
@@ -46,7 +46,7 @@ class TestSimpleProduct(TestCase):
 
 class TestShoes(TestCase):
     def setUp(self) -> None:
-        self.shoes = product_factory(product_type='shoes', prod_id='6', name='nike air force', price=900, color='red', size=43, length_of_insole=28.5, width='Wide')
+        self.shoes = ProductFactory.create(product_type='shoes', prod_id='6', name='nike air force', price=900, color='red', size=43, length_of_insole=28.5, width='Wide')
 
     def test_01_initial(self):
         self.assertEqual(str(self.shoes),
@@ -58,7 +58,7 @@ class TestShoes(TestCase):
         self.assertEqual(str(self.shoes.width), 'Wide')
 
     def test_02_initial(self):
-        self.shoes = product_factory(product_type='shoes', prod_id='02')
+        self.shoes = ProductFactory.create(product_type='shoes', prod_id='02')
         self.assertEqual(str(self.shoes), '<Shoes: id=02, name=item, price=UAH 0.00, color=default, size=1.0, '
                                           'length_of_insole=11.0, width=Medium>')
 
