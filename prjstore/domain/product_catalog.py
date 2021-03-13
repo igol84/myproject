@@ -15,7 +15,7 @@ class ProductCatalog(list):
 >>> pc.quantity                                          # count of products
 5
 >>> pc.last_id                                           # get last id
-6
+'6'
 >>> pc.new_id                                            # get new generated id  "last id + 1"
 '7'
 >>> pc.set_product(ProductFactory.create(id=pc.new_id))
@@ -78,13 +78,13 @@ class ProductCatalog(list):
     def __getitem__(self, prod_id):
         return self.get_product_by_id(prod_id)
 
-    def get_product_by_id(self, prod_id):
+    def get_product_by_id(self, prod_id) -> AbstractProduct:
         for pr in self:
             if pr.id == prod_id:
                 return pr
         raise IndexError(f"Invalid product id: {prod_id}")
 
-    def search(self, name=None) -> list:
+    def search(self, name=None) -> list[AbstractProduct]:
         products = []
         if name:
             for product in self:
@@ -97,13 +97,13 @@ class ProductCatalog(list):
 
     quantity = property(quantity)
 
-    def last_id(self) -> int:
-        return sorted([int(pr.id) for pr in self])[-1]
+    def last_id(self) -> str:
+        return str(sorted([int(pr.id) for pr in self])[-1])
 
     last_id = property(last_id)
 
     def new_id(self) -> str:
-        return str(self.last_id + 1)
+        return str(int(self.last_id) + 1)
 
     new_id = property(new_id)
 
@@ -112,9 +112,8 @@ def get_products_for_test():
     pc = ProductCatalog()
     pc.set_product(ProductFactory.create(product_type='shoes', prod_id='1', name='item1', price=100, size=36))
     pc.set_product(ProductFactory.create(id='2', name='item23', price=600))
-    pc.set_product(
-        ProductFactory.create(product_type='shoes', prod_id='3', name='item4', price=700, color='red', size=43.3,
-                              length_of_insole=28))
+    pc.set_product(ProductFactory.create(product_type='shoes', prod_id='3', name='item4', price=700, color='red',
+                                         size=43.3, length_of_insole=28))
     pc.set_product(ProductFactory.create(id='4', name='item5', price=300))
     pc.set_product(ProductFactory.create(id='6', name='item2', price=500))
     return pc

@@ -2,7 +2,7 @@ from contracts import contract
 
 from prjstore.domain.product_catalog import get_products_for_test
 from prjstore.domain.abstract_product import AbstractProduct
-
+from util.money_my import MoneyMy, Decimal
 
 class Item:
     """
@@ -27,11 +27,17 @@ class Item:
 >>> item.qty=2                                                    # edit items quantity
 >>> item.qty
 2
-    """
+>>> item.buy_price=100                                                    # edit items quantity
+>>> item.buy_price
+UAH 100
 
-    def __init__(self, pr, qty):
+    """
+    _default_curr = MoneyMy.default_currency
+
+    def __init__(self, pr, qty=1, buy_price=0, currency=_default_curr):
         self.product = pr
         self.qty = qty
+        self.set_buy_price(buy_price, currency)
 
     def __repr__(self) -> str:
         return f'<{self.__class__.__name__}: product={self._product}, qty={self._qty}>'
@@ -53,6 +59,19 @@ class Item:
         self._qty = qty
 
     qty = property(get_qty, set_qty)
+
+    def get_buy_price(self) -> MoneyMy:
+        return self._buy_price
+
+    @contract(buy_price='$MoneyMy | int | float | $Decimal', currency='None | str')
+    def set_buy_price(self, buy_price, currency=None) -> None:
+        if isinstance(buy_price, MoneyMy):
+            self._buy_price = buy_price
+        else:
+            curr = currency if currency else self._buy_price.currency
+            self._buy_price = MoneyMy(amount=str(buy_price), currency=curr)
+
+    buy_price = property(get_buy_price, set_buy_price)
 
 
 def get_items_for_test() -> list:
