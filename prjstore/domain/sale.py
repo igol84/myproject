@@ -5,6 +5,7 @@ import locale
 from prjstore.domain.item import Item, get_items_for_test
 from prjstore.domain.sale_line_item import SaleLineItem
 from prjstore.domain.abstract_product import AbstractProduct
+from prjstore.domain.seller import Seller
 
 locale.setlocale(locale.LC_TIME, 'ru_RU')
 
@@ -16,18 +17,23 @@ class Sale:
 [<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,\
  <Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>,\
  <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>]
->>> sale = Sale(items[1])                                                    # Create sale
+>>> sale = Sale(Seller('Igor'), items[1])                                                    # Create sale
 >>> sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')    # set time
 >>> sale.time.strftime("%m/%d/%Y, %H:%M:%S")                                            # get time
 '06/06/2020, 12:19:55'
 >>> sale
-<Sale: time: 06/06/2020, 12:19:55, not completed, line items:
+<Sale: seller:Igor, time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, sale_price=UAH 300.00, qty=1>>
+
+>>> sale.seller = Seller('Anna')
+>>> sale.seller.name
+'Anna'
+
 >>> sale.add_line_item(items[0])                                          # Add product to sale
 >>> sale.add_line_item(items[2])
 >>> sale
-<Sale: time: 06/06/2020, 12:19:55, not completed, line items:
+<Sale: seller:Anna, time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, sale_price=UAH 300.00, qty=1>
  <SaleLineItem: item=\
@@ -36,7 +42,7 @@ class Sale:
 <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=1>>
 >>> sale.add_line_item(items[0], 2)                                          # Add same product to sale
 >>> sale
-<Sale: time: 06/06/2020, 12:19:55, not completed, line items:
+<Sale: seller:Anna, time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, sale_price=UAH 300.00, qty=1>
  <SaleLineItem: item=<Item: product=\
@@ -63,13 +69,13 @@ class Sale:
 <SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=1>]
 >>> sale.unset_line_item_by_pr_id('6')                           # unset sale line pr id ='6' items 1-1=0 -> del
 >>> sale
-<Sale: time: 06/06/2020, 12:19:55, not completed, line items:
+<Sale: seller:Anna, time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=1>>
 >>> sale.add_line_item_by_product_id('2',items,2)        # set sale line pr id ='2' items 1+2=3 -> del
 >>> sale.add_line_item_by_product_id('6',items,2)
 >>> sale
-<Sale: time: 06/06/2020, 12:19:55, not completed, line items:
+<Sale: seller:Anna, time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=3>
  <SaleLineItem: item=<Item: product=\
@@ -78,18 +84,19 @@ class Sale:
 >>> sale.is_complete()
 True
 >>> sale
-<Sale: time: 06/06/2020, 12:19:55, completed, line items:
+<Sale: seller:Anna, time: 06/06/2020, 12:19:55, completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=3>
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=2>>
     """
 
-    @contract(item="None | $Item", gty="None | int, >0")
-    def __init__(self, item=None, gty=1) -> None:
+    def __init__(self, seller, item=None, gty=1) -> None:
+        self.seller = seller
         self._list_sli = []
         self._is_complete = False
-        self._time = datetime.datetime.now()
+        self.time = datetime.datetime.now()
+
         if item:
             self.add_line_item(item, gty)
 
@@ -156,6 +163,15 @@ True
 
     time = property(get_time, set_time)
 
+    def get_seller(self):
+        return self._seller
+
+    @contract(seller = Seller)
+    def set_seller(self, seller):
+        self._seller = seller
+
+    seller = property(get_seller, set_seller)
+
     @contract(item=Item)
     def is_item_in_sale(self, item) -> bool:
         return item.product in self
@@ -171,7 +187,7 @@ True
         sale_line_items = '\n ' + '\n '.join([str(sli) for sli in self.line_items])
         completed = 'completed' if self.is_complete() else 'not completed'
         time = self.time.strftime("%m/%d/%Y, %H:%M:%S")
-        return f"<{self.__class__.__name__}: time: {time}, {completed}, line items:{sale_line_items}>"
+        return f"<{self.__class__.__name__}: seller:{self.seller.name}, time: {time}, {completed}, line items:{sale_line_items}>"
 
     def __getitem__(self, key):  # get line item by product id
         return self.get_line_item_by_product_id(key)
