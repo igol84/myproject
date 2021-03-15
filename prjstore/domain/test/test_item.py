@@ -14,6 +14,7 @@ class TestItem(TestCase):
                       '6': Item(pr=self.pc['6'], buy_price=100.5),
                       '2': Item(pr=self.pc['2'], qty=3, buy_price=200)}
 
+class Test_Item(TestItem):
     def test_01_initial(self):
         self.assertEqual(str(self.items['2']), '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>')
         self.assertEqual(str(self.items['2'].product), '<SimpleProduct: id=2, name=item23, price=UAH 600.00>')

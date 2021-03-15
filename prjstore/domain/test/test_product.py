@@ -7,6 +7,7 @@ class TestSimpleProduct(TestCase):
     def setUp(self) -> None:
         self.simple_product = ProductFactory.create(id='01', name='product1', price=25, currency='UAH')
 
+class Test_SimpleProduct(TestSimpleProduct):
     def test_01_initial(self):
         self.assertEqual(str(self.simple_product), '<SimpleProduct: id=01, name=product1, price=UAH 25.00>')
         self.assertEqual(self.simple_product.id, '01')

@@ -7,6 +7,7 @@ class TestShoes(TestCase):
         self.shoes = ProductFactory.create(product_type='shoes', prod_id='6', name='nike air force', price=900,
                                            color='red', size=43, length_of_insole=28.5, width='Wide')
 
+class Test_Shoes(TestShoes):
     def test_01_initial(self):
         self.assertEqual(str(self.shoes),
                          '<Shoes: id=6, name=nike air force, price=UAH 900.00, color=red, size=43.0, '

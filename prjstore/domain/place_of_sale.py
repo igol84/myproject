@@ -2,7 +2,7 @@ import datetime
 from contracts import contract
 
 from prjstore.domain.sale import Sale, Item, get_items_for_test
-
+from prjstore.domain.seller import Seller
 
 class PlaceOfSale:
     """
@@ -15,27 +15,27 @@ class PlaceOfSale:
 >>> place_of_sale.name = 'Магазин 2-й этаж'
 >>> place_of_sale.name
 'Магазин 2-й этаж'
->>> place_of_sale.make_new_sale(Sale())                                          # make new empty sale
+>>> place_of_sale.make_new_sale(Sale(seller=Seller('Igor')))                # make new empty sale
 >>> place_of_sale.sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
->>> place_of_sale.set_items_on_sale(items[1])                              # set items on sale
+>>> place_of_sale.set_items_on_sale(items[1])                               # set items on sale
 >>> place_of_sale.set_items_on_sale(items[0], 2)
 >>> place_of_sale.unset_items_on_sale_by_pr_id('2')                         # unset item with product id "2" from sale
 >>> place_of_sale.end_sale_items()
->>> place_of_sale.make_new_sale()
+>>> place_of_sale.make_new_sale(Seller('Igor'))
 >>> place_of_sale.sale.time = datetime.datetime.strptime('11/7/20, 09:10:45', '%m/%d/%y, %H:%M:%S')
 >>> place_of_sale.set_items_on_sale_by_pr_id('2', 2, items)
 >>> place_of_sale
 <PlaceOfSale: name: Магазин 2-й этаж, current sale:
-<Sale: time: 11/07/2020, 09:10:45, not completed, line items:
+<Sale: seller:Igor, time: 11/07/2020, 09:10:45, not completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=2>>>
 >>> place_of_sale.end_sale_items()
 
     """
 
-    def __init__(self, name):
+    def __init__(self, name, sale=None):
         self.name = name
-        self._sale = None
+        self.sale = sale
 
     def get_name(self) -> str:
         return self._name
@@ -48,7 +48,7 @@ class PlaceOfSale:
     def get_sale(self) -> Sale:
         return self._sale
 
-    @contract(sale=Sale)
+    @contract(sale='None | $Sale')
     def set_sale(self, sale) -> None:
         self._sale = sale
 
@@ -57,12 +57,12 @@ class PlaceOfSale:
 
     sale = property(get_sale, set_sale, del_sale)
 
-    @contract(sale="None | $Sale")
-    def make_new_sale(self, sale=None) -> None:
-        if sale:
-            self.sale = sale
+    @contract(value="$Sale | $Seller")
+    def make_new_sale(self, value) -> None:
+        if isinstance(value, Sale):
+            self.sale = value
         else:
-            self.sale = Sale()
+            self.sale = Sale(value)
 
     @contract(item=Item, qty="int, >0")
     def set_items_on_sale(self, item, qty=1) -> None:

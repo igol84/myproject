@@ -12,6 +12,7 @@ class TestSaleLineItem(TestCase):
                            SaleLineItem(self.items['1']),
                            SaleLineItem(self.items['3'])]
 
+class Test_SaleLineItem(TestSaleLineItem):
     def test_01_initial(self):
         self.assertEqual(str(self.list_sli[0]),
                          '<SaleLineItem: item='

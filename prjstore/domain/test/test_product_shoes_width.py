@@ -5,6 +5,7 @@ class TestShoesWidth(TestCase):
     def setUp(self) -> None:
         self.width = Width(name='Wide', short_name='EE')
 
+class Test_ShoesWidth(TestShoesWidth):
     def test_01_initial(self):
         self.assertEqual(str(self.width), 'Wide')
         self.assertEqual(self.width.short_name, 'EE')

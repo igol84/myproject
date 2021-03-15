@@ -15,6 +15,7 @@ class TestProductCatalog(TestCase):
         self.pc.set_product(ProductFactory.create(id='4', name='item5', price=300))
         self.pc.set_product(ProductFactory.create(id='6', name='item2', price=500))
 
+class Test_ProductCatalog(TestProductCatalog):
     def test_01_initial(self):
         self.assertEqual(str(self.pc),
                          '[<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, length_of_insole=11.0,'
