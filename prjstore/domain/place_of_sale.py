@@ -25,10 +25,11 @@ class PlaceOfSale:
 >>> place_of_sale.sale.time = datetime.datetime.strptime('11/7/20, 09:10:45', '%m/%d/%y, %H:%M:%S')
 >>> place_of_sale.set_items_on_sale_by_pr_id('2', 2, items)
 >>> place_of_sale
-<PlaceOfSale: name: Магазин 2-й этаж, current sale:
+<PlaceOfSale: name: Магазин 2-й этаж, sale:Yes>
+>>> place_of_sale.sale
 <Sale: seller:Igor, time: 11/07/2020, 09:10:45, not completed, line items:
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=2>>>
+ <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
+ qty=3>, sale_price=UAH 600.00, qty=2>>
 >>> place_of_sale.end_sale_items()
 
     """
@@ -82,4 +83,5 @@ class PlaceOfSale:
             del self.sale
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__}: name: {self._name}, current sale:\n{self.sale}>"
+        sale = 'Yes' if self.sale else 'No'
+        return f"<{self.__class__.__name__}: name: {self._name}, sale:{sale}>"
