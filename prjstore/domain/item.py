@@ -74,7 +74,7 @@ UAH 100
     buy_price = property(get_buy_price, set_buy_price)
 
 
-def get_items_for_test() -> list:
+def get_items_for_test() -> list[Item]:
     test_pc = get_products_for_test()
     # [<SimpleProduct: id=1, name=item1, price=UAH 100.00>,\
     #  <SimpleProduct: id=2, name=item23, price=UAH 600.00>,\

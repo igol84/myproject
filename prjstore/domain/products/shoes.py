@@ -45,12 +45,12 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
 
     @staticmethod
     @new_contract
-    def valid_size(size):
+    def valid_size(size) -> float:
         return float(size) and 0 < float(size) < 60
 
     @staticmethod
     @new_contract
-    def valid_length_of_insole(length_of_insole):
+    def valid_length_of_insole(length_of_insole) -> float:
         return float(length_of_insole) and 10 < float(length_of_insole) < 40
 
     @contract(prod_id=str, name=str, price='int | float', size='valid_size', currency=str)

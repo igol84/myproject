@@ -72,10 +72,10 @@ class ProductCatalog(list):
     def unset_product_by_pr_id(self, pr_id) -> None:
         self.remove(self[pr_id])
 
-    def __delitem__(self, prod_id):
+    def __delitem__(self, prod_id) -> None:
         self.unset_product_by_pr_id(prod_id)
 
-    def __getitem__(self, prod_id):
+    def __getitem__(self, prod_id) -> AbstractProduct:
         return self.get_product_by_id(prod_id)
 
     def get_product_by_id(self, prod_id) -> AbstractProduct:
@@ -108,7 +108,7 @@ class ProductCatalog(list):
     new_id = property(new_id)
 
 
-def get_products_for_test():
+def get_products_for_test() -> ProductCatalog:
     pc = ProductCatalog()
     pc.set_product(ProductFactory.create(product_type='shoes', prod_id='1', name='item1', price=100, size=36))
     pc.set_product(ProductFactory.create(id='2', name='item23', price=600))
