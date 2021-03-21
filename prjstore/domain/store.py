@@ -42,11 +42,11 @@ class Store:
         self.pc = ProductCatalog()
 
     def get_pc(self):
-        return self._pc
+        return self.__pc
 
     @contract(pc=ProductCatalog)
     def set_pc(self, pc):
-        self._pc = pc
+        self.__pc = pc
 
     pc = property(get_pc, set_pc)
 
