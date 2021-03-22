@@ -46,3 +46,10 @@ class Test_Store(TestStore):
 
     def test_05_search_item(self):
         self.assertEqual(len(self.store.search_item(name = 'item2')), 3)
+
+    def test_06_move_sale_to_another_place(self):
+        sale = self.store.places_of_sale[0].sale
+        self.store.places_of_sale[0].sale = None
+        self.store.places_of_sale[1].sale = sale
+        self.assertEqual(self.store.places_of_sale[0].sale, None)
+        self.assertEqual(len(self.store.places_of_sale[1].sale), 3)

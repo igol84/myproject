@@ -51,38 +51,38 @@ class Store:
     pc = property(get_pc, set_pc)
 
     def setup_items(self):
-        self._items = {}
+        self.__items = {}
 
     def setup_sellers(self):
-        self._sellers = []
+        self.__sellers = []
 
     def setup_places_of_sale(self):
-        self._places_of_sale = []
+        self.__places_of_sale = []
 
     def get_items(self) -> dict[str: Item]:
-        return self._items
+        return self.__items
 
     @contract(items='dict(str: $Item)')
     def set_items(self, items):
-        self._items = items
+        self.__items = items
 
     items = property(get_items, set_items)
 
     def get_sellers(self) -> list[Seller]:
-        return self._sellers
+        return self.__sellers
 
     @contract(sellers='list($Seller)')
     def set_sellers(self, sellers):
-        self._sellers = sellers
+        self.__sellers = sellers
 
     sellers = property(get_sellers, set_sellers)
 
     def get_places_of_sale(self) -> list[PlaceOfSale]:
-        return self._places_of_sale
+        return self.__places_of_sale
 
     @contract(places_of_sale='list($PlaceOfSale)')
     def set_places_of_sale(self, places_of_sale):
-        self._places_of_sale = places_of_sale
+        self.__places_of_sale = places_of_sale
 
     places_of_sale = property(get_places_of_sale, set_places_of_sale)
 

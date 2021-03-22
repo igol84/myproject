@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import QWidget, QApplication, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtCore import QDate
 
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
@@ -24,20 +24,25 @@ class SaleForm(QWidget):
         for n, seller in enumerate(self.handler.store.sellers):
             self.ui.combo_box_seller.addItem(seller.name, userData=n)
 
+        self.update_sli()
+        self.update_items()
+
+    def update_sli(self):
+        groupBox = QtWidgets.QGroupBox()
+        v_box = QtWidgets.QVBoxLayout(groupBox)
+        for i in range(3):
+            v_box.addWidget(QtWidgets.QLabel(f"Item{i + 1} qty=1"))
+        spacer = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        v_box.addItem(spacer)
+        self.ui.scroll_slis.setWidget(groupBox)
+
+    def update_items(self):
         v_box = QtWidgets.QVBoxLayout()
-        self.items = [f"Item{i+1}" for i in range(8)]
+        self.items = [f"Item{i + 1}" for i in range(8)]
         for item in self.items:
             v_box.addWidget(QtWidgets.QLabel(item))
         v_box.addStretch(0)
         self.ui.scroll_items.setLayout(v_box)
-
-        groupBox = QtWidgets.QGroupBox()
-        v_box = QtWidgets.QVBoxLayout(groupBox)
-        for i in range(3):
-            v_box.addWidget(QtWidgets.QLabel(f"Item{i+1} qty=1"))
-        spacer = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        v_box.addItem(spacer)
-        self.ui.scroll_slis.setWidget(groupBox)
 
 
 if __name__ == "__main__":

@@ -40,23 +40,23 @@ UAH 100
         self.set_buy_price(buy_price, currency)
 
     def __repr__(self) -> str:
-        return f'<{self.__class__.__name__}: product={self._product}, qty={self._qty}>'
+        return f'<{self.__class__.__name__}: product={self.__product}, qty={self.__qty}>'
 
     def get_product(self) -> AbstractProduct:
-        return self._product
+        return self.__product
 
     @contract(pr=AbstractProduct)
     def set_product(self, pr) -> None:
-        self._product = pr
+        self.__product = pr
 
     product = property(get_product, set_product)
 
     def get_qty(self) -> int:
-        return self._qty
+        return self.__qty
 
     @contract(qty='int, >0')
     def set_qty(self, qty) -> None:
-        self._qty = qty
+        self.__qty = qty
 
     qty = property(get_qty, set_qty)
 

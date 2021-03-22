@@ -26,5 +26,8 @@ class SaleRegistrationHandler:
 if __name__ == '__main__':
     handler = SaleRegistrationHandler()
     handler.test()
-    for place in handler.store.places_of_sale:
-        print(place.name)
+    for key, item in handler.store.items.items():
+        print(item.product.name)
+    # for place in handler.store.places_of_sale:
+    #     if place.sale:
+    #         print(place.sale.line_items)
