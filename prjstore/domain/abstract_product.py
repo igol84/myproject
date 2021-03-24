@@ -1,9 +1,9 @@
 from contracts import contract
-from abc import ABCMeta
+from abc import ABC, abstractmethod
 from util.money_my import MoneyMy, Decimal
 
 
-class AbstractProduct(metaclass=ABCMeta):
+class AbstractProduct(ABC):
     """
     """
     _default_curr = MoneyMy.default_currency
@@ -52,5 +52,6 @@ class AbstractProduct(metaclass=ABCMeta):
         elif currency:
             self.set_price(self.price.amount, currency)
 
+    @abstractmethod
     def __repr__(self) -> str:
         pass

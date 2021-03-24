@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtCore import QDate
 
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
+from prjstore.ui.qt.sale_registration_product import ItemFrame
 from prjstore.ui.qt.sale_registration_ui import *
 
 
@@ -12,8 +13,11 @@ class SaleForm(QWidget):
         super().__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.resize(1200, 600)
         self.handler = SaleRegistrationHandler()
         self.handler.test()
+        self.ui.widget_items.deleteLater()
+        self.setContentsMargins(0, 0, 0, 0)
 
         self.ui.dateEdit.setDate(QDate.currentDate())
         self.ui.dateEdit.setCalendarPopup(True)
@@ -38,11 +42,16 @@ class SaleForm(QWidget):
 
     def update_items(self):
         v_box = QtWidgets.QVBoxLayout()
-        self.items = [f"Item{i + 1}" for i in range(8)]
-        for item in self.items:
-            v_box.addWidget(QtWidgets.QLabel(item))
+        items = self.handler.store.items
+        item_frames = []
+        for key, item in items.items():
+            item_frame = ItemFrame(item, item_frames)
+            v_box.addWidget(item_frame)
+            item_frames.append(item_frame)
         v_box.addStretch(0)
         self.ui.scroll_items.setLayout(v_box)
+
+
 
 
 if __name__ == "__main__":

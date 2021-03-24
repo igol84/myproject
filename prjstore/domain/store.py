@@ -9,7 +9,11 @@ from prjstore.domain.seller import Seller
 
 class Store:
     """
->>> store = Store(test=True)
+>>> store = Store()
+>>> store.pc = get_products_for_test()
+>>> store.items = get_test_items(store.pc)
+>>> store.sellers = get_test_sellers()
+>>> store.places_of_sale = get_test_places_of_sale()
 >>> len(store.items)
 4
 >>> store.get_item_by_pr_id('4')
@@ -25,18 +29,12 @@ class Store:
 
     """
 
-    def __init__(self, test=False):
+    def __init__(self):
         self.factory = ProductFactory()
         self.setup_product_catalog()
         self.setup_items()
         self.setup_sellers()
         self.setup_places_of_sale()
-
-        if test:
-            self.pc = get_products_for_test()
-            self.items = get_test_items(self.pc)
-            self.sellers = get_test_sellers()
-            self.places_of_sale = get_test_places_of_sale()
 
     def setup_product_catalog(self):
         self.pc = ProductCatalog()

@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>733</width>
-    <height>624</height>
+    <width>1064</width>
+    <height>796</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,12 +34,31 @@
     </widget>
    </item>
    <item>
+    <widget class="QWidget" name="widget_2" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>скрыть</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QWidget" name="widget_area" native="true">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QWidget" name="widget" native="true">
+         <widget class="QWidget" name="sale" native="true">
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <property name="spacing">
             <number>9</number>
@@ -57,7 +76,7 @@
             <number>0</number>
            </property>
            <item>
-            <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0" columnstretch="0,2">
+            <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0" columnstretch="0,0">
              <property name="sizeConstraint">
               <enum>QLayout::SetFixedSize</enum>
              </property>
@@ -74,6 +93,19 @@
                </property>
               </widget>
              </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Кто продал</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="combo_box_place_of_sale"/>
+             </item>
+             <item row="0" column="1">
+              <widget class="QDateEdit" name="dateEdit"/>
+             </item>
              <item row="2" column="1">
               <widget class="QComboBox" name="combo_box_seller"/>
              </item>
@@ -83,19 +115,6 @@
                 <string>Дата продажи</string>
                </property>
               </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QComboBox" name="combo_box_place_of_sale"/>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string>Кто продал</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QDateEdit" name="dateEdit"/>
              </item>
             </layout>
            </item>
@@ -109,8 +128,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>343</width>
-                <height>432</height>
+                <width>508</width>
+                <height>556</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_5"/>
@@ -202,11 +221,42 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>342</width>
-                <height>436</height>
+                <width>508</width>
+                <height>78</height>
                </rect>
               </property>
-              <layout class="QVBoxLayout" name="verticalLayout_4"/>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <property name="rightMargin">
+                <number>9</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_6">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_5">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </widget>
            </item>
