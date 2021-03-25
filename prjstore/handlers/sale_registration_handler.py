@@ -21,6 +21,10 @@ class SaleRegistrationHandler:
         self.places_of_sale = []
         TestPlaceOfSale.setUp(self)
         self.store.places_of_sale = self.places_of_sale
+        self.store.items['1'].qty = 150
+        self.store.items['1'].product.price = 10500
+        self.store.items['1'].product.name = 'Кроссовки Adidas Yung-1 красные, натуральная замша. Топ качество!'
+
 
 
 if __name__ == '__main__':
