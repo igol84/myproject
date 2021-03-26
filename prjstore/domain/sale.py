@@ -91,7 +91,7 @@ True
 <SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=2>>
     """
 
-    def __init__(self, seller, item=None, gty=1) -> None:
+    def __init__(self, seller=None, item=None, gty=1) -> None:
         self.seller = seller
         self.__list_sli = []
         self.__is_complete = False
@@ -166,7 +166,7 @@ True
     def get_seller(self):
         return self.__seller
 
-    @contract(seller = Seller)
+    @contract(seller = 'None | $Seller')
     def set_seller(self, seller):
         self.__seller = seller
 

@@ -1,3 +1,4 @@
+from prjstore.domain.sale import Sale
 from prjstore.domain.store import Store
 from prjstore.domain.test.test_item import TestItem
 from prjstore.domain.test.test_place_of_sale import TestPlaceOfSale
@@ -7,6 +8,7 @@ from prjstore.domain.test.test_seller import TestSeller
 class SaleRegistrationHandler:
     def __init__(self):
         self.store = Store()
+        self.sale = Sale()
 
     def test(self):
         self.pc = None

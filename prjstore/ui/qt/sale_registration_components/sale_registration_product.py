@@ -1,36 +1,29 @@
 import sys
 
-from PyQt5 import QtCore, QtGui
-from PyQt5.QtGui import QFontMetrics
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QRect
+from PyQt5.QtGui import QFontMetrics, QFont
 from PyQt5.QtWidgets import QWidget, QApplication, QSpinBox, QHBoxLayout, QSpacerItem, QSizePolicy, QPushButton
 
 class ItemFrame(QWidget):
     __color_fon = '#E1E1E1'
     selected_item = None
     sale_form = None
+    h = 30
 
     def __init__(self, item):
         super().__init__()
         self.item = item
+        self.setMinimumHeight(self.h)
         self.setToolTip(self.item.product.name)
         self.setToolTipDuration(2000)
-        self.count_box = QSpinBox()
+        self.count_box = QSpinBox(self)
         self.count_box.setRange(1, self.item.qty)
-        self.btn_plus = QPushButton('+')
+        self.btn_plus = QPushButton(parent=self, text='+')
         self.btn_plus.setMaximumSize(25, 25)
         self.btn_plus.clicked.connect(self.on_push_button)
 
         self.count_box.setRange(1, self.item.qty)
-
-
-        self.h_box = QHBoxLayout(self)
-        spacer = QSpacerItem(1500, 0, QSizePolicy.Minimum, QSizePolicy.Minimum)
-        self.h_box.addItem(spacer)
-        self.h_box.addWidget(self.count_box)
-        self.h_box.addWidget(self.btn_plus)
-        spacer = QSpacerItem(50, 0, QSizePolicy.Minimum, QSizePolicy.Minimum)
-        self.h_box.addItem(spacer)
-        self.h_box.setContentsMargins(0, 0, 0, 0)
 
         self.count_box.hide()
         self.btn_plus.hide()
@@ -38,9 +31,11 @@ class ItemFrame(QWidget):
 
 
     def sizeHint(self):
-        return QtCore.QSize(700, 30)
+        return QtCore.QSize(200, self.h)
 
     def paintEvent(self, e):
+        self.count_box.move(self.width()-self.count_box.width()-3-self.btn_plus.width()-3, 4)
+        self.btn_plus.move(self.width()-self.btn_plus.width()-3, 3)
         painter = QtGui.QPainter(self)
         brush = QtGui.QBrush()
         brush.setColor(QtGui.QColor(self.__color_fon))
@@ -62,14 +57,15 @@ class ItemFrame(QWidget):
         font.setPointSize(10)
         painter.setFont(font)
         fm = QFontMetrics(font)
-        pixelsWide = fm.width(f'{self.item.product.price.format_my()}')
+        pixels_price = fm.width(f'{self.item.product.price.format_my()}')
+        pixels_qty = fm.width(f'{self.item.qty}шт.')
 
 
         painter.drawText(QtCore.QRect(0, 0, painter.device().width()-180, 25), QtCore.Qt.AlignVCenter,
                          f'{self.item.product.id}:{self.item.product.name}')
         # painter.drawText(5, 20, f'{self.item.product.id}:{self.item.product.name}')
-        painter.drawText(painter.device().width()-pixelsWide-125, 20, f'{self.item.product.price.format_my()}')
-        painter.drawText(painter.device().width()-45, 20, f'{self.item.qty}шт.')
+        painter.drawText(painter.device().width()-pixels_price-125, 20, f'{self.item.product.price.format_my()}')
+        painter.drawText(painter.device().width()-pixels_qty-80, 20, f'{self.item.qty}шт.')
         painter.end()
 
 

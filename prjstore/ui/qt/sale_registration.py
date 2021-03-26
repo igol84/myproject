@@ -16,6 +16,7 @@ class SaleForm(QWidget):
         self.resize(1200, 600)
         self.handler = SaleRegistrationHandler()
         self.handler.test()
+        self.items = self.handler.store.items
 
         self.ui.dateEdit.setDate(QDate.currentDate())
         self.ui.dateEdit.setCalendarPopup(True)
@@ -41,13 +42,11 @@ class SaleForm(QWidget):
         self.ui.scroll_slis.setWidget(groupBox)
 
     def _update_items(self):
-        self.items_box = QtWidgets.QVBoxLayout()
-        items = self.handler.store.items
+        items = self.items
         for key, item in items.items():
             item_frame = ItemFrame(item)
-            self.items_box.addWidget(item_frame)
-        self.items_box.addStretch(0)
-        self.ui.scroll_items.setLayout(self.items_box)
+            self.ui.items_box.addWidget(item_frame)
+        self.ui.items_box.addStretch(0)
 
 
 
