@@ -9,12 +9,13 @@ class ItemFrame(QWidget):
     __color_fon = '#E1E1E1'
     selected_item = None
     sale_form = None
-    h = 30
+    __h = 30
+    __w = 300
 
     def __init__(self, item):
         super().__init__()
         self.item = item
-        self.setMinimumHeight(self.h)
+        self.setMinimumHeight(self.__h)
         self.setToolTip(self.item.product.name)
         self.setToolTipDuration(2000)
         self.count_box = QSpinBox(self)
@@ -31,7 +32,7 @@ class ItemFrame(QWidget):
 
 
     def sizeHint(self):
-        return QtCore.QSize(200, self.h)
+        return QtCore.QSize(self.__w, self.__h)
 
     def paintEvent(self, e):
         self.count_box.move(self.width()-self.count_box.width()-3-self.btn_plus.width()-3, 4)
@@ -61,11 +62,11 @@ class ItemFrame(QWidget):
         pixels_qty = fm.width(f'{self.item.qty}шт.')
 
 
-        painter.drawText(QtCore.QRect(0, 0, painter.device().width()-180, 25), QtCore.Qt.AlignVCenter,
+        painter.drawText(QtCore.QRect(0, 0, self.width()-180, 25), QtCore.Qt.AlignVCenter,
                          f'{self.item.product.id}:{self.item.product.name}')
         # painter.drawText(5, 20, f'{self.item.product.id}:{self.item.product.name}')
-        painter.drawText(painter.device().width()-pixels_price-125, 20, f'{self.item.product.price.format_my()}')
-        painter.drawText(painter.device().width()-pixels_qty-80, 20, f'{self.item.qty}шт.')
+        painter.drawText(self.width()-pixels_price-125, 20, f'{self.item.product.price.format_my()}')
+        painter.drawText(self.width()-pixels_qty-80, 20, f'{self.item.qty}шт.')
         painter.end()
 
 
@@ -89,8 +90,7 @@ class ItemFrame(QWidget):
         self.update()
 
     def on_push_button(self):
-
-        print(self.__class__.sale_form.handler.store.items[self.item.product.id])
+        print(self.selected_item)
 
 if __name__ == "__main__":
     from prjstore.domain.item import Item

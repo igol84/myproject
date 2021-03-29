@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtCore import QDate
 
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
+from prjstore.ui.qt.qt_utils import clearLayout
 from prjstore.ui.qt.sale_registration_components.sale_registration_product import ItemFrame
 from prjstore.ui.qt.sale_registration_ui import *
 
@@ -42,11 +43,13 @@ class SaleForm(QWidget):
         self.ui.scroll_slis.setWidget(groupBox)
 
     def _update_items(self):
+        clearLayout(self.ui.items_box)
         items = self.items
         for key, item in items.items():
             item_frame = ItemFrame(item)
             self.ui.items_box.addWidget(item_frame)
         self.ui.items_box.addStretch(0)
+
 
 
 
