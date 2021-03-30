@@ -96,7 +96,7 @@ class Store:
         items = {}
         if name:
             for it_id, item in self.items.items():
-                if name in item.product.name:
+                if name.lower() in item.product.name.lower():
                     items[it_id] = item
         return items
 

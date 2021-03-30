@@ -15,7 +15,7 @@ class ItemFrame(QWidget):
     def __init__(self, item):
         super().__init__()
         self.item = item
-        self.setMinimumHeight(self.__h)
+        self.setMinimumSize(self.__w, self.__h)
         self.setToolTip(self.item.product.name)
         self.setToolTipDuration(2000)
         self.count_box = QSpinBox(self)
@@ -61,10 +61,9 @@ class ItemFrame(QWidget):
         pixels_price = fm.width(f'{self.item.product.price.format_my()}')
         pixels_qty = fm.width(f'{self.item.qty}шт.')
 
-
-        painter.drawText(QtCore.QRect(0, 0, self.width()-180, 25), QtCore.Qt.AlignVCenter,
-                         f'{self.item.product.id}:{self.item.product.name}')
-        # painter.drawText(5, 20, f'{self.item.product.id}:{self.item.product.name}')
+        text_name = f'{self.item.product.id}:{self.item.product.name}'
+        elided = fm.elidedText(text_name, QtCore.Qt.ElideRight, self.width()-180)
+        painter.drawText(QtCore.QRect(0, 0, self.width()-180, self.height()), QtCore.Qt.AlignVCenter, elided)
         painter.drawText(self.width()-pixels_price-125, 20, f'{self.item.product.price.format_my()}')
         painter.drawText(self.width()-pixels_qty-80, 20, f'{self.item.qty}шт.')
         painter.end()

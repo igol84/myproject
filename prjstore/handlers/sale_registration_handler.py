@@ -27,7 +27,8 @@ class SaleRegistrationHandler:
         self.store.items['1'].product.price = 10500
         self.store.items['1'].product.name = 'Кроссовки Adidas Yung-1 красные, натуральная замша. Топ качество!'
 
-
+    def search_items(self, text: str):
+        return self.store.search_item(name=text)
 
 if __name__ == '__main__':
     handler = SaleRegistrationHandler()

@@ -44,7 +44,7 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="button_hide_sli">
         <property name="text">
          <string>скрыть</string>
         </property>
@@ -105,7 +105,11 @@
               <widget class="QComboBox" name="combo_box_place_of_sale"/>
              </item>
              <item row="0" column="1">
-              <widget class="QDateEdit" name="dateEdit"/>
+              <widget class="QDateEdit" name="dateEdit">
+               <property name="calendarPopup">
+                <bool>true</bool>
+               </property>
+              </widget>
              </item>
              <item row="2" column="1">
               <widget class="QComboBox" name="combo_box_seller"/>
@@ -207,7 +211,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="src_items"/>
+               <widget class="QLineEdit" name="src_items">
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
