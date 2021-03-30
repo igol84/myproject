@@ -4,9 +4,9 @@ from PyQt5.QtWidgets import QWidget, QApplication
 from PyQt5.QtCore import QDate
 
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
-from prjstore.ui.qt.qt_utils import clearLayout
-from prjstore.ui.qt.sale_registration_components.sale_registration_product import ItemFrame
-from prjstore.ui.qt.sale_registration_ui import *
+from prjstore.ui.pyqt.qt_utils import clearLayout
+from prjstore.ui.pyqt.sale_registration_components.sale_registration_product import ItemFrame
+from prjstore.ui.pyqt.sale_registration_ui import *
 
 
 class SaleForm(QWidget):
