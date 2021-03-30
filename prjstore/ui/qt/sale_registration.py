@@ -29,7 +29,8 @@ class SaleForm(QWidget):
 
         self._update_sli()
 
-        ItemFrame.sale_form = self
+        ItemFrame.parent_form = self
+        self.selected_item = None
         self._update_items()
 
         self.ui.button_hide_sli.clicked.connect(self.on_button_hide_sli)
@@ -48,7 +49,7 @@ class SaleForm(QWidget):
 
     def _update_items(self):
         clearLayout(self.ui.items_box)
-        ItemFrame.selected_item = None
+        self.selected_item = None
         items = self.items
         for key, item in items.items():
             item_frame = ItemFrame(item)

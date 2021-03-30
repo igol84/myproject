@@ -7,8 +7,7 @@ from PyQt5.QtWidgets import QWidget, QApplication, QSpinBox, QHBoxLayout, QSpace
 
 class ItemFrame(QWidget):
     __color_fon = '#E1E1E1'
-    selected_item = None
-    sale_form = None
+    parent_form = None
     __h = 30
     __w = 300
 
@@ -70,10 +69,10 @@ class ItemFrame(QWidget):
 
 
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
-        if self.__class__.selected_item:
-            self.__class__.selected_item.count_box.hide()
-            self.__class__.selected_item.btn_plus.hide()
-        self.__class__.selected_item = self
+        if self.parent_form.selected_item:
+            self.parent_form.selected_item.count_box.hide()
+            self.parent_form.selected_item.btn_plus.hide()
+        self.parent_form.selected_item = self
         self.count_box.show()
         self.btn_plus.show()
         self.count_box.setFocus()
@@ -89,7 +88,7 @@ class ItemFrame(QWidget):
         self.update()
 
     def on_push_button(self):
-        print(self.selected_item)
+        print(self.parent_form.selected_item)
 
 if __name__ == "__main__":
     from prjstore.domain.item import Item
