@@ -22,6 +22,7 @@ class SaleForm(QWidget):
         self.handler.test()
         self.items = self.handler.store.items
 
+        # SLI ----------------------------------------------------
         self.ui.dateEdit.setDate(QDate.currentDate())
         self.ui.combo_box_place_of_sale.addItem('', userData=None)
         for n, place in enumerate(self.handler.store.places_of_sale):
@@ -32,7 +33,7 @@ class SaleForm(QWidget):
 
         self._update_sli()
 
-        ItemFrame.parent_form = self
+        # Items ----------------------------------------------------
         self.selected_item = None
         self._update_items()
 
@@ -55,7 +56,7 @@ class SaleForm(QWidget):
         self.selected_item = None
         items = self.items
         for key, item in items.items():
-            item_frame = ItemFrame(item)
+            item_frame = ItemFrame(self, item)
             self.ui.items_box.addWidget(item_frame)
         self.ui.items_box.addStretch(0)
 
