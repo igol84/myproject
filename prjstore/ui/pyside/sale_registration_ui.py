@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'sale_registration.ui'
+## Form generated from reading UI file 'sale_registrationwOPoWM.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -81,11 +81,11 @@ class Ui_Form(object):
 
         self.gridLayout.addWidget(self.combo_box_place_of_sale, 1, 1, 1, 1)
 
-        self.dateEdit = QDateEdit(self.sale)
-        self.dateEdit.setObjectName(u"dateEdit")
-        self.dateEdit.setCalendarPopup(True)
+        self.date_edit = QDateEdit(self.sale)
+        self.date_edit.setObjectName(u"date_edit")
+        self.date_edit.setCalendarPopup(True)
 
-        self.gridLayout.addWidget(self.dateEdit, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.date_edit, 0, 1, 1, 1)
 
         self.combo_box_seller = QComboBox(self.sale)
         self.combo_box_seller.setObjectName(u"combo_box_seller")
@@ -106,8 +106,8 @@ class Ui_Form(object):
         self.widget_slis = QWidget()
         self.widget_slis.setObjectName(u"widget_slis")
         self.widget_slis.setGeometry(QRect(0, 0, 508, 567))
-        self.verticalLayout_5 = QVBoxLayout(self.widget_slis)
-        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.sli_layout = QVBoxLayout(self.widget_slis)
+        self.sli_layout.setObjectName(u"sli_layout")
         self.scroll_slis.setWidget(self.widget_slis)
 
         self.verticalLayout_6.addWidget(self.scroll_slis)
@@ -159,27 +159,27 @@ class Ui_Form(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.widget_items.sizePolicy().hasHeightForWidth())
         self.widget_items.setSizePolicy(sizePolicy1)
-        self.items_box = QVBoxLayout(self.widget_items)
-        self.items_box.setObjectName(u"items_box")
-        self.items_box.setContentsMargins(5, 5, 5, 5)
+        self.items_layout = QVBoxLayout(self.widget_items)
+        self.items_layout.setObjectName(u"items_layout")
+        self.items_layout.setContentsMargins(5, 5, 5, 5)
         self.label_6 = QLabel(self.widget_items)
         self.label_6.setObjectName(u"label_6")
 
-        self.items_box.addWidget(self.label_6)
+        self.items_layout.addWidget(self.label_6)
 
         self.label_5 = QLabel(self.widget_items)
         self.label_5.setObjectName(u"label_5")
 
-        self.items_box.addWidget(self.label_5)
+        self.items_layout.addWidget(self.label_5)
 
         self.label_4 = QLabel(self.widget_items)
         self.label_4.setObjectName(u"label_4")
 
-        self.items_box.addWidget(self.label_4)
+        self.items_layout.addWidget(self.label_4)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.items_box.addItem(self.verticalSpacer)
+        self.items_layout.addItem(self.verticalSpacer)
 
         self.scroll_items.setWidget(self.widget_items)
 
