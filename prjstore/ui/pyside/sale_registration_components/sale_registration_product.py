@@ -20,6 +20,7 @@ class ItemFrame(QWidget):
         super().__init__()
         self.__parent_form = parent
         self.item = pr_item
+        self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setMinimumSize(self.width_, self.height_)
         self.setMaximumHeight(self.height_)
         self.setToolTipDuration(2000)
@@ -28,6 +29,7 @@ class ItemFrame(QWidget):
         text_item_description = f'{self.item.product.id}:{self.item.product.name}'
         self.label_item_description = LabelItemDescription(parent=self, text=text_item_description)
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
+        self.label_item_description.move(5, 0)
         self.count_box = QSpinBox(self)
         self.count_box.setRange(1, self.item.qty)
         self.btn_plus = QPushButton(parent=self, text='+')
@@ -73,7 +75,7 @@ class ItemFrame(QWidget):
         text_item_qty = f'{self.item.qty}шт.'
         pixels_price = fm.size(0, text_item_price).width()
         pixels_qty = fm.size(0, text_item_qty).width()
-        painter.drawText(self.width() - pixels_price - 125, 20, text_item_price)
+        painter.drawText(self.width() - pixels_price - 145, 20, text_item_price)
         painter.drawText(self.width() - pixels_qty - 80, 20, text_item_qty)
         painter.end()
 
@@ -121,7 +123,7 @@ class LabelItemDescription(QLabel):
         pen.setColor(QtGui.QColor(self.parent().color_text))
         painter.setPen(pen)
         metrics = QFontMetrics(self.font())
-        pixels_text = metrics.elidedText(self.text(), QtCore.Qt.ElideRight, self.parent().width() - 180)
+        pixels_text = metrics.elidedText(self.text(), QtCore.Qt.ElideRight, self.parent().width() - 220)
         self.resize(metrics.size(0, pixels_text).width(), self.parent().height_)
         painter.drawText(self.rect(), self.alignment(), pixels_text)
 
@@ -131,13 +133,13 @@ if __name__ == "__main__":
     from prjstore.domain.product_factory import ProductFactory
 
     app = QApplication(sys.argv)
-    product = ProductFactory.create(id='2', name='Кроссовки Adidas Yung-1 красные, натуральная замша. Топ качество!',
+    product = ProductFactory.create(id='2', name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
                                     price=1600)
     item = Item(pr=product, qty=3, buy_price=200)
     w = ItemFrame(parent=None, pr_item=item)
     w.show()
-    product2 = ProductFactory.create(id='2', name='Кроссовки Adidas Yung-1 красные', price=1600)
-    item2 = Item(pr=product2, qty=1, buy_price=200)
+    product2 = ProductFactory.create(id='2', name='Кроссовки Adidas Y-1 красные', price=10600.50)
+    item2 = Item(pr=product2, qty=1000, buy_price=1200)
     w2 = ItemFrame(parent=None, pr_item=item2)
     w2.show()
     sys.exit(app.exec_())

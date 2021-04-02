@@ -18,7 +18,7 @@ class Store:
 4
 >>> store.get_item_by_pr_id('4')
 <Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>
->>> store.search_item(name = 'item2')
+>>> store.search_items_by_name(name = 'item2')
 {'2': <Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,\
  '6': <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>}
 >>> store.sellers
@@ -92,7 +92,7 @@ class Store:
         raise IndexError(f"Invalid product id: {pr_id}")
 
     @contract(name="None | str")
-    def search_item(self, name=None) -> dict[str: Item]:
+    def search_items_by_name(self, name=None) -> dict[str: Item]:
         items = {}
         if name:
             for it_id, item in self.items.items():

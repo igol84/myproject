@@ -39,7 +39,7 @@ class SaleForm(QWidget):
         self._update_items()
 
         self.ui.scroll_items.mousePressEvent = self.on_click_scroll_items
-        self.ui.src_items.textChanged.connect(self.on_search_items_by_name)
+        self.ui.src_items.textChanged.connect(self.on_search_items)
 
     def _update_sli(self):
         clearLayout(self.ui.sli_layout)
@@ -79,7 +79,7 @@ class SaleForm(QWidget):
     def on_click_scroll_items(self, event):
         self._update_items()
 
-    def on_search_items_by_name(self):
+    def on_search_items(self):
         src_text = self.ui.src_items.text()
         if src_text:
             self.items = self.handler.search_items(src_text)
@@ -89,7 +89,9 @@ class SaleForm(QWidget):
             self._update_items()
 
     def put_on_sale(self):
-        print(self.selected_item_widget.item)
+        item = self.selected_item_widget.item
+        qty = self.selected_item_widget.count_box.text()
+        self.handler.put_on_sale(item, qty)
 
 
 if __name__ == "__main__":

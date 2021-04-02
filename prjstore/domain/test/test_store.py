@@ -45,7 +45,7 @@ class Test_Store(TestStore):
         self.assertEqual(self.store.get_item_by_pr_id('2').product.name, 'item23')
 
     def test_05_search_item(self):
-        self.assertEqual(len(self.store.search_item(name = 'item2')), 3)
+        self.assertEqual(len(self.store.search_items_by_name(name ='item2')), 3)
 
     def test_06_move_sale_to_another_place(self):
         sale = self.store.places_of_sale[0].sale

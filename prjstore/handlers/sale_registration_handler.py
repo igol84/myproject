@@ -1,9 +1,11 @@
+from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
 from prjstore.domain.store import Store
 from prjstore.domain.test.test_item import TestItem
 from prjstore.domain.test.test_place_of_sale import TestPlaceOfSale
 from prjstore.domain.test.test_products_catalog import TestProductCatalog
 from prjstore.domain.test.test_seller import TestSeller
+
 
 class SaleRegistrationHandler:
     def __init__(self):
@@ -25,10 +27,17 @@ class SaleRegistrationHandler:
         self.store.places_of_sale = self.places_of_sale
         self.store.items['1'].qty = 150
         self.store.items['1'].product.price = 10500
-        self.store.items['1'].product.name = 'Кроссовки Adidas Yung-1 красные, натуральная замша. Топ качество!'
+        self.store.items['1'].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
 
-    def search_items(self, text: str):
-        return self.store.search_item(name=text)
+    def search_items(self, text: str) ->  dict[str: Item]:
+        items = self.store.search_items_by_name(name=text)
+        if text in self.store.items:
+            items[text] = self.store.items[text]
+        return items
+
+    def put_on_sale(self, item: Item, qty: int):
+        print(item, qty)
+
 
 if __name__ == '__main__':
     handler = SaleRegistrationHandler()
