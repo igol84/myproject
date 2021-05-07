@@ -1,7 +1,7 @@
 from contracts import contract
 
-from prjstore.domain.product_catalog import get_products_for_test
-from prjstore.domain.abstract_product import AbstractProduct
+from .product_catalog import get_products_for_test
+from .abstract_product import AbstractProduct
 from util.money_my import MoneyMy, Decimal
 
 class Item:

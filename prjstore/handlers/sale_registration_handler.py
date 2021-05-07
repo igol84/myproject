@@ -1,10 +1,10 @@
-from prjstore.domain.item import Item
-from prjstore.domain.sale import Sale
-from prjstore.domain.store import Store
-from prjstore.domain.test.test_item import TestItem
-from prjstore.domain.test.test_place_of_sale import TestPlaceOfSale
-from prjstore.domain.test.test_products_catalog import TestProductCatalog
-from prjstore.domain.test.test_seller import TestSeller
+from ..domain.item import Item
+from ..domain.sale import Sale
+from ..domain.store import Store
+from ..domain.test.test_item import TestItem
+from ..domain.test.test_place_of_sale import TestPlaceOfSale
+from ..domain.test.test_products_catalog import TestProductCatalog
+from ..domain.test.test_seller import TestSeller
 
 
 class SaleRegistrationHandler:

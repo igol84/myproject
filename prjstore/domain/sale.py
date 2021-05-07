@@ -2,10 +2,10 @@ from contracts import contract
 import datetime
 import locale
 
-from prjstore.domain.item import Item, get_items_for_test
-from prjstore.domain.sale_line_item import SaleLineItem
-from prjstore.domain.abstract_product import AbstractProduct
-from prjstore.domain.seller import Seller
+from .item import Item, get_items_for_test
+from .sale_line_item import SaleLineItem
+from .abstract_product import AbstractProduct
+from .seller import Seller
 
 locale.setlocale(locale.LC_TIME, 'ru_RU')
 

@@ -1,8 +1,8 @@
 import datetime
 from contracts import contract
 
-from prjstore.domain.sale import Sale, Item, get_items_for_test
-from prjstore.domain.seller import Seller
+from .sale import Sale, Item, get_items_for_test
+from .seller import Seller
 
 class PlaceOfSale:
     """
