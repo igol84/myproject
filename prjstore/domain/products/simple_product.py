@@ -1,4 +1,4 @@
-from ..abstract_product import AbstractProduct
+from prjstore.domain.abstract_product import AbstractProduct
 
 
 class SimpleProduct(AbstractProduct):

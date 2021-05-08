@@ -1,7 +1,7 @@
 from contracts import contract
 
-from .abstract_product import AbstractProduct
-from .product_factory import ProductFactory
+from prjstore.domain.abstract_product import AbstractProduct
+from prjstore.domain.product_factory import ProductFactory
 
 
 class ProductCatalog(list):

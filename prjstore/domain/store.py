@@ -1,10 +1,10 @@
 from contracts import contract
 
-from .item import Item
-from .place_of_sale import PlaceOfSale
-from .product_catalog import ProductCatalog, get_products_for_test
-from .product_factory import ProductFactory
-from .seller import Seller
+from prjstore.domain.item import Item
+from prjstore.domain.place_of_sale import PlaceOfSale
+from prjstore.domain.product_catalog import ProductCatalog, get_products_for_test
+from prjstore.domain.product_factory import ProductFactory
+from prjstore.domain.seller import Seller
 
 
 class Store:

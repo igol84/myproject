@@ -1,19 +1,19 @@
 from contracts import contract, new_contract
-from ..abstract_product import AbstractProduct
-from .shoes_components import Width
+from prjstore.domain.abstract_product import AbstractProduct
+from prjstore.domain.products.shoes_components import Width
 
 
 class Shoes(AbstractProduct):
     """
 >>> shoes = Shoes(prod_id='6', name='nike air force', price=900, color='red', \
-size=43, width=Shoes.widths['Wide'], length_of_insole=28.5) # Create product
+size=43, width=Width(name='Wide', short_name='EE'), length_of_insole=28.5) # Create product
 >>> shoes
 <Shoes: id=6, name=nike air force, price=UAH 900.00, color=red, size=43.0, length_of_insole=28.5, width=Wide>
->>> shoes.color='black'                                                                  # color
+>>> shoes.color='black'
 >>> shoes.color
 'black'
 
->>> shoes.size=44                                                                        # size
+>>> shoes.size=44                                                 # Get size
 >>> shoes.size
 44.0
 
@@ -22,7 +22,7 @@ size=43, width=Shoes.widths['Wide'], length_of_insole=28.5) # Create product
 28.0
 
 
->>> shoes.width = Shoes.widths['Medium']                                                 # width
+>>> shoes.width = Width(name='Medium', short_name='D')                                                 # Get width
 >>> shoes.width
 Medium
 >>> shoes.width.short_name
@@ -51,12 +51,11 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
     @staticmethod
     @new_contract
     def valid_length_of_insole(length_of_insole) -> float:
-        return float(length_of_insole) and 9 < float(length_of_insole) < 40
+        return float(length_of_insole) and 10 < float(length_of_insole) < 40
 
-    @contract(prod_id=str, name=str, price='int | float', color=str, size='valid_size', length_of_insole='valid_length_of_insole',
-              currency=str)
+    @contract(prod_id=str, name=str, price='int | float', size='valid_size', currency=str)
     def __init__(self, prod_id, name='item', price=0, color='default', size=1, length_of_insole=11,
-                 width=widths['Medium'],
+                 width=Width(name='Medium', short_name='D'),
                  currency=AbstractProduct._default_curr):
         super().__init__(prod_id, name, price, currency)
         self.color = color

@@ -7,7 +7,6 @@ class TestShoes(TestCase):
         self.shoes = ProductFactory.create(product_type='shoes', prod_id='6', name='nike air force', price=900,
                                            color='red', size=43, length_of_insole=28.5, width='Wide')
 
-
 class Test_Shoes(TestShoes):
     def test_01_initial(self):
         self.assertEqual(str(self.shoes),
@@ -36,7 +35,7 @@ class Test_Shoes(TestShoes):
         self.assertEqual(self.shoes.length_of_insole, 29)
 
     def test_02_edit_width(self):
-        self.shoes.width = 'Extra Wide'
+        self.shoes.set_width('Extra Wide')
         self.assertEqual(str(self.shoes.width), 'Extra Wide')
         self.assertEqual(self.shoes.width.short_name, '4E')
 
