@@ -20,7 +20,7 @@ class Test_01_Currency(unittest.TestCase):
 
     def test_03_edit_rate(self):
         self.cur.rate = 28
-        self.assertEqual(str(self.cur), '<Currency UAH rate 28 ₴>')
+        self.assertEqual(str(self.cur), '<Currency UAH rate 28.0 ₴>')
         self.cur.rate = 28.5
         self.assertEqual(str(self.cur), '<Currency UAH rate 28.5 ₴>')
 

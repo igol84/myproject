@@ -1,6 +1,6 @@
 import unittest
 from contracts import ContractNotRespected
-from util.currency import Currency, Currencies
+from util.currency import Currencies
 from util.money_my import MoneyMy
 from util.test.test_currecy import TestCurrencies
 
@@ -17,7 +17,7 @@ class Test_MyMoney(unittest.TestCase):
         self.assertEqual(self.money_UAH.amount, 1750.5)
         self.assertEqual(self.money_UAH.currency, 'UAH')
         self.assertEqual(str(self.money_UAH.USD), 'USD 63.65')
-        self.assertEqual(str(self.money_UAH.format_my()), '1,750.5₴')
+        self.assertEqual(str(self.money_UAH.format_my()), '1,750.50₴')
         self.assertEqual(str(self.money_UAH.format('uk_UA')), '1 750,50 ₴')  # 1 750,50 ₴
 
     def test_02_converted(self):

@@ -1,3 +1,5 @@
+from typing import Union
+
 from contracts import contract
 from money import Money  # pip install money  https://github.com/carlospalol/money
 from decimal import Decimal
@@ -31,7 +33,7 @@ USD 63.65
     default_currency = 'UAH'
 
     @contract(currency='str[3]')
-    def __init__(self, amount='0', currency=default_currency):
+    def __init__(self, amount: Union[int, float, Decimal], currency: str = default_currency):
         """
         :param amount: int, float, Decimal
         :param currency: str[3] ("UAH", "USD" ...)
@@ -39,7 +41,7 @@ USD 63.65
         assert currency in MoneyMy.currencies, f"'{self.__class__.__name__}' has no currency '{currency}'"
         Money.__init__(self, amount=amount, currency=currency)
 
-    def __getattr__(self, currency):
+    def __getattr__(self, currency: str) -> 'Money':
         """For get money in .USD or .UAH"""
         assert currency in MoneyMy.currencies, f"'{self.__class__.__name__}' has no currency '{currency}'"
         if currency == self.currency:
@@ -47,12 +49,12 @@ USD 63.65
         else:
             return MoneyMy.get_converted_money(self, currency)
 
-    def format_my(self):
-        return f'{self.amount:,}{self.currencies[self.currency].sign}'
+    def format_my(self) -> str:
+        return f'{self.amount:,.2f}{self.currencies[self.currency].sign}'
 
     @classmethod
-    @contract
-    def get_converted_money(cls, money_my: "isinstance(MoneyMy)", currency_to: 'str') -> "isinstance(MoneyMy)":
+    @contract(money_my='isinstance(MoneyMy)', currency_to='str')
+    def get_converted_money(cls, money_my: 'MoneyMy', currency_to: str) -> 'MoneyMy':
         assert currency_to in cls.currencies, f"'{cls.__name__}' has no currency '{currency_to}'"
         if money_my.currency == currency_to:
             amount = money_my.amount
