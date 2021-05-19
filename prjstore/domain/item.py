@@ -71,10 +71,10 @@ UAH 100
         return self.__buy_price
 
     @contract(buy_price='$MoneyMy | int | float | $Decimal', currency='None | str')
-    def set__buy_price(self, 
-                      buy_price: Union[MoneyMy, int, float, Decimal], 
-                      currency: Optional[str] = None
-                      ) -> None:
+    def set__buy_price(self,
+                       buy_price: Union[MoneyMy, int, float, Decimal],
+                       currency: Optional[str] = None
+                       ) -> None:
         if isinstance(buy_price, MoneyMy):
             self.__buy_price = buy_price
         else:

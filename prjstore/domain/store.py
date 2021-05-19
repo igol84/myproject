@@ -31,16 +31,13 @@ class Store:
 
     def __init__(self):
         self.factory: ProductFactory = ProductFactory()
-        self.setup_product_catalog()
-        self.setup_items()
-        self.setup_sellers()
-        self.setup_places_of_sale()
+        self.pc: ProductCatalog = ProductCatalog()
+        self.__items: dict[str, Item] = {}
+        self.__sellers: list[Seller] = []
+        self.__places_of_sale: list[PlaceOfSale] = []
 
     ###############################################################################################
     # pc
-    def setup_product_catalog(self):
-        self.pc: ProductCatalog = ProductCatalog()
-
     def get_pc(self) -> ProductCatalog:
         return self.__pc
 
@@ -52,9 +49,6 @@ class Store:
 
     ###############################################################################################
     # items
-    def setup_items(self):
-        self.__items: list[Item] = {}
-
     def get_items(self) -> dict[str: Item]:
         return self.__items
 
@@ -66,9 +60,6 @@ class Store:
 
     ###############################################################################################
     # sellers
-    def setup_sellers(self):
-        self.__sellers: list[Seller] = []
-
     def get_sellers(self) -> list[Seller]:
         return self.__sellers
 
@@ -80,9 +71,6 @@ class Store:
 
     ###############################################################################################
     # places_of_sale
-    def setup_places_of_sale(self):
-        self.__places_of_sale: list[PlaceOfSale] = []
-
     def get_places_of_sale(self) -> list[PlaceOfSale]:
         return self.__places_of_sale
 

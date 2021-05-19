@@ -93,7 +93,7 @@ True
 <SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=2>>
     """
 
-    def __init__(self, seller: Seller = None, item: Item = None, gty: int =1) -> None:
+    def __init__(self, seller: Seller = None, item: Item = None, gty: int = 1) -> None:
         self.seller: Seller = seller
         self.__list_sli: list[SaleLineItem] = []
         self.__is_complete: bool = False
