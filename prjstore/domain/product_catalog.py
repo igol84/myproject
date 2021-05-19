@@ -64,48 +64,55 @@ class ProductCatalog(list):
     def __init__(self):
         super().__init__()
 
+    ###############################################################################################
+    # quantity
+    def quantity(self) -> int:
+        return len(self)
+
+    quantity = property(quantity)
+
+    ###############################################################################################
+    # last_id
+    def last_id(self) -> str:
+        return str(sorted([int(pr.id) for pr in self])[-1])
+
+    last_id = property(last_id)
+
+    ###############################################################################################
+    # new_id
+    def new_id(self) -> str:
+        return str(int(self.last_id) + 1)
+
+    new_id = property(new_id)
+
+    ###############################################################################################
     @contract(pr=AbstractProduct)
-    def set_product(self, pr) -> None:
+    def set_product(self, pr: AbstractProduct) -> None:
         self.append(pr)
 
     @contract(pr_id=str)
-    def unset_product_by_pr_id(self, pr_id) -> None:
+    def unset_product_by_pr_id(self, pr_id: str) -> None:
         self.remove(self[pr_id])
 
-    def __delitem__(self, prod_id) -> None:
+    def __delitem__(self, prod_id: str) -> None:
         self.unset_product_by_pr_id(prod_id)
 
-    def __getitem__(self, prod_id) -> AbstractProduct:
-        return self.get_product_by_id(prod_id)
-
-    def get_product_by_id(self, prod_id) -> AbstractProduct:
+    def get_product_by_id(self, prod_id: str) -> AbstractProduct:
         for pr in self:
             if pr.id == prod_id:
                 return pr
         raise IndexError(f"Invalid product id: {prod_id}")
 
-    def search(self, name=None) -> list[AbstractProduct]:
+    def __getitem__(self, prod_id: str) -> AbstractProduct:
+        return self.get_product_by_id(prod_id)
+
+    def search(self, name: str = None) -> list[AbstractProduct]:
         products = []
         if name:
             for product in self:
                 if name.lower() in product.name.lower():
                     products.append(product)
         return products
-
-    def quantity(self) -> int:
-        return len(self)
-
-    quantity = property(quantity)
-
-    def last_id(self) -> str:
-        return str(sorted([int(pr.id) for pr in self])[-1])
-
-    last_id = property(last_id)
-
-    def new_id(self) -> str:
-        return str(int(self.last_id) + 1)
-
-    new_id = property(new_id)
 
 
 def get_products_for_test() -> ProductCatalog:

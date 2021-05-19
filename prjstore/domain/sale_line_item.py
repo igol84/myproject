@@ -1,3 +1,6 @@
+from decimal import Decimal
+from typing import Union, Optional
+
 from contracts import contract
 from util.money_my import MoneyMy
 from prjstore.domain.item import Item, get_items_for_test
@@ -30,37 +33,45 @@ qty=2>
     """
     _default_curr = MoneyMy.default_currency
 
-    def __init__(self, item, qty=1, sale_price=None, currency=_default_curr) -> None:
-        self.item = item
-        self.qty = qty
+    def __init__(self, item: Item, qty: int = 1, sale_price: Union[MoneyMy, int, float, Decimal] = None,
+                 currency: str = _default_curr) -> None:
+        self.item: Item = item
+        self.qty: int = qty
         if sale_price is None:
-            self.sale_price = self.item.product.price
+            self.sale_price: MoneyMy = self.item.product.price
         else:
             self.set_sale_price(sale_price, currency)
 
+    ###############################################################################################
+    # item
     def get_item(self) -> Item:
         return self._item
 
     @contract(pr=Item)
-    def set_item(self, pr) -> None:
+    def set_item(self, pr: Item) -> None:
         self._item = pr
 
     item = property(get_item, set_item)
 
+    ###############################################################################################
+    # qty
     def get_qty(self) -> int:
         return self._qty
 
     @contract(qty='int, >0')
-    def set_qty(self, qty) -> None:
+    def set_qty(self, qty: int) -> None:
         assert self._item.qty >= qty, f'sly.qty({qty}) should not be more than item.qty({self._item.qty})!'
         self._qty = qty
 
     qty = property(get_qty, set_qty)
 
+    ###############################################################################################
+    # sale_price
     def get_sale_price(self) -> MoneyMy:
         return self._sale_price
 
-    def set_sale_price(self, sale_price, currency=None) -> None:
+    @contract(sale_price='$MoneyMy | int | float | $Decimal', currency='None | str')
+    def set_sale_price(self, sale_price: Union[MoneyMy, int, float, Decimal], currency: Optional[str] = None) -> None:
         if isinstance(sale_price, MoneyMy):
             self._sale_price = sale_price
         else:

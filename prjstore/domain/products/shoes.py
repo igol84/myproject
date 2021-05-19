@@ -1,6 +1,10 @@
+from decimal import Decimal
+from typing import Union, Optional
+
 from contracts import contract, new_contract
 from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.products.shoes_components import Width
+from util.money_my import MoneyMy
 
 
 class Shoes(AbstractProduct):
@@ -39,9 +43,11 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
 >>> shoes
 <Shoes: id=6, name=nike air, price=USD 500.00, color=red, size=42.0, length_of_insole=28.5, width=Wide>
     """
-    widths = {'Medium': Width(name='Medium', short_name='D'),
-              'Wide': Width(name='Wide', short_name='EE'),
-              'Extra Wide': Width(name='Extra Wide', short_name='4E')}
+    widths: dict[str, Width] = {
+        'Medium': Width(name='Medium', short_name='D'),
+        'Wide': Width(name='Wide', short_name='EE'),
+        'Extra Wide': Width(name='Extra Wide', short_name='4E')
+    }
 
     @staticmethod
     @new_contract
@@ -55,15 +61,23 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
 
     @contract(price='int | float', color=str, size='valid_size',
               length_of_insole='valid_length_of_insole', currency=str)
-    def __init__(self, prod_id:str, name:str='item', price=0, color='default', size=1, length_of_insole=11,
-                 width=widths['Medium'],
-                 currency=AbstractProduct._default_curr):
+    def __init__(self,
+                 prod_id: str,
+                 name: str = 'item',
+                 price: Union[MoneyMy, int, float, Decimal] = 0,
+                 color: str = 'default',
+                 size: Union[int, float] = 1,
+                 length_of_insole: Union[int, float] = 11,
+                 width: Union[Width, str] = widths['Medium'],
+                 currency: str = AbstractProduct._default_curr):
         super().__init__(prod_id, name, price, currency)
-        self.color = color
-        self.size = size
-        self.length_of_insole = length_of_insole
-        self.width = width
+        self.color: str = color
+        self.size: float = size
+        self.length_of_insole: float = length_of_insole
+        self.width: Width = width
 
+    ###############################################################################################
+    # color
     def get_color(self) -> str:
         return self._color
 
@@ -73,6 +87,8 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
 
     color = property(get_color, set_color)
 
+    ###############################################################################################
+    # size
     def get_size(self) -> float:
         return self._size
 
@@ -82,6 +98,8 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
 
     size = property(get_size, set_size)
 
+    ###############################################################################################
+    # length_of_insole
     def get_length_of_insole(self) -> float:
         return self._length_of_insole
 
@@ -91,11 +109,13 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
 
     length_of_insole = property(get_length_of_insole, set_length_of_insole)
 
+    ###############################################################################################
+    # width
     def get_width(self) -> Width:
         return self._width
 
     @contract(width='$Width | str')
-    def set_width(self, width) -> None:
+    def set_width(self, width: Union[Width, str]) -> None:
         if isinstance(width, Width):
             self._width = width
         else:
@@ -106,8 +126,17 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
 
     width = property(get_width, set_width)
 
-    def edit(self, name=None, price=None, currency=None, color=None, size=None,
-             length_of_insole=None, width=None) -> None:
+    ###############################################################################################
+
+    def edit(self,
+             name: Optional[str] = None,
+             price: Union[None, MoneyMy, int, float, Decimal] = None,
+             currency: Optional[str] = None,
+             color: Optional[str] = None,
+             size: Union[int, float] = None,
+             length_of_insole: Union[None, int, float] = None,
+             width: Union[None, Width, str] = None
+             ) -> None:
         AbstractProduct.edit(self, name, price, currency)
         if color:
             self.set_color(color)

@@ -1,8 +1,11 @@
 import datetime
+from typing import Optional, Union
+
 from contracts import contract
 
 from prjstore.domain.sale import Sale, Item, get_items_for_test
 from prjstore.domain.seller import Seller
+
 
 class PlaceOfSale:
     """
@@ -34,10 +37,12 @@ class PlaceOfSale:
 
     """
 
-    def __init__(self, name, sale=None):
-        self.name = name
-        self.sale = sale
+    def __init__(self, name: str, sale: Sale = None):
+        self.name: str = name
+        self.sale: Sale = sale
 
+    ###############################################################################################
+    # name
     def get_name(self) -> str:
         return self._name
 
@@ -46,11 +51,13 @@ class PlaceOfSale:
 
     name = property(get_name, set_name)
 
+    ###############################################################################################
+    # sale
     def get_sale(self) -> Sale:
         return self._sale
 
     @contract(sale='None | $Sale')
-    def set_sale(self, sale) -> None:
+    def set_sale(self, sale: Optional[Sale]) -> None:
         self._sale = sale
 
     def del_sale(self) -> None:
@@ -58,23 +65,24 @@ class PlaceOfSale:
 
     sale = property(get_sale, set_sale, del_sale)
 
+    ###############################################################################################
     @contract(value="$Sale | $Seller")
-    def make_new_sale(self, value) -> None:
+    def make_new_sale(self, value: Union[Sale, Seller]) -> None:
         if isinstance(value, Sale):
             self.sale = value
         else:
             self.sale = Sale(value)
 
     @contract(item=Item, qty="int, >0")
-    def set_items_on_sale(self, item, qty=1) -> None:
+    def set_items_on_sale(self, item: Item, qty: int = 1) -> None:
         self.sale.add_line_item(item, qty)
 
     @contract(pr_id=str, qty="int, >0", items="None | list")
-    def set_items_on_sale_by_pr_id(self, pr_id, qty=1, items=None) -> None:
+    def set_items_on_sale_by_pr_id(self, pr_id: str, qty: int = 1, items: list[Item] = None) -> None:
         self.sale.add_line_item_by_product_id(pr_id, items, qty)
 
     @contract(pr_id=str, qty="int, >0")
-    def unset_items_on_sale_by_pr_id(self, pr_id, qty=1) -> None:
+    def unset_items_on_sale_by_pr_id(self, pr_id: str, qty: int = 1) -> None:
         self.sale.unset_line_item_by_pr_id(pr_id, qty)
 
     def end_sale_items(self) -> None:

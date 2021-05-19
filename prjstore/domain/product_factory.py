@@ -6,7 +6,7 @@ from prjstore.domain.products.shoes import Shoes
 class ProductFactory:
 
     @staticmethod
-    def create(product_type='product', *args, **kwargs) -> AbstractProduct:
+    def create(product_type: str = 'product', *args, **kwargs) -> AbstractProduct:
         products = {
             'product': SimpleProduct,
             'shoes': Shoes,

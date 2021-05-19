@@ -1,8 +1,11 @@
+from typing import Union, Optional
+
 from contracts import contract
 
 from prjstore.domain.product_catalog import get_products_for_test
 from prjstore.domain.abstract_product import AbstractProduct
 from util.money_my import MoneyMy, Decimal
+
 
 class Item:
     """
@@ -32,46 +35,57 @@ class Item:
 UAH 100
 
     """
-    _default_curr = MoneyMy.default_currency
+    _default_curr: str = MoneyMy.default_currency
 
-    def __init__(self, pr, qty=1, buy_price=0, currency=_default_curr):
-        self.product = pr
-        self.qty = qty
-        self.set_buy_price(buy_price, currency)
+    def __init__(self, pr: AbstractProduct, qty: int = 1, buy_price=0, currency=_default_curr):
+        self.product: AbstractProduct = pr
+        self.qty: int = qty
+        self.__buy_price: MoneyMy = None
+        self.set__buy_price(buy_price, currency)
 
-    def __repr__(self) -> str:
-        return f'<{self.__class__.__name__}: product={self.__product}, qty={self.__qty}>'
-
+    ###############################################################################################
+    # product
     def get_product(self) -> AbstractProduct:
         return self.__product
 
     @contract(pr=AbstractProduct)
-    def set_product(self, pr) -> None:
+    def set_product(self, pr: AbstractProduct) -> None:
         self.__product = pr
 
     product = property(get_product, set_product)
 
+    ###############################################################################################
+    # qty
     def get_qty(self) -> int:
         return self.__qty
 
     @contract(qty='int, >0')
-    def set_qty(self, qty) -> None:
+    def set_qty(self, qty: int) -> None:
         self.__qty = qty
 
     qty = property(get_qty, set_qty)
 
-    def get_buy_price(self) -> MoneyMy:
-        return self._buy_price
+    ###############################################################################################
+    # buy_price
+    def get__buy_price(self) -> MoneyMy:
+        return self.__buy_price
 
     @contract(buy_price='$MoneyMy | int | float | $Decimal', currency='None | str')
-    def set_buy_price(self, buy_price, currency=None) -> None:
+    def set__buy_price(self, 
+                      buy_price: Union[MoneyMy, int, float, Decimal], 
+                      currency: Optional[str] = None
+                      ) -> None:
         if isinstance(buy_price, MoneyMy):
-            self._buy_price = buy_price
+            self.__buy_price = buy_price
         else:
-            curr = currency if currency else self._buy_price.currency
-            self._buy_price = MoneyMy(amount=str(buy_price), currency=curr)
+            curr = currency if currency else self.__buy_price.currency
+            self.__buy_price = MoneyMy(amount=str(buy_price), currency=curr)
 
-    buy_price = property(get_buy_price, set_buy_price)
+    buy_price = property(get__buy_price, set__buy_price)
+
+    ###############################################################################################
+    def __repr__(self) -> str:
+        return f'<{self.__class__.__name__}: product={self.__product}, qty={self.__qty}>'
 
 
 def get_items_for_test() -> list[Item]:

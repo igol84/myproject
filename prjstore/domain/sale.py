@@ -1,5 +1,7 @@
+from typing import Optional
+
 from contracts import contract
-import datetime
+from datetime import datetime
 import locale
 
 from prjstore.domain.item import Item, get_items_for_test
@@ -12,13 +14,13 @@ locale.setlocale(locale.LC_TIME, 'ru_RU')
 
 class Sale:
     """
->>> items = get_items_for_test()                                               # get items
+>>> items: list[Item] = get_items_for_test()                                               # get items
 >>> items
 [<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,\
  <Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>,\
  <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>]
 >>> sale = Sale(Seller('Igor'), items[1])                                                    # Create sale
->>> sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')    # set time
+>>> sale.time = datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')    # set time
 >>> sale.time.strftime("%m/%d/%Y, %H:%M:%S")                                            # get time
 '06/06/2020, 12:19:55'
 >>> sale
@@ -91,29 +93,56 @@ True
 <SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=2>>
     """
 
-    def __init__(self, seller=None, item=None, gty=1) -> None:
-        self.seller = seller
-        self.__list_sli = []
-        self.__is_complete = False
-        self.time = datetime.datetime.now()
+    def __init__(self, seller: Seller = None, item: Item = None, gty: int =1) -> None:
+        self.seller: Seller = seller
+        self.__list_sli: list[SaleLineItem] = []
+        self.__is_complete: bool = False
+        self.time: datetime = datetime.now()
 
         if item:
             self.add_line_item(item, gty)
 
-    def get_list_sli(self):
+    ###############################################################################################
+    # seller
+    def get_seller(self) -> Seller:
+        return self.__seller
+
+    @contract(seller='None | $Seller')
+    def set_seller(self, seller: Optional[Seller]) -> None:
+        self.__seller = seller
+
+    seller = property(get_seller, set_seller)
+
+    ###############################################################################################
+    # line_items
+    def get_list_sli(self) -> list[SaleLineItem]:
         return self.__list_sli
 
     line_items = property(get_list_sli)
 
+    ###############################################################################################
+    # time
+    def get_time(self) -> datetime:
+        return self.__time
+
+    @contract(time=datetime)
+    def set_time(self, time: datetime) -> None:
+        self.__time = time
+
+    time = property(get_time, set_time)
+
+    ###############################################################################################
+    # add new line items
     @contract(item=Item, qty="int, >0")
-    def add_line_item(self, item, qty=1) -> None:  # add new line items
+    def add_line_item(self, item: Item, qty: int = 1) -> None:
         if not self.is_item_in_sale(item):  # is a new product in line items
             self.__list_sli.append(SaleLineItem(item, qty))
         else:  # a same product in line items
             self[item.product.id].qty += qty
 
-    @contract(pr_id=str, qty='int, >0', items='None | list')
-    def add_line_item_by_product_id(self, pr_id, items=None, qty=1) -> None:  # add new line items by product id
+    # add new line items by product id
+    @contract(pr_id=str, items='None | list', qty='int, >0')
+    def add_line_item_by_product_id(self, pr_id: str, items: list[Item] = None, qty: int = 1) -> None:
         try:
             if self.get_line_item_by_product_id(pr_id):  # try to get line items by product id
                 self[pr_id].qty += qty
@@ -126,14 +155,14 @@ True
             raise IndexError(f"Invalid product id: {pr_id}")
 
     @contract(pr_id=str)
-    def get_line_item_by_product_id(self, pr_id) -> SaleLineItem:
+    def get_line_item_by_product_id(self, pr_id: str) -> SaleLineItem:
         for sli in self.__list_sli:
             if sli.item.product.id == pr_id:
                 return sli
         raise IndexError(f"Invalid product id: {pr_id}")
 
     @contract(pr_id=str, qty='int, >0')
-    def unset_line_item_by_pr_id(self, pr_id, qty=1) -> None:  # unset line items
+    def unset_line_item_by_pr_id(self, pr_id: str, qty: int = 1) -> None:  # unset line items
         sli = self.get_line_item_by_product_id(pr_id)
         assert sli and qty <= sli.qty, f"quantity({qty}) should not be more than item.qty({self[pr_id].qty})!"
         # a same product in line items
@@ -143,7 +172,7 @@ True
             del self[pr_id]
 
     @contract(pr_id=str)
-    def del_line_item_by_product_id(self, pr_id) -> None:
+    def del_line_item_by_product_id(self, pr_id: str) -> None:
         for key, sli in enumerate(self.__list_sli):
             if sli.item.product.id == pr_id:
                 del self.__list_sli[key]
@@ -154,30 +183,12 @@ True
     def completed(self) -> None:
         self.__is_complete = True
 
-    def get_time(self) -> datetime:
-        return self.__time
-
-    @contract(time=datetime.datetime)
-    def set_time(self, time) -> None:
-        self.__time = time
-
-    time = property(get_time, set_time)
-
-    def get_seller(self):
-        return self.__seller
-
-    @contract(seller = 'None | $Seller')
-    def set_seller(self, seller):
-        self.__seller = seller
-
-    seller = property(get_seller, set_seller)
-
     @contract(item=Item)
-    def is_item_in_sale(self, item) -> bool:
+    def is_item_in_sale(self, item: Item) -> bool:
         return item.product in self
 
     @contract(product=AbstractProduct)
-    def is_product_in_sale(self, product) -> bool:
+    def is_product_in_sale(self, product: AbstractProduct) -> bool:
         for sli in self.__list_sli:
             if product == sli.item.product:
                 return True
@@ -187,15 +198,16 @@ True
         sale_line_items = '\n ' + '\n '.join([str(sli) for sli in self.line_items])
         completed = 'completed' if self.is_complete() else 'not completed'
         time = self.time.strftime("%m/%d/%Y, %H:%M:%S")
-        return f"<{self.__class__.__name__}: seller:{self.seller.name}, time: {time}, {completed}, line items:{sale_line_items}>"
+        return f"<{self.__class__.__name__}: " \
+               f"seller:{self.seller.name}, time: {time}, {completed}, line items:{sale_line_items}>"
 
-    def __getitem__(self, key):  # get line item by product id
+    def __getitem__(self, key: str):  # get line item by product id
         return self.get_line_item_by_product_id(key)
 
-    def __delitem__(self, key):  # del sale line item by product id
+    def __delitem__(self, key: str):  # del sale line item by product id
         self.del_line_item_by_product_id(key)
 
-    def __contains__(self, product) -> bool:  # Does Sale contain this product in line items?
+    def __contains__(self, product: AbstractProduct) -> bool:  # Does Sale contain this product in line items?
         return self.is_product_in_sale(product)
 
     def __len__(self):

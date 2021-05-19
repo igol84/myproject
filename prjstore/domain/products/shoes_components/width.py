@@ -11,9 +11,11 @@ Wide
     '''
 
     def __init__(self, name: str, short_name: str) -> None:
-        self.name = name
-        self.short_name = short_name
+        self.name : str = name
+        self.short_name : str = short_name
 
+    ###############################################################################################
+    # name
     def get_name(self) -> str:
         return self._name
 
@@ -23,6 +25,8 @@ Wide
 
     name = property(get_name, set_name)
 
+    ###############################################################################################
+    # short_name
     def get_short_name(self) -> str:
         return self._short_name
 
@@ -32,5 +36,6 @@ Wide
 
     short_name = property(get_short_name, set_short_name)
 
+    ###############################################################################################
     def __repr__(self) -> str:
         return self.name
