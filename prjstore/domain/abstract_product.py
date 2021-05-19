@@ -38,7 +38,7 @@ class AbstractProduct(ABC):
 
     @contract(price='$MoneyMy | int | float | $Decimal', currency='None | str')
     def set_price(self,
-                  price: Union[MoneyMy | int | float | Decimal],
+                  price: Union[MoneyMy, int, float, Decimal],
                   currency: Optional[str] = None
                   ) -> None:
         if isinstance(price, MoneyMy):
