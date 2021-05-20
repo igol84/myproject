@@ -31,12 +31,18 @@ class SaleRegistrationHandler:
 
     def search_items(self, text: str) ->  dict[str: Item]:
         items = self.store.search_items_by_name(name=text)
-        if text in self.store.items:
+        if text in self.store.items: # search_items_by_id
             items[text] = self.store.items[text]
         return items
 
     def put_on_sale(self, item: Item, qty: int):
+        self.sale.add_line_item(item=item, qty=qty)
         print(item, qty)
+        if item.qty > qty:
+            item.qty -= qty
+        else:
+            del item
+
 
 
 if __name__ == '__main__':

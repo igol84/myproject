@@ -7,9 +7,9 @@ from prjstore.domain.products.simple_product import SimpleProduct
 
 class TestProductFactory(TestCase):
     def test_create_simple_product(self):
-        self.product = ProductFactory.create(product_type='product', id='01', name='product1', price=25, currency='UAH')
+        self.product = ProductFactory.create(product_type='product', product_id='01', name='product1', price=25, currency='UAH')
         self.assertIsInstance(self.product, SimpleProduct)
-        self.product = ProductFactory.create(id='01', name='product1', price=25, currency='UAH')
+        self.product = ProductFactory.create(product_id='01', name='product1', price=25, currency='UAH')
         self.assertIsInstance(self.product, SimpleProduct)
 
 class Test_ProductFactory(TestProductFactory):

@@ -9,11 +9,11 @@ class TestProductCatalog(TestCase):
     def setUp(self) -> None:
         self.pc = ProductCatalog()
         self.pc.set_product(ProductFactory.create(product_type='shoes', prod_id='1', name='item1', price=100, size=36))
-        self.pc.set_product(ProductFactory.create(id='2', name='item23', price=600))
+        self.pc.set_product(ProductFactory.create(product_id='2', name='item23', price=600))
         self.pc.set_product(ProductFactory.create(product_type='shoes', prod_id='3', name='item24', price=700,
                                                   color='red', size=43.3, length_of_insole=28))
-        self.pc.set_product(ProductFactory.create(id='4', name='item5', price=300))
-        self.pc.set_product(ProductFactory.create(id='6', name='item2', price=500))
+        self.pc.set_product(ProductFactory.create(product_id='4', name='item5', price=300))
+        self.pc.set_product(ProductFactory.create(product_id='6', name='item2', price=500))
 
 class Test_ProductCatalog(TestProductCatalog):
     def test_01_initial(self):

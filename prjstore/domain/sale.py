@@ -93,11 +93,15 @@ True
 <SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=2>>
     """
 
-    def __init__(self, seller: Seller = None, item: Item = None, gty: int = 1) -> None:
+    def __init__(self,
+                 seller: Seller = None,
+                 item: Item = None,
+                 gty: int = 1
+                 ) -> None:
         self.seller: Seller = seller
         self.__list_sli: list[SaleLineItem] = []
         self.__is_complete: bool = False
-        self.time: datetime = datetime.now()
+        self.date_time: datetime = datetime.now()
 
         if item:
             self.add_line_item(item, gty)
@@ -122,14 +126,14 @@ True
 
     ###############################################################################################
     # time
-    def get_time(self) -> datetime:
-        return self.__time
+    def get_date_time(self) -> datetime:
+        return self.__date_time
 
-    @contract(time=datetime)
-    def set_time(self, time: datetime) -> None:
-        self.__time = time
+    @contract(date_time=datetime)
+    def set_date_time(self, date_time: datetime) -> None:
+        self.__date_time = date_time
 
-    time = property(get_time, set_time)
+    time = property(get_date_time, set_date_time)
 
     ###############################################################################################
     # add new line items

@@ -1,18 +1,18 @@
-from contracts import contract, new_contract
+from contracts import contract
 
 
 class Width:
-    '''
+    """
 >>> width = Width(name='Wide', short_name='EE')
 >>> width
 Wide
 >>> width.short_name
 'EE'
-    '''
+    """
 
     def __init__(self, name: str, short_name: str) -> None:
-        self.name : str = name
-        self.short_name : str = short_name
+        self.name: str = name
+        self.short_name: str = short_name
 
     ###############################################################################################
     # name

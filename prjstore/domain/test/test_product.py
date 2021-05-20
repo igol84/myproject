@@ -5,7 +5,7 @@ from prjstore.domain.product_factory import ProductFactory
 
 class TestSimpleProduct(TestCase):
     def setUp(self) -> None:
-        self.simple_product = ProductFactory.create(id='01', name='product1', price=25, currency='UAH')
+        self.simple_product = ProductFactory.create(product_id='01', name='product1', price=25, currency='UAH')
 
 class Test_SimpleProduct(TestSimpleProduct):
     def test_01_initial(self):
@@ -15,7 +15,7 @@ class Test_SimpleProduct(TestSimpleProduct):
         self.assertEqual(str(self.simple_product.price), 'UAH 25.00')
 
     def test_01a_initial(self):
-        self.simple_product = ProductFactory.create(product_type='product', id='02')
+        self.simple_product = ProductFactory.create(product_type='product', product_id='02')
         self.assertEqual(str(self.simple_product), '<SimpleProduct: id=02, name=item, price=UAH 0.00>')
 
     def test_02_edit_name(self):

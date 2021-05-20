@@ -10,9 +10,9 @@ class AbstractProduct(ABC):
     """
     _default_curr = MoneyMy.default_currency
 
-    @contract(id='str | int')
-    def __init__(self, id: Union[str, int], name: str = 'item', price=0, currency=_default_curr):
-        self._id: str = str(id)
+    @contract(product_id='str | int')
+    def __init__(self, product_id: Union[str, int], name: str = 'item', price=0, currency=_default_curr):
+        self._id: str = str(product_id)
         self.name: str = name
         self._price: MoneyMy = None
         self.set_price(price, currency)
@@ -22,7 +22,7 @@ class AbstractProduct(ABC):
     def get_id(self) -> str:
         return self._id
 
-    id : str = property(get_id)
+    id: str = property(get_id)
 
     def get_name(self) -> str:
         return self._name
@@ -33,7 +33,7 @@ class AbstractProduct(ABC):
     def set_name(self, name: str) -> None:
         self._name = name
 
-    name : str = property(get_name, set_name)
+    name: str = property(get_name, set_name)
 
     ###############################################################################################
     # price

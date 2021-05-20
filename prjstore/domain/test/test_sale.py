@@ -107,11 +107,11 @@ class Test_Sale(TestSale):
         self.assertEqual(self.sale.is_complete(), True)
 
     def test_get_time(self):
-        self.assertEqual(str(self.sale.get_time()), '2020-06-06 12:19:55')
+        self.assertEqual(str(self.sale.get_date_time()), '2020-06-06 12:19:55')
 
     def test_set_time(self):
-        self.sale.set_time(datetime.datetime.strptime('6/6/20, 12:20:55', '%m/%d/%y, %H:%M:%S'))
-        self.assertEqual(str(self.sale.get_time()), '2020-06-06 12:20:55')
+        self.sale.set_date_time(datetime.datetime.strptime('6/6/20, 12:20:55', '%m/%d/%y, %H:%M:%S'))
+        self.assertEqual(str(self.sale.get_date_time()), '2020-06-06 12:20:55')
 
     def test_get_seller(self):
         self.assertEqual(str(self.sale.get_seller()), '<Seller: name=Igor>')

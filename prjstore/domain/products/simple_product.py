@@ -7,7 +7,7 @@ from util.money_my import MoneyMy
 
 class SimpleProduct(AbstractProduct):
     """
->>> pr = SimpleProduct(id='2', name='item2', price=700)# Create product
+>>> pr = SimpleProduct(product_id='2', name='item2', price=700)# Create product
 >>> pr                                                    # Get product
 <SimpleProduct: id=2, name=item2, price=UAH 700.00>
 >>> pr.id                                                 # Get id

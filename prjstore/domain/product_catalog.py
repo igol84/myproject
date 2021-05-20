@@ -118,9 +118,9 @@ class ProductCatalog(list):
 def get_products_for_test() -> ProductCatalog:
     pc = ProductCatalog()
     pc.set_product(ProductFactory.create(product_type='shoes', prod_id='1', name='item1', price=100, size=36))
-    pc.set_product(ProductFactory.create(id='2', name='item23', price=600))
+    pc.set_product(ProductFactory.create(product_id='2', name='item23', price=600))
     pc.set_product(ProductFactory.create(product_type='shoes', prod_id='3', name='item4', price=700, color='red',
                                          size=43.3, length_of_insole=28))
-    pc.set_product(ProductFactory.create(id='4', name='item5', price=300))
-    pc.set_product(ProductFactory.create(id='6', name='item2', price=500))
+    pc.set_product(ProductFactory.create(product_id='4', name='item5', price=300))
+    pc.set_product(ProductFactory.create(product_id='6', name='item2', price=500))
     return pc
