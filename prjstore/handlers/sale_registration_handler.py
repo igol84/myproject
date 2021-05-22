@@ -23,11 +23,12 @@ class SaleRegistrationHandler:
         TestSeller.setUp(self)
         self.store.sellers = self.sellers
         self.places_of_sale = []
-        TestPlaceOfSale.setUp(self)
+        TestPlaceOfSale.setUp(self, sale=False)
         self.store.places_of_sale = self.places_of_sale
         self.store.items['1'].qty = 150
         self.store.items['1'].product.price = 10500
         self.store.items['1'].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
+
 
     def search_items(self, text: str) ->  dict[str: Item]:
         items = self.store.search_items_by_name(name=text)
@@ -37,11 +38,8 @@ class SaleRegistrationHandler:
 
     def put_on_sale(self, item: Item, qty: int):
         self.sale.add_line_item(item=item, qty=qty)
-        print(item, qty)
-        if item.qty > qty:
-            item.qty -= qty
-        else:
-            del item
+
+
 
 
 

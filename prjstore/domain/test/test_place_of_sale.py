@@ -8,10 +8,12 @@ from prjstore.domain.test.test_sale import TestSale
 
 
 class TestPlaceOfSale(TestCase):
-    def setUp(self) -> None:
+    def setUp(self, sale = True) -> None:
         self.items = []
-        self.sale = None
-        TestSale.setUp(self)
+        if sale == True:
+            TestSale.setUp(self)
+        else:
+            self.sale = Sale()
         self.places_of_sale = [PlaceOfSale('Интернет'), PlaceOfSale('Бокс 47'), 
                                PlaceOfSale('Магазин 1-й этаж'), PlaceOfSale('Магазин 2-й этаж')]
         self.places_of_sale[0].sale = self.sale

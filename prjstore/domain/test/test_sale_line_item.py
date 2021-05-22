@@ -9,8 +9,8 @@ class TestSaleLineItem(TestCase):
         self.items=[]
         TestItem.setUp(self)
         self.list_sli = [SaleLineItem(self.items['2']),
-                           SaleLineItem(self.items['1']),
-                           SaleLineItem(self.items['3'])]
+                           SaleLineItem(item=self.items['1'], sale_price=250),
+                           SaleLineItem(self.items['3'], qty=2, sale_price=750)]
 
 class Test_SaleLineItem(TestSaleLineItem):
     def test_01_initial(self):
@@ -21,7 +21,7 @@ class Test_SaleLineItem(TestSaleLineItem):
         self.assertEqual(str(self.list_sli[1]),
                          '<SaleLineItem: item=<Item: product='
                          '<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, length_of_insole=11.0,'
-                         ' width=Medium>, qty=1>, sale_price=UAH 100.00, qty=1>')
+                         ' width=Medium>, qty=1>, sale_price=UAH 250.00, qty=1>')
 
     def test_02_edit_qty(self):
         self.list_sli[0].qty = 3

@@ -36,11 +36,12 @@ class SaleForm(QWidget):
         self.ui.button_hide_sli.clicked.connect(self.on_button_hide_sli)
 
         # Items -------------------- right panel --------------------------------
-        self._update_items()
+        self._update_items_layout()
 
         self.ui.scroll_items.mousePressEvent = self.on_click_scroll_items
         self.ui.src_items.textChanged.connect(self.on_search_items)
 
+    # SLI ----------------------- left panel ------------------------------
     def _update_sli(self):
         clearLayout(self.ui.sli_layout)
 
@@ -68,7 +69,8 @@ class SaleForm(QWidget):
             print(self.handler.store.sellers[seller_id])
         self._update_sli()
 
-    def _update_items(self):
+    # Items -------------------- right panel --------------------------------
+    def _update_items_layout(self):
         clearLayout(self.ui.items_layout)
         self.selected_item_widget = None
         for key, item in  self.items.items():
@@ -77,21 +79,22 @@ class SaleForm(QWidget):
         self.ui.items_layout.addStretch(0)
 
     def on_click_scroll_items(self, event):
-        self._update_items()
+        self._update_items_layout()
 
     def on_search_items(self):
         src_text = self.ui.src_items.text()
         if src_text:
             self.items = self.handler.search_items(src_text)
-            self._update_items()
+            self._update_items_layout()
         else:
             self.items = self.handler.store.items
-            self._update_items()
+            self._update_items_layout()
 
     def put_on_sale(self):
         item = self.selected_item_widget.item
         qty = self.selected_item_widget.count_box.text()
         self.handler.put_on_sale(item, int(qty))
+
 
 
 if __name__ == "__main__":

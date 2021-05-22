@@ -13,10 +13,10 @@ class SaleLineItem:
 [<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,\
  <Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>,\
  <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>]
->>> sli = SaleLineItem(items[0])           # Create saleLineItem
+>>> sli = SaleLineItem(item=items[0], qty=2, sale_price=750)           # Create saleLineItem
 >>> sli
 <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=1>
+<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 750.00, qty=2>
 >>> sli.item = items[2]                # set saleLineItem product
 >>> sli.item                                            # get saleLineItem product
 <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>
@@ -33,7 +33,9 @@ qty=2>
     """
     _default_curr = MoneyMy.default_currency
 
-    def __init__(self, item: Item, qty: int = 1, sale_price: Union[MoneyMy, int, float, Decimal] = None,
+    def __init__(self,
+                 item: Item,
+                 qty: int = 1, sale_price: Union[MoneyMy, int, float, Decimal] = None,
                  currency: str = _default_curr) -> None:
         self.item: Item = item
         self.qty: int = qty
