@@ -29,18 +29,15 @@ class SaleRegistrationHandler:
         self.store.items['1'].product.price = 10500
         self.store.items['1'].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
 
-
-    def search_items(self, text: str) ->  dict[str: Item]:
+    def search_items(self, text: str) -> dict[str: Item]:
         items = self.store.search_items_by_name(name=text)
-        if text in self.store.items: # search_items_by_id
+        if text in self.store.items:  # search_items_by_id
             items[text] = self.store.items[text]
         return items
 
-    def put_on_sale(self, item: Item, qty: int):
-        self.sale.add_line_item(item=item, qty=qty)
-
-
-
+    def put_on_sale(self, item: Item, qty: int, sale_price: float = None):
+        # self.sale.add_line_item(item=item, qty=qty, sale_price=sale_price)
+        pass
 
 
 if __name__ == '__main__':

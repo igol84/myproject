@@ -21,20 +21,9 @@ class PlaceOfSale:
 >>> place_of_sale.make_new_sale(Sale(seller=Seller('Igor')))                # make new empty sale
 >>> place_of_sale.sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
 >>> place_of_sale.set_items_on_sale(items[1])                               # set items on sale
->>> place_of_sale.set_items_on_sale(items[0], 2)
->>> place_of_sale.unset_items_on_sale_by_pr_id('2')                         # unset item with product id "2" from sale
+>>> place_of_sale.set_items_on_sale(items[0], qty=2)
+>>> place_of_sale.unset_items_on_sale_by_pr_id_and_sale_price('2', 600)  # unset item with product id "2" from sale
 >>> place_of_sale.end_sale_items()
->>> place_of_sale.make_new_sale(Seller('Igor'))
->>> place_of_sale.sale.time = datetime.datetime.strptime('11/7/20, 09:10:45', '%m/%d/%y, %H:%M:%S')
->>> place_of_sale.set_items_on_sale_by_pr_id('2', 2, items)
->>> place_of_sale
-<PlaceOfSale: name: Магазин 2-й этаж, sale:Yes>
->>> place_of_sale.sale
-<Sale: seller:Igor, time: 11/07/2020, 09:10:45, not completed, line items:
- <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
- qty=3>, sale_price=UAH 600.00, qty=2>>
->>> place_of_sale.end_sale_items()
-
     """
 
     def __init__(self, name: str, sale: Sale = None):
@@ -74,16 +63,12 @@ class PlaceOfSale:
             self.sale = Sale(value)
 
     @contract(item=Item, qty="int, >0")
-    def set_items_on_sale(self, item: Item, qty: int = 1) -> None:
-        self.sale.add_line_item(item, qty)
-
-    @contract(pr_id=str, qty="int, >0", items="None | list")
-    def set_items_on_sale_by_pr_id(self, pr_id: str, qty: int = 1, items: list[Item] = None) -> None:
-        self.sale.add_line_item_by_product_id(pr_id, items, qty)
+    def set_items_on_sale(self, item: Item, sale_price: float = None, qty: int = 1) -> None:
+        self.sale.add_line_item(item, sale_price, qty)
 
     @contract(pr_id=str, qty="int, >0")
-    def unset_items_on_sale_by_pr_id(self, pr_id: str, qty: int = 1) -> None:
-        self.sale.unset_line_item_by_pr_id(pr_id, qty)
+    def unset_items_on_sale_by_pr_id_and_sale_price(self, pr_id: str, sale_price: float, qty: int = 1) -> None:
+        self.sale.unset_line_item_by_pr_id_and_sale_price(pr_id, sale_price, qty)
 
     def end_sale_items(self) -> None:
         if self.sale:

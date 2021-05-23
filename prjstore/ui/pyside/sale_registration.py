@@ -18,7 +18,7 @@ class SaleForm(QWidget):
         self.handler = SaleRegistrationHandler()
         self.handler.test()
         self.items = self.handler.store.items
-        self.selected_item_widget = None
+        self.selected_item_widget: ItemFrame = None
 
         # SLI ----------------------- left panel ------------------------------
         self.ui.date_edit.setDate(QDate.currentDate())
@@ -73,7 +73,7 @@ class SaleForm(QWidget):
     def _update_items_layout(self):
         clearLayout(self.ui.items_layout)
         self.selected_item_widget = None
-        for key, item in  self.items.items():
+        for key, item in self.items.items():
             item_frame = ItemFrame(self, item)
             self.ui.items_layout.addWidget(item_frame)
         self.ui.items_layout.addStretch(0)
@@ -92,9 +92,12 @@ class SaleForm(QWidget):
 
     def put_on_sale(self):
         item = self.selected_item_widget.item
+        sale_price = self.selected_item_widget.price_line_edit.text()
         qty = self.selected_item_widget.count_box.text()
-        self.handler.put_on_sale(item, int(qty))
-
+        self.handler.put_on_sale(item, int(qty), float(sale_price))
+        for line in self.handler.sale.line_items:
+            print(line)
+        print()
 
 
 if __name__ == "__main__":

@@ -35,23 +35,17 @@ class Test_PlaceOfSale(TestPlaceOfSale):
                          '<Sale: seller:Igor, time: 06/06/2020, 12:19:55, not completed, line items:\n >')
 
     def test_set_items_on_sale(self):
-        self.places_of_sale[0].set_items_on_sale(self.items['2'])
-        self.assertEqual(str(self.places_of_sale[0].sale['2']),
+        self.places_of_sale[0].set_items_on_sale(self.items[('2')])
+        self.assertEqual(str(self.places_of_sale[0].sale[('2', 600)]),
             '<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>'
             ', qty=3>, sale_price=UAH 600.00, qty=3>')
 
-    def test_set_items_on_sale_by_pr_id(self):
-        self.places_of_sale[0].set_items_on_sale_by_pr_id('2')
-        self.assertEqual(str(self.places_of_sale[0].sale['2']),
-                         '<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>'
-                         ', qty=3>, sale_price=UAH 600.00, qty=3>')
-
     def test_unset_items_on_sale_by_pr_id(self):
-        self.places_of_sale[0].unset_items_on_sale_by_pr_id('2')
-        self.assertEqual(self.places_of_sale[0].sale['2'].qty, 1)
-        self.places_of_sale[0].unset_items_on_sale_by_pr_id('2')
-        with self.assertRaises(IndexError):
-            self.places_of_sale[0].sale.get_line_item_by_product_id('2')
+        self.places_of_sale[0].unset_items_on_sale_by_pr_id_and_sale_price('2', 600)
+        self.assertEqual(self.places_of_sale[0].sale[('2', 600)].qty, 1)
+        self.places_of_sale[0].unset_items_on_sale_by_pr_id_and_sale_price('2', 600)
+        self.assertEqual(self.places_of_sale[0].sale.get_line_item_by_product_id_and_sale_price('2', 600), None)
+
 
     def test_end_sale_items(self):
         self.places_of_sale[0].end_sale_items()

@@ -54,50 +54,36 @@ class Test_Sale(TestSale):
 
     def test_add_line_item(self):
         self.sale.add_line_item(self.items['2'])
-        self.assertEqual(str(self.sale['2']),
+        self.assertEqual(str(self.sale[('2', 600)]),
                          '<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, '
                          'qty=3>, sale_price=UAH 600.00, qty=3>')
 
     def test_add_line_item_2(self):
         self.sale.add_line_item(self.items['2'], qty=1)
-        self.assertEqual(str(self.sale['2']),
-                         '<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, '
-                         'qty=3>, sale_price=UAH 600.00, qty=3>')
-
-    def test_add_line_item_by_product_id(self):
-        self.sale.add_line_item_by_product_id('2')
-        self.assertEqual(str(self.sale['2']),
-                         '<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, '
-                         'qty=3>, sale_price=UAH 600.00, qty=3>')
-
-    def test_add_line_item_by_product_id_2(self):
-        self.sale.add_line_item_by_product_id(pr_id='2', qty=1)
-        self.assertEqual(str(self.sale['2']),
+        self.assertEqual(str(self.sale[('2', 600)]),
                          '<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, '
                          'qty=3>, sale_price=UAH 600.00, qty=3>')
 
     def test_get_line_item_by_product_id(self):
-        sli = self.sale.get_line_item_by_product_id('2')
+        sli = self.sale.get_line_item_by_product_id_and_sale_price('2', 600)
         self.assertEqual(str(sli),
                          '<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, '
                          'qty=3>, sale_price=UAH 600.00, qty=2>')
 
     def test_unset_line_item_by_pr_id(self):
-        self.sale.unset_line_item_by_pr_id('2')
-        self.assertEqual(self.sale['2'].qty, 1)
-        self.sale.unset_line_item_by_pr_id('2')
-        with self.assertRaises(IndexError):
-            self.sale.get_line_item_by_product_id('2')
+        self.sale.unset_line_item_by_pr_id_and_sale_price('2', 600)
+        self.assertEqual(self.sale[('2', 600)].qty, 1)
+        self.sale.unset_line_item_by_pr_id_and_sale_price('2', 600)
+        self.assertEqual(self.sale[('2', 600)], None)
 
     def test_del_line_item_by_product_id(self):
-        self.sale.del_line_item_by_product_id('2')
-        with self.assertRaises(IndexError):
-            self.sale.get_line_item_by_product_id('2')
+        self.sale.del_line_item_by_product_id_and_sale_price('2', 600)
+        self.assertEqual(self.sale.get_line_item_by_product_id_and_sale_price('2', 600), None)
+
 
     def test_del_line_item_by_product_id_2(self):
-        del self.sale['2']
-        with self.assertRaises(IndexError):
-            self.sale.get_line_item_by_product_id('2')
+        del self.sale[('2', 600)]
+        self.assertEqual(self.sale.get_line_item_by_product_id_and_sale_price('2', 600), None)
 
     def test_is_complete(self):
         self.assertEqual(self.sale.is_complete(), False)

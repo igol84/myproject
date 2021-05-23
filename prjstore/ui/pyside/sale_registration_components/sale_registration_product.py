@@ -31,7 +31,7 @@ class ItemFrame(QWidget):
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
         self.label_item_description.move(5, 0)
         self.price_line_edit = QLineEdit(str(self.item.product.price.amount), parent=self)
-        self.price_line_edit.setFixedWidth(80)
+        self.price_line_edit.setFixedWidth(75)
         self.count_box = QSpinBox(self)
         self.count_box.setRange(1, self.item.qty)
         self.btn_plus = QPushButton(parent=self, text='+')

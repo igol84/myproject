@@ -35,8 +35,10 @@ qty=2>
 
     def __init__(self,
                  item: Item,
-                 qty: int = 1, sale_price: Union[MoneyMy, int, float, Decimal] = None,
-                 currency: str = _default_curr) -> None:
+                 sale_price: Union[MoneyMy, int, float, Decimal] = None,
+                 qty: int = 1,
+                 currency: str = _default_curr
+                 ) -> None:
         self.item: Item = item
         self.qty: int = qty
         if sale_price is None:

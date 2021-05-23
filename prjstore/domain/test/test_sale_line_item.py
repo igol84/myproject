@@ -6,11 +6,12 @@ from prjstore.domain.test.test_item import TestItem
 
 class TestSaleLineItem(TestCase):
     def setUp(self) -> None:
-        self.items=[]
+        self.items = []
         TestItem.setUp(self)
         self.list_sli = [SaleLineItem(self.items['2']),
-                           SaleLineItem(item=self.items['1'], sale_price=250),
-                           SaleLineItem(self.items['3'], qty=2, sale_price=750)]
+                         SaleLineItem(item=self.items['1'], sale_price=250),
+                         SaleLineItem(self.items['3'], sale_price=750, qty=2)]
+
 
 class Test_SaleLineItem(TestSaleLineItem):
     def test_01_initial(self):

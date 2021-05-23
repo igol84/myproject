@@ -18,7 +18,7 @@ class ProductCatalog(list):
 '6'
 >>> pc.new_id                                            # get new generated id  "last id + 1"
 '7'
->>> pc.set_product(ProductFactory.create(id=pc.new_id))
+>>> pc.set_product(ProductFactory.create(product_id=pc.new_id))
 >>> pc.set_product(ProductFactory.create(product_type='shoes', prod_id=pc.new_id,\
  name='item12', price=300, color='white',  size=40, length_of_insole=25.5))
 >>> pc                                                   # get catalog
@@ -38,7 +38,7 @@ class ProductCatalog(list):
 ...         f_products.append((pr.name, pr.price.USD))
 >>> f_products
 [('item23', USD 21.82), ('item4', USD 25.45)]
->>> pc.set_product(ProductFactory.create(id=pc.new_id, name='prod', price=500))
+>>> pc.set_product(ProductFactory.create(product_id=pc.new_id, name='prod', price=500))
 >>> pc                                                   # get catalog
 [<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, length_of_insole=11.0, width=Medium>,\
  <SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
