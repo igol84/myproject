@@ -16,7 +16,7 @@ class SaleForm(QWidget):
         self.ui.setupUi(self)
         self.resize(1200, 600)
         self.handler = SaleRegistrationHandler()
-        self.handler.test()
+        self.handler.test()         # loading test data-----------------------------------
         self.items = self.handler.store.items
         self.selected_item_widget: ItemFrame = None
 

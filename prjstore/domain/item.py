@@ -41,37 +41,37 @@ UAH 100
         self.product: AbstractProduct = pr
         self.qty: int = qty
         self.__buy_price: MoneyMy = None
-        self.set__buy_price(buy_price, currency)
+        self.__set__buy_price(buy_price, currency)
 
     ###############################################################################################
     # product
-    def get_product(self) -> AbstractProduct:
+    def __get_product(self) -> AbstractProduct:
         return self.__product
 
     @contract(pr=AbstractProduct)
-    def set_product(self, pr: AbstractProduct) -> None:
+    def __set_product(self, pr: AbstractProduct) -> None:
         self.__product = pr
 
-    product = property(get_product, set_product)
+    product = property(__get_product, __set_product)
 
     ###############################################################################################
     # qty
-    def get_qty(self) -> int:
+    def __get_qty(self) -> int:
         return self.__qty
 
     @contract(qty='int, >0')
-    def set_qty(self, qty: int) -> None:
+    def __set_qty(self, qty: int) -> None:
         self.__qty = qty
 
-    qty = property(get_qty, set_qty)
+    qty = property(__get_qty, __set_qty)
 
     ###############################################################################################
     # buy_price
-    def get__buy_price(self) -> MoneyMy:
+    def __get__buy_price(self) -> MoneyMy:
         return self.__buy_price
 
     @contract(buy_price='$MoneyMy | int | float | $Decimal', currency='None | str')
-    def set__buy_price(self,
+    def __set__buy_price(self,
                        buy_price: Union[MoneyMy, int, float, Decimal],
                        currency: Optional[str] = None
                        ) -> None:
@@ -81,7 +81,7 @@ UAH 100
             curr = currency if currency else self.__buy_price.currency
             self.__buy_price = MoneyMy(amount=str(buy_price), currency=curr)
 
-    buy_price = property(get__buy_price, set__buy_price)
+    buy_price = property(__get__buy_price, __set__buy_price)
 
     ###############################################################################################
     def __repr__(self) -> str:

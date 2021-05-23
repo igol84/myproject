@@ -14,7 +14,7 @@ class TestSale(TestCase):
         self.sale.add_line_item(self.items['1'])
         self.sale.add_line_item(self.items['2'], qty=2)
         self.sale.add_line_item(self.items['3'])
-        self.sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
+        self.sale.date_time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
 
 class Test_Sale(TestSale):
     def test_01_initial(self):
@@ -44,7 +44,7 @@ class Test_Sale(TestSale):
                 ' sale_price=UAH 600.00, qty=2>>')
 
     def test_get_list_sli(self):
-        list_sli = self.sale.get_list_sli()
+        list_sli = self.sale.line_items
         self.assertEqual(str(list_sli),
             '[<SaleLineItem: item=<Item: product=<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0,'
             ' length_of_insole=11.0, width=Medium>, qty=1>, sale_price=UAH 100.00, qty=1>, <SaleLineItem: item='
@@ -93,18 +93,18 @@ class Test_Sale(TestSale):
         self.assertEqual(self.sale.is_complete(), True)
 
     def test_get_time(self):
-        self.assertEqual(str(self.sale.get_date_time()), '2020-06-06 12:19:55')
+        self.assertEqual(str(self.sale.date_time), '2020-06-06 12:19:55')
 
     def test_set_time(self):
-        self.sale.set_date_time(datetime.datetime.strptime('6/6/20, 12:20:55', '%m/%d/%y, %H:%M:%S'))
-        self.assertEqual(str(self.sale.get_date_time()), '2020-06-06 12:20:55')
+        self.sale.date_time = datetime.datetime.strptime('6/6/20, 12:20:55', '%m/%d/%y, %H:%M:%S')
+        self.assertEqual(str(self.sale.date_time), '2020-06-06 12:20:55')
 
     def test_get_seller(self):
-        self.assertEqual(str(self.sale.get_seller()), '<Seller: name=Igor>')
+        self.assertEqual(str(self.sale.seller), '<Seller: name=Igor>')
 
     def test_set_seller(self):
-        self.sale.set_seller(Seller('Anna'))
-        self.assertEqual(str(self.sale.get_seller()), '<Seller: name=Anna>')
+        self.sale.seller = Seller('Anna')
+        self.assertEqual(str(self.sale.seller), '<Seller: name=Anna>')
 
     def test_is_item_in_sale(self):
         self.assertEqual(self.sale.is_item_in_sale(self.items['6']), False)

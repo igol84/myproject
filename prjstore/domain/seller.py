@@ -16,14 +16,14 @@ class Seller:
 
     ###############################################################################################
     # name
-    def get_name(self) -> str:
-        return self._name
+    def __get_name(self) -> str:
+        return self.__name
 
     @contract(name=str)
-    def set_name(self, name: str) -> None:
-        self._name = name
+    def __set_name(self, name: str) -> None:
+        self.__name = name
 
-    name = property(get_name, set_name)
+    name = property(__get_name, __set_name)
 
     def __repr__(self):
         return f'<{self.__class__.__name__}: name={self.name}>'

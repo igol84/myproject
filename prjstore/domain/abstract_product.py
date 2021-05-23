@@ -12,50 +12,50 @@ class AbstractProduct(ABC):
 
     @contract(product_id='str | int')
     def __init__(self, product_id: Union[str, int], name: str = 'item', price=0, currency=_default_curr):
-        self._id: str = str(product_id)
+        self.__id: str = str(product_id)
         self.name: str = name
-        self._price: MoneyMy = None
-        self.set_price(price, currency)
+        self.__price: MoneyMy = None
+        self.__set_price(price, currency)
 
     ###############################################################################################
     # id
-    def get_id(self) -> str:
-        return self._id
+    def __get_id(self) -> str:
+        return self.__id
 
-    id: str = property(get_id)
-
-    def get_name(self) -> str:
-        return self._name
+    id: str = property(__get_id)
 
     ###############################################################################################
     # name
-    @contract(name='str')
-    def set_name(self, name: str) -> None:
-        self._name = name
+    def __get_name(self) -> str:
+        return self.__name
 
-    name: str = property(get_name, set_name)
+    @contract(name='str')
+    def __set_name(self, name: str) -> None:
+        self.__name = name
+
+    name: str = property(__get_name, __set_name)
 
     ###############################################################################################
     # price
-    def get_price(self) -> MoneyMy:
-        return self._price
+    def __get_price(self) -> MoneyMy:
+        return self.__price
 
     @contract(price='$MoneyMy | int | float | $Decimal', currency='None | str')
-    def set_price(self,
+    def __set_price(self,
                   price: Union[MoneyMy, int, float, Decimal],
                   currency: Optional[str] = None
                   ) -> None:
         if isinstance(price, MoneyMy):
-            self._price = price
+            self.__price = price
         else:
-            curr = currency if currency else self._price.currency
-            self._price = MoneyMy(amount=str(price), currency=curr)
+            curr = currency if currency else self.__price.currency
+            self.__price = MoneyMy(amount=str(price), currency=curr)
 
-    price: MoneyMy = property(get_price, set_price)
+    price: MoneyMy = property(__get_price, __set_price)
 
     ################################################################################################
     def convert_price(self, to_currency: str) -> None:
-        self._price = MoneyMy.get_converted_money(self._price, to_currency)
+        self.__price = MoneyMy.get_converted_money(self.__price, to_currency)
 
     def edit(self,
              name: Optional[str] = None,
@@ -63,11 +63,11 @@ class AbstractProduct(ABC):
              currency: Optional[str] = None
              ) -> None:
         if name:
-            self.set_name(name)
+            self.__set_name(name)
         if price:
-            self.set_price(price, currency)
+            self.__set_price(price, currency)
         elif currency:
-            self.set_price(self.price.amount, currency)
+            self.__set_price(self.price.amount, currency)
 
     @abstractmethod
     def __repr__(self) -> str:

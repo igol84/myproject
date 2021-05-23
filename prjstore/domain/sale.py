@@ -102,32 +102,32 @@ True
 
     ###############################################################################################
     # seller
-    def get_seller(self) -> Seller:
+    def __get_seller(self) -> Seller:
         return self.__seller
 
     @contract(seller='None | $Seller')
-    def set_seller(self, seller: Optional[Seller]) -> None:
+    def __set_seller(self, seller: Optional[Seller]) -> None:
         self.__seller = seller
 
-    seller = property(get_seller, set_seller)
+    seller = property(__get_seller, __set_seller)
 
     ###############################################################################################
     # line_items
-    def get_list_sli(self) -> list[SaleLineItem]:
+    def __get_list_sli(self) -> list[SaleLineItem]:
         return self.__list_sli
 
-    line_items = property(get_list_sli)
+    line_items = property(__get_list_sli)
 
     ###############################################################################################
     # time
-    def get_date_time(self) -> datetime:
+    def __get_date_time(self) -> datetime:
         return self.__date_time
 
     @contract(date_time=datetime)
-    def set_date_time(self, date_time: datetime) -> None:
+    def __set_date_time(self, date_time: datetime) -> None:
         self.__date_time = date_time
 
-    time = property(get_date_time, set_date_time)
+    date_time = property(__get_date_time, __set_date_time)
 
     ###############################################################################################
     # add new line items

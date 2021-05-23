@@ -35,7 +35,7 @@ class Test_Shoes(TestShoes):
         self.assertEqual(self.shoes.length_of_insole, 29)
 
     def test_02_edit_width(self):
-        self.shoes.set_width('Extra Wide')
+        self.shoes.width = 'Extra Wide'
         self.assertEqual(str(self.shoes.width), 'Extra Wide')
         self.assertEqual(self.shoes.width.short_name, '4E')
 

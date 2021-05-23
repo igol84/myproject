@@ -32,27 +32,27 @@ class PlaceOfSale:
 
     ###############################################################################################
     # name
-    def get_name(self) -> str:
-        return self._name
+    def __get_name(self) -> str:
+        return self.__name
 
-    def set_name(self, value: str) -> None:
-        self._name = value
+    def __set_name(self, value: str) -> None:
+        self.__name = value
 
-    name = property(get_name, set_name)
+    name = property(__get_name, __set_name)
 
     ###############################################################################################
     # sale
-    def get_sale(self) -> Sale:
-        return self._sale
+    def __get_sale(self) -> Sale:
+        return self.__sale
 
     @contract(sale='None | $Sale')
-    def set_sale(self, sale: Optional[Sale]) -> None:
-        self._sale = sale
+    def __set_sale(self, sale: Optional[Sale]) -> None:
+        self.__sale = sale
 
     def del_sale(self) -> None:
-        self._sale = None
+        self.__sale = None
 
-    sale = property(get_sale, set_sale, del_sale)
+    sale = property(__get_sale, __set_sale, del_sale)
 
     ###############################################################################################
     @contract(value="$Sale | $Seller")
@@ -77,4 +77,4 @@ class PlaceOfSale:
 
     def __repr__(self) -> str:
         sale = 'Yes' if self.sale else 'No'
-        return f"<{self.__class__.__name__}: name: {self._name}, sale:{sale}>"
+        return f"<{self.__class__.__name__}: name: {self.name}, sale:{sale}>"

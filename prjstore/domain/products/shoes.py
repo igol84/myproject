@@ -78,53 +78,53 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
 
     ###############################################################################################
     # color
-    def get_color(self) -> str:
-        return self._color
+    def __get_color(self) -> str:
+        return self.__color
 
     @contract(color=str)
-    def set_color(self, color) -> None:
-        self._color = color
+    def __set_color(self, color) -> None:
+        self.__color = color
 
-    color = property(get_color, set_color)
+    color = property(__get_color, __set_color)
 
     ###############################################################################################
     # size
-    def get_size(self) -> float:
-        return self._size
+    def __get_size(self) -> float:
+        return self.__size
 
     @contract(size='valid_size')
-    def set_size(self, size) -> None:
-        self._size = float(size)
+    def __set_size(self, size) -> None:
+        self.__size = float(size)
 
-    size = property(get_size, set_size)
+    size = property(__get_size, __set_size)
 
     ###############################################################################################
     # length_of_insole
-    def get_length_of_insole(self) -> float:
-        return self._length_of_insole
+    def __get_length_of_insole(self) -> float:
+        return self.__length_of_insole
 
     @contract(length_of_insole='valid_length_of_insole')
-    def set_length_of_insole(self, length_of_insole) -> None:
-        self._length_of_insole = float(length_of_insole)
+    def __set_length_of_insole(self, length_of_insole) -> None:
+        self.__length_of_insole = float(length_of_insole)
 
-    length_of_insole = property(get_length_of_insole, set_length_of_insole)
+    length_of_insole = property(__get_length_of_insole, __set_length_of_insole)
 
     ###############################################################################################
     # width
-    def get_width(self) -> Width:
-        return self._width
+    def __get_width(self) -> Width:
+        return self.__width
 
     @contract(width='$Width | str')
-    def set_width(self, width: Union[Width, str]) -> None:
+    def __set_width(self, width: Union[Width, str]) -> None:
         if isinstance(width, Width):
-            self._width = width
+            self.__width = width
         else:
             if width in Shoes.widths:
-                self._width = Shoes.widths[width]
+                self.__width = Shoes.widths[width]
             else:
                 raise IndexError(f"Invalid value width: {width}")
 
-    width = property(get_width, set_width)
+    width = property(__get_width, __set_width)
 
     ###############################################################################################
 
@@ -139,13 +139,13 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
              ) -> None:
         AbstractProduct.edit(self, name, price, currency)
         if color:
-            self.set_color(color)
+            self.__set_color(color)
         if size:
-            self.set_size(size)
+            self.__set_size(size)
         if length_of_insole:
-            self.set_length_of_insole(length_of_insole)
+            self.__set_length_of_insole(length_of_insole)
         if width:
-            self.set_width(width)
+            self.__set_width(width)
 
     def __repr__(self) -> str:
         return f'<{self.__class__.__name__}: id={self.id}, name={self.name}, price={self.price}, color={self.color}, ' \

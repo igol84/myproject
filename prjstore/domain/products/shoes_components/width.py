@@ -16,25 +16,25 @@ Wide
 
     ###############################################################################################
     # name
-    def get_name(self) -> str:
-        return self._name
+    def __get_name(self) -> str:
+        return self.__name
 
     @contract(name=str)
-    def set_name(self, name: str) -> None:
-        self._name = name
+    def __set_name(self, name: str) -> None:
+        self.__name = name
 
-    name = property(get_name, set_name)
+    name = property(__get_name, __set_name)
 
     ###############################################################################################
     # short_name
-    def get_short_name(self) -> str:
-        return self._short_name
+    def __get_short_name(self) -> str:
+        return self.__short_name
 
     @contract(short_name=str)
-    def set_short_name(self, short_name: str) -> None:
-        self._short_name = short_name
+    def __set_short_name(self, short_name: str) -> None:
+        self.__short_name = short_name
 
-    short_name = property(get_short_name, set_short_name)
+    short_name = property(__get_short_name, __set_short_name)
 
     ###############################################################################################
     def __repr__(self) -> str:

@@ -73,17 +73,17 @@ class ProductCatalog(list):
 
     ###############################################################################################
     # last_id
-    def last_id(self) -> str:
+    def __last_id(self) -> str:
         return str(sorted([int(pr.id) for pr in self])[-1])
 
-    last_id = property(last_id)
+    last_id = property(__last_id)
 
     ###############################################################################################
     # new_id
-    def new_id(self) -> str:
+    def __new_id(self) -> str:
         return str(int(self.last_id) + 1)
 
-    new_id = property(new_id)
+    new_id = property(__new_id)
 
     ###############################################################################################
     @contract(pr=AbstractProduct)

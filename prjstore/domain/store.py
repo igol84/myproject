@@ -38,47 +38,47 @@ class Store:
 
     ###############################################################################################
     # pc
-    def get_pc(self) -> ProductCatalog:
+    def __get_pc(self) -> ProductCatalog:
         return self.__pc
 
     @contract(pc=ProductCatalog)
-    def set_pc(self, pc: ProductCatalog) -> None:
+    def __set_pc(self, pc: ProductCatalog) -> None:
         self.__pc = pc
 
-    pc = property(get_pc, set_pc)
+    pc = property(__get_pc, __set_pc)
 
     ###############################################################################################
     # items
-    def get_items(self) -> dict[str: Item]:
+    def __get_items(self) -> dict[str: Item]:
         return self.__items
 
     @contract(items='dict(str: $Item)')
-    def set_items(self, items: dict[str, Item]) -> None:
+    def __set_items(self, items: dict[str, Item]) -> None:
         self.__items = items
 
-    items = property(get_items, set_items)
+    items = property(__get_items, __set_items)
 
     ###############################################################################################
     # sellers
-    def get_sellers(self) -> list[Seller]:
+    def __get_sellers(self) -> list[Seller]:
         return self.__sellers
 
     @contract(sellers='list($Seller)')
-    def set_sellers(self, sellers: list[Seller]):
+    def __set_sellers(self, sellers: list[Seller]):
         self.__sellers = sellers
 
-    sellers = property(get_sellers, set_sellers)
+    sellers = property(__get_sellers, __set_sellers)
 
     ###############################################################################################
     # places_of_sale
-    def get_places_of_sale(self) -> list[PlaceOfSale]:
+    def __get_places_of_sale(self) -> list[PlaceOfSale]:
         return self.__places_of_sale
 
     @contract(places_of_sale='list($PlaceOfSale)')
-    def set_places_of_sale(self, places_of_sale: list[PlaceOfSale]) -> None:
+    def __set_places_of_sale(self, places_of_sale: list[PlaceOfSale]) -> None:
         self.__places_of_sale = places_of_sale
 
-    places_of_sale = property(get_places_of_sale, set_places_of_sale)
+    places_of_sale = property(__get_places_of_sale, __set_places_of_sale)
 
     ###############################################################################################
     @contract(pr_id=str)

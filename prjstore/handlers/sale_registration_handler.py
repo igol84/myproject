@@ -36,8 +36,7 @@ class SaleRegistrationHandler:
         return items
 
     def put_on_sale(self, item: Item, qty: int, sale_price: float = None):
-        # self.sale.add_line_item(item=item, qty=qty, sale_price=sale_price)
-        pass
+        self.sale.add_line_item(item=item, qty=qty, sale_price=sale_price)
 
 
 if __name__ == '__main__':
