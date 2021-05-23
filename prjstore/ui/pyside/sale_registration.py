@@ -93,7 +93,7 @@ class SaleForm(QWidget):
     def put_on_sale(self):
         item = self.selected_item_widget.item
         sale_price = self.selected_item_widget.price_line_edit.text()
-        qty = self.selected_item_widget.count_box.text()
+        qty = self.selected_item_widget.qty_box.text()
         self.handler.put_on_sale(item, int(qty), float(sale_price))
         for line in self.handler.sale.line_items:
             print(line)

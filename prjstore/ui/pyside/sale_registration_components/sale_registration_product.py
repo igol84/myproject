@@ -30,28 +30,28 @@ class ItemFrame(QWidget):
         self.label_item_description = LabelItemDescription(parent=self, text=text_item_description)
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
         self.label_item_description.move(5, 0)
-        self.price_line_edit = QLineEdit(str(self.item.product.price.amount), parent=self)
-        self.price_line_edit.setFixedWidth(75)
-        self.count_box = QSpinBox(self)
-        self.count_box.setRange(1, self.item.qty)
+        self.price_line_edit = LineEditPrice(str(self.item.product.price.amount), parent=self)
+        self.price_line_edit.returnPressed.connect(self.on_pressed_price_line_edit)
+        self.qty_box = qtyBox(self, max_qty=self.item.qty)
         self.btn_plus = QPushButton(parent=self, text='+')
-        self.btn_plus.setMaximumSize(25, 25)
+        width = 25 if self.item.qty>1 else 75
+        self.btn_plus.setMaximumSize(width, 25)
         self.btn_plus.clicked.connect(self.on_push_button_plus)
 
         self.price_line_edit.hide()
-        self.count_box.hide()
+        self.qty_box.hide()
         self.btn_plus.hide()
 
-    def get_parent_form(self):
+    def __get_parent_form(self):
         return self.__parent_form
 
-    parent_form = property(get_parent_form)
+    parent_form = property(__get_parent_form)
 
     def sizeHint(self):
         return QtCore.QSize(self.width_, self.height_)
 
     def paintEvent(self, e):
-        self.count_box.move(self.width() - self.count_box.width() - 3 - self.btn_plus.width() - 3, 4)
+        self.qty_box.move(self.width() - self.qty_box.width() - 3 - self.btn_plus.width() - 10, 4)
         self.btn_plus.move(self.width() - self.btn_plus.width() - 3, 3)
         painter = QtGui.QPainter(self)
         brush = QtGui.QBrush()
@@ -76,9 +76,9 @@ class ItemFrame(QWidget):
         text_item_qty = f'{self.item.qty}шт.'
         pixels_price = fm.size(0, text_item_price).width()
         pixels_qty = fm.size(0, text_item_qty).width()
-        painter.drawText(self.width() - pixels_price - 145, 20, text_item_price)
-        self.price_line_edit.move(self.width() - pixels_price - 145, 4)
-        painter.drawText(self.width() - pixels_qty - 80, 20, text_item_qty)
+        painter.drawText(self.width() - pixels_price - 150, 20, text_item_price)
+        self.price_line_edit.move(self.width() - pixels_price - 150, 4)
+        painter.drawText(self.width() - pixels_qty - 85, 20, text_item_qty)
         painter.end()
 
     # on click on this widget
@@ -94,15 +94,15 @@ class ItemFrame(QWidget):
             self.parent_form.selected_item_widget.color_text = self.default_color_text
             self.parent_form.selected_item_widget.update()
             self.parent_form.selected_item_widget.price_line_edit.hide()
-            self.parent_form.selected_item_widget.count_box.hide()
+            self.parent_form.selected_item_widget.qty_box.hide()
             self.parent_form.selected_item_widget.btn_plus.hide()
         if self.parent_form:
             self.parent_form.selected_item_widget = self
         if self.item.qty > 1:
-            self.count_box.show()
+            self.qty_box.show()
         self.price_line_edit.show()
         self.btn_plus.show()
-        self.count_box.setFocus()
+        self.qty_box.setFocus()
 
     def enterEvent(self, a0: QtCore.QEvent) -> None:
         if self.parent_form and self.parent_form.selected_item_widget is not self:
@@ -121,6 +121,13 @@ class ItemFrame(QWidget):
             self.parent_form.put_on_sale()
         self.update()
 
+    def on_pressed_price_line_edit(self):
+        if self.price_line_edit.hasFocus():
+            self.price_line_edit.clearFocus()
+        if self.parent_form:
+            self.parent_form.put_on_sale()
+        self.update()
+
 
 class LabelItemDescription(QLabel):
     def paintEvent(self, event):
@@ -133,6 +140,26 @@ class LabelItemDescription(QLabel):
         pixels_text = metrics.elidedText(self.text(), QtCore.Qt.ElideRight, self.parent().width() - 220)
         self.resize(metrics.size(0, pixels_text).width(), self.parent().height_)
         painter.drawText(self.rect(), self.alignment(), pixels_text)
+
+
+class qtyBox(QSpinBox):
+    def __init__(self, parent, max_qty):
+        super().__init__(parent)
+        font = self.font()
+        font.setPointSize(ItemFrame.font_size)
+        self.setFont(font)
+        self.setRange(1, max_qty)
+
+
+class LineEditPrice(QLineEdit):
+    def __init__(self, text, parent):
+        super().__init__(text, parent)
+        font = self.font()
+        font.setPointSize(ItemFrame.font_size)
+        self.setFont(font)
+        self.setFixedWidth(75)
+        validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]+[.]*[0-9]{0,2}"))
+        self.setValidator(validator_reg)
 
 
 if __name__ == "__main__":
