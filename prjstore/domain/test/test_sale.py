@@ -29,9 +29,9 @@ class Test_Sale(TestSale):
         sale = Sale(Seller('Igor'), self.items['1'])
         sale.date_time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
         self.assertEqual(str(sale),
-                '<Sale: seller:Igor, date_time: 06/06/2020, 12:19:55, not completed, line items:\n'
-                ' <SaleLineItem: item=<Item: product=<Shoes: id=1, name=item1, price=UAH 100.00, color=default,'
-                ' size=36.0, length_of_insole=11.0, width=Medium>, qty=1>, sale_price=UAH 100.00, qty=1>>')
+                         '<Sale: seller:Igor, date_time: 06/06/2020, 12:19:55, not completed, line items:\n'
+                         ' <SaleLineItem: item=<Item: product=<Shoes: id=1, name=item1, price=UAH 100.00, color=default,'
+                         ' size=36.0, length_of_insole=11.0, width=Medium>, qty=1>, sale_price=UAH 100.00, qty=1>>')
 
     def test_03_initial(self):
         self.items=[]
@@ -39,30 +39,38 @@ class Test_Sale(TestSale):
         sale = Sale(seller=Seller('Igor'), item=self.items['2'], gty=2)
         sale.date_time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
         self.assertEqual(str(sale),
-                '<Sale: seller:Igor, date_time: 06/06/2020, 12:19:55, not completed, line items:\n'
-                ' <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,'
-                ' sale_price=UAH 600.00, qty=2>>')
+                         '<Sale: seller:Igor, date_time: 06/06/2020, 12:19:55, not completed, line items:\n'
+                         ' <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,'
+                         ' sale_price=UAH 600.00, qty=2>>')
 
     def test_get_list_sli(self):
         list_sli = self.sale.line_items
         self.assertEqual(str(list_sli),
-            '[<SaleLineItem: item=<Item: product=<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0,'
-            ' length_of_insole=11.0, width=Medium>, qty=1>, sale_price=UAH 100.00, qty=1>, <SaleLineItem: item='
-            '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=2>'
-            ', <SaleLineItem: item=<Item: product=<Shoes: id=3, name=item24, price=UAH 700.00, color=red, size=43.3,'
-            ' length_of_insole=28.0, width=Medium>, qty=2>, sale_price=UAH 700.00, qty=1>]')
+                         '[<SaleLineItem: item=<Item: product=<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0,'
+                         ' length_of_insole=11.0, width=Medium>, qty=1>, sale_price=UAH 100.00, qty=1>, <SaleLineItem: item='
+                         '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=2>'
+                         ', <SaleLineItem: item=<Item: product=<Shoes: id=3, name=item24, price=UAH 700.00, color=red, size=43.3,'
+                         ' length_of_insole=28.0, width=Medium>, qty=2>, sale_price=UAH 700.00, qty=1>]')
 
     def test_add_line_item(self):
-        self.sale.add_line_item(self.items['2'])
-        self.assertEqual(str(self.sale[('2', 600)]),
-                         '<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, '
-                         'qty=3>, sale_price=UAH 600.00, qty=3>')
+        self.assertEqual(str(self.sale['2']),
+                         '[<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, '
+                         'qty=3>, sale_price=UAH 600.00, qty=2>]')
+        self.sale.add_line_item(self.items['2'], sale_price=700)
+        self.assertEqual(str(self.sale['2']),
+                         '[<SaleLineItem: item=<Item: product='
+                         '<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=2>, '
+                         '<SaleLineItem: item=<Item: product='
+                         '<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 700.00, qty=1>]')
+        with self.assertRaises(AssertionError):
+            self.sale.add_line_item(self.items['2'], sale_price=700)
 
     def test_add_line_item_2(self):
         self.sale.add_line_item(self.items['2'], qty=1)
         self.assertEqual(str(self.sale[('2', 600)]),
                          '<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, '
                          'qty=3>, sale_price=UAH 600.00, qty=3>')
+
 
     def test_get_line_item_by_product_id(self):
         sli = self.sale.get_line_item_by_product_id_and_sale_price('2', 600)

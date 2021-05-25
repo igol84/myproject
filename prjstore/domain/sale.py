@@ -1,4 +1,5 @@
-from typing import Optional
+from decimal import Decimal
+from typing import Optional, overload
 
 from contracts import contract
 from datetime import datetime
@@ -134,12 +135,28 @@ True
     @contract(item=Item, qty="int, >0")
     def add_line_item(self, item: Item, sale_price: float = None, qty: int = 1) -> None:
         sale_price = sale_price if sale_price else item.product.price.amount
+        list_items = self[item.product.id]
+        qty_same_items_in_sale = 0
+        if list_items:
+            for sli in list_items:
+                qty_same_items_in_sale += sli.qty
+
+        assert qty + qty_same_items_in_sale <= item.qty, f"qty({qty}) should not be more than " \
+                                                         f"item.qty({item.qty-qty_same_items_in_sale})!"
         # a same product in line items
         if self[(item.product.id, sale_price)]:
             self[(item.product.id, sale_price)].qty += qty
         # is a new product in line items
         else:
             self.__list_sli.append(SaleLineItem(item, sale_price=sale_price, qty=qty))
+
+    @contract(pr_id=str)
+    def get_line_items_by_product_id(self, pr_id: str) -> list[SaleLineItem]:
+        list_sli = []
+        for sli in self.__list_sli:
+            if sli.item.product.id == pr_id:
+                list_sli.append(sli)
+        return list_sli
 
     @contract(pr_id=str)
     def get_line_item_by_product_id_and_sale_price(self, pr_id: str, sale_price: float) -> SaleLineItem:
@@ -194,9 +211,24 @@ True
         return f"<{self.__class__.__name__}: " \
                f"seller:{self.seller.name}, date_time: {time}, {completed}, line items:{sale_line_items}>"
 
-    def __getitem__(self, key: tuple[str, float]) -> SaleLineItem:  # get line item by product id
-        pr_id, sale_price = key
-        return self.get_line_item_by_product_id_and_sale_price(pr_id, sale_price)
+    @overload
+    def __getitem__(self, key: str) -> list[SaleLineItem]:
+        ...
+
+    @overload
+    def __getitem__(self, key: tuple[str, float]) -> SaleLineItem:
+        ...
+
+    def __getitem__(self, key):  # get line item by product id
+        if isinstance(key, str):
+            pr_id = key
+            return self.get_line_items_by_product_id(pr_id)
+        elif isinstance(key, tuple) and isinstance(key[0], str) and \
+                (isinstance(key[1], int) or isinstance(key[1], float) or isinstance(key[1], Decimal)):
+            pr_id, sale_price = key
+            return self.get_line_item_by_product_id_and_sale_price(pr_id, sale_price)
+        else:
+            raise ValueError('invalid key', key)
 
     def __delitem__(self, key: tuple[str, float]):  # del sale line item by product id
         pr_id, sale_price = key
