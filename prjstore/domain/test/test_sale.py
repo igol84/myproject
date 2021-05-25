@@ -19,17 +19,17 @@ class TestSale(TestCase):
 class Test_Sale(TestSale):
     def test_01_initial(self):
         sale = Sale(seller=Seller('Igor'))
-        sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
+        sale.date_time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
         self.assertEqual(str(sale),
-                         '<Sale: seller:Igor, time: 06/06/2020, 12:19:55, not completed, line items:\n >')
+                         '<Sale: seller:Igor, date_time: 06/06/2020, 12:19:55, not completed, line items:\n >')
 
     def test_02_initial(self):
         self.items=[]
         TestItem.setUp(self)
         sale = Sale(Seller('Igor'), self.items['1'])
-        sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
+        sale.date_time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
         self.assertEqual(str(sale),
-                '<Sale: seller:Igor, time: 06/06/2020, 12:19:55, not completed, line items:\n'
+                '<Sale: seller:Igor, date_time: 06/06/2020, 12:19:55, not completed, line items:\n'
                 ' <SaleLineItem: item=<Item: product=<Shoes: id=1, name=item1, price=UAH 100.00, color=default,'
                 ' size=36.0, length_of_insole=11.0, width=Medium>, qty=1>, sale_price=UAH 100.00, qty=1>>')
 
@@ -37,9 +37,9 @@ class Test_Sale(TestSale):
         self.items=[]
         TestItem.setUp(self)
         sale = Sale(seller=Seller('Igor'), item=self.items['2'], gty=2)
-        sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
+        sale.date_time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
         self.assertEqual(str(sale),
-                '<Sale: seller:Igor, time: 06/06/2020, 12:19:55, not completed, line items:\n'
+                '<Sale: seller:Igor, date_time: 06/06/2020, 12:19:55, not completed, line items:\n'
                 ' <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,'
                 ' sale_price=UAH 600.00, qty=2>>')
 

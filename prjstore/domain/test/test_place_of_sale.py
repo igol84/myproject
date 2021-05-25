@@ -30,9 +30,9 @@ class Test_PlaceOfSale(TestPlaceOfSale):
 
     def test_make_new_sale(self):
         self.places_of_sale[0].make_new_sale(Sale(seller=Seller('Igor')))
-        self.places_of_sale[0].sale.time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
+        self.places_of_sale[0].sale.date_time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
         self.assertEqual(str(self.places_of_sale[0].sale),
-                         '<Sale: seller:Igor, time: 06/06/2020, 12:19:55, not completed, line items:\n >')
+                         '<Sale: seller:Igor, date_time: 06/06/2020, 12:19:55, not completed, line items:\n >')
 
     def test_set_items_on_sale(self):
         self.places_of_sale[0].set_items_on_sale(self.items[('2')])

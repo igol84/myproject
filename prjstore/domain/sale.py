@@ -20,11 +20,11 @@ class Sale:
  <Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>,\
  <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>]
 >>> sale = Sale(Seller('Igor'), items[1])                                                    # Create sale
->>> sale.time = datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')    # set time
->>> sale.time.strftime("%m/%d/%Y, %H:%M:%S")                                            # get time
+>>> sale.date_time = datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')    # set time
+>>> sale.date_time.strftime("%m/%d/%Y, %H:%M:%S")                                            # get time
 '06/06/2020, 12:19:55'
 >>> sale
-<Sale: seller:Igor, time: 06/06/2020, 12:19:55, not completed, line items:
+<Sale: seller:Igor, date_time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, sale_price=UAH 300.00, qty=1>>
 
@@ -35,7 +35,7 @@ class Sale:
 >>> sale.add_line_item(items[0])                                          # Add product to sale
 >>> sale.add_line_item(items[2])
 >>> sale
-<Sale: seller:Anna, time: 06/06/2020, 12:19:55, not completed, line items:
+<Sale: seller:Anna, date_time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, sale_price=UAH 300.00, qty=1>
  <SaleLineItem: item=\
@@ -44,7 +44,7 @@ class Sale:
 <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=1>>
 >>> sale.add_line_item(item=items[0], sale_price=800, qty=2)      # Add same product to sale
 >>> sale
-<Sale: seller:Anna, time: 06/06/2020, 12:19:55, not completed, line items:
+<Sale: seller:Anna, date_time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, sale_price=UAH 300.00, qty=1>
  <SaleLineItem: item=<Item: product=\
@@ -73,7 +73,7 @@ class Sale:
 <SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 800.00, qty=2>]
 >>> sale.unset_line_item_by_pr_id_and_sale_price('6', 500)              # unset sale line pr id ='6' items 1-1=0 -> del
 >>> sale
-<Sale: seller:Anna, time: 06/06/2020, 12:19:55, not completed, line items:
+<Sale: seller:Anna, date_time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 800.00, qty=2>>
 
@@ -81,7 +81,7 @@ class Sale:
 >>> sale.is_complete()
 True
 >>> sale
-<Sale: seller:Anna, time: 06/06/2020, 12:19:55, completed, line items:
+<Sale: seller:Anna, date_time: 06/06/2020, 12:19:55, completed, line items:
  <SaleLineItem: item=<Item: product=\
 <SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 800.00, qty=2>>
     """
@@ -190,9 +190,9 @@ True
     def __repr__(self) -> str:
         sale_line_items = '\n ' + '\n '.join([str(sli) for sli in self.line_items])
         completed = 'completed' if self.is_complete() else 'not completed'
-        time = self.time.strftime("%m/%d/%Y, %H:%M:%S")
+        time = self.date_time.strftime("%m/%d/%Y, %H:%M:%S")
         return f"<{self.__class__.__name__}: " \
-               f"seller:{self.seller.name}, time: {time}, {completed}, line items:{sale_line_items}>"
+               f"seller:{self.seller.name}, date_time: {time}, {completed}, line items:{sale_line_items}>"
 
     def __getitem__(self, key: tuple[str, float]) -> SaleLineItem:  # get line item by product id
         pr_id, sale_price = key

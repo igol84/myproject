@@ -76,7 +76,7 @@ class ItemFrame(QWidget):
         text_item_qty = f'{self.item.qty}шт.'
         pixels_price = fm.size(0, text_item_price).width()
         pixels_qty = fm.size(0, text_item_qty).width()
-        painter.drawText(self.width() - pixels_price - 150, 20, text_item_price)
+        painter.drawText(self.width() - pixels_price - 147, 20, text_item_price)
         self.price_line_edit.move(self.width() - pixels_price - 150, 4)
         painter.drawText(self.width() - pixels_qty - 85, 20, text_item_qty)
         painter.end()
@@ -158,7 +158,7 @@ class LineEditPrice(QLineEdit):
         font.setPointSize(ItemFrame.font_size)
         self.setFont(font)
         self.setFixedWidth(75)
-        validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]+[.]*[0-9]{0,2}"))
+        validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]{1,7}[.]*[0-9]{0,2}"))
         self.setValidator(validator_reg)
 
 
