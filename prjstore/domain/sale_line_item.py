@@ -64,7 +64,6 @@ qty=2>
 
     @contract(qty='int, >0')
     def __set_qty(self, qty: int) -> None:
-        assert self.item.qty >= qty, f'sly.qty({qty}) should not be more than item.qty({self.item.qty})!'
         self.__qty = qty
 
     qty = property(__get_qty, __set_qty)

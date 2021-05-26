@@ -73,6 +73,7 @@ class ItemFrame(QWidget):
         painter.setFont(font)
         fm = QFontMetrics(font)
         text_item_price = f'{self.item.product.price.format_my()}'
+        self.qty_box.setRange(1, self.item.qty)
         text_item_qty = f'{self.item.qty}шт.'
         pixels_price = fm.size(0, text_item_price).width()
         pixels_qty = fm.size(0, text_item_qty).width()
@@ -148,7 +149,7 @@ class qtyBox(QSpinBox):
         font = self.font()
         font.setPointSize(ItemFrame.font_size)
         self.setFont(font)
-        self.setRange(1, max_qty)
+
 
 
 class LineEditPrice(QLineEdit):

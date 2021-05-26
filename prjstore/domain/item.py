@@ -59,7 +59,7 @@ UAH 100
     def __get_qty(self) -> int:
         return self.__qty
 
-    @contract(qty='int, >0')
+    @contract(qty='int, >=0')
     def __set_qty(self, qty: int) -> None:
         self.__qty = qty
 

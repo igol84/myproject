@@ -1,6 +1,6 @@
 import sys
 
-from PySide2.QtWidgets import QWidget, QApplication
+from PySide2.QtWidgets import QWidget, QApplication, QLabel
 from PySide2.QtCore import QDate
 
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
@@ -18,6 +18,7 @@ class SaleForm(QWidget):
         self.handler = SaleRegistrationHandler()
         self.handler.test()         # loading test data-----------------------------------
         self.items = self.handler.store.items
+        self.sli_list = self.handler.sale.line_items
         self.selected_item_widget: ItemFrame = None
 
         # SLI ----------------------- left panel ------------------------------
@@ -44,6 +45,10 @@ class SaleForm(QWidget):
     # SLI ----------------------- left panel ------------------------------
     def _update_sli(self):
         clearLayout(self.ui.sli_layout)
+        for sli in self.sli_list:
+            label = QLabel(str(sli))
+            self.ui.sli_layout.addWidget(label)
+        self.ui.sli_layout.addStretch(0)
 
     def on_button_hide_sli(self):
         if self.ui.sale.isHidden():
@@ -95,10 +100,12 @@ class SaleForm(QWidget):
         sale_price = self.selected_item_widget.price_line_edit.text()
         qty = self.selected_item_widget.qty_box.text()
         self.handler.put_on_sale(item, int(qty), float(sale_price))
-        for line in self.handler.sale.line_items:
-            print(line)
-        print()
-
+        if item.qty == 0:
+            self._update_items_layout()
+        self._update_sli()
+        # for line in self.handler.sale.line_items:
+        #     print(line)
+        # print()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

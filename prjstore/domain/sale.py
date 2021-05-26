@@ -135,20 +135,14 @@ True
     @contract(item=Item, qty="int, >0")
     def add_line_item(self, item: Item, sale_price: float = None, qty: int = 1) -> None:
         sale_price = sale_price if sale_price else item.product.price.amount
-        list_items = self[item.product.id]
-        qty_same_items_in_sale = 0
-        if list_items:
-            for sli in list_items:
-                qty_same_items_in_sale += sli.qty
-
-        assert qty + qty_same_items_in_sale <= item.qty, f"qty({qty}) should not be more than " \
-                                                         f"item.qty({item.qty-qty_same_items_in_sale})!"
+        assert qty <= item.qty, f"qty({qty}) should not be more than item.qty({item.qty})!"
         # a same product in line items
         if self[(item.product.id, sale_price)]:
             self[(item.product.id, sale_price)].qty += qty
         # is a new product in line items
         else:
             self.__list_sli.append(SaleLineItem(item, sale_price=sale_price, qty=qty))
+        item.qty -= qty
 
     @contract(pr_id=str)
     def get_line_items_by_product_id(self, pr_id: str) -> list[SaleLineItem]:

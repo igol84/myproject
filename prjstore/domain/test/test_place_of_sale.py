@@ -38,7 +38,7 @@ class Test_PlaceOfSale(TestPlaceOfSale):
         self.places_of_sale[0].set_items_on_sale(self.items[('2')])
         self.assertEqual(str(self.places_of_sale[0].sale[('2', 600)]),
             '<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>'
-            ', qty=3>, sale_price=UAH 600.00, qty=3>')
+            ', qty=0>, sale_price=UAH 600.00, qty=3>')
 
     def test_unset_items_on_sale_by_pr_id(self):
         self.places_of_sale[0].unset_items_on_sale_by_pr_id_and_sale_price('2', 600)

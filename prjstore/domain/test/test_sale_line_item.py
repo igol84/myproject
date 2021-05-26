@@ -32,7 +32,3 @@ class Test_SaleLineItem(TestSaleLineItem):
         self.list_sli[0].sale_price = 500
         self.assertEqual(str(self.list_sli[0].sale_price), 'UAH 500.00')
 
-    def test_04_assert_qty(self):
-        self.assertRaises(AssertionError, SaleLineItem, item=self.items['1'], qty=2)
-        with self.assertRaises(AssertionError):
-            self.list_sli[1].qty = 3
