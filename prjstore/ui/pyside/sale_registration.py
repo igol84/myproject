@@ -16,7 +16,7 @@ class SaleForm(QWidget):
         self.ui.setupUi(self)
         self.resize(1200, 600)
         self.handler = SaleRegistrationHandler()
-        self.handler.test()         # loading test data-----------------------------------
+        self.handler.test()  # loading test data-----------------------------------
         self.items = self.handler.store.items
         self.sli_list = self.handler.sale.line_items
         self.selected_item_widget: ItemFrame = None
@@ -90,10 +90,9 @@ class SaleForm(QWidget):
         src_text = self.ui.src_items.text()
         if src_text:
             self.items = self.handler.search_items(src_text)
-            self._update_items_layout()
         else:
             self.items = self.handler.store.items
-            self._update_items_layout()
+        self._update_items_layout()
 
     def put_on_sale(self):
         item = self.selected_item_widget.item
@@ -101,11 +100,14 @@ class SaleForm(QWidget):
         qty = self.selected_item_widget.qty_box.text()
         self.handler.put_on_sale(item, int(qty), float(sale_price))
         if item.qty == 0:
+            if self.ui.src_items.text():
+                del self.items[item.product.id]
             self._update_items_layout()
         self._update_sli()
         # for line in self.handler.sale.line_items:
         #     print(line)
         # print()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

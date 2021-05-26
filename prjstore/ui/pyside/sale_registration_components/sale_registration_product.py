@@ -32,7 +32,7 @@ class ItemFrame(QWidget):
         self.label_item_description.move(5, 0)
         self.price_line_edit = LineEditPrice(str(self.item.product.price.amount), parent=self)
         self.price_line_edit.returnPressed.connect(self.on_pressed_price_line_edit)
-        self.qty_box = qtyBox(self, max_qty=self.item.qty)
+        self.qty_box = QtyBox(self)
         self.btn_plus = QPushButton(parent=self, text='+')
         width = 25 if self.item.qty>1 else 75
         self.btn_plus.setMaximumSize(width, 25)
@@ -103,7 +103,8 @@ class ItemFrame(QWidget):
             self.qty_box.show()
         self.price_line_edit.show()
         self.btn_plus.show()
-        self.qty_box.setFocus()
+        self.price_line_edit.setFocus()
+        self.price_line_edit.selectAll()
 
     def enterEvent(self, a0: QtCore.QEvent) -> None:
         if self.parent_form and self.parent_form.selected_item_widget is not self:
@@ -129,6 +130,11 @@ class ItemFrame(QWidget):
             self.parent_form.put_on_sale()
         self.update()
 
+    def on_press_enter_on_qty_box_edit(self):
+        if self.parent_form:
+            self.parent_form.put_on_sale()
+        self.update()
+
 
 class LabelItemDescription(QLabel):
     def paintEvent(self, event):
@@ -143,12 +149,19 @@ class LabelItemDescription(QLabel):
         painter.drawText(self.rect(), self.alignment(), pixels_text)
 
 
-class qtyBox(QSpinBox):
-    def __init__(self, parent, max_qty):
+class QtyBox(QSpinBox):
+    def __init__(self, parent):
         super().__init__(parent)
         font = self.font()
         font.setPointSize(ItemFrame.font_size)
         self.setFont(font)
+
+    def keyPressEvent(self, event:QtGui.QKeyEvent) -> None:
+        if event.key() == QtCore.Qt.Key_Enter:
+            self.clearFocus()
+            self.parent().on_press_enter_on_qty_box_edit()
+        else:
+            QSpinBox.keyPressEvent(self, event)
 
 
 
