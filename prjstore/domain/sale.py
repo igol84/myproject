@@ -27,7 +27,7 @@ class Sale:
 >>> sale
 <Sale: seller:Igor, date_time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, sale_price=UAH 300.00, qty=1>>
+<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=0>, sale_price=UAH 300.00, qty=1>>
 
 >>> sale.seller = Seller('Anna')
 >>> sale.seller.name
@@ -38,54 +38,50 @@ class Sale:
 >>> sale
 <Sale: seller:Anna, date_time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, sale_price=UAH 300.00, qty=1>
+<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=0>, sale_price=UAH 300.00, qty=1>
  <SaleLineItem: item=\
-<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=1>
+<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=2>, sale_price=UAH 600.00, qty=1>
  <SaleLineItem: item=\
-<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=1>>
+<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=1>, sale_price=UAH 500.00, qty=1>>
 >>> sale.add_line_item(item=items[0], sale_price=800, qty=2)      # Add same product to sale
 >>> sale
 <Sale: seller:Anna, date_time: 06/06/2020, 12:19:55, not completed, line items:
  <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, sale_price=UAH 300.00, qty=1>
+<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=0>, sale_price=UAH 300.00, qty=1>
  <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 600.00, qty=1>
+<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 600.00, qty=1>
  <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=1>
+<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=1>, sale_price=UAH 500.00, qty=1>
  <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 800.00, qty=2>>
+<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 800.00, qty=2>>
 >>> sale[('2', 800)]                                                    # get line item by product id "4"
 <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 800.00, qty=2>
->>> sale.unset_line_item_by_pr_id_and_sale_price('2', 600, 1) # unset sale line pr id ='2'# items 3-2=1
+<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 800.00, qty=2>
+>>> sale.unset_line_item_by_pr_id_and_sale_price('2', 800, 1) # unset sale line pr id ='2'# items 3-2=1
 >>> sale.line_items                                                                   # get sale line items
-[<SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, sale_price=UAH 300.00, qty=1>,\
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=1>,\
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 800.00, qty=2>]
-
+[<SaleLineItem: item=<Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=0>, \
+sale_price=UAH 300.00, qty=1>, <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
+ qty=0>, sale_price=UAH 600.00, qty=1>, <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, name=item2, \
+price=UAH 500.00>, qty=1>, sale_price=UAH 500.00, qty=1>, <SaleLineItem: item=<Item: product=\
+<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 800.00, qty=1>]
 >>> del sale[('4', 300)]                                            # del sale line item by product id='4'
 >>> sale.line_items
-[<SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>, sale_price=UAH 500.00, qty=1>,\
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 800.00, qty=2>]
->>> sale.unset_line_item_by_pr_id_and_sale_price('6', 500)              # unset sale line pr id ='6' items 1-1=0 -> del
->>> sale
-<Sale: seller:Anna, date_time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 800.00, qty=2>>
-
+[<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, \
+sale_price=UAH 600.00, qty=1>, <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, name=item2, \
+price=UAH 500.00>, qty=1>, sale_price=UAH 500.00, qty=1>, <SaleLineItem: item=\
+<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 800.00, qty=1>]
 >>> sale.completed()                                                                  # completed
 >>> sale.is_complete()
 True
 >>> sale
 <Sale: seller:Anna, date_time: 06/06/2020, 12:19:55, completed, line items:
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>, sale_price=UAH 800.00, qty=2>>
-    """
+ <SaleLineItem: item=\
+<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 600.00, qty=1>
+ <SaleLineItem: item=\
+<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=1>, sale_price=UAH 500.00, qty=1>
+ <SaleLineItem: item=\
+<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 800.00, qty=1>>
+"""
 
     def __init__(self,
                  seller: Seller = None,
@@ -152,16 +148,27 @@ True
                 list_sli.append(sli)
         return list_sli
 
-    @contract(pr_id=str)
+    @contract(pr_id=str, sale_price='int | float | $Decimal')
     def get_line_item_by_product_id_and_sale_price(self, pr_id: str, sale_price: float) -> SaleLineItem:
         for sli in self.__list_sli:
             if sli.item.product.id == pr_id and sli.sale_price.amount == sale_price:
                 return sli
 
+    @contract(sli=SaleLineItem, sale_price='int | float | $Decimal')
+    def edit_sale_price(self, sli: SaleLineItem, sale_price: float):
+        old_same_sli = self.get_line_item_by_product_id_and_sale_price(sli.item.product.id, sale_price)
+        if old_same_sli:
+            self.line_items.remove(sli)
+            old_same_sli.qty += sli.qty
+        else:
+            sli.sale_price = sale_price
+
     # unset line items
-    @contract(pr_id=str, qty='int, >0')
-    def unset_line_item_by_pr_id_and_sale_price(self, pr_id: str, sale_price: float, qty: int = 1) -> None:
-        sli = self[(pr_id, sale_price)]
+    @contract(sli=SaleLineItem)
+    def unset_line_item(self, sli: SaleLineItem, qty: int = 1) -> None:
+        qty = qty
+        sale_price = sli.sale_price.amount
+        pr_id = sli.item.product.id
         if not sli:
             raise ValueError(f"Invalid pr_id: {pr_id}, price: {sale_price}")
         assert sli and qty <= sli.qty, f"qty({qty}) should not be more than item.qty({self[(pr_id, sale_price)].qty})!"
@@ -170,6 +177,12 @@ True
             self[(pr_id, sale_price)].qty -= qty
         elif qty == sli.qty:
             del self[(pr_id, sale_price)]
+
+    # unset line items
+    @contract(pr_id=str, qty='int, >0')
+    def unset_line_item_by_pr_id_and_sale_price(self, pr_id: str, sale_price: float, qty: int = 1) -> None:
+        sli = self[(pr_id, sale_price)]
+        self.unset_line_item(sli, qty)
 
     @contract(pr_id=str)
     def del_line_item_by_product_id_and_sale_price(self, pr_id: str, sale_price: float) -> None:

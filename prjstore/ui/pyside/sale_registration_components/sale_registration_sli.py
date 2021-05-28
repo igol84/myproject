@@ -2,12 +2,12 @@ import sys
 
 from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QFontMetrics, QFont
-from PySide2.QtWidgets import QWidget, QApplication, QSpinBox, QPushButton, QLabel, QLineEdit
+from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QLabel, QLineEdit
 
-from prjstore.domain.item import Item
+from prjstore.domain.sale_line_item import SaleLineItem
 
 
-class ItemFrame(QWidget):
+class SLIFrame(QWidget):
     default_color_bg = '#E1E1E1'
     default_color_text = '#000'
     color_fon_enter = '#CCC'
@@ -18,29 +18,25 @@ class ItemFrame(QWidget):
     font_family = 'Times'
     font_size = 10
 
-    def __init__(self, parent, pr_item: Item):
+    def __init__(self, parent, sli: SaleLineItem):
         super().__init__()
         self.__parent_form = parent
-        self.item = pr_item
+        self.sli = sli
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setMinimumSize(self.width_, self.height_)
         self.color_fon = self.default_color_bg
         self.color_text = self.default_color_text
-        text_item_description = f'{self.item.product.id}:{self.item.product.name}'
-        self.label_item_description = LabelItemDescription(parent=self, text=text_item_description)
+        text_sli_description = f'{self.sli.item.product.id}:{self.sli.item.product.name}'
+        self.label_item_description = LabelItemDescription(parent=self, text=text_sli_description)
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
         self.label_item_description.move(5, 0)
-        self.price_line_edit = LineEditPrice(str(self.item.product.price.amount), parent=self)
-        self.price_line_edit.returnPressed.connect(self.on_pressed_price_line_edit)
-        self.qty_box = QtyBox(self)
-        self.btn_plus = QPushButton(parent=self, text='+')
-        width = 25 if self.item.qty > 1 else 75
-        self.btn_plus.setMaximumSize(width, 25)
-        self.btn_plus.clicked.connect(self.on_push_button_plus)
-
-        self.price_line_edit.hide()
-        self.qty_box.hide()
-        self.btn_plus.hide()
+        self.price_edit = LineEditPrice(str(self.sli.sale_price.amount), parent=self)
+        self.price_edit.returnPressed.connect(self.on_pressed_price_line_edit)
+        self.btn_minus = QPushButton(parent=self, text='-')
+        self.btn_minus.setMaximumSize(75, 25)
+        self.btn_minus.clicked.connect(self.on_push_button_plus)
+        self.btn_minus.hide()
+        self.price_edit.hide()
 
     def __get_parent_form(self):
         return self.__parent_form
@@ -51,8 +47,7 @@ class ItemFrame(QWidget):
         return QtCore.QSize(self.width_, self.height_)
 
     def paintEvent(self, e):
-        self.qty_box.move(self.width() - self.qty_box.width() - 3 - self.btn_plus.width() - 10, 4)
-        self.btn_plus.move(self.width() - self.btn_plus.width() - 3, 3)
+        self.btn_minus.move(self.width() - self.btn_minus.width() - 3, 3)
         painter = QtGui.QPainter(self)
         brush = QtGui.QBrush()
         brush.setColor(QtGui.QColor(self.color_fon))
@@ -72,12 +67,11 @@ class ItemFrame(QWidget):
         font.setPointSize(self.font_size)
         painter.setFont(font)
         fm = QFontMetrics(font)
-        text_item_price = f'{self.item.product.price.format_my()}'
-        self.qty_box.setRange(1, self.item.qty)
-        text_item_qty = f'{self.item.qty}шт.'
+        text_sale_price = f'{self.sli.sale_price.format_my()}'
+        text_item_qty = f'{self.sli.qty}шт.'
         pixels_qty = fm.size(0, text_item_qty).width()
-        painter.drawText(self.width() - 211, 20, text_item_price)
-        self.price_line_edit.move(self.width() - 211, 4)
+        painter.drawText(self.width() - 211, 20, text_sale_price)
+        self.price_edit.move(self.width() - 214, 4)
         painter.drawText(self.width() - pixels_qty - 85, 20, text_item_qty)
         painter.end()
 
@@ -88,50 +82,42 @@ class ItemFrame(QWidget):
         self.color_text = self.current_color_text
         self.update()
         # return default style on the previous selected widget
-        if self.parent_form and self.parent_form.selected_item_widget \
-                and self.parent_form.selected_item_widget is not self:
-            self.parent_form.selected_item_widget.color_fon = self.default_color_bg
-            self.parent_form.selected_item_widget.color_text = self.default_color_text
-            self.parent_form.selected_item_widget.update()
-            self.parent_form.selected_item_widget.price_line_edit.hide()
-            self.parent_form.selected_item_widget.qty_box.hide()
-            self.parent_form.selected_item_widget.btn_plus.hide()
+        if self.parent_form and self.parent_form.selected_sli_widget \
+                and self.parent_form.selected_sli_widget is not self:
+            self.parent_form.selected_sli_widget.color_fon = self.default_color_bg
+            self.parent_form.selected_sli_widget.color_text = self.default_color_text
+            self.parent_form.selected_sli_widget.update()
+            self.parent_form.selected_sli_widget.price_edit.hide()
+            self.parent_form.selected_sli_widget.btn_minus.hide()
         if self.parent_form:
-            self.parent_form.selected_item_widget = self
-        if self.item.qty > 1:
-            self.qty_box.show()
-        self.price_line_edit.show()
-        self.btn_plus.show()
-        self.price_line_edit.setFocus()
-        self.price_line_edit.selectAll()
+            self.parent_form.selected_sli_widget = self
+        self.price_edit.show()
+        self.btn_minus.show()
+        self.price_edit.setFocus()
+        self.price_edit.selectAll()
 
     def enterEvent(self, a0: QtCore.QEvent) -> None:
-        if self.parent_form and self.parent_form.selected_item_widget is not self:
+        if self.parent_form and self.parent_form.selected_sli_widget is not self:
             self.color_fon = self.color_fon_enter
             self.color_text = self.default_color_text
         self.update()
 
     def leaveEvent(self, a0: QtCore.QEvent) -> None:
-        if self.parent_form and self.parent_form.selected_item_widget is not self:
+        if self.parent_form and self.parent_form.selected_sli_widget is not self:
             self.color_fon = self.default_color_bg
             self.color_text = self.default_color_text
         self.update()
 
+    def on_pressed_price_line_edit(self):
+        self.parent_form.edit_sale_price_in_sli(self.sli, float(self.price_edit.text()))
+        self.parent_form.selected_sli_widget = None
+        self.btn_minus.hide()
+        self.price_edit.hide()
+        self.update()
+
     def on_push_button_plus(self):
         if self.parent_form:
-            self.parent_form.put_on_sale()
-        self.update()
-
-    def on_pressed_price_line_edit(self):
-        if self.price_line_edit.hasFocus():
-            self.price_line_edit.clearFocus()
-        if self.parent_form:
-            self.parent_form.put_on_sale()
-        self.update()
-
-    def on_press_enter_on_qty_box_edit(self):
-        if self.parent_form:
-            self.parent_form.put_on_sale()
+            self.parent_form.put_item_form_sli_to_items()
         self.update()
 
 
@@ -148,26 +134,11 @@ class LabelItemDescription(QLabel):
         painter.drawText(self.rect(), self.alignment(), pixels_text)
 
 
-class QtyBox(QSpinBox):
-    def __init__(self, parent):
-        super().__init__(parent)
-        font = self.font()
-        font.setPointSize(ItemFrame.font_size)
-        self.setFont(font)
-
-    def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:
-        if event.key() == QtCore.Qt.Key_Enter:
-            self.clearFocus()
-            self.parent().on_press_enter_on_qty_box_edit()
-        else:
-            QSpinBox.keyPressEvent(self, event)
-
-
 class LineEditPrice(QLineEdit):
     def __init__(self, text, parent):
         super().__init__(text, parent)
         font = self.font()
-        font.setPointSize(ItemFrame.font_size)
+        font.setPointSize(SLIFrame.font_size)
         self.setFont(font)
         self.setFixedWidth(75)
         validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]{1,7}[.]*[0-9]{0,2}"))
@@ -175,6 +146,7 @@ class LineEditPrice(QLineEdit):
 
 
 if __name__ == "__main__":
+    from prjstore.domain.item import Item
     from prjstore.domain.product_factory import ProductFactory
 
     app = QApplication(sys.argv)
@@ -182,7 +154,9 @@ if __name__ == "__main__":
                                     name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
                                     price=1600)
     item = Item(pr=product, qty=3, buy_price=200)
-    w = ItemFrame(parent=None, pr_item=item)
+    sli = SaleLineItem(item=item, qty=2, sale_price=750)
+
+    w = SLIFrame(parent=None, sli=sli)
     w.show()
 
     # product2 = ProductFactory.create(product_id='2', name='Кроссовки Adidas Y-1 красные', price=10600.50)

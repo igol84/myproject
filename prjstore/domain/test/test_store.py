@@ -53,3 +53,42 @@ class Test_Store(TestStore):
         self.store.places_of_sale[1].sale = sale
         self.assertEqual(self.store.places_of_sale[0].sale, None)
         self.assertEqual(len(self.store.places_of_sale[1].sale), 3)
+
+    def test_07_add_item(self):
+        item = self.store.items['1']
+        self.assertEqual(str(item),
+                         '<Item: product=<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, '
+                         'length_of_insole=11.0, width=Medium>, qty=1>')
+        self.store.add_item(item = item, qty=5)
+        print(self.store.items['1'])
+        self.assertEqual(item.qty, 6)
+
+    def test_08_add_new_item(self):
+        item = self.store.items['1']
+        item.qty = 0
+        del self.store.items['1']
+        self.assertEqual(item.qty, 0)
+        self.assertRaises(IndexError, self.store.get_item_by_pr_id, pr_id=item.product.id)
+        self.store.add_item(item = item, qty=5)
+        self.assertEqual(item.qty, 5)
+
+    def test_09_update_sale_price(self):
+        sli = self.store.places_of_sale[0].sale.line_items[1]
+        self.assertEqual(str(sli),
+        '<SaleLineItem: item='
+        '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=1>, sale_price=UAH 600.00, qty=2>')
+        self.store.places_of_sale[0].sale.add_line_item(sli.item, 50)
+        self.assertEqual(str(sli),
+        '<SaleLineItem: item='
+        '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 600.00, qty=2>')
+        new_sli = self.store.places_of_sale[0].sale[('2', 50)]
+        self.assertEqual(str(new_sli),
+        '<SaleLineItem: item='
+        '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 50.00, qty=1>')
+        self.store.places_of_sale[0].sale.update_sale_price(sli, 50)
+        self.assertEqual(str(new_sli),
+        '<SaleLineItem: item='
+        '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 50.00, qty=3>')
+        self.assertEqual(self.store.places_of_sale[0].sale[('2', 600)], None)
+
+

@@ -6,6 +6,7 @@ from PySide2.QtCore import QDate
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 from prjstore.ui.pyside.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration_components.sale_registration_product import ItemFrame
+from prjstore.ui.pyside.sale_registration_components.sale_registration_sli import SLIFrame
 from prjstore.ui.pyside.sale_registration_ui import Ui_Form
 
 
@@ -19,34 +20,41 @@ class SaleForm(QWidget):
         self.handler.test()  # loading test data-----------------------------------
         self.items = self.handler.store.items
         self.sli_list = self.handler.sale.line_items
+        self.selected_sli_widget: SLIFrame = None
         self.selected_item_widget: ItemFrame = None
 
         # SLI ----------------------- left panel ------------------------------
         self.ui.date_edit.setDate(QDate.currentDate())
         self.ui.date_edit.dateChanged.connect(self.on_date_edit_changed)
+
         self.ui.combo_box_place_of_sale.addItem('', userData=None)
         for n, place in enumerate(self.handler.store.places_of_sale):
             self.ui.combo_box_place_of_sale.addItem(place.name, userData=n)
         self.ui.combo_box_place_of_sale.currentIndexChanged.connect(self.on_combo_box_place_of_sale_changed)
+
         self.ui.combo_box_seller.addItem('', userData=None)
         for n, seller in enumerate(self.handler.store.sellers):
             self.ui.combo_box_seller.addItem(seller.name, userData=n)
         self.ui.combo_box_seller.currentIndexChanged.connect(self.on_combo_box_seller_changed)
 
-        self._update_sli()
         self.ui.button_hide_sli.clicked.connect(self.on_button_hide_sli)
+        self._update_sli()
 
         # Items -------------------- right panel --------------------------------
         self._update_items_layout()
 
-        self.ui.scroll_items.mousePressEvent = self.on_click_scroll_items
         self.ui.src_items.textChanged.connect(self.on_search_items)
+
+    def mousePressEvent(self, event):
+        self._update_sli()
+        self._update_items_layout()
 
     # SLI ----------------------- left panel ------------------------------
     def _update_sli(self):
         clearLayout(self.ui.sli_layout)
+        self.selected_sli_widget = None
         for sli in self.sli_list:
-            label = QLabel(str(sli))
+            label = SLIFrame(self, sli)
             self.ui.sli_layout.addWidget(label)
         self.ui.sli_layout.addStretch(0)
 
@@ -78,7 +86,7 @@ class SaleForm(QWidget):
     def _update_items_layout(self):
         clearLayout(self.ui.items_layout)
         self.selected_item_widget = None
-        for key, item in self.items.items():
+        for key, item in sorted(self.items.items()):
             item_frame = ItemFrame(self, item)
             self.ui.items_layout.addWidget(item_frame)
         self.ui.items_layout.addStretch(0)
@@ -104,9 +112,19 @@ class SaleForm(QWidget):
                 del self.items[item.product.id]
             self._update_items_layout()
         self._update_sli()
-        # for line in self.handler.sale.line_items:
-        #     print(line)
-        # print()
+
+    def put_item_form_sli_to_items(self):
+        sli = self.selected_sli_widget.sli
+        self.handler.put_item_form_sli_to_items(sli)
+        # add item in list items, where using search
+        if sli.item.product.id not in self.items:
+            self.items[sli.item.product.id] = sli.item
+        self._update_sli()
+        self._update_items_layout()
+
+    def edit_sale_price_in_sli(self, sli, sale_price: float):
+        self.handler.edit_sale_price_in_sli(sli, sale_price)
+        self._update_sli()
 
 
 if __name__ == "__main__":

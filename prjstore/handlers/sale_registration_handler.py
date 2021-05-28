@@ -1,5 +1,6 @@
 from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
+from prjstore.domain.sale_line_item import SaleLineItem
 from prjstore.domain.store import Store
 from prjstore.domain.test.test_item import TestItem
 from prjstore.domain.test.test_place_of_sale import TestPlaceOfSale
@@ -39,6 +40,13 @@ class SaleRegistrationHandler:
         self.sale.add_line_item(item=item, qty=qty, sale_price=sale_price)
         if item.qty == 0:
             del self.store.items[item.product.id]
+
+    def put_item_form_sli_to_items(self, sli: SaleLineItem):
+        self.sale.unset_line_item(sli=sli, qty=sli.qty)
+        self.store.add_item(item=sli.item, qty=sli.qty)
+
+    def edit_sale_price_in_sli(self, sli, sale_price: float):
+        self.sale.edit_sale_price(sli, sale_price)
 
 
 if __name__ == '__main__':

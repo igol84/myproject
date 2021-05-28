@@ -33,13 +33,18 @@ class Store:
 <SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>}
 >>> item = store.items['2']
 >>> del store.items['2']
+>>> item.qty = 0
 >>> store.items
 {'3': <Item: product=<Shoes: id=3, name=item4, price=UAH 700.00, color=red, size=43.3, length_of_insole=28.0, \
 width=Medium>, qty=1>, '4': <Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>, '6': \
 <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>}
->>> store.items['2'] = item
+>>> store.add_item(item, 3)
 >>> store.items['2']
 <Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>
+>>> store.add_item(item)
+>>> store.items['2']
+<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=4>
+
 
     """
 
@@ -97,9 +102,8 @@ width=Medium>, qty=1>, '4': <Item: product=<SimpleProduct: id=4, name=item5, pri
     ###############################################################################################
     @contract(pr_id=str)
     def get_item_by_pr_id(self, pr_id: str) -> Item:
-        for it_id in self.items:
-            if it_id == pr_id:
-                return self.items[it_id]
+        if pr_id in self.items:
+            return self.items[pr_id]
         raise IndexError(f"Invalid product id: {pr_id}")
 
     @contract(name="None | str")
@@ -111,7 +115,15 @@ width=Medium>, qty=1>, '4': <Item: product=<SimpleProduct: id=4, name=item5, pri
                     items[it_id] = item
         return items
 
+    @contract(item=Item, qty=int)
+    def add_item(self, item: Item, qty: int = 1):
+        if item.product.id not in self.items:
+            self.items[item.product.id] = item
+        self.items[item.product.id].qty += qty
 
+
+###############################################################################################
+# For Test
 def get_test_items(pc: ProductCatalog) -> dict[str, Item]:
     items = {'2': Item(pc['2'], qty=3), '3': Item(pc['3'], qty=1),
              '4': Item(pc['4'], qty=1), '6': Item(pc['6'], qty=2)}
