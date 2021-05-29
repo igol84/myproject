@@ -215,8 +215,9 @@ True
         sale_line_items = '\n ' + '\n '.join([str(sli) for sli in self.line_items])
         completed = 'completed' if self.is_complete() else 'not completed'
         time = self.date_time.strftime("%m/%d/%Y, %H:%M:%S")
+        seller_name = self.seller.name if self.seller else None
         return f"<{self.__class__.__name__}: " \
-               f"seller:{self.seller.name}, date_time: {time}, {completed}, line items:{sale_line_items}>"
+               f"seller:{seller_name}, date_time: {time}, {completed}, line items:{sale_line_items}>"
 
     @overload
     def __getitem__(self, key: str) -> list[SaleLineItem]:

@@ -1,6 +1,6 @@
 import sys
 
-from PySide2.QtWidgets import QWidget, QApplication, QLabel
+from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox
 from PySide2.QtCore import QDate
 
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
@@ -37,13 +37,17 @@ class SaleForm(QWidget):
             self.ui.combo_box_seller.addItem(seller.name, userData=n)
         self.ui.combo_box_seller.currentIndexChanged.connect(self.on_combo_box_seller_changed)
 
-        self.ui.button_hide_sli.clicked.connect(self.on_button_hide_sli)
         self._update_sli()
 
         # Items -------------------- right panel --------------------------------
         self._update_items_layout()
 
         self.ui.src_items.textChanged.connect(self.on_search_items)
+
+        # Items -------------------- Ok Cancel --------------------------------
+        self.save_button = QPushButton('Сохранить')
+        self.ui.buttonBox.addButton(self.save_button, QDialogButtonBox.AcceptRole)
+        self.ui.buttonBox.accepted.connect(self.press_save)
 
     def mousePressEvent(self, event):
         self._update_sli()
@@ -58,28 +62,26 @@ class SaleForm(QWidget):
             self.ui.sli_layout.addWidget(label)
         self.ui.sli_layout.addStretch(0)
 
-    def on_button_hide_sli(self):
-        if self.ui.sale.isHidden():
-            self.ui.button_hide_sli.setText('Скрыть')
-            self.ui.sale.show()
-        else:
-            self.ui.button_hide_sli.setText('Отобразить')
-            self.ui.sale.hide()
-
     def on_date_edit_changed(self, date: QDate):
-        print(date.toString('dd.MM.yyyy'))
+        self.handler.change_date(date.toPython())
         self._update_sli()
 
     def on_combo_box_place_of_sale_changed(self, combo_box_place_of_sale_id):
         place_of_sale_id = self.ui.combo_box_place_of_sale.itemData(combo_box_place_of_sale_id)
         if place_of_sale_id is not None:
-            print(self.handler.store.places_of_sale[place_of_sale_id])
+            self.handler.change_place_of_sale(place_of_sale_id)
+            view = self.ui.combo_box_place_of_sale.view()
+            if not view.isRowHidden(0):
+                view.setRowHidden(0, True)
         self._update_sli()
 
     def on_combo_box_seller_changed(self, combo_box_seller_id):
         seller_id = self.ui.combo_box_seller.itemData(combo_box_seller_id)
         if seller_id is not None:
-            print(self.handler.store.sellers[seller_id])
+            self.handler.change_seller(seller_id)
+            view = self.ui.combo_box_seller.view()
+            if not view.isRowHidden(0):
+                view.setRowHidden(0, True)
         self._update_sli()
 
     # Items -------------------- right panel --------------------------------
@@ -125,6 +127,9 @@ class SaleForm(QWidget):
     def edit_sale_price_in_sli(self, sli, sale_price: float):
         self.handler.edit_sale_price_in_sli(sli, sale_price)
         self._update_sli()
+
+    def press_save(self):
+        self.handler.press_save_button()
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'sale_registrationwOPoWM.ui'
+## Form generated from reading UI file 'sale_registration.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -31,23 +31,6 @@ class Ui_Form(object):
         self.title.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_2.addWidget(self.title)
-
-        self.widget_2 = QWidget(Form)
-        self.widget_2.setObjectName(u"widget_2")
-        sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.widget_2.sizePolicy().hasHeightForWidth())
-        self.widget_2.setSizePolicy(sizePolicy)
-        self.horizontalLayout_2 = QHBoxLayout(self.widget_2)
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.button_hide_sli = QPushButton(self.widget_2)
-        self.button_hide_sli.setObjectName(u"button_hide_sli")
-
-        self.horizontalLayout_2.addWidget(self.button_hide_sli)
-
-
-        self.verticalLayout_2.addWidget(self.widget_2)
 
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -102,10 +85,14 @@ class Ui_Form(object):
 
         self.scroll_slis = QScrollArea(self.sale)
         self.scroll_slis.setObjectName(u"scroll_slis")
+        font1 = QFont()
+        font1.setBold(False)
+        font1.setWeight(50)
+        self.scroll_slis.setFont(font1)
         self.scroll_slis.setWidgetResizable(True)
         self.widget_slis = QWidget()
         self.widget_slis.setObjectName(u"widget_slis")
-        self.widget_slis.setGeometry(QRect(0, 0, 508, 567))
+        self.widget_slis.setGeometry(QRect(0, 0, 508, 637))
         self.sli_layout = QVBoxLayout(self.widget_slis)
         self.sli_layout.setObjectName(u"sli_layout")
         self.scroll_slis.setWidget(self.widget_slis)
@@ -131,9 +118,9 @@ class Ui_Form(object):
         self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
         self.title_items = QLabel(self.frame)
         self.title_items.setObjectName(u"title_items")
-        font1 = QFont()
-        font1.setPointSize(11)
-        self.title_items.setFont(font1)
+        font2 = QFont()
+        font2.setPointSize(11)
+        self.title_items.setFont(font2)
         self.title_items.setMargin(0)
         self.title_items.setIndent(1)
 
@@ -153,12 +140,12 @@ class Ui_Form(object):
         self.scroll_items.setWidgetResizable(True)
         self.widget_items = QWidget()
         self.widget_items.setObjectName(u"widget_items")
-        self.widget_items.setGeometry(QRect(0, 0, 508, 569))
-        sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.widget_items.sizePolicy().hasHeightForWidth())
-        self.widget_items.setSizePolicy(sizePolicy1)
+        self.widget_items.setGeometry(QRect(0, 0, 508, 639))
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.widget_items.sizePolicy().hasHeightForWidth())
+        self.widget_items.setSizePolicy(sizePolicy)
         self.items_layout = QVBoxLayout(self.widget_items)
         self.items_layout.setObjectName(u"items_layout")
         self.items_layout.setContentsMargins(5, 5, 5, 5)
@@ -193,7 +180,7 @@ class Ui_Form(object):
 
         self.buttonBox = QDialogButtonBox(Form)
         self.buttonBox.setObjectName(u"buttonBox")
-        self.buttonBox.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QDialogButtonBox.NoButton)
 
         self.verticalLayout.addWidget(self.buttonBox)
 
@@ -209,7 +196,6 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.title.setText(QCoreApplication.translate("Form", u"\u041e\u0444\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435 \u043f\u0440\u043e\u0434\u0430\u0436", None))
-        self.button_hide_sli.setText(QCoreApplication.translate("Form", u"\u0441\u043a\u0440\u044b\u0442\u044c", None))
         self.label.setText(QCoreApplication.translate("Form", u"\u0413\u0434\u0435 \u043f\u0440\u043e\u0434\u0430\u043b\u0438", None))
         self.label_2.setText(QCoreApplication.translate("Form", u"\u041a\u0442\u043e \u043f\u0440\u043e\u0434\u0430\u043b", None))
         self.label_3.setText(QCoreApplication.translate("Form", u"\u0414\u0430\u0442\u0430 \u043f\u0440\u043e\u0434\u0430\u0436\u0438", None))

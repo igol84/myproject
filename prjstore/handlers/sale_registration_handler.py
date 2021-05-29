@@ -1,4 +1,7 @@
+import datetime
+
 from prjstore.domain.item import Item
+from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.sale import Sale
 from prjstore.domain.sale_line_item import SaleLineItem
 from prjstore.domain.store import Store
@@ -12,6 +15,7 @@ class SaleRegistrationHandler:
     def __init__(self):
         self.store = Store()
         self.sale = Sale()
+        self.current_place_of_sale = None
 
     def test(self):
         self.pc = None
@@ -26,6 +30,7 @@ class SaleRegistrationHandler:
         self.places_of_sale = []
         TestPlaceOfSale.setUp(self, sale=False)
         self.store.places_of_sale = self.places_of_sale
+        self.store.places_of_sale[0].sale = None
         self.store.items['1'].qty = 150
         self.store.items['1'].product.price = 10500
         self.store.items['1'].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
@@ -48,6 +53,28 @@ class SaleRegistrationHandler:
     def edit_sale_price_in_sli(self, sli, sale_price: float):
         self.sale.edit_sale_price(sli, sale_price)
 
+    def change_date(self, date: datetime.date):
+        time = datetime.datetime.min.time()
+        date_time = datetime.datetime.combine(date, time)
+        self.sale.date_time = date_time
+
+    def change_place_of_sale(self, place_of_sale_id: int):
+        self.store.places_of_sale[place_of_sale_id].sale = self.sale
+        if self.current_place_of_sale:
+            self.current_place_of_sale.sale = None
+        self.current_place_of_sale = self.store.places_of_sale[place_of_sale_id]
+
+    def change_seller(self, seller_id: int):
+        current_seller = self.sellers[seller_id]
+        self.sale.seller = current_seller
+
+    def press_save_button(self):
+        if self.current_place_of_sale and self.sellers and self.sale.line_items:
+            self.sale.completed()
+            print(self.store)
+            print(self.sale)
+        else:
+            print('Не все условия выполнены')
 
 if __name__ == '__main__':
     handler = SaleRegistrationHandler()

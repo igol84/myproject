@@ -121,6 +121,8 @@ width=Medium>, qty=1>, '4': <Item: product=<SimpleProduct: id=4, name=item5, pri
             self.items[item.product.id] = item
         self.items[item.product.id].qty += qty
 
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__}: places_of_sale:{self.places_of_sale}>"
 
 ###############################################################################################
 # For Test

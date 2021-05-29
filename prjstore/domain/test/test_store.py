@@ -85,7 +85,7 @@ class Test_Store(TestStore):
         self.assertEqual(str(new_sli),
         '<SaleLineItem: item='
         '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 50.00, qty=1>')
-        self.store.places_of_sale[0].sale.update_sale_price(sli, 50)
+        self.store.places_of_sale[0].sale.edit_sale_price(sli, 50)
         self.assertEqual(str(new_sli),
         '<SaleLineItem: item='
         '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 50.00, qty=3>')
