@@ -1,5 +1,7 @@
 import datetime
 
+from PySide2.QtWidgets import QMessageBox
+
 from prjstore.domain.item import Item
 from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.sale import Sale
@@ -69,12 +71,20 @@ class SaleRegistrationHandler:
         self.sale.seller = current_seller
 
     def press_save_button(self):
-        if self.current_place_of_sale and self.sellers and self.sale.line_items:
+        if self.current_place_of_sale and self.sale.seller and self.sale.line_items:
             self.sale.completed()
-            print(self.store)
-            print(self.sale)
+            if self.sale.is_complete():
+                QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec_()
         else:
-            print('Не все условия выполнены')
+            warning_texts = []
+            if not self.current_place_of_sale:
+                warning_texts.append('Не вабрано место продажи!')
+            if not self.sale.seller:
+                warning_texts.append('Не вабран продавец!')
+            if not self.sale.line_items:
+                warning_texts.append('Нет товаров в списке продаж!')
+            QMessageBox(icon=QMessageBox.Warning, text='\n'.join(warning_texts)).exec_()
+
 
 if __name__ == '__main__':
     handler = SaleRegistrationHandler()
