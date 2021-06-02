@@ -4,8 +4,6 @@ from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QFontMetrics, QFont
 from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QLabel, QLineEdit
 
-from prjstore.domain.sale_line_item import SaleLineItem
-
 
 class SLIFrame(QWidget):
     default_color_bg = '#E1E1E1'
@@ -18,19 +16,28 @@ class SLIFrame(QWidget):
     font_family = 'Times'
     font_size = 10
 
-    def __init__(self, parent, sli: SaleLineItem):
+    def __init__(self, parent,
+                 sli_product_id: int,
+                 sli_product_name: str,
+                 sli_sale_price: float,
+                 sli_sale_price_format: str,
+                 sli_qty: int):
         super().__init__()
         self.__parent_form = parent
-        self.sli = sli
+        self.sli_product_id = sli_product_id
+        self.sli_product_name = sli_product_name
+        self.sli_price = sli_sale_price
+        self.sli_price_format = sli_sale_price_format
+        self.sli_qty = sli_qty
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setMinimumSize(self.width_, self.height_)
         self.color_fon = self.default_color_bg
         self.color_text = self.default_color_text
-        text_sli_description = f'{self.sli.item.product.id}:{self.sli.item.product.name}'
+        text_sli_description = f'{self.sli_product_id}:{self.sli_product_name}'
         self.label_item_description = LabelItemDescription(parent=self, text=text_sli_description)
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
         self.label_item_description.move(5, 0)
-        self.price_edit = LineEditPrice(str(self.sli.sale_price.amount), parent=self)
+        self.price_edit = LineEditPrice(self.sli_price, parent=self)
         self.price_edit.returnPressed.connect(self.on_pressed_price_line_edit)
         self.btn_minus = QPushButton(parent=self, text='-')
         self.btn_minus.setMaximumSize(75, 25)
@@ -67,8 +74,8 @@ class SLIFrame(QWidget):
         font.setPointSize(self.font_size)
         painter.setFont(font)
         fm = QFontMetrics(font)
-        text_sale_price = f'{self.sli.sale_price.format_my()}'
-        text_item_qty = f'{self.sli.qty}шт.'
+        text_sale_price = f'{self.sli_price_format}'
+        text_item_qty = f'{self.sli_qty}шт.'
         pixels_qty = fm.size(0, text_item_qty).width()
         painter.drawText(self.width() - 211, 20, text_sale_price)
         self.price_edit.move(self.width() - 214, 4)
@@ -109,7 +116,7 @@ class SLIFrame(QWidget):
         self.update()
 
     def on_pressed_price_line_edit(self):
-        self.parent_form.edit_sale_price_in_sli(self.sli, float(self.price_edit.text()))
+        self.parent_form.edit_sale_price_in_sli(self.sli_product_id, self.sli_price, float(self.price_edit.text()))
         self.parent_form.selected_sli_widget = None
         self.btn_minus.hide()
         self.price_edit.hide()
@@ -135,8 +142,8 @@ class LabelItemDescription(QLabel):
 
 
 class LineEditPrice(QLineEdit):
-    def __init__(self, text, parent):
-        super().__init__(text, parent)
+    def __init__(self, price, parent):
+        super().__init__(str(price), parent)
         font = self.font()
         font.setPointSize(SLIFrame.font_size)
         self.setFont(font)
@@ -146,17 +153,10 @@ class LineEditPrice(QLineEdit):
 
 
 if __name__ == "__main__":
-    from prjstore.domain.item import Item
-    from prjstore.domain.product_factory import ProductFactory
-
     app = QApplication(sys.argv)
-    product = ProductFactory.create(product_id='2',
-                                    name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
-                                    price=1600)
-    item = Item(pr=product, qty=3, buy_price=200)
-    sli = SaleLineItem(item=item, qty=2, sale_price=750)
-
-    w = SLIFrame(parent=None, sli=sli)
+    w = SLIFrame(parent=None, sli_product_id=2,
+                 sli_product_name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
+                 sli_sale_price=200, sli_sale_price_format='200 грн.', sli_qty=2)
     w.show()
 
     # product2 = ProductFactory.create(product_id='2', name='Кроссовки Adidas Y-1 красные', price=10600.50)

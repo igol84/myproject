@@ -18,8 +18,8 @@ class SaleForm(QWidget):
         self.resize(1200, 600)
         self.handler = SaleRegistrationHandler()
         self.handler.test()  # loading test data-----------------------------------
-        self.items = self.handler.store.items
-        self.sli_list = self.handler.sale.line_items
+        self.items: dict = self.handler.get_store_items()
+        self.sli_list: list = self.handler.get_sale_line_items()
         self.selected_sli_widget: SLIFrame = None
         self.selected_item_widget: ItemFrame = None
 
@@ -28,13 +28,13 @@ class SaleForm(QWidget):
         self.ui.date_edit.dateChanged.connect(self.on_date_edit_changed)
 
         self.ui.combo_box_place_of_sale.addItem('', userData=None)
-        for n, place in enumerate(self.handler.store.places_of_sale):
-            self.ui.combo_box_place_of_sale.addItem(place.name, userData=n)
+        for n, name_place_of_sale in enumerate(self.handler.get_store_places_of_sale_names()):
+            self.ui.combo_box_place_of_sale.addItem(name_place_of_sale, userData=n)
         self.ui.combo_box_place_of_sale.currentIndexChanged.connect(self.on_combo_box_place_of_sale_changed)
 
         self.ui.combo_box_seller.addItem('', userData=None)
-        for n, seller in enumerate(self.handler.store.sellers):
-            self.ui.combo_box_seller.addItem(seller.name, userData=n)
+        for n, seller_name in enumerate(self.handler.get_store_sellers_names()):
+            self.ui.combo_box_seller.addItem(seller_name, userData=n)
         self.ui.combo_box_seller.currentIndexChanged.connect(self.on_combo_box_seller_changed)
 
         self._update_sli()
@@ -57,8 +57,9 @@ class SaleForm(QWidget):
     def _update_sli(self):
         clearLayout(self.ui.sli_layout)
         self.selected_sli_widget = None
-        for sli in self.sli_list:
-            label = SLIFrame(self, sli)
+        self.sli_list = self.handler.get_sale_line_items()
+        for sly in self.sli_list.values():
+            label = SLIFrame(self, sly['id'], sly['name'], sly['price'], sly['price_format'], sly['qty'])
             self.ui.sli_layout.addWidget(label)
         self.ui.sli_layout.addStretch(0)
 
@@ -88,8 +89,9 @@ class SaleForm(QWidget):
     def _update_items_layout(self):
         clearLayout(self.ui.items_layout)
         self.selected_item_widget = None
-        for key, item in sorted(self.items.items()):
-            item_frame = ItemFrame(self, item)
+        self.items = self.handler.get_store_items(self.ui.src_items.text())
+        for pr_id, item in sorted(self.items.items()):
+            item_frame = ItemFrame(self, pr_id, item['name'], item['price'], item['price_format'], item['qty'])
             self.ui.items_layout.addWidget(item_frame)
         self.ui.items_layout.addStretch(0)
 
@@ -97,35 +99,31 @@ class SaleForm(QWidget):
         self._update_items_layout()
 
     def on_search_items(self):
-        src_text = self.ui.src_items.text()
-        if src_text:
-            self.items = self.handler.search_items(src_text)
-        else:
-            self.items = self.handler.store.items
         self._update_items_layout()
 
     def put_on_sale(self):
-        item = self.selected_item_widget.item
+        pr_id = self.selected_item_widget.pr_id
         sale_price = self.selected_item_widget.price_line_edit.text()
-        qty = self.selected_item_widget.qty_box.text()
-        self.handler.put_on_sale(item, int(qty), float(sale_price))
-        if item.qty == 0:
+        sale_qty = self.selected_item_widget.qty_box.text()
+        self.handler.put_on_sale(pr_id, int(sale_qty), float(sale_price))
+
+        if self.handler.is_item_exists(pr_id):
+            self.selected_item_widget.pr_qty = self.handler.get_item_qty_by_product_id(pr_id)
+        else:
             if self.ui.src_items.text():
-                del self.items[item.product.id]
+                del self.items[pr_id]
             self._update_items_layout()
         self._update_sli()
 
     def put_item_form_sli_to_items(self):
-        sli = self.selected_sli_widget.sli
-        self.handler.put_item_form_sli_to_items(sli)
-        # add item in list items, where using search
-        if sli.item.product.id not in self.items:
-            self.items[sli.item.product.id] = sli.item
+        sli_id = self.selected_sli_widget.sli_product_id
+        sli_price = self.selected_sli_widget.sli_price
+        self.handler.put_item_form_sli_to_items(sli_id, sli_price)
         self._update_sli()
         self._update_items_layout()
 
-    def edit_sale_price_in_sli(self, sli, sale_price: float):
-        self.handler.edit_sale_price_in_sli(sli, sale_price)
+    def edit_sale_price_in_sli(self, sli_item_id: str, old_sale_price: float, sale_price: float):
+        self.handler.edit_sale_price_in_sli(sli_item_id, old_sale_price, sale_price)
         self._update_sli()
 
     def press_save(self):

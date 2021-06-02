@@ -4,8 +4,6 @@ from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QFontMetrics, QFont
 from PySide2.QtWidgets import QWidget, QApplication, QSpinBox, QPushButton, QLabel, QLineEdit
 
-from prjstore.domain.item import Item
-
 
 class ItemFrame(QWidget):
     default_color_bg = '#E1E1E1'
@@ -18,23 +16,27 @@ class ItemFrame(QWidget):
     font_family = 'Times'
     font_size = 10
 
-    def __init__(self, parent, pr_item: Item):
+    def __init__(self, parent, pr_id: int, pr_name: str, pr_price: float, pr_price_format: str, pr_qty: int):
         super().__init__()
         self.__parent_form = parent
-        self.item = pr_item
+        self.pr_id = pr_id
+        self.pr_name = pr_name
+        self.pr_price = pr_price
+        self.pr_price_format = pr_price_format
+        self.pr_qty = pr_qty
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setMinimumSize(self.width_, self.height_)
         self.color_fon = self.default_color_bg
         self.color_text = self.default_color_text
-        text_item_description = f'{self.item.product.id}:{self.item.product.name}'
+        text_item_description = f'{self.pr_id}:{self.pr_name}'
         self.label_item_description = LabelItemDescription(parent=self, text=text_item_description)
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
         self.label_item_description.move(5, 0)
-        self.price_line_edit = LineEditPrice(str(self.item.product.price.amount), parent=self)
+        self.price_line_edit = LineEditPrice(str(self.pr_price), parent=self)
         self.price_line_edit.returnPressed.connect(self.on_pressed_price_line_edit)
         self.qty_box = QtyBox(self)
         self.btn_plus = QPushButton(parent=self, text='+')
-        width = 25 if self.item.qty > 1 else 75
+        width = 25 if self.pr_qty > 1 else 75
         self.btn_plus.setMaximumSize(width, 25)
         self.btn_plus.clicked.connect(self.on_push_button_plus)
 
@@ -72,9 +74,9 @@ class ItemFrame(QWidget):
         font.setPointSize(self.font_size)
         painter.setFont(font)
         fm = QFontMetrics(font)
-        text_item_price = f'{self.item.product.price.format_my()}'
-        self.qty_box.setRange(1, self.item.qty)
-        text_item_qty = f'{self.item.qty}шт.'
+        text_item_price = f'{self.pr_price_format}'
+        self.qty_box.setRange(1, self.pr_qty)
+        text_item_qty = f'{self.pr_qty}шт.'
         pixels_qty = fm.size(0, text_item_qty).width()
         painter.drawText(self.width() - 211, 20, text_item_price)
         self.price_line_edit.move(self.width() - 211, 4)
@@ -98,7 +100,7 @@ class ItemFrame(QWidget):
             self.parent_form.selected_item_widget.btn_plus.hide()
         if self.parent_form:
             self.parent_form.selected_item_widget = self
-        if self.item.qty > 1:
+        if self.pr_qty > 1:
             self.qty_box.show()
         self.price_line_edit.show()
         self.btn_plus.show()
@@ -175,18 +177,8 @@ class LineEditPrice(QLineEdit):
 
 
 if __name__ == "__main__":
-    from prjstore.domain.product_factory import ProductFactory
-
     app = QApplication(sys.argv)
-    product = ProductFactory.create(product_id='2',
-                                    name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
-                                    price=1600)
-    item = Item(pr=product, qty=3, buy_price=200)
-    w = ItemFrame(parent=None, pr_item=item)
+    w = ItemFrame(parent=None, pr_id=2, pr_name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
+                  pr_price=1600, pr_price_format='1600 грн.', pr_qty=3)
     w.show()
-
-    # product2 = ProductFactory.create(product_id='2', name='Кроссовки Adidas Y-1 красные', price=10600.50)
-    # item2 = Item(pr=product2, qty=1000, buy_price=1200)
-    # w2 = ItemFrame(parent=None, pr_item=item2)
-    # w2.show()
     sys.exit(app.exec_())
