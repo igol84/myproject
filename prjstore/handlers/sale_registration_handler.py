@@ -1,11 +1,7 @@
 import datetime
-
-from PySide2.QtWidgets import QMessageBox
-
+from typing import Union, Optional
 from prjstore.domain.item import Item
-from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.sale import Sale
-from prjstore.domain.sale_line_item import SaleLineItem
 from prjstore.domain.store import Store
 from prjstore.domain.test.test_item import TestItem
 from prjstore.domain.test.test_place_of_sale import TestPlaceOfSale
@@ -37,7 +33,7 @@ class SaleRegistrationHandler:
         self.store.items['1'].product.price = 10500
         self.store.items['1'].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
 
-    def get_store_items(self, search=None) -> dict[str: dict]:
+    def get_store_items(self, search: Optional[str] = None) -> dict[str: dict[str: Union[str, int, float]]]:
         items: dict[str: Item] = self.store.items if not search else self.search_items(search)
         return {item.product.id:
                     {'name': item.product.name,
@@ -46,7 +42,7 @@ class SaleRegistrationHandler:
                      'qty': item.qty}
                 for item in items.values()}
 
-    def get_sale_line_items(self) -> dict[str: dict]:
+    def get_sale_line_items(self) -> dict[str: dict[str: Union[str, int, float]]]:
         return {(sli.item.product.id, sli.sale_price.amount):
                     {'id': sli.item.product.id,
                      'name': sli.item.product.name,
@@ -107,17 +103,9 @@ class SaleRegistrationHandler:
     def press_save_button(self):
         if self.current_place_of_sale and self.sale.seller and self.sale.line_items:
             self.sale.completed()
-            if self.sale.is_complete():
-                QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec_()
-        else:
-            warning_texts = []
-            if not self.current_place_of_sale:
-                warning_texts.append('Не вабрано место продажи!')
-            if not self.sale.seller:
-                warning_texts.append('Не вабран продавец!')
-            if not self.sale.line_items:
-                warning_texts.append('Нет товаров в списке продаж!')
-            QMessageBox(icon=QMessageBox.Warning, text='\n'.join(warning_texts)).exec_()
+
+    def is_sale_completed(self) -> bool:
+        return self.sale.is_complete()
 
 
 if __name__ == '__main__':

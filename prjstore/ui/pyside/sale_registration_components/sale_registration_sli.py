@@ -5,7 +5,7 @@ from PySide2.QtGui import QFontMetrics, QFont
 from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QLabel, QLineEdit
 
 
-class SLIFrame(QWidget):
+class SLI_Frame(QWidget):
     default_color_bg = '#E1E1E1'
     default_color_text = '#000'
     color_fon_enter = '#CCC'
@@ -145,7 +145,7 @@ class LineEditPrice(QLineEdit):
     def __init__(self, price, parent):
         super().__init__(str(price), parent)
         font = self.font()
-        font.setPointSize(SLIFrame.font_size)
+        font.setPointSize(SLI_Frame.font_size)
         self.setFont(font)
         self.setFixedWidth(75)
         validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]{1,7}[.]*[0-9]{0,2}"))
@@ -154,9 +154,9 @@ class LineEditPrice(QLineEdit):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = SLIFrame(parent=None, sli_product_id=2,
-                 sli_product_name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
-                 sli_sale_price=200, sli_sale_price_format='200 грн.', sli_qty=2)
+    w = SLI_Frame(parent=None, sli_product_id=2,
+                  sli_product_name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
+                  sli_sale_price=200, sli_sale_price_format='200 грн.', sli_qty=2)
     w.show()
 
     # product2 = ProductFactory.create(product_id='2', name='Кроссовки Adidas Y-1 красные', price=10600.50)

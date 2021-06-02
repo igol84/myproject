@@ -1,12 +1,12 @@
 import sys
 
-from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox
+from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
 from PySide2.QtCore import QDate
 
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 from prjstore.ui.pyside.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration_components.sale_registration_product import ItemFrame
-from prjstore.ui.pyside.sale_registration_components.sale_registration_sli import SLIFrame
+from prjstore.ui.pyside.sale_registration_components.sale_registration_sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration_ui import Ui_Form
 
 
@@ -20,7 +20,7 @@ class SaleForm(QWidget):
         self.handler.test()  # loading test data-----------------------------------
         self.items: dict = self.handler.get_store_items()
         self.sli_list: list = self.handler.get_sale_line_items()
-        self.selected_sli_widget: SLIFrame = None
+        self.selected_sli_widget: SLI_Frame = None
         self.selected_item_widget: ItemFrame = None
 
         # SLI ----------------------- left panel ------------------------------
@@ -28,13 +28,13 @@ class SaleForm(QWidget):
         self.ui.date_edit.dateChanged.connect(self.on_date_edit_changed)
 
         self.ui.combo_box_place_of_sale.addItem('', userData=None)
-        for n, name_place_of_sale in enumerate(self.handler.get_store_places_of_sale_names()):
-            self.ui.combo_box_place_of_sale.addItem(name_place_of_sale, userData=n)
+        for i, name_place_of_sale in enumerate(self.handler.get_store_places_of_sale_names()):
+            self.ui.combo_box_place_of_sale.addItem(name_place_of_sale, userData=i)
         self.ui.combo_box_place_of_sale.currentIndexChanged.connect(self.on_combo_box_place_of_sale_changed)
 
         self.ui.combo_box_seller.addItem('', userData=None)
-        for n, seller_name in enumerate(self.handler.get_store_sellers_names()):
-            self.ui.combo_box_seller.addItem(seller_name, userData=n)
+        for i, seller_name in enumerate(self.handler.get_store_sellers_names()):
+            self.ui.combo_box_seller.addItem(seller_name, userData=i)
         self.ui.combo_box_seller.currentIndexChanged.connect(self.on_combo_box_seller_changed)
 
         self._update_sli()
@@ -42,7 +42,7 @@ class SaleForm(QWidget):
         # Items -------------------- right panel --------------------------------
         self._update_items_layout()
 
-        self.ui.src_items.textChanged.connect(self.on_search_items)
+        self.ui.src_items.textChanged.connect(self.on_search_items_text_changed)
 
         # Items -------------------- Ok Cancel --------------------------------
         self.save_button = QPushButton('Сохранить')
@@ -58,8 +58,8 @@ class SaleForm(QWidget):
         clearLayout(self.ui.sli_layout)
         self.selected_sli_widget = None
         self.sli_list = self.handler.get_sale_line_items()
-        for sly in self.sli_list.values():
-            label = SLIFrame(self, sly['id'], sly['name'], sly['price'], sly['price_format'], sly['qty'])
+        for sli in self.sli_list.values():
+            label = SLI_Frame(self, sli['id'], sli['name'], sli['price'], sli['price_format'], sli['qty'])
             self.ui.sli_layout.addWidget(label)
         self.ui.sli_layout.addStretch(0)
 
@@ -98,7 +98,7 @@ class SaleForm(QWidget):
     def on_click_scroll_items(self, event):
         self._update_items_layout()
 
-    def on_search_items(self):
+    def on_search_items_text_changed(self):
         self._update_items_layout()
 
     def put_on_sale(self):
@@ -128,6 +128,18 @@ class SaleForm(QWidget):
 
     def press_save(self):
         self.handler.press_save_button()
+        if self.handler.is_sale_completed():
+            QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec_()
+            self.close()
+        else:
+            warning_texts = []
+            if not self.ui.combo_box_place_of_sale.currentText():
+                warning_texts.append('Не вабрано место продажи!')
+            if not self.ui.combo_box_seller.currentText():
+                warning_texts.append('Не вабран продавец!')
+            if not self.sli_list:
+                warning_texts.append('Нет товаров в списке продаж!')
+            QMessageBox(icon=QMessageBox.Warning, text='\n'.join(warning_texts)).exec_()
 
 
 if __name__ == "__main__":
