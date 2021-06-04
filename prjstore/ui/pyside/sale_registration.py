@@ -1,4 +1,5 @@
 import sys
+from typing import Union
 
 from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
 from PySide2.QtCore import QDate
@@ -17,9 +18,9 @@ class SaleForm(QWidget):
         self.ui.setupUi(self)
         self.resize(1200, 600)
         self.handler = SaleRegistrationHandler()
-        self.handler.test()  # loading test data-----------------------------------
-        self.items: dict = self.handler.get_store_items()
-        self.sli_list: list = self.handler.get_sale_line_items()
+        self.handler._test()  # loading test data-----------------------------------
+        self.items: dict[str: dict[str: Union[str, int, float]]] = self.handler.get_store_items()
+        self.sli_list: dict[str: dict[str: Union[str, int, float]]] = self.handler.get_sale_line_items()
         self.selected_sli_widget: SLI_Frame = None
         self.selected_item_widget: ItemFrame = None
 
@@ -64,26 +65,14 @@ class SaleForm(QWidget):
         self.ui.sli_layout.addStretch(0)
 
     def on_date_edit_changed(self, date: QDate):
-        self.handler.change_date(date.toPython())
-        self._update_sli()
+        # self.handler.change_date(date.toPython())
+        pass
 
     def on_combo_box_place_of_sale_changed(self, combo_box_place_of_sale_id):
-        place_of_sale_id = self.ui.combo_box_place_of_sale.itemData(combo_box_place_of_sale_id)
-        if place_of_sale_id is not None:
-            self.handler.change_place_of_sale(place_of_sale_id)
-            view = self.ui.combo_box_place_of_sale.view()
-            if not view.isRowHidden(0):
-                view.setRowHidden(0, True)
-        self._update_sli()
+        pass
 
     def on_combo_box_seller_changed(self, combo_box_seller_id):
-        seller_id = self.ui.combo_box_seller.itemData(combo_box_seller_id)
-        if seller_id is not None:
-            self.handler.change_seller(seller_id)
-            view = self.ui.combo_box_seller.view()
-            if not view.isRowHidden(0):
-                view.setRowHidden(0, True)
-        self._update_sli()
+        pass
 
     # Items -------------------- right panel --------------------------------
     def _update_items_layout(self):
@@ -127,8 +116,10 @@ class SaleForm(QWidget):
         self._update_sli()
 
     def press_save(self):
-        self.handler.press_save_button()
-        if self.handler.is_sale_completed():
+        current_data = self.ui.date_edit.date().toPython()
+        current_place_of_sale_id = self.ui.combo_box_place_of_sale.currentData()
+        current_seller_id = self.ui.combo_box_seller.currentData()
+        if self.handler.end_sale(current_data, current_place_of_sale_id, current_seller_id):
             QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec_()
             self.close()
         else:

@@ -11,30 +11,29 @@ from prjstore.domain.test.test_seller import TestSeller
 
 class SaleRegistrationHandler:
     def __init__(self):
-        self.store = Store()
-        self.sale = Sale()
-        self.current_place_of_sale = None
+        self._store = Store()
+        self._sale = Sale()
 
-    def test(self):
-        self.pc = None
-        TestProductCatalog.setUp(self)
-        self.store.pc = self.pc
-        self.items = {}
-        TestItem.setUp(self)
-        self.store.items = self.items
-        self.sellers = []
-        TestSeller.setUp(self)
-        self.store.sellers = self.sellers
-        self.places_of_sale = []
-        TestPlaceOfSale.setUp(self, sale=False)
-        self.store.places_of_sale = self.places_of_sale
-        self.store.places_of_sale[0].sale = None
-        self.store.items['1'].qty = 150
-        self.store.items['1'].product.price = 10500
-        self.store.items['1'].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
+    def _test(self):
+        test = TestProductCatalog()
+        test.setUp()
+        self._store.pc = test.pc
+        test = TestItem()
+        test.setUp()
+        self._store.items = test.items
+        test = TestSeller()
+        test.setUp()
+        self._store.sellers = test.sellers
+        test = TestPlaceOfSale()
+        test.setUp(sale=False)
+        self._store.places_of_sale = test.places_of_sale
+        self._store.places_of_sale[0].sale = None
+        self._store.items['1'].qty = 150
+        self._store.items['1'].product.price = 10500
+        self._store.items['1'].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
 
     def get_store_items(self, search: Optional[str] = None) -> dict[str: dict[str: Union[str, int, float]]]:
-        items: dict[str: Item] = self.store.items if not search else self.search_items(search)
+        items: dict[str: Item] = self._store.items if not search else self.search_items(search)
         return {item.product.id:
                     {'name': item.product.name,
                      'price': item.product.price.amount,
@@ -49,71 +48,56 @@ class SaleRegistrationHandler:
                      'price': sli.sale_price.amount,
                      'price_format': sli.sale_price.format_my(),
                      'qty': sli.qty}
-                for sli in self.sale.line_items}
+                for sli in self._sale.line_items}
 
     def search_items(self, text: str) -> dict[str: Item]:
-        items = self.store.search_items_by_name(name=text)
-        if text in self.store.items:  # search_items_by_id
-            items[text] = self.store.items[text]
+        items = self._store.search_items_by_name(name=text)
+        if text in self._store.items:  # search_items_by_id
+            items[text] = self._store.items[text]
         return items
 
-    def put_on_sale(self, pr_id: str, qty: int, sale_price: float = None):
-        sale_item = self.store.get_item_by_pr_id(pr_id)
-        self.sale.add_line_item(item=sale_item, qty=qty, sale_price=sale_price)
+    def put_on_sale(self, pr_id: str, qty: int, sale_price: float = None) -> None:
+        sale_item = self._store.get_item_by_pr_id(pr_id)
+        self._sale.add_line_item(item=sale_item, qty=qty, sale_price=sale_price)
         if sale_item.qty == 0:
-            del self.store.items[sale_item.product.id]
+            del self._store.items[sale_item.product.id]
 
-    def is_item_exists(self, pr_id):
-        return pr_id in self.store.items
+    def is_item_exists(self, pr_id) -> bool:
+        return pr_id in self._store.items
 
     def get_item_qty_by_product_id(self, pr_id: str) -> int:
-        if pr_id in self.store.items:
-            return self.store.items[pr_id].qty
+        if pr_id in self._store.items:
+            return self._store.items[pr_id].qty
 
-    def put_item_form_sli_to_items(self, sli_id: str, sli_price: float):
-        sli = self.sale.get_line_item_by_product_id_and_sale_price(sli_id, sli_price)
-        self.sale.unset_line_item(sli=sli, qty=sli.qty)
-        self.store.add_item(item=sli.item, qty=sli.qty)
+    def put_item_form_sli_to_items(self, sli_id: str, sli_price: float) -> None:
+        sli = self._sale.get_line_item_by_product_id_and_sale_price(sli_id, sli_price)
+        self._sale.unset_line_item(sli=sli, qty=sli.qty)
+        self._store.add_item(item=sli.item, qty=sli.qty)
 
-    def edit_sale_price_in_sli(self, sli_product_id: str, old_sale_price: float, sale_price: float):
-        sli = self.sale.get_line_item_by_product_id_and_sale_price(sli_product_id, old_sale_price)
-        self.sale.edit_sale_price(sli, sale_price)
+    def edit_sale_price_in_sli(self, sli_product_id: str, old_sale_price: float, sale_price: float) -> None:
+        sli = self._sale.get_line_item_by_product_id_and_sale_price(sli_product_id, old_sale_price)
+        self._sale.edit_sale_price(sli, sale_price)
 
-    def change_date(self, date: datetime.date):
-        time = datetime.datetime.min.time()
-        date_time = datetime.datetime.combine(date, time)
-        self.sale.date_time = date_time
+    def get_store_places_of_sale_names(self) -> list[str]:
+        return [place_of_sale.name for place_of_sale in self._store.places_of_sale]
 
-    def get_store_places_of_sale_names(self):
-        return [place_of_sale.name for place_of_sale in self.store.places_of_sale]
+    def get_store_sellers_names(self) -> list[str]:
+        return [seller.name for seller in self._store.sellers]
 
-    def change_place_of_sale(self, place_of_sale_id: int):
-        self.store.places_of_sale[place_of_sale_id].sale = self.sale
-        if self.current_place_of_sale:
-            self.current_place_of_sale.sale = None
-        self.current_place_of_sale = self.store.places_of_sale[place_of_sale_id]
-
-    def get_store_sellers_names(self):
-        return [seller.name for seller in self.store.sellers]
-
-    def change_seller(self, seller_id: int):
-        current_seller = self.sellers[seller_id]
-        self.sale.seller = current_seller
-
-    def press_save_button(self):
-        if self.current_place_of_sale and self.sale.seller and self.sale.line_items:
-            self.sale.completed()
-
-    def is_sale_completed(self) -> bool:
-        return self.sale.is_complete()
+    def end_sale(self, date: datetime.date, current_place_of_sale_id: Optional[int], current_seller_id: Optional[int]) -> bool:
+        if current_place_of_sale_id is not None and current_seller_id is not None and self._sale.line_items:
+            time = datetime.datetime.min.time()
+            self._sale.date_time = datetime.datetime.combine(date, time)
+            self._store.places_of_sale[current_place_of_sale_id].sale = self._sale
+            self._sale.seller = self._store.sellers[current_seller_id]
+            self._sale.completed()
+            return True
+        return False
 
 
 if __name__ == '__main__':
     handler = SaleRegistrationHandler()
-    handler.test()
+    handler._test()
 
-    for key, item in handler.store.items.items():
-        print(item.product.name)
-    # for place in handler.store.places_of_sale:
-    #     if place.sale:
-    #         print(place.sale.line_items)
+    for key, item in sorted(handler.get_store_items().items()):
+        print(key, item)
