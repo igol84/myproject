@@ -4,7 +4,7 @@ from typing import Union, Optional
 from contracts import contract, new_contract
 from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.products.shoes_components import Width
-from util.money_my import Money
+from util.money import Money
 
 
 class Shoes(AbstractProduct):

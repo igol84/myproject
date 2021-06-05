@@ -2,7 +2,7 @@ from typing import Union, Optional
 
 from contracts import contract
 from abc import ABC, abstractmethod
-from util.money_my import Money, Decimal
+from util.money import Money, Decimal
 
 
 class AbstractProduct(ABC):

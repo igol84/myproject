@@ -2,7 +2,7 @@ from decimal import Decimal
 from typing import Optional, Union
 
 from prjstore.domain.abstract_product import AbstractProduct
-from util.money_my import Money
+from util.money import Money
 
 
 class SimpleProduct(AbstractProduct):

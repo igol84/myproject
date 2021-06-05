@@ -1,7 +1,7 @@
 import unittest
 from contracts import ContractNotRespected
 from util.currency import Currencies
-from util.money_my import Money
+from util.money import Money
 from util.test.test_currecy import TestCurrencies
 
 

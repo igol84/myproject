@@ -2,7 +2,7 @@ from decimal import Decimal
 from typing import Union, Optional
 
 from contracts import contract
-from util.money_my import Money
+from util.money import Money
 from prjstore.domain.item import Item, get_items_for_test
 
 

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from util.money_my import Money, Decimal
+from util.money import Money, Decimal
 from prjstore.domain.product_factory import ProductFactory
 
 
