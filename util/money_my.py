@@ -90,6 +90,7 @@ UAH 3,551.25
     def __repr__(self):
         return f'{self.currency} {self.amount:,.2f}'  # 'UAH 1,750.50'
 
+    @contract(other='int | float | $Decimal | Money')
     def __add__(self, other):
         if not isinstance(other, Money):
             amount = self.__amount + Decimal(other)

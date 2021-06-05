@@ -46,5 +46,10 @@ class Test_MyMoney(unittest.TestCase):
 
     def test_06_add(self):
         self.money_UAH += 20
-        print(self.money_UAH)
-        self.assertEqual(self.money_UAH.amount, 1750.5)
+        self.assertEqual(str(self.money_UAH.amount), '1770.5')
+        money_UAH2 = Money(amount=20.5, currency='UAH')
+        money_UAH3 = self.money_UAH + money_UAH2
+        self.assertEqual(str(money_UAH3.amount), '1791.0')
+        money_USD2 = Money(amount=20.5, currency='USD')
+        money_UAH4 = self.money_UAH + money_USD2
+        self.assertEqual(str(money_UAH4.amount), '2334.25')
