@@ -1,5 +1,5 @@
 from unittest import TestCase
-from util.money_my import MoneyMy, Decimal
+from util.money_my import Money, Decimal
 from prjstore.domain.product_factory import ProductFactory
 
 
@@ -31,7 +31,7 @@ class Test_SimpleProduct(TestSimpleProduct):
         self.assertEqual(str(self.simple_product.price), 'UAH 750.50')
         self.simple_product.convert_price('USD')
         self.assertEqual(str(self.simple_product.price), 'USD 27.29')
-        self.simple_product.price = MoneyMy(27)
+        self.simple_product.price = Money(27)
         self.assertEqual(str(self.simple_product.price), 'UAH 27.00')
 
     def test_03_edit(self):

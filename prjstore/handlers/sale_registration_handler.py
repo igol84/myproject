@@ -37,7 +37,7 @@ class SaleRegistrationHandler:
         return {item.product.id:
                     {'name': item.product.name,
                      'price': item.product.price.amount,
-                     'price_format': item.product.price.format_my(),
+                     'price_format': item.product.price.format(),
                      'qty': item.qty}
                 for item in items.values()}
 
@@ -46,7 +46,7 @@ class SaleRegistrationHandler:
                     {'id': sli.item.product.id,
                      'name': sli.item.product.name,
                      'price': sli.sale_price.amount,
-                     'price_format': sli.sale_price.format_my(),
+                     'price_format': sli.sale_price.format(),
                      'qty': sli.qty}
                 for sli in self._sale.line_items}
 

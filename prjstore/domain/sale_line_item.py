@@ -2,7 +2,7 @@ from decimal import Decimal
 from typing import Union, Optional
 
 from contracts import contract
-from util.money_my import MoneyMy
+from util.money_my import Money
 from prjstore.domain.item import Item, get_items_for_test
 
 
@@ -31,18 +31,18 @@ UAH 500.00
 qty=2>
 
     """
-    _default_curr = MoneyMy.default_currency
+    _default_curr = Money.default_currency
 
     def __init__(self,
                  item: Item,
-                 sale_price: Union[MoneyMy, int, float, Decimal] = None,
+                 sale_price: Union[Money, int, float, Decimal] = None,
                  qty: int = 1,
                  currency: str = _default_curr
                  ) -> None:
         self.item: Item = item
         self.qty: int = qty
         if sale_price is None:
-            self.sale_price: MoneyMy = self.item.product.price
+            self.sale_price: Money = self.item.product.price
         else:
             self.__set_sale_price(sale_price, currency)
 
@@ -70,16 +70,16 @@ qty=2>
 
     ###############################################################################################
     # sale_price
-    def __get_sale_price(self) -> MoneyMy:
+    def __get_sale_price(self) -> Money:
         return self.__sale_price
 
-    @contract(sale_price='$MoneyMy | int | float | $Decimal', currency='None | str')
-    def __set_sale_price(self, sale_price: Union[MoneyMy, int, float, Decimal], currency: Optional[str] = None) -> None:
-        if isinstance(sale_price,  MoneyMy):
+    @contract(sale_price='$Money | int | float | $Decimal', currency='None | str')
+    def __set_sale_price(self, sale_price: Union[Money, int, float, Decimal], currency: Optional[str] = None) -> None:
+        if isinstance(sale_price, Money):
             self.__sale_price = sale_price
         else:
             curr = currency if currency else self.__sale_price.currency
-            self.__sale_price = MoneyMy(amount=str(sale_price), currency=curr)
+            self.__sale_price = Money(amount=sale_price, currency=curr)
 
     sale_price = property(__get_sale_price, __set_sale_price)
 

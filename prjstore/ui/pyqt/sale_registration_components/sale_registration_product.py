@@ -57,13 +57,13 @@ class ItemFrame(QWidget):
         font.setPointSize(10)
         painter.setFont(font)
         fm = QFontMetrics(font)
-        pixels_price = fm.width(f'{self.item.product.price.format_my()}')
+        pixels_price = fm.width(f'{self.item.product.price.format()}')
         pixels_qty = fm.width(f'{self.item.qty}шт.')
 
         text_name = f'{self.item.product.id}:{self.item.product.name}'
         elided = fm.elidedText(text_name, QtCore.Qt.ElideRight, self.width()-180)
         painter.drawText(QtCore.QRect(0, 0, self.width()-180, self.height()), QtCore.Qt.AlignVCenter, elided)
-        painter.drawText(self.width()-pixels_price-125, 20, f'{self.item.product.price.format_my()}')
+        painter.drawText(self.width() - pixels_price - 125, 20, f'{self.item.product.price.format()}')
         painter.drawText(self.width()-pixels_qty-80, 20, f'{self.item.qty}шт.')
         painter.end()
 

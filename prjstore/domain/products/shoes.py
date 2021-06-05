@@ -4,7 +4,7 @@ from typing import Union, Optional
 from contracts import contract, new_contract
 from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.products.shoes_components import Width
-from util.money_my import MoneyMy
+from util.money_my import Money
 
 
 class Shoes(AbstractProduct):
@@ -64,7 +64,7 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
     def __init__(self,
                  prod_id: str,
                  name: str = 'item',
-                 price: Union[MoneyMy, int, float, Decimal] = 0,
+                 price: Union[Money, int, float, Decimal] = 0,
                  color: str = 'default',
                  size: Union[int, float] = 1,
                  length_of_insole: Union[int, float] = 11,
@@ -130,7 +130,7 @@ width=Width(name='Wide', short_name='EE'), length_of_insole=28.5, currency='USD'
 
     def edit(self,
              name: Optional[str] = None,
-             price: Union[None, MoneyMy, int, float, Decimal] = None,
+             price: Union[None, Money, int, float, Decimal] = None,
              currency: Optional[str] = None,
              color: Optional[str] = None,
              size: Union[int, float] = None,

@@ -4,7 +4,7 @@ from contracts import contract
 
 from prjstore.domain.product_catalog import get_products_for_test
 from prjstore.domain.abstract_product import AbstractProduct
-from util.money_my import MoneyMy, Decimal
+from util.money_my import Money, Decimal
 
 
 class Item:
@@ -32,15 +32,15 @@ class Item:
 2
 >>> item.buy_price=100                                                    # edit items quantity
 >>> item.buy_price
-UAH 100
+UAH 100.00
 
     """
-    _default_curr: str = MoneyMy.default_currency
+    _default_curr: str = Money.default_currency
 
     def __init__(self, pr: AbstractProduct, qty: int = 1, buy_price=0, currency=_default_curr):
         self.product: AbstractProduct = pr
         self.qty: int = qty
-        self.__buy_price: MoneyMy = None
+        self.__buy_price: Money = None
         self.__set__buy_price(buy_price, currency)
 
     ###############################################################################################
@@ -67,19 +67,19 @@ UAH 100
 
     ###############################################################################################
     # buy_price
-    def __get__buy_price(self) -> MoneyMy:
+    def __get__buy_price(self) -> Money:
         return self.__buy_price
 
-    @contract(buy_price='$MoneyMy | int | float | $Decimal', currency='None | str')
+    @contract(buy_price='$Money | int | float | $Decimal', currency='None | str')
     def __set__buy_price(self,
-                       buy_price: Union[MoneyMy, int, float, Decimal],
-                       currency: Optional[str] = None
-                       ) -> None:
-        if isinstance(buy_price, MoneyMy):
+                         buy_price: Union[Money, int, float, Decimal],
+                         currency: Optional[str] = None
+                         ) -> None:
+        if isinstance(buy_price, Money):
             self.__buy_price = buy_price
         else:
             curr = currency if currency else self.__buy_price.currency
-            self.__buy_price = MoneyMy(amount=str(buy_price), currency=curr)
+            self.__buy_price = Money(amount=buy_price, currency=curr)
 
     buy_price = property(__get__buy_price, __set__buy_price)
 

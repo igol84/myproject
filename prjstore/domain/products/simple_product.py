@@ -2,7 +2,7 @@ from decimal import Decimal
 from typing import Optional, Union
 
 from prjstore.domain.abstract_product import AbstractProduct
-from util.money_my import MoneyMy
+from util.money_my import Money
 
 
 class SimpleProduct(AbstractProduct):
@@ -34,7 +34,7 @@ USD 27.29
 
     def edit(self,
              name: Optional[str] = None,
-             price: Union[None, MoneyMy, int, float, Decimal] = None,
+             price: Union[None, Money, int, float, Decimal] = None,
              currency: Optional[str] = None
              ) -> None:
         AbstractProduct.edit(self, name, price, currency)
