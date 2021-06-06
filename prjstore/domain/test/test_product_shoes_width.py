@@ -7,12 +7,12 @@ class TestShoesWidth(TestCase):
 
 class Test_ShoesWidth(TestShoesWidth):
     def test_01_initial(self):
-        self.assertEqual(str(self.width), 'Wide')
+        self.assertEqual(str(self.width.name), 'Wide')
         self.assertEqual(self.width.short_name, 'EE')
 
     def test_02_edit_color(self):
         self.width.name = 'Extra Wide'
-        self.assertEqual(str(self.width), 'Extra Wide')
+        self.assertEqual(str(self.width.name), 'Extra Wide')
 
     def test_02_edit_short_name(self):
         self.width.short_name = '4E'
