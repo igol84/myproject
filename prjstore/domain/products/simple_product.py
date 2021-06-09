@@ -1,7 +1,7 @@
 from pydantic.dataclasses import dataclass
 
 from prjstore.domain.abstract_product import AbstractProduct
-from util.money import Money, currencies
+from util.money import Money
 
 
 @dataclass
@@ -9,7 +9,7 @@ class SimpleProduct(AbstractProduct):
     """
 >>> pr = SimpleProduct(prod_id='2', name='item2', price=Money(amount=700))# Create product
 >>> pr                                                    # Get product
-SimpleProduct(prod_id='2', name='item2', price=Money(amount=700.0, currency=Currency(code='UAH', rate=27.5, sign='₴')))
+SimpleProduct(prod_id='2', type_prod='product', name='item2', price=Money(amount=700.0, currency=Currency(code='UAH', rate=27.5, sign='₴')))
 >>> pr.prod_id                                                 # Get id
 '2'
 >>> pr.name = 'new item'                                  # Change name
@@ -25,3 +25,4 @@ new item
 >>> print(pr.name, pr.price.format())
 item3 500.00$
     """
+    product_type: str = 'product'

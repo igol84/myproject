@@ -7,16 +7,18 @@ from pydantic import validate_arguments
 from pydantic.dataclasses import dataclass
 
 from util.currency import Currency
-from util.money import Money, Decimal, currencies
+from util.money import Money, Decimal
 
 
 @dataclass
 class AbstractProduct(ABC):
     prod_id: str
+    product_type: str
     name: str = field(default='item')
     price: Money = Money(0)
 
     ################################################################################################
+    @validate_arguments
     def convert_price(self, to_currency: str) -> None:
         self.price = Money.get_converted_money(self.price, to_currency)
 
@@ -31,11 +33,11 @@ class AbstractProduct(ABC):
             else:
                 currency = currency if currency else self.price.currency
                 if isinstance(currency, str):
-                    currency = currencies[currency]
+                    currency = Money.currencies[currency]
                 self.price = Money(amount=float(price), currency=currency)
         elif currency:
             if isinstance(currency, str):
-                currency = currencies[currency]
+                currency = Money.currencies[currency]
                 self.price.currency = currency
             elif isinstance(currency, Currency):
                 self.price.currency = currency

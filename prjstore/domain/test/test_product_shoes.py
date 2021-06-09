@@ -1,20 +1,17 @@
 from unittest import TestCase
 from prjstore.domain.product_factory import ProductFactory
-from prjstore.domain.products.shoes import widths
+from prjstore.domain.products.shoes import Shoes
 from util.money import Money
 
 
 class TestShoes(TestCase):
     def setUp(self) -> None:
         self.shoes = ProductFactory.create(product_type='shoes', prod_id='6', name='nike air force', price=Money(900),
-                                           color='red', size=43, length_of_insole=28.5, width=widths['Wide'])
+                                           color='red', size=43, length_of_insole=28.5, width=Shoes.widths['Wide'])
 
 class Test_Shoes(TestShoes):
     def test_01_initial(self):
-        self.assertEqual(str(self.shoes),
-        "Shoes(prod_id='6', name='nike air force', price=Money(amount=900.0, "
-        "currency=Currency(code='UAH', rate=27.5, sign='₴')), color='red', size=43.0, length_of_insole=28.5, "
-        "width=Width(name='Wide', short_name='EE'))")
+        self.assertEqual(str(self.shoes.name), 'nike air force')
         self.assertEqual(self.shoes.color, 'red')
         self.assertEqual(self.shoes.size, 43.0)
         self.assertEqual(self.shoes.length_of_insole, 28.5)
@@ -37,7 +34,7 @@ class Test_Shoes(TestShoes):
         self.assertEqual(self.shoes.length_of_insole, 29)
 
     def test_02_edit_width(self):
-        self.shoes.width = widths['Extra Wide']
+        self.shoes.width = Shoes.widths['Extra Wide']
         self.assertEqual(str(self.shoes.width.name), 'Extra Wide')
         self.assertEqual(self.shoes.width.short_name, '4E')
 
