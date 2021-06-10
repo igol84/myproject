@@ -9,7 +9,7 @@ class TestSeller(TestCase):
 
 class Test_Seller(TestSeller):
     def test_01_initial(self):
-        self.assertEqual(str(self.sellers[0]), '<Seller: name=Igor>')
+        self.assertEqual(str(self.sellers[0]), "Seller(name='Igor')")
         self.assertEqual(self.sellers[0].name, 'Igor')
 
     def test_02_edit_name(self):

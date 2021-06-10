@@ -41,4 +41,3 @@ class AbstractProduct(ABC):
                 self.price.currency = currency
             elif isinstance(currency, Currency):
                 self.price.currency = currency
-

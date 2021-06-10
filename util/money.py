@@ -1,5 +1,3 @@
-from dataclasses import asdict
-
 from decimal import Decimal
 
 from pydantic.dataclasses import dataclass
@@ -9,40 +7,6 @@ from util.currency import Currency, get_currencies_for_test
 
 @dataclass
 class Money:
-    """
->>> money_UAH = Money(1750.5)          # Create price
->>> print(money_UAH)                                           # Get price
-Money(amount=1750.5, currency=Currency(code='UAH', rate=27.5, sign='₴'))
->>> print(money_UAH.amount)                                    # Get price amount
-1750.5
->>> print(money_UAH.currency)                                  # Get price currency
-Currency(code='UAH', rate=27.5, sign='₴')
->>> print(money_UAH.format())                           # Get format price
-1,750.50₴
->>> print(asdict(money_UAH))
-{'amount': 1750.5, 'currency': {'code': 'UAH', 'rate': 27.5, 'sign': '₴'}}
->>> money_USD = Money.get_converted_money(money_UAH, currency_to='USD')     # New converted price
->>> print(money_USD.format())
-63.65$
->>> money_USD += 2
->>> print(money_USD.format())
-65.65$
->>> money_USD -= 2
->>> print(money_USD.format())
-63.65$
->>> money_USD *= 2
->>> print(money_USD.format())
-127.30$
->>> money_UAH = Money.get_converted_money(money_USD, currency_to='UAH')
->>> print(money_UAH.format())
-3,500.75₴
->>> money_UAH1 = Money(amount=50.5, currency=Money.currencies['UAH'])
->>> money_UAH2 = Money(amount=40.5, currency=Money.currencies['UAH'])
->>> print(money_UAH1 + money_UAH2)
-Money(amount=91.0, currency=Currency(code='UAH', rate=27.5, sign='₴'))
->>> print(money_UAH1 + money_USD)
-Money(amount=3551.25, currency=Currency(code='UAH', rate=27.5, sign='₴'))
-    """
     # TODO: need to override this attribute
     currencies = get_currencies_for_test()
     default_currency = 'UAH'

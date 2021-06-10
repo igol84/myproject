@@ -1,5 +1,4 @@
-from dataclasses import field, asdict
-from pprint import pprint
+from dataclasses import field
 
 from pydantic import validate_arguments
 from pydantic.dataclasses import dataclass
@@ -11,26 +10,7 @@ from util.money import Money
 
 
 @dataclass
-class ProductCatalog():
-    """
->>> pc = get_products_for_test()  # create get test products
->>> d = asdict(pc[2])
->>> p = ProductFactory.create(**d)
->>> pc.set_product(ProductFactory.create(prod_id='7'))
->>> pc.set_product(ProductFactory.create(product_type='shoes', prod_id='8',\
- name='item12', price=(300, ), color='white',  size=40, length_of_insole=25.5))
->>> pc[2].name
-'item23'
->>> pc.set_product(ProductFactory.create(prod_id='10', name='prod10', price=(500, )))
->>> pc['10'].name                                                   # get catalog
-'prod10'
->>> pc.unset_product_by_pr_id('3')                       # del product by product id "7"
->>> del pc['10']
->>> list(pc.products.keys())                                                   # get catalog
-['1', '2', '4', '6', '7', '8']
->>> print([product.name for product in pc.search(name='Item2').values()])  # search products by name containing "item"
-['item23', 'item2']
-    """
+class ProductCatalog:
     products: dict[str, AbstractProduct] = field(init=False, default_factory=dict)
 
     ###############################################################################################
