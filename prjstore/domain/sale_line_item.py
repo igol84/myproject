@@ -6,7 +6,6 @@ from prjstore.domain.item import Item
 
 @dataclass
 class SaleLineItem:
-
     item: Item
     sale_price: Money = None
     qty: int = 1

@@ -11,9 +11,11 @@ from util.money import Money
 
 
 class SaleRegistrationHandler:
-    def __init__(self):
+    def __init__(self, test=False):
         self._store = Store()
         self._sale = Sale()
+        if test:
+            self._test()
 
     def _test(self):
         test = TestProductCatalog()
@@ -35,20 +37,18 @@ class SaleRegistrationHandler:
 
     def get_store_items(self, search: Optional[str] = None) -> dict[str: dict[str: Union[str, int, float]]]:
         items: dict[str: Item] = self._store.items if not search else self.search_items(search)
-        return {item.product.prod_id:
-                    {'name': item.product.name,
-                     'price': item.product.price.amount,
-                     'price_format': item.product.price.format(),
-                     'qty': item.qty}
-                for item in items.values()}
+        return {item_.product.prod_id: {'name': item_.product.name,
+                                        'price': item_.product.price.amount,
+                                        'price_format': item_.product.price.format(),
+                                        'qty': item_.qty}
+                for item_ in items.values()}
 
     def get_sale_line_items(self) -> dict[str: dict[str: Union[str, int, float]]]:
-        return {(sli.item.product.prod_id, sli.sale_price.amount):
-                    {'prod_id': sli.item.product.prod_id,
-                     'name': sli.item.product.name,
-                     'price': sli.sale_price.amount,
-                     'price_format': sli.sale_price.format(),
-                     'qty': sli.qty}
+        return {(sli.item.product.prod_id, sli.sale_price.amount): {'prod_id': sli.item.product.prod_id,
+                                                                    'name': sli.item.product.name,
+                                                                    'price': sli.sale_price.amount,
+                                                                    'price_format': sli.sale_price.format(),
+                                                                    'qty': sli.qty}
                 for sli in self._sale.list_sli}
 
     def search_items(self, text: str) -> dict[str: Item]:
@@ -98,8 +98,7 @@ class SaleRegistrationHandler:
 
 
 if __name__ == '__main__':
-    handler = SaleRegistrationHandler()
-    handler._test()
+    handler = SaleRegistrationHandler(test=True)
 
     for key, item in sorted(handler.get_store_items().items()):
         print(key, item)

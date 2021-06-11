@@ -12,12 +12,12 @@ from prjstore.ui.pyside.sale_registration_ui import Ui_Form
 
 
 class SaleForm(QWidget):
-    def __init__(self):
+    def __init__(self, test = False):
         super().__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.resize(1200, 600)
-        self.handler = SaleRegistrationHandler()
+        self.handler = SaleRegistrationHandler(test=test)
         self.handler._test()  # loading test data-----------------------------------
         self.items: dict[str: dict[str: Union[str, int, float]]] = self.handler.get_store_items()
         self.sli_list: dict[str: dict[str: Union[str, int, float]]] = self.handler.get_sale_line_items()
@@ -135,6 +135,6 @@ class SaleForm(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = SaleForm()
+    w = SaleForm(test=True)
     w.show()
     sys.exit(app.exec_())

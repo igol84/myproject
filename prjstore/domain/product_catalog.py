@@ -4,9 +4,6 @@ from pydantic import validate_arguments
 from pydantic.dataclasses import dataclass
 
 from prjstore.domain.abstract_product import AbstractProduct
-from prjstore.domain.product_factory import ProductFactory
-from prjstore.domain.products.shoes import Shoes
-from util.money import Money
 
 
 @dataclass

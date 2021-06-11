@@ -9,6 +9,7 @@ from prjstore.domain.product_catalog import ProductCatalog
 from prjstore.domain.product_factory import ProductFactory
 from prjstore.domain.seller import Seller
 
+
 @dataclass
 class Store:
     factory: ProductFactory = ProductFactory()
