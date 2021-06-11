@@ -1,4 +1,3 @@
-from dataclasses import field
 from typing import Union, Optional
 
 from abc import ABC
@@ -14,7 +13,7 @@ from util.money import Money, Decimal
 class AbstractProduct(ABC):
     prod_id: str
     product_type: str
-    name: str = field(default='item')
+    name: str = 'item'
     price: Money = Money(0)
 
     ################################################################################################
