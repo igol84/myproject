@@ -57,7 +57,7 @@ class Sale:
     def edit_sale_price(self, sli: SaleLineItem, sale_price: float):
         old_same_sli = self.get_line_item_by_product_id_and_sale_price(sli.item.product.prod_id, sale_price)
         if old_same_sli:
-            self.line_items.remove(sli)
+            self.list_sli.remove(sli)
             old_same_sli.qty += sli.qty
         else:
             sli.sale_price.amount = sale_price
@@ -136,4 +136,4 @@ class Sale:
         return self.is_product_in_sale(product)
 
     def __len__(self):
-        return len(self.line_items)
+        return len(self.list_sli)

@@ -44,14 +44,3 @@ class ProductCatalog:
                 if name.lower() in product.name.lower():
                     products[product.prod_id] = product
         return products
-
-
-def get_products_for_test() -> ProductCatalog:
-    pc = ProductCatalog()
-    pc.set_product(ProductFactory.create(prod_id='1', product_type='shoes', name='item1', price=Money(100), size=36))
-    pc.set_product(ProductFactory.create(prod_id='2', name='item23', price=Money(600)))
-    pc.set_product(ProductFactory.create(prod_id='3', product_type='shoes', name='item4', price=Money(700), color='red',
-                                         size=43.3, length_of_insole=28, width=Shoes.widths['Medium']))
-    pc.set_product(ProductFactory.create(prod_id='4', name='item5', price=Money(300)))
-    pc.set_product(ProductFactory.create(prod_id='6', name='item2', price=Money(500)))
-    return pc

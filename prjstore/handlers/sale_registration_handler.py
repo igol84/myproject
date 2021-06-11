@@ -7,6 +7,7 @@ from prjstore.domain.test.test_item import TestItem
 from prjstore.domain.test.test_place_of_sale import TestPlaceOfSale
 from prjstore.domain.test.test_products_catalog import TestProductCatalog
 from prjstore.domain.test.test_seller import TestSeller
+from util.money import Money
 
 
 class SaleRegistrationHandler:
@@ -29,12 +30,12 @@ class SaleRegistrationHandler:
         self._store.places_of_sale = test.places_of_sale
         self._store.places_of_sale[0].sale = None
         self._store.items['1'].qty = 150
-        self._store.items['1'].product.price = 10500
+        self._store.items['1'].product.price = Money(10500)
         self._store.items['1'].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
 
     def get_store_items(self, search: Optional[str] = None) -> dict[str: dict[str: Union[str, int, float]]]:
         items: dict[str: Item] = self._store.items if not search else self.search_items(search)
-        return {item.product.id:
+        return {item.product.prod_id:
                     {'name': item.product.name,
                      'price': item.product.price.amount,
                      'price_format': item.product.price.format(),
@@ -42,13 +43,13 @@ class SaleRegistrationHandler:
                 for item in items.values()}
 
     def get_sale_line_items(self) -> dict[str: dict[str: Union[str, int, float]]]:
-        return {(sli.item.product.id, sli.sale_price.amount):
-                    {'id': sli.item.product.id,
+        return {(sli.item.product.prod_id, sli.sale_price.amount):
+                    {'prod_id': sli.item.product.prod_id,
                      'name': sli.item.product.name,
                      'price': sli.sale_price.amount,
                      'price_format': sli.sale_price.format(),
                      'qty': sli.qty}
-                for sli in self._sale.line_items}
+                for sli in self._sale.list_sli}
 
     def search_items(self, text: str) -> dict[str: Item]:
         items = self._store.search_items_by_name(name=text)
@@ -60,7 +61,7 @@ class SaleRegistrationHandler:
         sale_item = self._store.get_item_by_pr_id(pr_id)
         self._sale.add_line_item(item=sale_item, qty=qty, sale_price=sale_price)
         if sale_item.qty == 0:
-            del self._store.items[sale_item.product.id]
+            del self._store.items[sale_item.product.prod_id]
 
     def is_item_exists(self, pr_id) -> bool:
         return pr_id in self._store.items
@@ -84,8 +85,9 @@ class SaleRegistrationHandler:
     def get_store_sellers_names(self) -> list[str]:
         return [seller.name for seller in self._store.sellers]
 
-    def end_sale(self, date: datetime.date, current_place_of_sale_id: Optional[int], current_seller_id: Optional[int]) -> bool:
-        if current_place_of_sale_id is not None and current_seller_id is not None and self._sale.line_items:
+    def end_sale(self, date: datetime.date, current_place_of_sale_id: Optional[int],
+                 current_seller_id: Optional[int]) -> bool:
+        if current_place_of_sale_id is not None and current_seller_id is not None and self._sale.list_sli:
             time = datetime.datetime.min.time()
             self._sale.date_time = datetime.datetime.combine(date, time)
             self._store.places_of_sale[current_place_of_sale_id].sale = self._sale

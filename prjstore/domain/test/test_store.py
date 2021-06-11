@@ -26,7 +26,7 @@ class TestStore(TestCase):
 
 class Test_Store(TestStore):
     def test_01_pc(self):
-        self.assertEqual(len(self.store.pc), 5)
+        self.assertEqual(len(self.store.pc.products), 5)
         self.assertEqual(self.store.pc['1'].name, 'item1')
 
     def test_02_items(self):
@@ -39,13 +39,13 @@ class Test_Store(TestStore):
 
     def test_04_places_of_sale(self):
         self.assertEqual(len(self.store.places_of_sale), 4)
-        self.assertEqual(str(self.store.places_of_sale[0].sale.line_items[0].item.product.name), 'item1')
+        self.assertEqual(str(self.store.places_of_sale[0].sale.list_sli[0].item.product.name), 'item1')
 
     def test_04_get_item_by_pr_id(self):
         self.assertEqual(self.store.get_item_by_pr_id('2').product.name, 'item23')
 
     def test_05_search_item(self):
-        self.assertEqual(len(self.store.search_items_by_name(name ='item2')), 3)
+        self.assertEqual(len(self.store.search_items_by_name(name='item2')), 3)
 
     def test_06_move_sale_to_another_place(self):
         sale = self.store.places_of_sale[0].sale
@@ -56,10 +56,8 @@ class Test_Store(TestStore):
 
     def test_07_add_item(self):
         item = self.store.items['1']
-        self.assertEqual(str(item),
-                         '<Item: product=<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, '
-                         'length_of_insole=11.0, width=Medium>, qty=1>')
-        self.store.add_item(item = item, qty=5)
+        self.assertEqual(str([item.product.name, item.qty, item.buy_price.amount]), "['item1', 1, 0.0]")
+        self.store.add_item(item=item, qty=5)
         print(self.store.items['1'])
         self.assertEqual(item.qty, 6)
 
@@ -68,27 +66,22 @@ class Test_Store(TestStore):
         item.qty = 0
         del self.store.items['1']
         self.assertEqual(item.qty, 0)
-        self.assertRaises(IndexError, self.store.get_item_by_pr_id, pr_id=item.product.id)
-        self.store.add_item(item = item, qty=5)
+        self.assertRaises(IndexError, self.store.get_item_by_pr_id, pr_id=item.product.prod_id)
+        self.store.add_item(item=item, qty=5)
         self.assertEqual(item.qty, 5)
 
     def test_09_update_sale_price(self):
-        sli = self.store.places_of_sale[0].sale.line_items[1]
-        self.assertEqual(str(sli),
-        '<SaleLineItem: item='
-        '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=1>, sale_price=UAH 600.00, qty=2>')
+        sli = self.store.places_of_sale[0].sale.list_sli[1]
+        self.assertEqual(str([sli.item.product.prod_id, sli.item.qty, sli.qty, sli.sale_price.amount]),
+                         "['2', 1, 2, 600.0]")
         self.store.places_of_sale[0].sale.add_line_item(sli.item, 50)
-        self.assertEqual(str(sli),
-        '<SaleLineItem: item='
-        '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 600.00, qty=2>')
+        sli = self.store.places_of_sale[0].sale.list_sli[1]
+        self.assertEqual(str([sli.item.product.prod_id, sli.item.qty, sli.qty, sli.sale_price.amount]),
+                        "['2', 0, 2, 600.0]")
         new_sli = self.store.places_of_sale[0].sale[('2', 50)]
-        self.assertEqual(str(new_sli),
-        '<SaleLineItem: item='
-        '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 50.00, qty=1>')
+        self.assertEqual(str([new_sli.item.product.prod_id, new_sli.item.qty, new_sli.qty, new_sli.sale_price.amount]),
+                         "['2', 0, 1, 50.0]")
         self.store.places_of_sale[0].sale.edit_sale_price(sli, 50)
-        self.assertEqual(str(new_sli),
-        '<SaleLineItem: item='
-        '<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 50.00, qty=3>')
+        self.assertEqual(str([new_sli.item.product.prod_id, new_sli.item.qty, new_sli.qty, new_sli.sale_price.amount]),
+                         "['2', 0, 3, 50.0]")
         self.assertEqual(self.store.places_of_sale[0].sale[('2', 600)], None)
-
-

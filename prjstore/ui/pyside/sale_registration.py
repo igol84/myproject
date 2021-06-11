@@ -60,7 +60,7 @@ class SaleForm(QWidget):
         self.selected_sli_widget = None
         self.sli_list = self.handler.get_sale_line_items()
         for sli in self.sli_list.values():
-            label = SLI_Frame(self, sli['id'], sli['name'], sli['price'], sli['price_format'], sli['qty'])
+            label = SLI_Frame(self, sli['prod_id'], sli['name'], sli['price'], sli['price_format'], sli['qty'])
             self.ui.sli_layout.addWidget(label)
         self.ui.sli_layout.addStretch(0)
 
