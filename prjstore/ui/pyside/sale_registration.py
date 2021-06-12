@@ -12,7 +12,7 @@ from prjstore.ui.pyside.sale_registration_ui import Ui_Form
 
 
 class SaleForm(QWidget):
-    def __init__(self, test = False):
+    def __init__(self, test=False):
         super().__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
@@ -64,6 +64,9 @@ class SaleForm(QWidget):
             self.ui.sli_layout.addWidget(label)
         self.ui.sli_layout.addStretch(0)
 
+    def _update_total(self):
+        self.ui.total.setText(self.handler.get_total())
+
     def on_date_edit_changed(self, date: QDate):
         # self.handler.change_date(date.toPython())
         pass
@@ -103,6 +106,8 @@ class SaleForm(QWidget):
                 del self.items[pr_id]
             self._update_items_layout()
         self._update_sli()
+        self._update_total()
+        self.ui.src_items.clear()
 
     def put_item_form_sli_to_items(self):
         sli_id = self.selected_sli_widget.sli_product_id
@@ -110,10 +115,12 @@ class SaleForm(QWidget):
         self.handler.put_item_form_sli_to_items(sli_id, sli_price)
         self._update_sli()
         self._update_items_layout()
+        self._update_total()
 
     def edit_sale_price_in_sli(self, sli_item_id: str, old_sale_price: float, sale_price: float):
         self.handler.edit_sale_price_in_sli(sli_item_id, old_sale_price, sale_price)
         self._update_sli()
+        self._update_total()
 
     def press_save(self):
         current_data = self.ui.date_edit.date().toPython()

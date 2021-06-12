@@ -11,8 +11,8 @@ class TestItem(TestCase):
     def setUp(self) -> None:
         self.pc = ProductCatalog()
         TestProductCatalog.setUp(self)
-        self.items = {'1': Item(product=self.pc.products['1']),
-                      '3': Item(product=self.pc.products['3'], qty=2),
+        self.items = {'1': Item(product=self.pc.products['1'], buy_price=(40,)),
+                      '3': Item(product=self.pc.products['3'], buy_price=(50.5,), qty=2),
                       '6': Item(product=self.pc.products['6'], buy_price=(100.5,)),
                       '2': Item(product=self.pc.products['2'], qty=3, buy_price=(200,))}
 

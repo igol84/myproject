@@ -8,13 +8,14 @@ from prjstore.domain.test.test_item import TestItem
 
 class TestSale(TestCase):
     def setUp(self) -> None:
-        self.items=[]
+        self.items = []
         TestItem.setUp(self)
         self.sale = Sale(Seller('Igor'))
         self.sale.add_line_item(self.items['1'])
         self.sale.add_line_item(self.items['2'], qty=2)
         self.sale.add_line_item(self.items['3'], sale_price=(200))
         self.sale.date_time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
+
 
 class Test_Sale(TestSale):
     def test_01_initial(self):
@@ -47,7 +48,6 @@ class Test_Sale(TestSale):
         self.assertEqual(str(sli),
                          "['item23', 0, 3, 600.0]")
 
-
     def test_get_line_item_by_product_id(self):
         sli = self.sale.get_line_item_by_product_id_and_sale_price('2', 600)
         sli = [sli.item.product.name, sli.item.qty, sli.qty, sli.sale_price.amount]
@@ -63,7 +63,6 @@ class Test_Sale(TestSale):
     def test_del_line_item_by_product_id(self):
         self.sale.del_line_item_by_product_id_and_sale_price('2', 600)
         self.assertEqual(self.sale.get_line_item_by_product_id_and_sale_price('2', 600), None)
-
 
     def test_del_line_item_by_product_id_2(self):
         del self.sale[('2', 600)]
@@ -97,3 +96,12 @@ class Test_Sale(TestSale):
     def test_is_product_in_sale(self):
         self.assertEqual(self.sale.is_product_in_sale(self.items['6'].product), False)
         self.assertEqual(self.sale.is_product_in_sale(self.items['2'].product), True)
+
+    def test_total(self):
+        self.assertEqual(self.sale.get_total().amount, 1500.0)
+
+    def test_total_purchase(self):
+        self.assertEqual(self.sale.get_total_purchase().amount, 490.5)
+
+    def test_total_profit(self):
+        self.assertEqual(self.sale.get_total_profit().amount, 1009.5)

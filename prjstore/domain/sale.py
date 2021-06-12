@@ -13,6 +13,7 @@ from prjstore.domain.item import Item
 from prjstore.domain.sale_line_item import SaleLineItem
 from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.seller import Seller
+from util.money import Money
 
 locale.setlocale(locale.LC_TIME, 'ru_RU')
 
@@ -28,7 +29,7 @@ class Sale:
     # add new line items
     @validate_arguments
     def add_line_item(self, item: Item, sale_price: float = None, qty: conint(ge=0) = 1) -> None:
-        sale_price = sale_price if sale_price else item.product.price.amount
+        sale_price = sale_price if sale_price is not None else item.product.price.amount
         assert qty <= item.qty, f"qty({qty}) should not be more than item.qty({item.qty})!"
         # a same product in line items
         if self[(item.product.prod_id, sale_price)]:
@@ -108,6 +109,21 @@ class Sale:
                 if product == sli.item.product:
                     return True
         return False
+
+    def get_total(self) -> Money:
+        total = Money(0)
+        for sli in self.list_sli:
+            total += sli.sale_price*sli.qty
+        return total
+
+    def get_total_purchase(self) -> Money:
+        total = Money(0)
+        for sli in self.list_sli:
+            total += sli.item.buy_price*sli.qty
+        return total
+
+    def get_total_profit(self) -> Money:
+        return self.get_total() - self.get_total_purchase()
 
     @overload
     def __getitem__(self, key: str) -> list[SaleLineItem]:

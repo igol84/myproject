@@ -92,7 +92,7 @@ class Ui_Form(object):
         self.scroll_slis.setWidgetResizable(True)
         self.widget_slis = QWidget()
         self.widget_slis.setObjectName(u"widget_slis")
-        self.widget_slis.setGeometry(QRect(0, 0, 508, 637))
+        self.widget_slis.setGeometry(QRect(0, 0, 508, 615))
         self.sli_layout = QVBoxLayout(self.widget_slis)
         self.sli_layout.setObjectName(u"sli_layout")
         self.scroll_slis.setWidget(self.widget_slis)
@@ -140,7 +140,7 @@ class Ui_Form(object):
         self.scroll_items.setWidgetResizable(True)
         self.widget_items = QWidget()
         self.widget_items.setObjectName(u"widget_items")
-        self.widget_items.setGeometry(QRect(0, 0, 508, 639))
+        self.widget_items.setGeometry(QRect(0, 0, 508, 617))
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -178,6 +178,18 @@ class Ui_Form(object):
 
         self.verticalLayout.addWidget(self.widget_area)
 
+        self.total = QLabel(Form)
+        self.total.setObjectName(u"total")
+        font3 = QFont()
+        font3.setPointSize(10)
+        font3.setBold(False)
+        font3.setWeight(50)
+        self.total.setFont(font3)
+        self.total.setStyleSheet(u"margin-left: 15px")
+        self.total.setWordWrap(False)
+
+        self.verticalLayout.addWidget(self.total)
+
         self.buttonBox = QDialogButtonBox(Form)
         self.buttonBox.setObjectName(u"buttonBox")
         self.buttonBox.setStandardButtons(QDialogButtonBox.NoButton)
@@ -203,5 +215,6 @@ class Ui_Form(object):
         self.label_6.setText(QCoreApplication.translate("Form", u"TextLabel", None))
         self.label_5.setText(QCoreApplication.translate("Form", u"TextLabel", None))
         self.label_4.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.total.setText("")
     # retranslateUi
 
