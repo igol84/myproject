@@ -33,7 +33,7 @@ class Test_Item(TestItem):
         self.assertEqual(self.items['1'].qty, 1)
 
     def test_04_edit_price(self):
-        self.assertEqual(str(self.items['1'].buy_price.amount), '0.0')
+        self.assertEqual(str(self.items['1'].buy_price.amount), '40.0')
         self.items['1'].buy_price = Money(200)
         self.assertEqual(str(self.items['1'].buy_price.amount), '200.0')
 

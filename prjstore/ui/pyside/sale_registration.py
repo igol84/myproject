@@ -4,7 +4,7 @@ from typing import Union
 from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
 from PySide2.QtCore import QDate
 
-from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
+from prjstore.application.sale_registration_handler import SaleRegistrationHandler
 from prjstore.ui.pyside.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration_components.sale_registration_product import ItemFrame
 from prjstore.ui.pyside.sale_registration_components.sale_registration_sli import SLI_Frame
@@ -18,7 +18,6 @@ class SaleForm(QWidget):
         self.ui.setupUi(self)
         self.resize(1200, 600)
         self.handler = SaleRegistrationHandler(test=test)
-        self.handler._test()  # loading test data-----------------------------------
         self.items: dict[str: dict[str: Union[str, int, float]]] = self.handler.get_store_items()
         self.sli_list: dict[str: dict[str: Union[str, int, float]]] = self.handler.get_sale_line_items()
         self.selected_sli_widget: SLI_Frame = None
@@ -88,6 +87,7 @@ class SaleForm(QWidget):
         self.ui.items_layout.addStretch(0)
 
     def on_click_scroll_items(self, event):
+        print(event)
         self._update_items_layout()
 
     def on_search_items_text_changed(self):
