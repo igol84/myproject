@@ -1,8 +1,6 @@
 from dataclasses import field
 from decimal import Decimal
 from typing import overload
-
-from contracts import contract
 from datetime import datetime
 import locale
 
@@ -40,7 +38,6 @@ class Sale:
         item.qty -= qty
 
     @validate_arguments
-    @contract(pr_id=str)
     def get_line_items_by_product_id(self, pr_id: str) -> list[SaleLineItem]:
         list_sli = []
         for sli in self.list_sli:
