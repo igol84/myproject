@@ -25,3 +25,12 @@ class Shoes(BaseShoes):
 
     class Config:
         orm_mode = True
+
+class ListShoes(BaseModel):
+    __root__: list[Shoes]
+
+    def __iter__(self):
+        return iter(self.__root__)
+
+    def __getitem__(self, item):
+        return self.__root__[item]
