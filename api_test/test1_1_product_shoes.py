@@ -36,7 +36,7 @@ class TestShoes(unittest.TestCase):
         cls.prod_id = product.id
         new_shoes = shoes_schema.CreateShoes(id=product.id, color='red', size=41, length=19, width='w')
         r = requests.post(
-            f'{host}/shoes/',
+            f'{host}{prefix}',
             json=new_shoes.dict(),
             headers=headers
         )
@@ -44,13 +44,13 @@ class TestShoes(unittest.TestCase):
         print(shoes)
 
     def test_case01_get(self):
-        r = requests.get(f"{host}/shoes/{self.prod_id}", headers=headers)
+        r = requests.get(f"{host}{prefix}/{self.prod_id}", headers=headers)
         self.assertEqual(r.status_code, 200)
         shoes = shoes_schema.Shoes(**r.json())
         self.assertEqual(shoes, shoes_schema.Shoes(id=self.prod_id, color='red', size=41, length=19, width='w'))
 
     def test_case01_get_all(self):
-        r = requests.get(f"{host}/shoes", headers=headers)
+        r = requests.get(f"{host}{prefix}", headers=headers)
         self.assertEqual(r.status_code, 200)
         list_shoes = shoes_schema.ListShoes.parse_obj(r.json())
         shoes = list_shoes[-1]
@@ -59,18 +59,18 @@ class TestShoes(unittest.TestCase):
     def test_case02_update(self):
         new_shoes = shoes_schema.UpdateShoes(color='blue', size=44, length=20, width='e')
         r = requests.put(
-            f"{host}/shoes/{self.prod_id}",
+            f"{host}{prefix}/{self.prod_id}",
             json=new_shoes.dict(),
             headers=headers
         )
         self.assertEqual(r.status_code, 202)
 
     def test_case03_get(self):
-        r = requests.get(f"{host}/shoes/{self.prod_id}", headers=headers)
+        r = requests.get(f"{host}{prefix}/{self.prod_id}", headers=headers)
         self.assertEqual(r.status_code, 200)
         shoes = shoes_schema.Shoes(**r.json())
         self.assertEqual(shoes, shoes_schema.Shoes(id=self.prod_id, color='blue', size=44, length=20, width='e'))
 
     @classmethod
     def tearDownClass(cls):
-        requests.delete(f"{host}/shoes/{cls.prod_id}", headers=headers)
+        requests.delete(f"{host}{prefix}/{cls.prod_id}", headers=headers)
