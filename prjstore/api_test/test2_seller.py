@@ -1,22 +1,19 @@
 import unittest
-import requests
-from prjstore.schemas.seller import CreateSeller, Seller
-from prjstore.api_test.authorization import host, headers
+from prjstore.db import API_DB
 
-prefix = '/seller'
 count_rows = 0
-
+db = API_DB()
 
 def setUpModule():
-    r = requests.get(f"{host}{prefix}", headers=headers)
+    sellers = db.get_all_sellers()
     global count_rows
-    count_rows = len(r.json())
+    count_rows = len(sellers)
 
 
 def tearDownModule():
-    r = requests.get(f"{host}{prefix}", headers=headers)
+    sellers = db.get_all_sellers()
     global count_rows
-    assert count_rows == len(r.json()), f" count seller changed '"
+    assert count_rows == len(sellers), f" count seller changed '"
 
 
 class TestSeller(unittest.TestCase):
@@ -24,38 +21,17 @@ class TestSeller(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        new_seller = CreateSeller(store_id=1, name="Igor")
-        r = requests.post(
-            f'{host}{prefix}/',
-            json=new_seller.dict(),
-            headers=headers
-        )
-        seller = Seller(**r.json())
-        cls.obj_id = seller.id
+        new_seller = db.create_seller(store_id=1, name="Igor")
+        cls.obj_id = list(new_seller)[0]
 
     def test_case01_get(self):
-        r = requests.get(f"{host}{prefix}/{self.obj_id}", headers=headers)
-        self.assertEqual(r.status_code, 200)
-        seller = Seller(**r.json())
-        self.assertEqual(seller.store_id, 1)
+        seller = db.get_seller(self.obj_id)
         self.assertEqual(seller.name, 'Igor')
 
     def test_case02_update(self):
-        new_seller = CreateSeller(store_id=2, name="Anna")
-        r = requests.put(
-            f"{host}{prefix}/{self.obj_id}",
-            json=new_seller.dict(),
-            headers=headers
-        )
-        self.assertEqual(r.status_code, 202)
-
-    def test_case03_get(self):
-        r = requests.get(f"{host}{prefix}/{self.obj_id}", headers=headers)
-        self.assertEqual(r.status_code, 200)
-        seller = Seller(**r.json())
-        self.assertEqual(seller.store_id, 2)
-        self.assertEqual(seller.name, 'Anna')
+        seller = db.update_seller(seller_id=self.obj_id, store_id=1, name="Anna")
+        self.assertEqual(list(seller.values())[0].name, 'Anna')
 
     @classmethod
     def tearDownClass(cls):
-        requests.delete(f"{host}{prefix}/{cls.obj_id}", headers=headers)
+        db.delete_seller(seller_id=cls.obj_id)

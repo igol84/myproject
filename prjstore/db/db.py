@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 
-from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.seller import Seller
 
 
@@ -23,18 +22,21 @@ class DB(ABC):
     #     pass
 
     @abstractmethod
-    def create_seller(self, **kwargs) -> Seller:
+    def create_seller(self, **kwargs) -> dict[int: Seller]:
         pass
 
     @abstractmethod
-    def update_seller(self, pr_id: int, **kwargs) -> Seller:
+    def update_seller(self, seller_id: int, store_id:int, name:str) -> dict[int: Seller]:
         pass
 
     @abstractmethod
-    def get_seller(self, pr_id: int) -> Seller:
+    def get_all_sellers(self) -> dict[int: Seller]:
         pass
 
     @abstractmethod
-    def get_sellers(self) -> list[Seller]:
+    def get_seller(self, seller_id: int) -> dict[int: Seller]:
         pass
 
+    @abstractmethod
+    def delete_seller(self, seller_id: int) -> bool:
+        pass
