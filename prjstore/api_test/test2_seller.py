@@ -6,13 +6,13 @@ db = API_DB()
 
 
 def setUpModule():
-    sellers = db.get_all_sellers()
+    sellers = db.seller.get_all()
     global count_rows
     count_rows = len(sellers)
 
 
 def tearDownModule():
-    sellers = db.get_all_sellers()
+    sellers = db.seller.get_all()
     global count_rows
     assert count_rows == len(sellers), f" count seller changed '"
 
@@ -22,17 +22,17 @@ class TestSeller(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        new_seller = db.create_seller(store_id=1, name="Igor")
+        new_seller = db.seller.create(store_id=1, name="Igor")
         cls.obj_id = list(new_seller)[0]
 
     def test_case01_get(self):
-        seller = db.get_seller(self.obj_id)
+        seller = db.seller.get(self.obj_id)
         self.assertEqual(seller.name, 'Igor')
 
     def test_case02_update(self):
-        seller = db.update_seller(seller_id=self.obj_id, store_id=1, name="Anna")
+        seller = db.seller.update(seller_id=self.obj_id, store_id=1, name="Anna")
         self.assertEqual(list(seller.values())[0].name, 'Anna')
 
     @classmethod
     def tearDownClass(cls):
-        db.delete_seller(seller_id=cls.obj_id)
+        db.seller.delete(seller_id=cls.obj_id)
