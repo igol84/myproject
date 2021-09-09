@@ -26,7 +26,7 @@ class DB(ABC):
         pass
 
     @abstractmethod
-    def update_seller(self, seller_id: int, store_id:int, name:str) -> dict[int: Seller]:
+    def update_seller(self, seller_id: int, store_id: int, name: str) -> dict[int: Seller]:
         pass
 
     @abstractmethod

@@ -4,6 +4,7 @@ from prjstore.db import API_DB
 count_rows = 0
 db = API_DB()
 
+
 def setUpModule():
     sellers = db.get_all_sellers()
     global count_rows
