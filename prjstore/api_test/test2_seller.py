@@ -1,7 +1,7 @@
 import unittest
 import requests
 from prjstore.schemas.seller import CreateSeller, Seller
-from api_test.authorization import host, headers
+from prjstore.api_test.authorization import host, headers
 
 prefix = '/seller'
 count_rows = 0

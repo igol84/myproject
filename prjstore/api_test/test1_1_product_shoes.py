@@ -1,6 +1,6 @@
 import unittest
 import requests
-from api_test.authorization import host, headers
+from prjstore.api_test.authorization import host, headers
 from prjstore.schemas import product as product_schema
 from prjstore.schemas import shoes as shoes_schema
 
