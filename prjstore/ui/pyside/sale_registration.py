@@ -28,12 +28,12 @@ class SaleForm(QWidget):
         self.ui.date_edit.dateChanged.connect(self.on_date_edit_changed)
 
         self.ui.combo_box_place_of_sale.addItem('', userData=None)
-        for i, name_place_of_sale in enumerate(self.handler.get_store_places_of_sale_names()):
+        for i, name_place_of_sale in self.handler.get_store_places_of_sale_names().items():
             self.ui.combo_box_place_of_sale.addItem(name_place_of_sale, userData=i)
         self.ui.combo_box_place_of_sale.currentIndexChanged.connect(self.on_combo_box_place_of_sale_changed)
 
         self.ui.combo_box_seller.addItem('', userData=None)
-        for i, seller_name in enumerate(self.handler.get_store_sellers_names()):
+        for i, seller_name in self.handler.get_store_sellers_names().items():
             self.ui.combo_box_seller.addItem(seller_name, userData=i)
         self.ui.combo_box_seller.currentIndexChanged.connect(self.on_combo_box_seller_changed)
 

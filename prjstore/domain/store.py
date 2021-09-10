@@ -15,8 +15,8 @@ class Store:
     factory: ProductFactory = ProductFactory()
     pc: ProductCatalog = ProductCatalog()
     items: dict[str, Item] = field(default_factory=dict)
-    sellers: list[Seller] = field(default_factory=list)
-    places_of_sale: list[PlaceOfSale] = field(default_factory=list)
+    sellers: dict[int, Seller] = field(default_factory=dict)
+    places_of_sale: dict[int, PlaceOfSale] = field(default_factory=dict)
 
     ###############################################################################################
     @validate_arguments

@@ -5,13 +5,14 @@ from prjstore.domain.seller import Seller
 
 class TestSeller(TestCase):
     def setUp(self) -> None:
-        self.sellers = [Seller('Igor'), Seller('Anna'), Seller('Sasha')]
+        self.sellers = {1: Seller('Igor'), 2: Seller('Anna'), 3: Seller('Sasha')}
+
 
 class Test_Seller(TestSeller):
     def test_01_initial(self):
-        self.assertEqual(str(self.sellers[0]), "Seller(name='Igor')")
-        self.assertEqual(self.sellers[0].name, 'Igor')
+        self.assertEqual(str(self.sellers[1]), "Seller(name='Igor')")
+        self.assertEqual(self.sellers[1].name, 'Igor')
 
     def test_02_edit_name(self):
-        self.sellers[0].name = 'Anna'
-        self.assertEqual(self.sellers[0].name, 'Anna')
+        self.sellers[1].name = 'Anna'
+        self.assertEqual(self.sellers[1].name, 'Anna')

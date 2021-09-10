@@ -33,7 +33,7 @@ class SaleRegistrationHandler:
         test = TestPlaceOfSale()
         test.setUp(sale=False)
         self._store.places_of_sale = test.places_of_sale
-        self._store.places_of_sale[0].sale = None
+        self._store.places_of_sale[1].sale = None
         self._store.items['1'].qty = 150
         self._store.items['1'].product.price = Money(10500)
         self._store.items['1'].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
@@ -90,11 +90,11 @@ class SaleRegistrationHandler:
         sli = self._sale.get_line_item_by_product_id_and_sale_price(sli_product_id, old_sale_price)
         self._sale.edit_sale_price(sli, sale_price)
 
-    def get_store_places_of_sale_names(self) -> list[str]:
-        return [place_of_sale.name for place_of_sale in self._store.places_of_sale]
+    def get_store_places_of_sale_names(self) -> dict[int, str]:
+        return {sale_id: place_of_sale.name for sale_id, place_of_sale in list(self._store.places_of_sale.items())}
 
-    def get_store_sellers_names(self) -> list[str]:
-        return [seller.name for seller in self._store.sellers]
+    def get_store_sellers_names(self) -> dict[int, str]:
+        return {seller_id: seller.name for seller_id, seller in list(self._store.sellers.items())}
 
     def get_total(self) -> str:
         total_str = ''
