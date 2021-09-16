@@ -14,15 +14,16 @@ from prjstore.domain.seller import Seller
 class Store:
     factory: ProductFactory = ProductFactory()
     pc: ProductCatalog = ProductCatalog()
-    items: dict[str, Item] = field(default_factory=dict)
+    items: dict[int, Item] = field(default_factory=dict)
     sellers: dict[int, Seller] = field(default_factory=dict)
     places_of_sale: dict[int, PlaceOfSale] = field(default_factory=dict)
 
     ###############################################################################################
     @validate_arguments
     def get_item_by_pr_id(self, pr_id: str) -> Item:
-        if pr_id in self.items:
-            return self.items[pr_id]
+        for _item in self.items.values():
+            if _item.product.prod_id == pr_id:
+                return _item
         raise IndexError(f"Invalid product id: {pr_id}")
 
     @validate_arguments

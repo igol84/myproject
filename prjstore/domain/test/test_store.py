@@ -30,8 +30,8 @@ class Test_Store(TestStore):
         self.assertEqual(self.store.pc['1'].name, 'item1')
 
     def test_02_items(self):
-        self.assertEqual(len(self.store.items), 4)
-        self.assertEqual(self.store.items['2'].product.name, 'item23')
+        self.assertEqual(len(self.store.items), 5)
+        self.assertEqual(self.store.items[4].product.name, 'item23')
 
     def test_03_sellers(self):
         self.assertEqual(len(self.store.sellers), 3)
@@ -45,7 +45,7 @@ class Test_Store(TestStore):
         self.assertEqual(self.store.get_item_by_pr_id('2').product.name, 'item23')
 
     def test_05_search_item(self):
-        self.assertEqual(len(self.store.search_items_by_name(name='item2')), 3)
+        self.assertEqual(len(self.store.search_items_by_name(name='item2')), 4)
 
     def test_06_move_sale_to_another_place(self):
         sale = self.store.places_of_sale[1].sale
@@ -55,16 +55,16 @@ class Test_Store(TestStore):
         self.assertEqual(len(self.store.places_of_sale[1].sale), 3)
 
     def test_07_add_item(self):
-        item = self.store.items['1']
+        item = self.store.items[1]
         self.assertEqual(str([item.product.name, item.qty, item.buy_price.amount]), "['item1', 1, 40.0]")
         self.store.add_item(item=item, qty=5)
-        print(self.store.items['1'])
+        print(self.store.items[1])
         self.assertEqual(item.qty, 6)
 
     def test_08_add_new_item(self):
-        item = self.store.items['1']
+        item = self.store.items[1]
         item.qty = 0
-        del self.store.items['1']
+        del self.store.items[1]
         self.assertEqual(item.qty, 0)
         self.assertRaises(IndexError, self.store.get_item_by_pr_id, pr_id=item.product.prod_id)
         self.store.add_item(item=item, qty=5)
@@ -78,10 +78,10 @@ class Test_Store(TestStore):
         sli = self.store.places_of_sale[1].sale.list_sli[1]
         self.assertEqual(str([sli.item.product.prod_id, sli.item.qty, sli.qty, sli.sale_price.amount]),
                          "['2', 0, 2, 600.0]")
-        new_sli = self.store.places_of_sale[1].sale[('2', 50)]
+        new_sli = self.store.places_of_sale[1].sale[(4, 50)]
         self.assertEqual(str([new_sli.item.product.prod_id, new_sli.item.qty, new_sli.qty, new_sli.sale_price.amount]),
                          "['2', 0, 1, 50.0]")
         self.store.places_of_sale[1].sale.edit_sale_price(sli, 50)
         self.assertEqual(str([new_sli.item.product.prod_id, new_sli.item.qty, new_sli.qty, new_sli.sale_price.amount]),
                          "['2', 0, 3, 50.0]")
-        self.assertEqual(self.store.places_of_sale[1].sale[('2', 600)], None)
+        self.assertEqual(self.store.places_of_sale[1].sale[(4, 600)], None)
