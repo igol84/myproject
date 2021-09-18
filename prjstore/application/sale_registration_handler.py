@@ -1,5 +1,6 @@
 import datetime
-from typing import Union, Optional
+import collections
+from typing import Optional
 
 from pydantic import validate_arguments
 
@@ -10,6 +11,7 @@ from prjstore.domain.test.test_item import TestItem
 from prjstore.domain.test.test_place_of_sale import TestPlaceOfSale
 from prjstore.domain.test.test_products_catalog import TestProductCatalog
 from prjstore.domain.test.test_seller import TestSeller
+from prjstore.schemas.item import ViewItem
 from util.money import Money
 
 
@@ -34,27 +36,43 @@ class SaleRegistrationHandler:
         test.setUp(sale=False)
         self._store.places_of_sale = test.places_of_sale
         self._store.places_of_sale[1].sale = None
-        self._store.items['1'].qty = 150
-        self._store.items['1'].product.price = Money(10500)
-        self._store.items['1'].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
+        self._store.items[1].qty = 150
+        self._store.items[1].product.price = Money(10500)
+        self._store.items[1].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
 
     @validate_arguments
-    def get_store_items(self, search: Optional[str] = None) -> dict[str: dict[str: Union[str, int, float]]]:
-        items: dict[str: Item] = self._store.items if not search else self.search_items(search)
-        return {item_.product.prod_id: {'name': item_.product.name,
-                                        'price': item_.product.price.amount,
-                                        'price_format': item_.product.price.format(),
-                                        'qty': item_.qty}
-                for item_ in items.values()}
+    def get_store_items(self, search: Optional[str] = None) -> dict[str, ViewItem]:
+        items: dict[int: Item] = self._store.items if not search else self.search_items(search)
+        items = collections.OrderedDict(sorted(items.items()))
+        products: dict[str, ViewItem] = {}
+        for item_ in items.values():
+            if item_.product.prod_id not in products:
+                products[item_.product.prod_id] = ViewItem(
+                    prod_id=item_.product.prod_id,
+                    name=item_.product.name,
+                    price=item_.product.price.amount,
+                    price_format=item_.product.price.format(),
+                    qty=item_.qty
+                )
+            else:
+                products[item_.product.prod_id].qty += item_.qty
+        return products
 
     @validate_arguments
-    def get_sale_line_items(self) -> dict[str: dict[str: Union[str, int, float]]]:
-        return {(sli.item.product.prod_id, sli.sale_price.amount): {'prod_id': sli.item.product.prod_id,
-                                                                    'name': sli.item.product.name,
-                                                                    'price': sli.sale_price.amount,
-                                                                    'price_format': sli.sale_price.format(),
-                                                                    'qty': sli.qty}
-                for sli in self._sale.list_sli}
+    def get_sale_line_items(self) -> dict[tuple[str, float], ViewItem]:
+        products: dict[tuple[str, float], ViewItem] = {}
+        for sli in self._sale.list_sli:
+            if (sli.item.product.prod_id, sli.sale_price.amount) not in products:
+                products[sli.item.product.prod_id, sli.sale_price.amount] = ViewItem(
+                    prod_id=sli.item.product.prod_id,
+                    name=sli.item.product.name,
+                    price=sli.sale_price.amount,
+                    price_format=sli.sale_price.format(),
+                    qty=sli.qty
+                )
+            else:
+                products[sli.item.product.prod_id, sli.sale_price.amount].qty += sli.qty
+        return products
 
     @validate_arguments
     def search_items(self, text: str) -> dict[str: Item]:
@@ -65,10 +83,16 @@ class SaleRegistrationHandler:
 
     @validate_arguments
     def put_on_sale(self, pr_id: str, qty: int, sale_price: float = None) -> None:
-        sale_item = self._store.get_item_by_pr_id(pr_id)
-        self._sale.add_line_item(item=sale_item, qty=qty, sale_price=sale_price)
-        if sale_item.qty == 0:
-            del self._store.items[sale_item.product.prod_id]
+        sale_items = self._store.get_items_by_pr_id(pr_id)
+        qty_need_to_add = qty
+        for sale_item in sale_items:
+            qty_line_item = sale_item.qty if qty_need_to_add > sale_item.qty else qty_need_to_add
+            self._sale.add_line_item(item=sale_item, qty=qty_line_item, sale_price=sale_price)
+            if sale_item.qty == 0:
+                del self._store.items[sale_item.id]
+            qty_need_to_add -= qty_line_item
+            if qty_need_to_add == 0:
+                break
 
     @validate_arguments
     def is_item_exists(self, pr_id: str) -> bool:
@@ -80,15 +104,17 @@ class SaleRegistrationHandler:
             return self._store.items[pr_id].qty
 
     @validate_arguments
-    def put_item_form_sli_to_items(self, sli_id: str, sli_price: float) -> None:
-        sli = self._sale.get_line_item_by_product_id_and_sale_price(sli_id, sli_price)
-        self._sale.unset_line_item(sli=sli, qty=sli.qty)
-        self._store.add_item(item=sli.item, qty=sli.qty)
+    def put_item_form_sli_to_items(self, pr_id: str, sli_price: float) -> None:
+        sli_s = self._sale.get_line_items_by_product_id_and_sale_price(pr_id, sli_price)
+        for sli in sli_s:
+            self._sale.unset_line_item(sli=sli, qty=sli.qty)
+            self._store.add_item(item=sli.item, qty=sli.qty)
 
     @validate_arguments
     def edit_sale_price_in_sli(self, sli_product_id: str, old_sale_price: float, sale_price: float) -> None:
-        sli = self._sale.get_line_item_by_product_id_and_sale_price(sli_product_id, old_sale_price)
-        self._sale.edit_sale_price(sli, sale_price)
+        sli_s = self._sale.get_line_items_by_product_id_and_sale_price(sli_product_id, old_sale_price)
+        for sli in sli_s:
+            self._sale.edit_sale_price(sli, sale_price)
 
     def get_store_places_of_sale_names(self) -> dict[int, str]:
         return {sale_id: place_of_sale.name for sale_id, place_of_sale in list(self._store.places_of_sale.items())}

@@ -20,14 +20,14 @@ class Store:
 
     ###############################################################################################
     @validate_arguments
-    def get_item_by_pr_id(self, pr_id: str) -> Item:
-        for _item in self.items.values():
-            if _item.product.prod_id == pr_id:
-                return _item
+    def get_items_by_pr_id(self, pr_id: str) -> list[Item]:
+        items = [_item for _item in self.items.values() if _item.product.prod_id == pr_id]
+        if items:
+            return items
         raise IndexError(f"Invalid product id: {pr_id}")
 
     @validate_arguments
-    def search_items_by_name(self, name: str = None) -> dict[str: Item]:
+    def search_items_by_name(self, name: str = None) -> dict[int: Item]:
         items = {}
         if name:
             for it_id, item in self.items.items():
@@ -37,6 +37,6 @@ class Store:
 
     @validate_arguments
     def add_item(self, item: Item, qty: int = 1):
-        if item.product.prod_id not in self.items:
-            self.items[item.product.prod_id] = item
-        self.items[item.product.prod_id].qty += qty
+        if item.id not in self.items:
+            self.items[item.id] = item
+        self.items[item.id].qty += qty

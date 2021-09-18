@@ -42,7 +42,7 @@ class Test_Store(TestStore):
         self.assertEqual(str(self.store.places_of_sale[1].sale.list_sli[0].item.product.name), 'item1')
 
     def test_04_get_item_by_pr_id(self):
-        self.assertEqual(self.store.get_item_by_pr_id('2').product.name, 'item23')
+        self.assertEqual(self.store.get_items_by_pr_id('2')[0].product.name, 'item23')
 
     def test_05_search_item(self):
         self.assertEqual(len(self.store.search_items_by_name(name='item2')), 4)
@@ -66,7 +66,7 @@ class Test_Store(TestStore):
         item.qty = 0
         del self.store.items[1]
         self.assertEqual(item.qty, 0)
-        self.assertRaises(IndexError, self.store.get_item_by_pr_id, pr_id=item.product.prod_id)
+        self.assertRaises(IndexError, self.store.get_items_by_pr_id, pr_id=item.product.prod_id)
         self.store.add_item(item=item, qty=5)
         self.assertEqual(item.qty, 5)
 

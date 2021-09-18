@@ -1,10 +1,10 @@
 import sys
-from typing import Union
 
 from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
 from PySide2.QtCore import QDate
 
 from prjstore.application.sale_registration_handler import SaleRegistrationHandler
+from prjstore.schemas.item import ViewItem
 from prjstore.ui.pyside.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration_components.sale_registration_product import ItemFrame
 from prjstore.ui.pyside.sale_registration_components.sale_registration_sli import SLI_Frame
@@ -18,8 +18,8 @@ class SaleForm(QWidget):
         self.ui.setupUi(self)
         self.resize(1200, 600)
         self.handler = SaleRegistrationHandler(test=test)
-        self.items: dict[str: dict[str: Union[str, int, float]]] = self.handler.get_store_items()
-        self.sli_list: dict[str: dict[str: Union[str, int, float]]] = self.handler.get_sale_line_items()
+        self.items: dict[str, ViewItem] = None
+        self.sli_list: dict[tuple[str, float]: ViewItem] = self.handler.get_sale_line_items()
         self.selected_sli_widget: SLI_Frame = None
         self.selected_item_widget: ItemFrame = None
 
@@ -59,7 +59,7 @@ class SaleForm(QWidget):
         self.selected_sli_widget = None
         self.sli_list = self.handler.get_sale_line_items()
         for sli in self.sli_list.values():
-            label = SLI_Frame(self, sli['prod_id'], sli['name'], sli['price'], sli['price_format'], sli['qty'])
+            label = SLI_Frame(self, sli.prod_id, sli.name, sli.price, sli.price_format, sli.qty)
             self.ui.sli_layout.addWidget(label)
         self.ui.sli_layout.addStretch(0)
 
@@ -81,8 +81,8 @@ class SaleForm(QWidget):
         clearLayout(self.ui.items_layout)
         self.selected_item_widget = None
         self.items = self.handler.get_store_items(self.ui.src_items.text())
-        for pr_id, item in sorted(self.items.items()):
-            item_frame = ItemFrame(self, pr_id, item['name'], item['price'], item['price_format'], item['qty'])
+        for pr_id, item in self.items.items():
+            item_frame = ItemFrame(self, pr_id, item.name, item.price, item.price_format, item.qty)
             self.ui.items_layout.addWidget(item_frame)
         self.ui.items_layout.addStretch(0)
 

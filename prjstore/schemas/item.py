@@ -22,3 +22,11 @@ class Item(BaseItem):
 
 class ShowItemWithProduct(Item):
     product: Product
+
+
+class ViewItem(BaseModel):
+    prod_id: int
+    name: str
+    price: float
+    price_format: str
+    qty: int
