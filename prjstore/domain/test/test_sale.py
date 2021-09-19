@@ -54,6 +54,25 @@ class Test_Sale(TestSale):
         self.assertEqual(str(sli),
                          "['item23', 1, 2, 600.0]")
 
+    def test_get_line_items_by_item_id(self):
+        sli = self.sale.get_line_items_by_item_id(4)[0]
+        sli = [sli.item.product.name, sli.item.qty, sli.qty, sli.sale_price.amount]
+        self.assertEqual(str(sli),
+                         "['item23', 1, 2, 600.0]")
+
+    def test_get_line_item_by_item_id_and_sale_price(self):
+        sli = self.sale.get_line_item_by_item_id_and_sale_price(4, 600)
+        sli = [sli.item.product.name, sli.item.qty, sli.qty, sli.sale_price.amount]
+        self.assertEqual(str(sli),
+                         "['item23', 1, 2, 600.0]")
+
+    def test_edit_sale_price(self):
+        sli = self.sale.get_line_item_by_item_id_and_sale_price(4, 600)
+        self.sale.edit_sale_price(sli=sli, sale_price=400)
+        sli = [sli.item.product.name, sli.item.qty, sli.qty, sli.sale_price.amount]
+        self.assertEqual(str(sli),
+                         "['item23', 1, 2, 400.0]")
+
     def test_unset_line_item_by_pr_id(self):
         self.sale.unset_line_items_by_pr_id_and_sale_price('2', 600)
         self.assertEqual(self.sale[(4, 600)].qty, 1)
@@ -67,6 +86,10 @@ class Test_Sale(TestSale):
     def test_del_line_item_by_product_id_2(self):
         del self.sale[(4, 600)]
         self.assertEqual(self.sale.get_line_items_by_product_id_and_sale_price('2', 600), [])
+
+    def test_del_line_items_by_item_id_and_sale_price(self):
+        self.sale.del_line_items_by_item_id_and_sale_price(4, 600)
+        self.assertEqual(self.sale.get_line_item_by_item_id_and_sale_price(4, 600), None)
 
     def test_is_complete(self):
         self.assertEqual(self.sale.is_complete(), False)
