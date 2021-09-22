@@ -9,7 +9,7 @@ class API_Seller(DB):
     def __init__(self, headers):
         self.headers = headers
 
-    def create(self, store_id: int, name: str) -> dict[int: Seller]:
+    def create(self, store_id: int, name: str) -> dict[int, Seller]:
         new_seller = schemas.seller.CreateSeller(store_id=store_id, name=name)
         r = requests.post(f'{settings.host}/seller', json=new_seller.dict(), headers=self.headers)
         if r.status_code != 201:
@@ -19,7 +19,7 @@ class API_Seller(DB):
             seller_pd = schemas.seller.Seller(**r.json())
             return {seller_pd.id: Seller(name=seller_pd.name)}
 
-    def update(self, seller_id: int, store_id: int, name: str) -> dict[int: Seller]:
+    def update(self, seller_id: int, store_id: int, name: str) -> dict[int, Seller]:
         new_seller = schemas.seller.CreateSeller(store_id=store_id, name=name)
         r = requests.put(f"{settings.host}/seller/{seller_id}", json=new_seller.dict(), headers=self.headers)
         if r.status_code != 202:

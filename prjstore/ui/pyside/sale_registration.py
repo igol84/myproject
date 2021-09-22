@@ -142,6 +142,6 @@ class SaleForm(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = SaleForm(test=True)
+    w = SaleForm(test=False)
     w.show()
     sys.exit(app.exec_())

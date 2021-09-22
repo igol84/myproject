@@ -8,8 +8,8 @@ class TestProductCatalog(TestCase):
 
     def setUp(self) -> None:
         self.pc = ProductCatalog()
-        self.pc.set_product(
-            ProductFactory.create(product_type='shoes', prod_id='1', name='item1', price=(100,), size=36))
+        self.pc.set_product(ProductFactory.create(product_type='shoes', prod_id='1', name='item1', price=(100,),
+                                                  size=36))
         self.pc.set_product(ProductFactory.create(prod_id='2', name='item23', price=(600,)))
         self.pc.set_product(ProductFactory.create(product_type='shoes', prod_id='3', name='item24', price=(700,),
                                                   color='red', size=43.3, length_of_insole=28))
@@ -22,8 +22,13 @@ class Test_ProductCatalog(TestProductCatalog):
         self.assertEqual(str([pr.name for pr in self.pc.products.values()]),
                          "['item1', 'item23', 'item24', 'item5', 'item2']")
 
-    def test_02_unset_product_by_pr_id(self):
+    def test_02_1_unset_product_by_pr_id(self):
         self.pc.unset_product_by_pr_id('3')
+        self.assertEqual(str([pr.name for pr in self.pc.products.values()]),
+                         "['item1', 'item23', 'item5', 'item2']")
+
+    def test_02_2_unset_product_by_pr_id(self):
+        del self.pc['3']
         self.assertEqual(str([pr.name for pr in self.pc.products.values()]),
                          "['item1', 'item23', 'item5', 'item2']")
 
