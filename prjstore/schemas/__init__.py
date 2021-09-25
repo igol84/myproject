@@ -1,1 +1,1 @@
-from prjstore.schemas import error, store, seller
+from prjstore.schemas import error, store, seller, product

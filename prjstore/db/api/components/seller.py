@@ -29,7 +29,7 @@ class API_Seller(DB):
             seller_pd = schemas.seller.Seller(**r.json())
             return {seller_pd.id: Seller(name=seller_pd.name)}
 
-    def get_all(self) -> dict[int: Seller]:
+    def get_all(self) -> dict[int, Seller]:
         r = requests.get(f"{settings.host}/seller", headers=self.headers)
         if r.status_code != 200:
             err = r.json()['detail']
