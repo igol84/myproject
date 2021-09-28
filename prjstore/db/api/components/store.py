@@ -30,7 +30,7 @@ class API_Store(DB):
             raise ValueError(err.detail)
         else:
             store_pd = schemas.store.StoreWithDetails(**r.json())
-            store = Store()
+            store = Store(id=store_pd.id, name=store_pd.name)
             products = API_Product(self.headers).get_all()
             for product in products.values():
                 store.pc.set_product(product)

@@ -12,6 +12,8 @@ from prjstore.domain.seller import Seller
 
 @dataclass
 class Store:
+    id: int
+    name: str
     factory: ProductFactory = ProductFactory()
     pc: ProductCatalog = ProductCatalog()
     items: dict[int, Item] = field(default_factory=dict)

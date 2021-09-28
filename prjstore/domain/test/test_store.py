@@ -9,7 +9,7 @@ from prjstore.domain.test.test_seller import TestSeller
 
 class TestStore(TestCase):
     def setUp(self) -> None:
-        self.store = Store()
+        self.store = Store(id=1, name='Giga')
         self.pc = None
         TestProductCatalog.setUp(self)
         self.store.pc = self.pc
