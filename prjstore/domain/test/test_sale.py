@@ -10,7 +10,7 @@ class TestSale(TestCase):
     def setUp(self) -> None:
         self.items = []
         TestItem.setUp(self)
-        self.sale = Sale(Seller('Igor'))
+        self.sale = Sale(Seller(1, 'Igor'))
         self.sale.add_line_item(self.items[1])
         self.sale.add_line_item(self.items[4], qty=2)
         self.sale.add_line_item(self.items[2], sale_price=200)
@@ -19,7 +19,7 @@ class TestSale(TestCase):
 
 class Test_Sale(TestSale):
     def test_01_initial(self):
-        sale = Sale(seller=Seller('Igor'))
+        sale = Sale(seller=Seller(1, 'Igor'))
         sale.date_time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
         self.assertEqual(str(sale.seller.name), 'Igor')
         self.assertEqual(str(sale.list_sli), '[]')
@@ -109,7 +109,7 @@ class Test_Sale(TestSale):
         self.assertEqual(str(self.sale.seller.name), 'Igor')
 
     def test_set_seller(self):
-        self.sale.seller = Seller('Anna')
+        self.sale.seller = Seller(2, 'Anna')
         self.assertEqual(str(self.sale.seller.name), 'Anna')
 
     def test_is_item_in_sale(self):

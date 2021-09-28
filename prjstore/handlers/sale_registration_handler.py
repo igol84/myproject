@@ -136,8 +136,10 @@ class SaleRegistrationHandler:
         if current_place_of_sale_id is not None and current_seller_id is not None and self._sale.list_sli:
             time = datetime.datetime.min.time()
             self._sale.date_time = datetime.datetime.combine(date, time)
-            self._store.places_of_sale[current_place_of_sale_id].sale = self._sale
             self._sale.seller = self._store.sellers[current_seller_id]
+            current_place = self._store.places_of_sale[current_place_of_sale_id]
+            current_place.sale = self._sale
+            current_place.make_new_sale()
             self._sale.completed()
             return True
         return False

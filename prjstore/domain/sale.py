@@ -76,7 +76,6 @@ class Sale:
         else:
             sli.sale_price.amount = sale_price
 
-    # unset line items
     @validate_arguments
     def unset_line_item(self, sli: SaleLineItem, qty: int = 1) -> None:
         sale_price = sli.sale_price.amount

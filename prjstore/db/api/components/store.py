@@ -38,9 +38,9 @@ class API_Store(DB):
                 product = get_product(item.product)
                 store.items[item.id] = Item(id=item.id, product=product, qty=item.qty, buy_price=Money(item.buy_price))
             for place in store_pd.places:
-                store.places_of_sale[place.id] = PlaceOfSale(name=place.name)
+                store.places_of_sale[place.id] = PlaceOfSale(id=place.id, name=place.name)
             for seller in store_pd.sellers:
-                store.sellers[seller.id] = Seller(name=seller.name)
+                store.sellers[seller.id] = Seller(id=seller.id, name=seller.name)
             return store
 
     def delete(self, seller_id: int) -> bool:
