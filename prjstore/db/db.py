@@ -16,9 +16,9 @@ class DB(ABC):
         pass
 
     @abstractmethod
-    def get(self, obj_id: int):
+    def get(self, **kwargs):
         pass
 
     @abstractmethod
-    def delete(self, obj_id: int) -> bool:
+    def delete(self, **kwargs) -> bool:
         pass
