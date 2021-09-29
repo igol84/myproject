@@ -1,6 +1,7 @@
 from prjstore.db.api.authorization import auth
 from prjstore.db.api.components.seller import API_Seller
 from prjstore.db.api.components.product import API_Product
+from prjstore.db.api.components.item import API_Item
 from prjstore.db.api.components.store import API_Store
 
 
@@ -10,6 +11,7 @@ class API_DB:
         self.sore = API_Store(self.headers)
         self.seller = API_Seller(self.headers)
         self.product = API_Product(self.headers)
+        self.item = API_Item(self.headers)
 
 
 if __name__ == '__main__':
