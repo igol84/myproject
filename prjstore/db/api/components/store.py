@@ -1,6 +1,6 @@
 import requests
 from prjstore import schemas
-from prjstore.db.api.components.product import get_product, API_Product
+from prjstore.db.api.components.product import get_product
 from prjstore.domain.item import Item
 from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.seller import Seller
@@ -31,9 +31,8 @@ class API_Store(DB):
         else:
             store_pd = schemas.store.StoreWithDetails(**r.json())
             store = Store(id=store_pd.id, name=store_pd.name)
-            products = API_Product(self.headers).get_all()
-            for product in products.values():
-                store.pc.set_product(product)
+            for product in [product_catalog.product for product_catalog in store_pd.products_catalog]:
+                store.pc.set_product(get_product(product))
             for item in store_pd.items:
                 product = get_product(item.product)
                 store.items[item.id] = Item(id=item.id, product=product, qty=item.qty, buy_price=Money(item.buy_price))

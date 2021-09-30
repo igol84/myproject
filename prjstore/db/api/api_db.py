@@ -19,7 +19,7 @@ class API_DB:
 if __name__ == '__main__':
     db = API_DB()
     store = db.sore.get(store_id=1)
-    print(store)
+    print(store.pc)
     # sellers = db.seller.get_all()
     # print(sellers)
     # print(len(sellers))
