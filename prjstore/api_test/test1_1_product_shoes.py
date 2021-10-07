@@ -1,76 +1,48 @@
 import unittest
-import requests
-from prjstore.api_test.authorization import host, headers
-from prjstore.schemas import product as product_schema
-from prjstore.schemas import shoes as shoes_schema
+
+from prjstore import schemas
+from prjstore.db import API_DB
+from prjstore.domain.product_factory import ProductFactory
 
 count_rows = 0
-prefix = '/shoes'
+db = API_DB()
 
 
 def setUpModule():
-    r = requests.get(f"{host}{prefix}", headers=headers)
+    products: list = db.product.get_all()
     global count_rows
-    count_rows = len(r.json())
+    count_rows = len(products)
 
 
 def tearDownModule():
-    r = requests.get(f"{host}{prefix}", headers=headers)
+    products = db.product.get_all()
     global count_rows
-    assert count_rows == len(r.json()), f" count prod changed '"
+    assert count_rows == len(products), f" count product changed '"
 
 
-class TestShoes(unittest.TestCase):
-    prod_id: int = None
+class TestProduct(unittest.TestCase):
+    obj_id: int = None
 
     @classmethod
     def setUpClass(cls):
-        new_product = product_schema.CreateProduct(type="shoes", name="converse", price=10)
-        r = requests.post(
-            f'{host}/prod/',
-            json=new_product.dict(),
-            headers=headers
-        )
-        product = product_schema.Product(**r.json())
-        print(product)
-        cls.prod_id = product.id
-        new_shoes = shoes_schema.CreateShoes(id=product.id, color='red', size=41, length=19, width='w')
-        r = requests.post(
-            f'{host}{prefix}',
-            json=new_shoes.dict(),
-            headers=headers
-        )
-        shoes = shoes_schema.Shoes(**r.json())
-        print(shoes)
+        pd_shoes = schemas.shoes.CreateShoesWithProduct(color='red', size=40, length=25.5, width="Wide")
+        pd_product = schemas.product.CreateProduct(type="shoes", name="converse", price=10, shoes=pd_shoes)
+        new_product = ProductFactory.create_from_schema(db.product.create(pd_product))
+        cls.obj_id = new_product.prod_id
 
     def test_case01_get(self):
-        r = requests.get(f"{host}{prefix}/{self.prod_id}", headers=headers)
-        self.assertEqual(r.status_code, 200)
-        shoes = shoes_schema.Shoes(**r.json())
-        self.assertEqual(shoes, shoes_schema.Shoes(id=self.prod_id, color='red', size=41, length=19, width='w'))
-
-    def test_case01_get_all(self):
-        r = requests.get(f"{host}{prefix}", headers=headers)
-        self.assertEqual(r.status_code, 200)
-        list_shoes = shoes_schema.ListShoes.parse_obj(r.json())
-        shoes = list_shoes[-1]
-        self.assertEqual(shoes, shoes_schema.Shoes(id=self.prod_id, color='red', size=41, length=19, width='w'))
+        shoes = ProductFactory.create_from_schema(db.product.get(self.obj_id))
+        print(db.product.get(self.obj_id))
+        self.assertEqual(shoes.name, 'converse')
+        self.assertEqual(shoes.color, 'red')
 
     def test_case02_update(self):
-        new_shoes = shoes_schema.UpdateShoes(color='blue', size=44, length=20, width='e')
-        r = requests.put(
-            f"{host}{prefix}/{self.prod_id}",
-            json=new_shoes.dict(),
-            headers=headers
-        )
-        self.assertEqual(r.status_code, 202)
-
-    def test_case03_get(self):
-        r = requests.get(f"{host}{prefix}/{self.prod_id}", headers=headers)
-        self.assertEqual(r.status_code, 200)
-        shoes = shoes_schema.Shoes(**r.json())
-        self.assertEqual(shoes, shoes_schema.Shoes(id=self.prod_id, color='blue', size=44, length=20, width='e'))
+        pd_shoes = schemas.shoes.CreateShoesWithProduct(color='white', size=40, length=25.5, width="Wide")
+        pd_product = schemas.product.Product(id=self.obj_id, type="shoes", name="nike", price=10, shoes=pd_shoes)
+        product = ProductFactory.create_from_schema(db.product.update(pd_product))
+        self.assertEqual(product.name, 'nike')
+        self.assertEqual(product.color, 'white')
 
     @classmethod
     def tearDownClass(cls):
-        requests.delete(f"{host}{prefix}/{cls.prod_id}", headers=headers)
+        db.product.delete(product_id=cls.obj_id)

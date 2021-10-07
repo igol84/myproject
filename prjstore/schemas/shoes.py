@@ -20,11 +20,16 @@ class CreateShoes(BaseShoes):
     pass
 
 
+class CreateShoesWithProduct(UpdateShoes):
+    pass
+
+
 class Shoes(BaseShoes):
     pass
 
     class Config:
         orm_mode = True
+
 
 class ListShoes(BaseModel):
     __root__: list[Shoes]

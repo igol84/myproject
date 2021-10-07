@@ -3,8 +3,10 @@ from typing import overload, Literal, Optional
 from pydantic import validate_arguments
 from pydantic.dataclasses import dataclass
 
-from prjstore.domain.products.simple_product import SimpleProduct
+from prjstore import schemas
+from prjstore.domain.products.simple_product import SimpleProduct, AbstractProduct
 from prjstore.domain.products.shoes import Shoes
+from util.money import Money
 
 
 @dataclass
@@ -28,3 +30,17 @@ class ProductFactory:
             'shoes': Shoes,
         }
         return products[product_type](*args, **kwargs)
+
+    @staticmethod
+    def create_from_schema(product_pd: schemas.product.Product):
+        if product_pd.type == "shoes":
+            product = ProductFactory.create(
+                product_type=product_pd.type, prod_id=product_pd.id, name=product_pd.name,
+                price=Money(product_pd.price),
+                color=product_pd.shoes.color, size=product_pd.shoes.size,
+                length_of_insole=product_pd.shoes.length, width=Shoes.widths[product_pd.shoes.width])
+        else:
+            product = ProductFactory.create(
+                product_type="product", prod_id=product_pd.id,
+                name=product_pd.name, price=(product_pd.price,))
+        return product

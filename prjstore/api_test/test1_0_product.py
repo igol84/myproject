@@ -1,59 +1,43 @@
 import unittest
-import requests
-from prjstore.api_test.authorization import host, headers
-from prjstore.schemas import product as product_schema
+
+from prjstore import schemas
+from prjstore.db import API_DB
+from prjstore.domain.product_factory import ProductFactory
 
 count_rows = 0
-prefix = '/prod'
+db = API_DB()
 
 
 def setUpModule():
-    r = requests.get(f"{host}{prefix}", headers=headers)
+    products: list = db.product.get_all()
     global count_rows
-    count_rows = len(r.json())
+    count_rows = len(products)
 
 
 def tearDownModule():
-    r = requests.get(f"{host}{prefix}", headers=headers)
+    products = db.product.get_all()
     global count_rows
-    assert count_rows == len(r.json()), f" count prod changed '"
+    assert count_rows == len(products), f" count product changed '"
 
 
-class TestProd(unittest.TestCase):
-    prod_id: int = None
+class TestProduct(unittest.TestCase):
+    obj_id: int = None
 
     @classmethod
     def setUpClass(cls):
-        new_product = product_schema.CreateProduct(type="", name="battery", price=10)
-        r = requests.post(
-            f'{host}{prefix}/',
-            json=new_product.dict(),
-            headers=headers
-        )
-        product = product_schema.Product(**r.json())
-        cls.prod_id = product.id
+        pd_product = schemas.product.CreateProduct(type="", name="book", price=10)
+        new_product = ProductFactory.create_from_schema(db.product.create(pd_product))
+        cls.obj_id = new_product.prod_id
 
     def test_case01_get(self):
-        r = requests.get(f"{host}{prefix}/{self.prod_id}", headers=headers)
-        self.assertEqual(r.status_code, 200)
-        product = product_schema.Product(**r.json())
-        self.assertEqual(product, product_schema.Product(id=self.prod_id, type="", name="battery", price=10))
+        product = ProductFactory.create_from_schema(db.product.get(self.obj_id))
+        self.assertEqual(product.name, 'book')
 
     def test_case02_update(self):
-        new_product = product_schema.CreateProduct(type="shoes", name="converse", price=15)
-        r = requests.put(
-            f"{host}{prefix}/{self.prod_id}",
-            json=new_product.dict(),
-            headers=headers
-        )
-        self.assertEqual(r.status_code, 202)
-
-    def test_case03_get(self):
-        r = requests.get(f"{host}{prefix}/{self.prod_id}", headers=headers)
-        self.assertEqual(r.status_code, 200)
-        product = product_schema.Product(**r.json())
-        self.assertEqual(product, product_schema.Product(id=self.prod_id, type="shoes", name="converse", price=15))
+        pd_product = schemas.product.Product(id=self.obj_id, type="", name="dog", price=10)
+        product = ProductFactory.create_from_schema(db.product.update(pd_product))
+        self.assertEqual(product.name, 'dog')
 
     @classmethod
     def tearDownClass(cls):
-        requests.delete(f"{host}{prefix}/{cls.prod_id}", headers=headers)
+        db.product.delete(product_id=cls.obj_id)

@@ -8,6 +8,3 @@ class PlaceOfSale:
     id: int
     name: str
     sale: Sale = None
-
-    def make_new_sale(self):
-        pass

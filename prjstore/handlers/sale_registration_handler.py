@@ -17,7 +17,8 @@ from util.money import Money
 
 class SaleRegistrationHandler:
     def __init__(self, db=API_DB(), test=False):
-        self._store = db.sore.get(store_id=1)
+        self.db = db
+        self._store = self.db.sore.get(store_id=1)
         self._sale = Sale()
         if test:
             self._test()
@@ -139,8 +140,8 @@ class SaleRegistrationHandler:
             self._sale.seller = self._store.sellers[current_seller_id]
             current_place = self._store.places_of_sale[current_place_of_sale_id]
             current_place.sale = self._sale
-            current_place.make_new_sale()
             self._sale.completed()
+            self.db.sale.create(sale=self._sale)
             return True
         return False
 

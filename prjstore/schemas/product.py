@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from prjstore.schemas.shoes import Shoes
+from prjstore.schemas.shoes import CreateShoesWithProduct, Shoes
 
 
 class BaseProduct(BaseModel):
@@ -12,8 +12,10 @@ class BaseProduct(BaseModel):
 
 
 class CreateProduct(BaseProduct):
-    pass
+    shoes: Optional[CreateShoesWithProduct] = None
 
+class UpdateProduct(CreateProduct):
+    pass
 
 class Product(BaseProduct):
     id: int
