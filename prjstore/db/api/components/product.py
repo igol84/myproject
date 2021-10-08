@@ -15,7 +15,6 @@ class API_Product(DB):
         else:
             return schemas.product.Product(**r.json())
 
-
     def update(self, product: schemas.product.Product) -> schemas.product.Product:
         r = requests.put(f"{settings.host}/prod/{product.id}", json=product.dict(), headers=self.headers)
         if r.status_code != 202:
