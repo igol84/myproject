@@ -8,8 +8,7 @@ class API_Seller(DB):
     def __init__(self, headers):
         self.headers = headers
 
-    def create(self, store_id: int, name: str) -> schemas.seller.Seller:
-        new_seller = schemas.seller.CreateSeller(store_id=store_id, name=name)
+    def create(self, new_seller: schemas.seller.CreateSeller) -> schemas.seller.Seller:
         r = requests.post(f'{settings.host}/seller', json=new_seller.dict(), headers=self.headers)
         if r.status_code != 201:
             err = r.json()['detail']
@@ -17,9 +16,8 @@ class API_Seller(DB):
         else:
             return schemas.seller.Seller(**r.json())
 
-    def update(self, seller_id: int, store_id: int, name: str) -> schemas.seller.Seller:
-        new_seller = schemas.seller.CreateSeller(store_id=store_id, name=name)
-        r = requests.put(f"{settings.host}/seller/{seller_id}", json=new_seller.dict(), headers=self.headers)
+    def update(self, seller: schemas.seller.UpdateSeller) -> schemas.seller.Seller:
+        r = requests.put(f"{settings.host}/seller/{seller.id}", json=seller.dict(), headers=self.headers)
         if r.status_code != 202:
             err = r.json()['detail']
             raise ValueError(err.detail)

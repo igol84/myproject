@@ -15,7 +15,7 @@ class CreateProduct(BaseProduct):
     shoes: Optional[CreateShoesWithProduct] = None
 
 class UpdateProduct(CreateProduct):
-    pass
+    id: Optional[int] = None
 
 class Product(BaseProduct):
     id: int

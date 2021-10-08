@@ -13,6 +13,10 @@ class CreateItem(BaseItem):
     pass
 
 
+class UpdateItem(BaseItem):
+    id: int
+
+
 class Item(BaseItem):
     id: int
 
@@ -31,8 +35,9 @@ class ViewItem(BaseModel):
     price_format: str
     qty: int
 
+
 class ListItems(BaseModel):
-    __root__: list[Item]
+    __root__: list[ShowItemWithProduct]
 
     def __iter__(self):
         return iter(self.__root__)
@@ -42,3 +47,6 @@ class ListItems(BaseModel):
 
     def __str__(self):
         return str(self.__root__)
+
+    def __len__(self):
+        return len(self.__root__)

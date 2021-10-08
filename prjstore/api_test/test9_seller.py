@@ -1,4 +1,5 @@
 import unittest
+from prjstore import schemas
 from prjstore.db import API_DB
 from prjstore.domain.seller import Seller
 
@@ -23,7 +24,8 @@ class TestSeller(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        new_seller = Seller.create_from_schema(db.seller.create(store_id=1, name="Igor"))
+        pd_seller = schemas.seller.CreateSeller(store_id=1, name="Igor")
+        new_seller = Seller.create_from_schema(db.seller.create(pd_seller))
         cls.obj_id = new_seller.id
 
     def test_case01_get(self):
@@ -31,7 +33,8 @@ class TestSeller(unittest.TestCase):
         self.assertEqual(seller.name, 'Igor')
 
     def test_case02_update(self):
-        seller = Seller.create_from_schema(db.seller.update(seller_id=self.obj_id, store_id=1, name="Anna"))
+        pd_seller = schemas.seller.UpdateSeller(id=self.obj_id, store_id=1, name="Anna")
+        seller = Seller.create_from_schema(db.seller.update(pd_seller))
         self.assertEqual(seller.name, 'Anna')
 
     @classmethod

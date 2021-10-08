@@ -38,7 +38,7 @@ class TestProduct(unittest.TestCase):
 
     def test_case02_update(self):
         pd_shoes = schemas.shoes.CreateShoesWithProduct(color='white', size=40, length=25.5, width="Wide")
-        pd_product = schemas.product.Product(id=self.obj_id, type="shoes", name="nike", price=10, shoes=pd_shoes)
+        pd_product = schemas.product.UpdateProduct(id=self.obj_id, type="shoes", name="nike", price=10, shoes=pd_shoes)
         product = ProductFactory.create_from_schema(db.product.update(pd_product))
         self.assertEqual(product.name, 'nike')
         self.assertEqual(product.color, 'white')
