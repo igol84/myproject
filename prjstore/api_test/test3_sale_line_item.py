@@ -1,5 +1,8 @@
 import unittest
+
+from prjstore.schemas import sale_line_item as schemas
 from prjstore.db import API_DB
+from prjstore.domain.sale_line_item import SaleLineItem
 
 count_rows = 0
 db = API_DB()
@@ -21,15 +24,18 @@ class TestSaleLineItem(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        db.sale_line_item.create(sale_id=1, item_id=2, sale_price=1100, qty=1)
+        pd_sli = schemas.CreateSaleLineItem(sale_id=1, item_id=2, sale_price=1100, qty=1)
+        db.sale_line_item.create(pd_sli)
 
     def test_case01_get(self):
-        sale_line_item = db.sale_line_item.get(sale_id=1, item_id=2, sale_price=1100)
+        pd_sli = db.sale_line_item.get(sale_id=1, item_id=2, sale_price=1100)
+        sale_line_item = SaleLineItem.create_from_schema(pd_sli)
         self.assertEqual(sale_line_item.sale_price.amount, 1100)
         self.assertEqual(sale_line_item.qty, 1)
 
     def test_case02_update(self):
-        sale_line_item = db.sale_line_item.update(sale_id=1, item_id=2, sale_price=1100, qty=2)
+        pd_sli = schemas.CreateSaleLineItem(sale_id=1, item_id=2, sale_price=1100, qty=2)
+        sale_line_item = SaleLineItem.create_from_schema(db.sale_line_item.update(pd_sli))
         self.assertEqual(sale_line_item.qty, 2)
 
     @classmethod
