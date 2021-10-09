@@ -40,4 +40,4 @@ class TestProduct(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        db.product.delete(product_id=cls.obj_id)
+        db.product.delete(cls.obj_id)

@@ -14,6 +14,7 @@ class APIBase(DB, Generic[CreateSchemaType, UpdateSchemaType, ReceivedSchemaType
     prefix = None
     schema = None
     list_schema = None
+    keys = ['id']
 
     def __init__(self, headers):
         self.headers = headers
@@ -21,34 +22,48 @@ class APIBase(DB, Generic[CreateSchemaType, UpdateSchemaType, ReceivedSchemaType
     def create(self, new_obj: CreateSchemaType) -> ReceivedSchemaType:
         r = requests.post(f'{settings.host}/{self.prefix}', json=new_obj.dict(), headers=self.headers)
         if r.status_code != 201:
-            raise ConnectionError(r.status_code)
+            raise ConnectionError(r.text)
         else:
             return self.schema(**r.json())
 
     def update(self, new_obj: UpdateSchemaType) -> ReceivedSchemaType:
-        r = requests.put(f"{settings.host}/{self.prefix}/{new_obj.id}", json=new_obj.dict(), headers=self.headers)
+        r = requests.put(f"{settings.host}/{self.prefix}/{self.create_key_by_schemas(new_obj)}",
+                         json=new_obj.dict(), headers=self.headers)
         if r.status_code != 202:
-            raise ConnectionError(r.status_code)
+            raise ConnectionError(r.text)
         else:
             return self.schema(**r.json())
 
     def get_all(self) -> list[ReceivedSchemaType]:
         r = requests.get(f"{settings.host}/{self.prefix}", headers=self.headers)
         if r.status_code != 200:
-            raise ConnectionError(r.status_code)
+            raise ConnectionError(r.text)
         else:
             return list(self.list_schema.parse_obj(r.json()))
 
-    def get(self, obj_id: int) -> ReceivedSchemaType:
-        r = requests.get(f"{settings.host}/{self.prefix}/{obj_id}", headers=self.headers)
+    def get(self, *args, **kwargs) -> ReceivedSchemaType:
+        r = requests.get(f"{settings.host}/{self.prefix}/{self.create_key_by_args(*args, **kwargs)}",
+                         headers=self.headers)
         if r.status_code != 200:
-            raise ConnectionError(r.status_code)
+            raise ConnectionError(r.text)
         else:
             return self.schema(**r.json())
 
-    def delete(self, obj_id: int) -> bool:
-        r = requests.delete(f"{settings.host}/item/{obj_id}", headers=self.headers)
+    def delete(self, *args, **kwargs) -> bool:
+        r = requests.delete(f"{settings.host}/{self.prefix}/{self.create_key_by_args(*args, **kwargs)}",
+                            headers=self.headers)
         if r.status_code != 204:
-            raise ConnectionError(r.status_code)
+            raise ConnectionError(r.text)
         else:
             return True
+
+    def create_key_by_schemas(self, obj):
+        return '/'.join([str(getattr(obj, key)) for key in self.keys])
+
+    def create_key_by_args(self, *args, **kwargs):
+        obj = {}
+        if args:
+            obj = dict(zip(self.keys, args))
+        if kwargs:
+            obj = kwargs
+        return '/'.join([str(obj[key]) for key in self.keys])
