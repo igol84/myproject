@@ -15,6 +15,11 @@ class CreateSale(BaseSale):
     sale_line_items: list[CreateSaleLineItemForSale]
 
 
+class UpdateSale(BaseSale):
+    id: int
+    sale_line_items: list[CreateSaleLineItemForSale]
+
+
 class Sale(BaseSale):
     id: int
 

@@ -7,6 +7,7 @@ import locale
 from pydantic import conint, validate_arguments
 from pydantic.dataclasses import dataclass
 
+from prjstore import schemas
 from prjstore.domain.item import Item
 from prjstore.domain.sale_line_item import SaleLineItem
 from prjstore.domain.abstract_product import AbstractProduct
@@ -18,6 +19,7 @@ locale.setlocale(locale.LC_TIME, 'ru_RU')
 
 @dataclass
 class Sale:
+    id: int
     seller: Seller = None
     list_sli: list[SaleLineItem] = field(default_factory=list)
     date_time: datetime = datetime.now()
@@ -168,3 +170,9 @@ class Sale:
 
     def __len__(self):
         return len(self.list_sli)
+
+    @staticmethod
+    def create_from_schema(schema: schemas.sale.ShowSaleWithSLIs) -> 'Sale':
+        seller = Seller.create_from_schema(schema.seller)
+        list_sli = [SaleLineItem.create_from_schema(sli) for sli in schema.sale_line_items]
+        return Sale(id=schema.id, seller=seller, list_sli=list_sli, date_time=schema.date_time)

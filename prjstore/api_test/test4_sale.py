@@ -3,8 +3,8 @@ from datetime import datetime
 
 from prjstore import schemas
 from prjstore.db import API_DB
-from prjstore.schemas.sale_line_item import CreateSaleLineItemForSale
-
+from prjstore.schemas.sale import CreateSaleLineItemForSale
+from prjstore.domain.sale import Sale
 
 count_rows = 0
 db = API_DB()
@@ -31,17 +31,24 @@ class TestSeller(unittest.TestCase):
                            CreateSaleLineItemForSale(item_id=2, sale_price=1, qty=1)]
         pd_sale = schemas.sale.CreateSale(place_id=1, seller_id=1, date_time=datetime.now(),
                                           sale_line_items=sale_line_items)
-        new_sale = db.sale.create(new_sale=pd_sale)
+        new_sale = Sale.create_from_schema(db.sale.create(pd_sale))
         cls.obj_id = new_sale.id
 
     def test_case01_get(self):
-        sale = db.sale.get(self.obj_id)
-        self.assertEqual(sale.name, 'Igor')
+        sale = Sale.create_from_schema(db.sale.get(self.obj_id))
+        self.assertEqual(sale.seller.id, 1)
+        self.assertEqual(sale.list_sli[0].item.id, 1)
+        self.assertEqual(sale.list_sli[1].item.id, 2)
 
     def test_case02_update(self):
-        sale = db.sale.update(sale_id=self.obj_id, store_id=1, name="Anna")
-        self.assertEqual(sale.name, 'Anna')
+        sale_line_items = [CreateSaleLineItemForSale(item_id=3, sale_price=20, qty=2)]
+        pd_sale = schemas.sale.UpdateSale(id=self.obj_id, place_id=2, seller_id=2, date_time=datetime.now(),
+                                          sale_line_items=sale_line_items)
+        sale = Sale.create_from_schema(db.sale.update(pd_sale))
+        self.assertEqual(sale.seller.id, 2)
+        self.assertEqual(sale.list_sli[0].item.id, 3)
+        self.assertEqual(sale.list_sli[0].sale_price.amount, 20.0)
 
     @classmethod
     def tearDownClass(cls):
-        db.sale.delete(sale_id=cls.obj_id)
+        db.sale.delete(cls.obj_id)
