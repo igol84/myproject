@@ -9,6 +9,8 @@ class BasePlace(BaseModel):
 class CreatePlace(BasePlace):
     pass
 
+class UpdatePlace(BasePlace):
+    id: int
 
 class Place(BasePlace):
     id: int

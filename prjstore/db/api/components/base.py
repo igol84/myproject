@@ -27,8 +27,7 @@ class APIBase(DB, Generic[CreateSchemaType, UpdateSchemaType, ReceivedSchemaType
             return self.schema(**r.json())
 
     def update(self, new_obj: UpdateSchemaType) -> ReceivedSchemaType:
-        print(f"{settings.host}/{self.prefix}/{self.create_key_by_schemas(new_obj)}")
-        r = requests.put(f"{settings.host}/{self.prefix}/{self.create_key_by_schemas(new_obj)}",
+        r = requests.put(f"{settings.host}/{self.prefix}/",
                          data=new_obj.json(), headers=self.headers)
         if r.status_code != 202:
             raise ConnectionError(r.text)
