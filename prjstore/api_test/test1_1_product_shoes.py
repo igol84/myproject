@@ -32,7 +32,6 @@ class TestProduct(unittest.TestCase):
 
     def test_case01_get(self):
         shoes = ProductFactory.create_from_schema(db.product.get(self.obj_id))
-        print(db.product.get(self.obj_id))
         self.assertEqual(shoes.name, 'converse')
         self.assertEqual(shoes.color, 'red')
 

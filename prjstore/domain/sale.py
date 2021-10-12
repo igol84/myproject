@@ -19,7 +19,7 @@ locale.setlocale(locale.LC_TIME, 'ru_RU')
 
 @dataclass
 class Sale:
-    id: int
+    id: int = None
     seller: Seller = None
     list_sli: list[SaleLineItem] = field(default_factory=list)
     date_time: datetime = datetime.now()

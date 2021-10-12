@@ -24,11 +24,11 @@ class Store(BaseStore):
 from prjstore.schemas.seller import Seller
 from prjstore.schemas.place import Place
 from prjstore.schemas.item import ShowItemWithProduct
-from prjstore.schemas.product_catalog import ShowProductCatalogWithProduct
+from prjstore.schemas.product_catalog import ShowRowProductCatalogWithProduct
 
 
 class StoreWithDetails(Store):
     sellers: list[Seller]
     places: list[Place]
     items: list[ShowItemWithProduct]
-    products_catalog: list[ShowProductCatalogWithProduct]
+    products_catalog: list[ShowRowProductCatalogWithProduct]

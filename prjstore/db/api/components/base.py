@@ -49,6 +49,13 @@ class APIBase(DB, Generic[CreateSchemaType, UpdateSchemaType, ReceivedSchemaType
         else:
             return self.schema(**r.json())
 
+    def check(self, *args, **kwargs) -> bool:
+        r = requests.get(f"{settings.host}/{self.prefix}/{self.create_key_by_args(*args, **kwargs)}",
+                         headers=self.headers)
+        if r.status_code == 200:
+            return True
+        return False
+
     def delete(self, *args, **kwargs) -> bool:
         r = requests.delete(f"{settings.host}/{self.prefix}/{self.create_key_by_args(*args, **kwargs)}",
                             headers=self.headers)

@@ -3,7 +3,9 @@ from dataclasses import field
 from pydantic import validate_arguments
 from pydantic.dataclasses import dataclass
 
+from prjstore import schemas
 from prjstore.domain.abstract_product import AbstractProduct
+from prjstore.domain.product_factory import ProductFactory
 
 
 @dataclass
@@ -41,3 +43,8 @@ class ProductCatalog:
                 if name.lower() in product.name.lower():
                     products[product.prod_id] = product
         return products
+
+    @staticmethod
+    def create_from_schema(schema: schemas.product_catalog.ShowRowProductCatalogWithProduct) -> 'ProductCatalog':
+        product = ProductFactory.create_from_schema(schema.product)
+        # return ProductCatalog(products=)
