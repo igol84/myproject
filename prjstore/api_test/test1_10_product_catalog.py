@@ -1,5 +1,6 @@
 import unittest
 from prjstore.schemas import product_catalog as schemas
+from prjstore.domain.product_catalog import ProductCatalog
 from prjstore.db import API_DB
 
 count_rows = 0
@@ -27,6 +28,11 @@ class TestProductCatalog(unittest.TestCase):
 
     def test_case01_get(self):
         self.assertEqual(db.product_catalog.check(store_id=1, prod_id=3), True)
+
+    def test_case02_get_pc(self):
+        pc_pd = db.product_catalog.get_store_pc(store_id=1)
+        pc = ProductCatalog.create_from_schema(pc_pd)
+        self.assertEqual(list(pc.products.keys())[-1], '3')
 
     @classmethod
     def tearDownClass(cls):

@@ -45,6 +45,9 @@ class ProductCatalog:
         return products
 
     @staticmethod
-    def create_from_schema(schema: schemas.product_catalog.ShowRowProductCatalogWithProduct) -> 'ProductCatalog':
-        product = ProductFactory.create_from_schema(schema.product)
-        # return ProductCatalog(products=)
+    def create_from_schema(schema: list[schemas.product_catalog.ShowRowProductCatalogWithProduct]) -> 'ProductCatalog':
+        pc = ProductCatalog()
+        for row_pc_pd in schema:
+            product = ProductFactory.create_from_schema(row_pc_pd.product)
+            pc.set_product(product)
+        return pc
