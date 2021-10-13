@@ -3,11 +3,13 @@ from dataclasses import field
 from pydantic import validate_arguments
 from pydantic.dataclasses import dataclass
 
+from prjstore.db import schemas
 from prjstore.domain.item import Item
 from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.product_catalog import ProductCatalog
 from prjstore.domain.product_factory import ProductFactory
 from prjstore.domain.seller import Seller
+from util.money import Money
 
 
 @dataclass
@@ -42,3 +44,12 @@ class Store:
         if item.id not in self.items:
             self.items[item.id] = item
         self.items[item.id].qty += qty
+
+    @staticmethod
+    def create_from_schema(schema: schemas.store.StoreWithDetails) -> 'Store':
+        pc = ProductCatalog.create_from_schema(schema.products_catalog)
+        items = {item.id: item for item in [Item.create_from_schema(item_pd) for item_pd in schema.items]}
+        places = {place.id: place for place in [PlaceOfSale.create_from_schema(place_pd) for place_pd in schema.places]}
+        sellers = {seller.id: seller for seller in
+                   [Seller.create_from_schema(seller_pd) for seller_pd in schema.sellers]}
+        return Store(id=schema.id, name=schema.name, pc=pc, items=items, places_of_sale=places, sellers=sellers)

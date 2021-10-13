@@ -4,7 +4,7 @@ from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonB
 from PySide2.QtCore import QDate
 
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
-from prjstore.schemas.item import ViewItem
+from prjstore.db.schemas.item import ViewItem
 from prjstore.ui.pyside.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration_components.sale_registration_product import ItemFrame
 from prjstore.ui.pyside.sale_registration_components.sale_registration_sli import SLI_Frame

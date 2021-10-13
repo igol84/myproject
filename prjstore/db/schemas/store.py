@@ -32,3 +32,13 @@ class StoreWithDetails(Store):
     places: list[Place]
     items: list[ShowItemWithProduct]
     products_catalog: list[ShowRowProductCatalogWithProduct]
+
+
+class ListStore(BaseModel):
+    __root__: list[StoreWithDetails]
+
+    def __iter__(self):
+        return iter(self.__root__)
+
+    def __getitem__(self, item):
+        return self.__root__[item]

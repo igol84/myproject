@@ -5,20 +5,22 @@ from typing import Optional
 from pydantic import validate_arguments
 
 from prjstore.db import API_DB
+from prjstore.domain.store import Store
 from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
 from prjstore.domain.test.test_item import TestItem
 from prjstore.domain.test.test_place_of_sale import TestPlaceOfSale
 from prjstore.domain.test.test_products_catalog import TestProductCatalog
 from prjstore.domain.test.test_seller import TestSeller
-from prjstore.schemas.item import ViewItem
+from prjstore.db.schemas.item import ViewItem
 from util.money import Money
 
 
 class SaleRegistrationHandler:
     def __init__(self, db=API_DB(), test=False):
         self.db = db
-        self._store = self.db.sore.get(store_id=1)
+        self._store = Store.create_from_schema(self.db.store.get(id=1))
+        print(self._store.places_of_sale)
         self._sale = Sale()
         if test:
             self._test()

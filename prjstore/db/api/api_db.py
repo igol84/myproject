@@ -6,19 +6,21 @@ from prjstore.db.api.components.product_catalog import API_ProductCatalog
 from prjstore.db.api.components.item import API_Item
 from prjstore.db.api.components.sale import API_Sale
 from prjstore.db.api.components.sale_line_item import API_SaleLineItem
+from prjstore.db.api.components.place import API_Place
 from prjstore.db.api.components.store import API_Store
 
 
 class API_DB:
     def __init__(self):
         self.headers = auth()
-        self.sore = API_Store(self.headers)
         self.seller = API_Seller(self.headers)
         self.product = API_Product(self.headers)
         self.product_catalog = API_ProductCatalog(self.headers)
         self.item = API_Item(self.headers)
         self.sale = API_Sale(self.headers)
+        self.place = API_Place(self.headers)
         self.sale_line_item = API_SaleLineItem(self.headers)
+        self.store = API_Store(self.headers)
 
 
 if __name__ == '__main__':
