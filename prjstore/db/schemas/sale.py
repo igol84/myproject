@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 from datetime import datetime
-from prjstore.schemas.sale_line_item import ShowSaleLineItemWithItem, CreateSaleLineItemForSale
-from prjstore.schemas.seller import Seller
-from prjstore.schemas.place import Place
+from prjstore.db.schemas.sale_line_item import ShowSaleLineItemWithItem, CreateSaleLineItemForSale
+from prjstore.db.schemas.seller import Seller
+from prjstore.db.schemas.place import Place
 
 
 class BaseSale(BaseModel):

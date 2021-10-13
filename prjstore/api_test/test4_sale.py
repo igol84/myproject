@@ -1,9 +1,8 @@
 import unittest
 from datetime import datetime
 
-from prjstore import schemas
-from prjstore.db import API_DB
-from prjstore.schemas.sale import CreateSaleLineItemForSale
+from prjstore.db import API_DB, schemas
+from prjstore.db.schemas.sale_line_item import CreateSaleLineItemForSale
 from prjstore.domain.sale import Sale
 
 count_rows = 0

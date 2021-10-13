@@ -1,7 +1,7 @@
 import unittest
-from prjstore.schemas import product_catalog as schemas
 from prjstore.domain.product_catalog import ProductCatalog
 from prjstore.db import API_DB
+from prjstore.db.schemas import product_catalog as schemas
 
 count_rows = 0
 db = API_DB()

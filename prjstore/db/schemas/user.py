@@ -1,6 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
-from prjstore.schemas.seller import Seller
+from prjstore.db.schemas.seller import Seller
 
 
 class BaseUser(BaseModel):

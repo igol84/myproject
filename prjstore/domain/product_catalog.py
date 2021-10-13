@@ -3,7 +3,7 @@ from dataclasses import field
 from pydantic import validate_arguments
 from pydantic.dataclasses import dataclass
 
-from prjstore import schemas
+from prjstore.db import schemas
 from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.product_factory import ProductFactory
 

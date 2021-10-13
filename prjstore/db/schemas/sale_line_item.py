@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from prjstore.schemas.item import ShowItemWithProduct
+from prjstore.db.schemas.item import ShowItemWithProduct
 
 
 class BaseSaleLineItem(BaseModel):

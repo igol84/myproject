@@ -2,8 +2,8 @@ import requests
 
 from prjstore.db.api import settings
 from prjstore.db.api.components.base import APIBase
-from prjstore.schemas.product_catalog import (CreateRowProductCatalog, ShowRowProductCatalogWithProduct,
-                                              ProductCatalog)
+from prjstore.db.schemas.product_catalog import (CreateRowProductCatalog, ShowRowProductCatalogWithProduct,
+                                                 ProductCatalog)
 
 
 class API_ProductCatalog(APIBase[CreateRowProductCatalog, CreateRowProductCatalog, ShowRowProductCatalogWithProduct]):

@@ -1,5 +1,5 @@
 from pydantic.dataclasses import dataclass
-from prjstore import schemas
+from prjstore.db import schemas
 
 
 @dataclass

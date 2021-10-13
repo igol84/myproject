@@ -3,8 +3,8 @@ from typing import overload, Literal, Optional
 from pydantic import validate_arguments
 from pydantic.dataclasses import dataclass
 
-from prjstore import schemas
-from prjstore.domain.products.simple_product import SimpleProduct, AbstractProduct
+from prjstore.db import schemas
+from prjstore.domain.products.simple_product import SimpleProduct
 from prjstore.domain.products.shoes import Shoes
 from util.money import Money
 

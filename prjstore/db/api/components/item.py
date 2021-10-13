@@ -1,4 +1,4 @@
-from prjstore.schemas import item as schemas
+from prjstore.db.schemas import item as schemas
 from .base import APIBase
 
 

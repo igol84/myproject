@@ -21,10 +21,10 @@ class Store(BaseStore):
         orm_mode = True
 
 
-from prjstore.schemas.seller import Seller
-from prjstore.schemas.place import Place
-from prjstore.schemas.item import ShowItemWithProduct
-from prjstore.schemas.product_catalog import ShowRowProductCatalogWithProduct
+from prjstore.db.schemas.seller import Seller
+from prjstore.db.schemas.place import Place
+from prjstore.db.schemas.item import ShowItemWithProduct
+from prjstore.db.schemas.product_catalog import ShowRowProductCatalogWithProduct
 
 
 class StoreWithDetails(Store):

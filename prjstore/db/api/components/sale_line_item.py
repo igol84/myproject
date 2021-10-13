@@ -1,5 +1,5 @@
 from prjstore.db.api.components.base import APIBase
-from prjstore.schemas import sale_line_item as sch
+from prjstore.db.schemas import sale_line_item as sch
 
 
 class API_SaleLineItem(APIBase[sch.CreateSaleLineItem, sch.UpdateSaleLineItem, sch.ShowSaleLineItemWithItem]):

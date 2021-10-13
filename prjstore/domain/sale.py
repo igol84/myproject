@@ -7,7 +7,7 @@ import locale
 from pydantic import conint, validate_arguments
 from pydantic.dataclasses import dataclass
 
-from prjstore import schemas
+from prjstore.db import schemas
 from prjstore.domain.item import Item
 from prjstore.domain.sale_line_item import SaleLineItem
 from prjstore.domain.abstract_product import AbstractProduct

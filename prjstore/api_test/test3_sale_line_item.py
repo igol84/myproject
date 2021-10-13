@@ -1,7 +1,7 @@
 import unittest
 
-from prjstore.schemas import sale_line_item as schemas
 from prjstore.db import API_DB
+from prjstore.db.schemas import sale_line_item as schemas
 from prjstore.domain.sale_line_item import SaleLineItem
 
 count_rows = 0

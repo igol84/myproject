@@ -1,5 +1,5 @@
 from prjstore.db.api.components.base import APIBase
-from prjstore.schemas import sale as schemas
+from prjstore.db.schemas import sale as schemas
 
 
 class API_Sale(APIBase[schemas.CreateSale, schemas.UpdateSale, schemas.ShowSaleWithSLIs]):

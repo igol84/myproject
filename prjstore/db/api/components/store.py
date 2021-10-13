@@ -1,5 +1,5 @@
 import requests
-from prjstore import schemas
+from prjstore.db import schemas
 from prjstore.domain.product_factory import ProductFactory
 from prjstore.domain.item import Item
 from prjstore.domain.place_of_sale import PlaceOfSale

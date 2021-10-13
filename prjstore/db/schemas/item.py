@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from prjstore.schemas.product import Product
+from prjstore.db.schemas.product import Product
 
 
 class BaseItem(BaseModel):
