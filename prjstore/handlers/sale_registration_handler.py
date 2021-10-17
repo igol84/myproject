@@ -20,7 +20,6 @@ class SaleRegistrationHandler:
     def __init__(self, db=API_DB(), test=False):
         self.db = db
         self._store = Store.create_from_schema(self.db.store.get(id=1))
-        print(self._store.places_of_sale)
         self._sale = Sale()
         if test:
             self._test()
@@ -143,8 +142,10 @@ class SaleRegistrationHandler:
             current_place = self._store.places_of_sale[current_place_of_sale_id]
             current_place.sale = self._sale
             self._sale.completed()
-            self.db.sale.create(sale=self._sale)
-            return True
+            pd_sale = self._sale.schema_create(place_id=current_place_of_sale_id)
+            if sale:=self.db.sale.create(pd_sale):
+
+                return sale
         return False
 
 

@@ -176,3 +176,16 @@ class Sale:
         seller = Seller.create_from_schema(schema.seller)
         list_sli = [SaleLineItem.create_from_schema(sli) for sli in schema.sale_line_items]
         return Sale(id=schema.id, seller=seller, list_sli=list_sli, date_time=schema.date_time)
+
+    @validate_arguments
+    def schema_create(self, place_id: int) -> schemas.sale.CreateSale:
+        sli_pd_list = [schemas.sale.CreateSaleLineItemForSale(qty=sli.qty, item_id=sli.item.id,
+                                                              sale_price=sli.sale_price.amount)
+                       for sli in self.list_sli]
+        return schemas.sale.CreateSale(place_id=place_id, seller_id=self.seller.id, date_time=self.date_time,
+                                       sale_line_items=sli_pd_list)
+
+    @validate_arguments
+    def schema_update(self, place_id: int) -> schemas.sale.UpdateSale:
+        return schemas.sale.UpdateSale(id=self.id, place_id=place_id, seller_id=self.seller.id,
+                                       date_time=self.date_time, sale_line_items=self.list_sli)

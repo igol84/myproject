@@ -128,7 +128,7 @@ class SaleForm(QWidget):
         current_seller_id = self.ui.combo_box_seller.currentData()
         if self.handler.end_sale(current_data, current_place_of_sale_id, current_seller_id):
             QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec_()
-            self.close()
+            # self.close()
         else:
             warning_texts = []
             if not self.ui.combo_box_place_of_sale.currentText():
