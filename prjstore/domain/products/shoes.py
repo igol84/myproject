@@ -3,6 +3,7 @@ from typing import Union, Optional
 from pydantic import validate_arguments
 from pydantic.dataclasses import dataclass
 
+from prjstore.db import schemas
 from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.products.shoes_components import Width
 from util.money import Money
@@ -46,3 +47,8 @@ class Shoes(AbstractProduct):
                 self.width = Shoes.widths[width]
             else:
                 raise ValueError('Dont find width: ', width)
+
+    def schema_create(self) -> schemas.product.Product:
+        shoes = schemas.shoes.Shoes(id=self.prod_id, color=self.color, size=self.size, length=self.length_of_insole,
+                                    width=self.width.name)
+        return super().schema_create(shoes=shoes)

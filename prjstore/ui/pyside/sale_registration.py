@@ -4,11 +4,11 @@ from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonB
 from PySide2.QtCore import QDate
 
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
-from prjstore.db.schemas.item import ViewItem
 from prjstore.ui.pyside.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration_components.sale_registration_product import ItemFrame
 from prjstore.ui.pyside.sale_registration_components.sale_registration_sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration_ui import Ui_Form
+from prjstore.ui.schemas.sale_registration import ViewItem
 
 
 class SaleForm(QWidget):
@@ -128,7 +128,7 @@ class SaleForm(QWidget):
         current_seller_id = self.ui.combo_box_seller.currentData()
         if self.handler.end_sale(current_data, current_place_of_sale_id, current_seller_id):
             QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec_()
-            # self.close()
+            self.close()
         else:
             warning_texts = []
             if not self.ui.combo_box_place_of_sale.currentText():
@@ -142,6 +142,6 @@ class SaleForm(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = SaleForm(test=False)
+    w = SaleForm(test=True)
     w.show()
     sys.exit(app.exec_())
