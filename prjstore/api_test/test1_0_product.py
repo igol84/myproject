@@ -2,6 +2,7 @@ import unittest
 
 from prjstore.db import API_DB, schemas
 from prjstore.domain.product_factory import ProductFactory
+from util.money import Money
 
 count_rows = 0
 db = API_DB()
@@ -24,8 +25,8 @@ class TestProduct(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        pd_product = schemas.product.CreateProduct(type="", name="book", price=10)
-        new_product = ProductFactory.create_from_schema(db.product.create(pd_product))
+        product = ProductFactory.create(prod_id='01', name='book', price=Money(amount=10))
+        new_product = ProductFactory.create_from_schema(db.product.create(product.schema_create()))
         cls.obj_id = new_product.prod_id
 
     def test_case01_get(self):

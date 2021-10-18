@@ -10,7 +10,7 @@ class TestSale(TestCase):
     def setUp(self) -> None:
         self.items = []
         TestItem.setUp(self)
-        self.sale = Sale(Seller(1, 'Igor'))
+        self.sale = Sale(seller=Seller(1, 'Igor'))
         self.sale.add_line_item(self.items[1])
         self.sale.add_line_item(self.items[4], qty=2)
         self.sale.add_line_item(self.items[2], sale_price=200)

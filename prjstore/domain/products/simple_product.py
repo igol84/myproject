@@ -1,5 +1,4 @@
 from pydantic.dataclasses import dataclass
-
 from prjstore.domain.abstract_product import AbstractProduct
 
 

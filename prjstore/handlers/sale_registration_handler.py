@@ -12,7 +12,7 @@ from prjstore.domain.test.test_item import TestItem
 from prjstore.domain.test.test_place_of_sale import TestPlaceOfSale
 from prjstore.domain.test.test_products_catalog import TestProductCatalog
 from prjstore.domain.test.test_seller import TestSeller
-from prjstore.db.schemas.item import ViewItem
+from prjstore.ui.schemas.sale_registration import ViewItem
 from util.money import Money
 
 
@@ -46,7 +46,7 @@ class SaleRegistrationHandler:
     def get_store_items(self, search: Optional[str] = None) -> dict[str, ViewItem]:
         items: dict[int: Item] = self._store.items if not search else self.search_items(search)
         items = collections.OrderedDict(sorted(items.items()))
-        products: dict[str, ViewItem] = {}
+        products: dict[str: ViewItem] = {}
         for item_ in items.values():
             if item_.product.prod_id not in products:
                 products[item_.product.prod_id] = ViewItem(
@@ -61,8 +61,8 @@ class SaleRegistrationHandler:
         return products
 
     @validate_arguments
-    def get_sale_line_items(self) -> dict[tuple[str, float], ViewItem]:
-        products: dict[tuple[str, float], ViewItem] = {}
+    def get_sale_line_items(self) -> dict[tuple[str, float]: ViewItem]:
+        products: dict[tuple[str, float]: ViewItem] = {}
         for sli in self._sale.list_sli:
             if (sli.item.product.prod_id, sli.sale_price.amount) not in products:
                 products[sli.item.product.prod_id, sli.sale_price.amount] = ViewItem(
@@ -144,7 +144,6 @@ class SaleRegistrationHandler:
             self._sale.completed()
             pd_sale = self._sale.schema_create(place_id=current_place_of_sale_id)
             if sale:=self.db.sale.create(pd_sale):
-
                 return sale
         return False
 

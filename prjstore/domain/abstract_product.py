@@ -3,6 +3,7 @@ from typing import Union, Optional, Protocol
 from pydantic import validate_arguments
 from pydantic.dataclasses import dataclass
 
+from prjstore.db import schemas
 from util.currency import Currency
 from util.money import Money, Decimal
 
@@ -38,3 +39,7 @@ class AbstractProduct(Protocol):
                 self.price.currency = currency
             elif isinstance(currency, Currency):
                 self.price.currency = currency
+
+    def schema_create(self, **kwargs) -> schemas.product.Product:
+        return schemas.product.Product(id=self.prod_id, type=self.product_type, name=self.name, price=self.price.amount,
+                                       **kwargs)
