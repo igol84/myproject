@@ -23,4 +23,4 @@ class Item:
     def schema_create(self, store_id: int) -> schemas.item.ShowItemWithProduct:
         product = self.product.schema_create()
         return schemas.item.ShowItemWithProduct(id=self.id, prod_id=self.product.prod_id, store_id=store_id,
-                                                qty=self.qty, buy_price=self.buy_price, product=product)
+                                                qty=self.qty, buy_price=self.buy_price.amount, product=product)

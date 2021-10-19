@@ -12,7 +12,8 @@ from prjstore.domain.test.test_item import TestItem
 from prjstore.domain.test.test_place_of_sale import TestPlaceOfSale
 from prjstore.domain.test.test_products_catalog import TestProductCatalog
 from prjstore.domain.test.test_seller import TestSeller
-from prjstore.ui.schemas.sale_registration import ViewItem
+from prjstore.ui.schemas.sale_registration import ViewProduct, create_product_schemas_by_items, \
+    create_sli_schemas_by_items
 from util.money import Money
 
 
@@ -43,38 +44,15 @@ class SaleRegistrationHandler:
         self._store.items[1].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
 
     @validate_arguments
-    def get_store_items(self, search: Optional[str] = None) -> dict[str, ViewItem]:
+    def get_store_items(self, search: Optional[str] = None) -> dict[str, ViewProduct]:
         items: dict[int: Item] = self._store.items if not search else self.search_items(search)
-        items = collections.OrderedDict(sorted(items.items()))
-        products: dict[str: ViewItem] = {}
-        for item_ in items.values():
-            if item_.product.prod_id not in products:
-                products[item_.product.prod_id] = ViewItem(
-                    prod_id=item_.product.prod_id,
-                    name=item_.product.name,
-                    price=item_.product.price.amount,
-                    price_format=item_.product.price.format(),
-                    qty=item_.qty
-                )
-            else:
-                products[item_.product.prod_id].qty += item_.qty
-        return products
+        print(items)
+        products = create_product_schemas_by_items(items)
+        return collections.OrderedDict(sorted(products.items()))
 
     @validate_arguments
-    def get_sale_line_items(self) -> dict[tuple[str, float]: ViewItem]:
-        products: dict[tuple[str, float]: ViewItem] = {}
-        for sli in self._sale.list_sli:
-            if (sli.item.product.prod_id, sli.sale_price.amount) not in products:
-                products[sli.item.product.prod_id, sli.sale_price.amount] = ViewItem(
-                    prod_id=sli.item.product.prod_id,
-                    name=sli.item.product.name,
-                    price=sli.sale_price.amount,
-                    price_format=sli.sale_price.format(),
-                    qty=sli.qty
-                )
-            else:
-                products[sli.item.product.prod_id, sli.sale_price.amount].qty += sli.qty
-        return products
+    def get_sale_line_items(self) -> dict[tuple[str, float]: ViewProduct]:
+        return create_sli_schemas_by_items(self._sale.list_sli)
 
     @validate_arguments
     def search_items(self, text: str) -> dict[str: Item]:
@@ -143,7 +121,7 @@ class SaleRegistrationHandler:
             current_place.sale = self._sale
             self._sale.completed()
             pd_sale = self._sale.schema_create(place_id=current_place_of_sale_id)
-            if sale:=self.db.sale.create(pd_sale):
+            if sale := self.db.sale.create(pd_sale):
                 return sale
         return False
 
