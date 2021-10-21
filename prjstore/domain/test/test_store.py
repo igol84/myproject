@@ -58,7 +58,6 @@ class Test_Store(TestStore):
         item = self.store.items[1]
         self.assertEqual(str([item.product.name, item.qty, item.buy_price.amount]), "['item1', 1, 40.0]")
         self.store.add_item(item=item, qty=5)
-        print(self.store.items[1])
         self.assertEqual(item.qty, 6)
 
     def test_08_add_new_item(self):

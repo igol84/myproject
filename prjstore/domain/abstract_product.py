@@ -10,8 +10,8 @@ from util.money import Money, Decimal
 
 @dataclass
 class AbstractProduct(Protocol):
-    prod_id: str
-    product_type: str
+    prod_id: str = None
+    product_type: str = 'product'
     name: str = 'item'
     price: Money = Money(0)
 
@@ -40,6 +40,9 @@ class AbstractProduct(Protocol):
             elif isinstance(currency, Currency):
                 self.price.currency = currency
 
-    def schema_create(self, **kwargs) -> schemas.product.Product:
+    def schema_create(self, **kwargs):
         return schemas.product.Product(id=self.prod_id, type=self.product_type, name=self.name, price=self.price.amount,
                                        **kwargs)
+
+    def copy(self) -> 'AbstractProduct':
+        ...

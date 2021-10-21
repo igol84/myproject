@@ -38,3 +38,10 @@ class Test_SimpleProduct(TestSimpleProduct):
         self.assertEqual(str(self.simple_product.price.amount), '29.0')
         self.simple_product.edit(currency='UAH')
         self.assertEqual(str(self.simple_product.price.currency.code), 'UAH')
+
+    def test_04_clone(self):
+        clone_product = self.simple_product.copy()
+        self.assertNotEqual(clone_product.prod_id, self.simple_product.prod_id)
+        self.assertEqual(clone_product.name, self.simple_product.name)
+        self.assertEqual(clone_product.price, self.simple_product.price)
+        self.assertEqual(clone_product.product_type, self.simple_product.product_type)

@@ -20,7 +20,7 @@ class Shoes(AbstractProduct):
     color: str = None
     size: float = None
     length_of_insole: float = None
-    width: Width = widths['Medium']
+    width: Width = None
 
     ###############################################################################################
     @validate_arguments
@@ -52,3 +52,7 @@ class Shoes(AbstractProduct):
         shoes = schemas.shoes.Shoes(id=self.prod_id, color=self.color, size=self.size, length=self.length_of_insole,
                                     width=self.width.name)
         return super().schema_create(shoes=shoes)
+
+    def copy(self, prod_id=None) -> 'Shoes':
+        return Shoes(prod_id=prod_id, product_type=self.product_type, name=self.name, price=self.price,
+                     color=self.color, size=self.size, length_of_insole=self.length_of_insole, width=self.width)

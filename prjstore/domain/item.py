@@ -9,8 +9,8 @@ from util.money import Money
 
 @dataclass
 class Item:
-    id: int
     product: AbstractProduct
+    id: int = None
     qty: conint(ge=0) = 1
     buy_price: Money = Money(0)
 

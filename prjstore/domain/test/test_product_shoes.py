@@ -44,3 +44,17 @@ class Test_Shoes(TestShoes):
         self.assertEqual(str(self.shoes.size), '44.5')
         self.assertEqual(str(self.shoes.length_of_insole), '28.5')
         self.assertEqual(str(self.shoes.width.name), 'Medium')
+
+    def test_04_clone(self):
+        clone_shoes = self.shoes.copy(prod_id='111')
+        self.assertNotEqual(clone_shoes, self.shoes)
+        self.assertNotEqual(clone_shoes.prod_id, self.shoes.prod_id)
+        self.assertEqual(clone_shoes.name, self.shoes.name)
+        self.assertEqual(clone_shoes.price, self.shoes.price)
+        self.assertEqual(clone_shoes.product_type, self.shoes.product_type)
+        self.assertEqual(clone_shoes.color, self.shoes.color)
+        self.assertEqual(clone_shoes.size, self.shoes.size)
+        clone_shoes.size = 46
+        self.assertNotEqual(clone_shoes.size, self.shoes.size)
+        self.assertEqual(clone_shoes.length_of_insole, self.shoes.length_of_insole)
+        self.assertEqual(clone_shoes.width, self.shoes.width)
