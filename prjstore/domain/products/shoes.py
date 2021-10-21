@@ -20,7 +20,7 @@ class Shoes(AbstractProduct):
     color: str = None
     size: float = None
     length_of_insole: float = None
-    width: Width = None
+    width: Width = widths['Medium']
 
     ###############################################################################################
     @validate_arguments

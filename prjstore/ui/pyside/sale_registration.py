@@ -3,21 +3,24 @@ import sys
 from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
 from PySide2.QtCore import QDate
 
+from prjstore.db import API_DB
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 from prjstore.ui.pyside.qt_utils import clearLayout
-from prjstore.ui.pyside.sale_registration_components.sale_registration_product import ItemFrame
-from prjstore.ui.pyside.sale_registration_components.sale_registration_sli import SLI_Frame
-from prjstore.ui.pyside.sale_registration_ui import Ui_Form
-from prjstore.ui.schemas.sale_registration import ViewProduct
+from prjstore.ui.pyside.sale_registration.components.sale_registration_product import ItemFrame
+from prjstore.ui.pyside.sale_registration.components.sale_registration_sli import SLI_Frame
+from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
+from prjstore.ui.pyside.sale_registration.schemas import ViewProduct
 
 
 class SaleForm(QWidget):
-    def __init__(self, test=False):
+    def __init__(self, db=None, test=False):
         super().__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.resize(1200, 600)
-        self.handler = SaleRegistrationHandler(test=test)
+        if not test and db is None:
+            db = API_DB()
+        self.handler = SaleRegistrationHandler(test=test, db=db)
         self.items: dict[str, ViewProduct] = None
         self.sli_list: dict[tuple[str, float]: ViewProduct] = self.handler.get_sale_line_items()
         self.selected_sli_widget: SLI_Frame = None

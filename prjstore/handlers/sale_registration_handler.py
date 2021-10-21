@@ -1,54 +1,38 @@
 import datetime
-import collections
+from collections import OrderedDict
+from pprint import pprint
 from typing import Optional
-
 from pydantic import validate_arguments
 
 from prjstore.db import API_DB
 from prjstore.domain.store import Store
 from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
-from prjstore.domain.test.test_item import TestItem
-from prjstore.domain.test.test_place_of_sale import TestPlaceOfSale
-from prjstore.domain.test.test_products_catalog import TestProductCatalog
-from prjstore.domain.test.test_seller import TestSeller
-from prjstore.ui.schemas.sale_registration import ViewProduct, create_product_schemas_by_items, \
-    create_sli_schemas_by_items
-from util.money import Money
+from prjstore.handlers.data_for_test.sale_registration import put_test_data
+
+from prjstore.ui.pyside.sale_registration.schemas import (
+    ViewProduct, create_product_schemas_by_items, create_sli_schemas_by_items
+)
 
 
 class SaleRegistrationHandler:
-    def __init__(self, db=API_DB(), test=False):
+    def __init__(self, db: API_DB, test=False):
         self.db = db
-        self._store = Store.create_from_schema(self.db.store.get(id=1))
         self._sale = Sale()
+        self.test_mode = test
         if test:
-            self._test()
-
-    def _test(self):
-        test = TestProductCatalog()
-        test.setUp()
-        self._store.pc = test.pc
-        test = TestItem()
-        test.setUp()
-        self._store.items = test.items
-        test = TestSeller()
-        test.setUp()
-        self._store.sellers = test.sellers
-        test = TestPlaceOfSale()
-        test.setUp(sale=False)
-        self._store.places_of_sale = test.places_of_sale
-        self._store.places_of_sale[1].sale = None
-        self._store.items[1].qty = 150
-        self._store.items[1].product.price = Money(10500)
-        self._store.items[1].product.name = 'Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!'
+            self._store = Store(id=1, name='test')
+            put_test_data(self)
+        else:
+            self._store = Store.create_from_schema(self.db.store.get(id=1))
 
     @validate_arguments
     def get_store_items(self, search: Optional[str] = None) -> dict[str, ViewProduct]:
         items: dict[int: Item] = self._store.items if not search else self.search_items(search)
         print(items)
         products = create_product_schemas_by_items(items)
-        return collections.OrderedDict(sorted(products.items()))
+        pprint(products)
+        return OrderedDict(sorted(products.items()))
 
     @validate_arguments
     def get_sale_line_items(self) -> dict[tuple[str, float]: ViewProduct]:
@@ -121,8 +105,10 @@ class SaleRegistrationHandler:
             current_place.sale = self._sale
             self._sale.completed()
             pd_sale = self._sale.schema_create(place_id=current_place_of_sale_id)
-            if sale := self.db.sale.create(pd_sale):
-                return sale
+            if self.test_mode:
+                return True
+            if self.db.sale.create(pd_sale):
+                return True
         return False
 
 
