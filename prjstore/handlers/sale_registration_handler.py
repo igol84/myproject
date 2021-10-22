@@ -1,5 +1,6 @@
 import datetime
 from collections import OrderedDict
+from pprint import pprint
 from typing import Optional
 from pydantic import validate_arguments
 
@@ -29,7 +30,8 @@ class SaleRegistrationHandler:
     def get_store_items(self, search: Optional[str] = None) -> dict[str, ViewProduct]:
         items: dict[int: Item] = self._store.items if not search else self.search_items(search)
         products = create_product_schemas_by_items(items)
-        return OrderedDict(sorted(products.items()))
+        pprint(list(reversed(sorted(products.items()))))
+        return OrderedDict(reversed(sorted(products.items())))
 
     @validate_arguments
     def get_sale_line_items(self) -> dict[tuple[str, float]: ViewProduct]:
@@ -37,10 +39,7 @@ class SaleRegistrationHandler:
 
     @validate_arguments
     def search_items(self, text: str) -> dict[str: Item]:
-        items = self._store.search_items_by_name(name=text)
-        if text in self._store.items:  # search_items_by_id
-            items[text] = self._store.items[text]
-        return items
+        return self._store.search_items(value=text, fields={'name', 'prod_id'})
 
     @validate_arguments
     def put_on_sale(self, pr_id: str, qty: int, sale_price: float = None) -> None:

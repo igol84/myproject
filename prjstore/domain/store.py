@@ -31,11 +31,11 @@ class Store:
         raise IndexError(f"Invalid product id: {pr_id}")
 
     @validate_arguments
-    def search_items_by_name(self, name: str = None) -> dict[int: Item]:
+    def search_items(self, value: str, fields: set[str]) -> dict[int: Item]:
         items = {}
-        if name:
+        for field in fields:
             for it_id, item in self.items.items():
-                if name.lower() in item.product.name.lower():
+                if value.lower() in getattr(item.product, field).lower():
                     items[it_id] = item
         return items
 

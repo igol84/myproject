@@ -15,7 +15,7 @@ class ViewShoes(BaseModel):
 
 
 class ViewProduct(BaseModel):
-    prod_id: int
+    prod_id: str
     name: str
     price: float
     price_format: str
