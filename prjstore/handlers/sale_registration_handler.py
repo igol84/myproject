@@ -30,8 +30,12 @@ class SaleRegistrationHandler:
     def get_store_items(self, search: Optional[str] = None) -> dict[str, ViewProduct]:
         items: dict[int: Item] = self._store.items if not search else self.search_items(search)
         products = create_product_schemas_by_items(items)
-        pprint(list(reversed(sorted(products.items()))))
-        return OrderedDict(reversed(sorted(products.items())))
+        sorted_products = OrderedDict(sorted(products.items(), reverse=True))
+        sorted_products = sorted(sorted_products.items(), key=lambda k: (
+            k[1].name, k[1].price, getattr(k[1].shoes, 'color', None), getattr(k[1].shoes, 'width_of_insole', None),
+            getattr(k[1].shoes, 'size', None)))
+        pprint(OrderedDict(sorted_products))
+        return OrderedDict(sorted_products)
 
     @validate_arguments
     def get_sale_line_items(self) -> dict[tuple[str, float]: ViewProduct]:

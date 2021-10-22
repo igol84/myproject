@@ -18,11 +18,11 @@ pc.set_product(ProductFactory.create(
     length_of_insole=28.5
 ))
 pc.set_product(ProductFactory.create(
-    product_type='shoes', prod_id='05', name='nike air force', price=Money(1200), color='red', size=42,
+    product_type='shoes', prod_id='05', name='nike air force мех', price=Money(1200), color='red', size=42,
     length_of_insole=27, width=Shoes.widths['Medium']
 ))
-pc.set_product(pc['04'].copy('06'))
-pc['06'].size = 44
+pc.set_product(pc['05'].copy('06'))
+pc['06'].color = 'white'
 pc.set_product(pc['05'].copy('07'))
 pc['07'].size = 44
 pc['07'].length_of_insole = 28.5

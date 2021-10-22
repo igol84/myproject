@@ -12,6 +12,13 @@ class ViewShoes(BaseModel):
     color: Optional[str] = None
     length: Optional[float] = None
     width: Optional[str] = None
+    width_of_insole: Optional[float] = None
+
+    def __lt__(self, other: 'ViewShoes'):
+        return True if self.size < other.size else False
+
+    def __gt__(self, other: 'ViewShoes'):
+        return True if self.size > other.size else False
 
 
 class ViewProduct(BaseModel):
@@ -30,9 +37,10 @@ def create_product_schemas_by_items(items: dict[int: Item]) -> dict[str: ViewPro
         if item_.product.prod_id not in products:
             shoes = None
             if item_.product.product_type == 'shoes' and isinstance(item_.product, Shoes):
-                width = item_.product.width.short_name if item_.product.width else None
+                width = getattr(item_.product.width, 'short_name', None)
+                width_of_insole = getattr(item_.product.width, 'width_of_insole', None)
                 shoes = ViewShoes(size=item_.product.size, color=item_.product.color,
-                                  length=item_.product.length_of_insole, width=width)
+                                  length=item_.product.length_of_insole, width=width, width_of_insole=width_of_insole)
             products[item_.product.prod_id] = ViewProduct(
                 prod_id=item_.product.prod_id,
                 type=item_.product.product_type,
@@ -52,9 +60,10 @@ def create_sli_schemas_by_items(list_sli: list[SaleLineItem]) -> dict[str: ViewP
     for sli in list_sli:
         shoes = None
         if sli.item.product.product_type == 'shoes' and isinstance(sli.item.product, Shoes):
-            width = sli.item.product.width.short_name if sli.item.product.width else None
+            width = getattr(sli.item.product.width, 'short_name', None)
+            width_of_insole = getattr(sli.item.product.width, 'width_of_insole', None)
             shoes = ViewShoes(size=sli.item.product.size, color=sli.item.product.color,
-                              length=sli.item.product.length_of_insole, width=width)
+                              length=sli.item.product.length_of_insole, width=width, width_of_insole=width_of_insole)
         if (sli.item.product.prod_id, sli.sale_price.amount) not in products:
             products[sli.item.product.prod_id, sli.sale_price.amount] = ViewProduct(
                 prod_id=sli.item.product.prod_id,

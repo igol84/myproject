@@ -12,9 +12,9 @@ from util.money import Money
 @dataclass
 class Shoes(AbstractProduct):
     widths = {
-        'Medium': Width(name='Medium', short_name='D'),
-        'Wide': Width(name='Wide', short_name='EE'),
-        'Extra Wide': Width(name='Extra Wide', short_name='4E')
+        'Medium': Width(name='Medium', short_name='D', width_of_insole=10),
+        'Wide': Width(name='Wide', short_name='EE', width_of_insole=12),
+        'Extra Wide': Width(name='Extra Wide', short_name='4E', width_of_insole=13)
     }
     product_type: str = 'shoes'
     color: str = None
