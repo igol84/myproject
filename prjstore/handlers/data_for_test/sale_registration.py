@@ -8,7 +8,8 @@ from util.money import Money
 
 pc = ProductCatalog()
 pc.set_product(ProductFactory.create(prod_id='04', name='sim prod', price=Money(25)))
-pc.set_product(ProductFactory.create(prod_id='02', name='sim prod', price=Money(25)))
+pc.set_product(ProductFactory.create(prod_id='02', name='battery', price=Money(25)))
+
 pc.set_product(ProductFactory.create(
     product_type='shoes', prod_id='03', name='nike air force', price=Money(900), color='red', size=43,
     length_of_insole=28

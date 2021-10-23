@@ -1,7 +1,6 @@
 import datetime
-from collections import OrderedDict
 from pprint import pprint
-from typing import Optional
+from typing import Optional, Union
 from pydantic import validate_arguments
 
 from prjstore.db import API_DB
@@ -11,12 +10,12 @@ from prjstore.domain.sale import Sale
 from prjstore.handlers.data_for_test.sale_registration import put_test_data
 
 from prjstore.ui.pyside.sale_registration.schemas import (
-    ViewProduct, create_product_schemas_by_items, create_sli_schemas_by_items
+    ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items, ViewShoes, ViewProduct
 )
 
 
 class SaleRegistrationHandler:
-    def __init__(self, db: API_DB, test=False):
+    def __init__(self, db: API_DB = None, test=False):
         self.db = db
         self._sale = Sale()
         self.test_mode = test
@@ -27,18 +26,12 @@ class SaleRegistrationHandler:
             self._store = Store.create_from_schema(self.db.store.get(id=1))
 
     @validate_arguments
-    def get_store_items(self, search: Optional[str] = None) -> dict[str, ViewProduct]:
-        items: dict[int: Item] = self._store.items if not search else self.search_items(search)
-        products = create_product_schemas_by_items(items)
-        sorted_products = OrderedDict(sorted(products.items(), reverse=True))
-        sorted_products = sorted(sorted_products.items(), key=lambda k: (
-            k[1].name, k[1].price, getattr(k[1].shoes, 'color', None), getattr(k[1].shoes, 'width_of_insole', None),
-            getattr(k[1].shoes, 'size', None)))
-        pprint(OrderedDict(sorted_products))
-        return OrderedDict(sorted_products)
+    def get_store_items(self, search: Optional[str] = None) -> list[Union[ViewProduct, ViewShoes]]:
+        products: dict[int: Item] = self._store.items if not search else self.search_items(search)
+        return create_product_schemas_by_items(products)
 
     @validate_arguments
-    def get_sale_line_items(self) -> dict[tuple[str, float]: ViewProduct]:
+    def get_sale_line_items(self) -> dict[tuple[str, float]: ModelProduct]:
         return create_sli_schemas_by_items(self._sale.list_sli)
 
     @validate_arguments
@@ -114,6 +107,5 @@ class SaleRegistrationHandler:
 
 if __name__ == '__main__':
     handler = SaleRegistrationHandler(test=True)
-
-    for key, item in sorted(handler.get_store_items().items()):
-        print(key, item)
+    for item in handler.get_store_items():
+        pprint(item)

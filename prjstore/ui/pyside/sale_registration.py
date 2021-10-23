@@ -6,10 +6,11 @@ from PySide2.QtCore import QDate
 from prjstore.db import API_DB
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 from prjstore.ui.pyside.qt_utils import clearLayout
-from prjstore.ui.pyside.sale_registration.components.sale_registration_product import ItemFrame
-from prjstore.ui.pyside.sale_registration.components.sale_registration_sli import SLI_Frame
+from prjstore.ui.pyside.sale_registration.components.product import ProductFrame
+from prjstore.ui.pyside.sale_registration.components.shoes import ShoesFrame
+from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
-from prjstore.ui.pyside.sale_registration.schemas import ViewProduct
+from prjstore.ui.pyside.sale_registration.schemas import ModelProduct
 
 
 class SaleForm(QWidget):
@@ -21,10 +22,10 @@ class SaleForm(QWidget):
         if not test and db is None:
             db = API_DB()
         self.handler = SaleRegistrationHandler(test=test, db=db)
-        self.items: dict[str, ViewProduct] = None
-        self.sli_list: dict[tuple[str, float]: ViewProduct] = self.handler.get_sale_line_items()
+        self.items: dict[str, ModelProduct] = None
+        self.sli_list: dict[tuple[str, float]: ModelProduct] = self.handler.get_sale_line_items()
         self.selected_sli_widget: SLI_Frame = None
-        self.selected_item_widget: ItemFrame = None
+        self.selected_item_widget: ProductFrame = None
 
         # SLI ----------------------- left panel ------------------------------
         self.ui.date_edit.setDate(QDate.currentDate())
@@ -84,9 +85,13 @@ class SaleForm(QWidget):
         clearLayout(self.ui.items_layout)
         self.selected_item_widget = None
         self.items = self.handler.get_store_items(search=self.ui.src_items.text())
-        for pr_id, item in self.items.items():
-            item_frame = ItemFrame(self, pr_id, item.name, item.price, item.price_format, item.qty)
-            self.ui.items_layout.addWidget(item_frame)
+        for item in self.items:
+            if item.type == 'shoes':
+                shoes_frame = ShoesFrame(self, item)
+                self.ui.items_layout.addWidget(shoes_frame)
+            else:
+                item_frame = ProductFrame(self, item)
+                self.ui.items_layout.addWidget(item_frame)
         self.ui.items_layout.addStretch(0)
 
     def on_click_scroll_items(self, event):

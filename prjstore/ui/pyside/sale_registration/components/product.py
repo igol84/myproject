@@ -4,8 +4,10 @@ from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QFontMetrics, QFont
 from PySide2.QtWidgets import QWidget, QApplication, QSpinBox, QPushButton, QLabel, QLineEdit
 
+from prjstore.ui.pyside.sale_registration.schemas import ViewProduct
 
-class ItemFrame(QWidget):
+
+class ProductFrame(QWidget):
     default_color_bg = '#E1E1E1'
     default_color_text = '#000'
     color_fon_enter = '#CCC'
@@ -16,14 +18,14 @@ class ItemFrame(QWidget):
     font_family = 'Times'
     font_size = 10
 
-    def __init__(self, parent, pr_id: int, pr_name: str, pr_price: float, pr_price_format: str, pr_qty: int):
+    def __init__(self, parent, item: ViewProduct):
         super().__init__()
         self.__parent_form = parent
-        self.pr_id = pr_id
-        self.pr_name = pr_name
-        self.pr_price = pr_price
-        self.pr_price_format = pr_price_format
-        self.pr_qty = pr_qty
+        self.pr_id = item.prod_id
+        self.pr_name = item.name
+        self.pr_price = item.price
+        self.pr_price_format = item.price_format
+        self.pr_qty = item.qty
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setMinimumSize(self.width_, self.height_)
         self.color_fon = self.default_color_bg
@@ -95,9 +97,7 @@ class ItemFrame(QWidget):
             self.parent_form.selected_item_widget.color_fon = self.default_color_bg
             self.parent_form.selected_item_widget.color_text = self.default_color_text
             self.parent_form.selected_item_widget.update()
-            self.parent_form.selected_item_widget.price_line_edit.hide()
-            self.parent_form.selected_item_widget.qty_box.hide()
-            self.parent_form.selected_item_widget.btn_plus.hide()
+            self.parent_form.selected_item_widget.hide_elements()
         if self.parent_form:
             self.parent_form.selected_item_widget = self
         if self.pr_qty > 1:
@@ -106,6 +106,11 @@ class ItemFrame(QWidget):
         self.btn_plus.show()
         self.price_line_edit.setFocus()
         self.price_line_edit.selectAll()
+
+    def hide_elements(self):
+        self.price_line_edit.hide()
+        self.qty_box.hide()
+        self.btn_plus.hide()
 
     def enterEvent(self, a0: QtCore.QEvent) -> None:
         if self.parent_form and self.parent_form.selected_item_widget is not self:
@@ -154,7 +159,7 @@ class QtyBox(QSpinBox):
     def __init__(self, parent):
         super().__init__(parent)
         font = self.font()
-        font.setPointSize(ItemFrame.font_size)
+        font.setPointSize(ProductFrame.font_size)
         self.setFont(font)
 
     def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:
@@ -169,7 +174,7 @@ class LineEditPrice(QLineEdit):
     def __init__(self, text, parent):
         super().__init__(text, parent)
         font = self.font()
-        font.setPointSize(ItemFrame.font_size)
+        font.setPointSize(ProductFrame.font_size)
         self.setFont(font)
         self.setFixedWidth(75)
         validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]{1,7}[.]*[0-9]{0,2}"))
@@ -178,7 +183,7 @@ class LineEditPrice(QLineEdit):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = ItemFrame(parent=None, pr_id=2, pr_name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
-                  pr_price=1600, pr_price_format='1600 грн.', pr_qty=3)
+    w = ProductFrame(parent=None, pr_id=2, pr_name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
+                     pr_price=1600, pr_price_format='1600 грн.', pr_qty=3)
     w.show()
     sys.exit(app.exec_())
