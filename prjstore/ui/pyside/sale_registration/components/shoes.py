@@ -2,12 +2,12 @@ import sys
 
 from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QFontMetrics, QFont
-from PySide2.QtWidgets import QWidget, QApplication, QLabel, QLineEdit
+from PySide2.QtWidgets import QWidget, QApplication, QLabel, QLineEdit, QFrame
 
-from prjstore.ui.pyside.sale_registration.schemas import ViewShoes
+from prjstore.ui.pyside.sale_registration.schemas import ViewShoes, ViewSize, ViewWidth, ViewColor
 
 
-class ShoesFrame(QWidget):
+class ShoesFrame(QFrame):
     default_color_bg = '#E1E1E1'
     default_color_text = '#000'
     color_fon_enter = '#CCC'
@@ -26,6 +26,8 @@ class ShoesFrame(QWidget):
         self.pr_price_format = ''
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setMinimumSize(self.width_, self.height_)
+        self.setFixedHeight(self.height_)
+        self.setFrameStyle(QFrame.Panel | QFrame.Raised)
         self.color_fon = self.default_color_bg
         self.color_text = self.default_color_text
         text_item_description = f'{self.pr_name}'
@@ -44,7 +46,7 @@ class ShoesFrame(QWidget):
     def sizeHint(self):
         return QtCore.QSize(self.width_, self.height_)
 
-    def paintEvent(self, e):
+    def paintEvent(self, event: QtGui.QPaintEvent) -> None:
         painter = QtGui.QPainter(self)
         brush = QtGui.QBrush()
         brush.setColor(QtGui.QColor(self.color_fon))
@@ -55,7 +57,7 @@ class ShoesFrame(QWidget):
         pen = painter.pen()
         pen.setColor(QtGui.QColor('#555'))
         painter.setPen(pen)
-        painter.drawRect(-1, -1, painter.device().width() - 1, painter.device().height() - 1)
+        # painter.drawRect(-1, -1, painter.device().width() - 1, painter.device().height() - 1)
 
         pen.setColor(QtGui.QColor(self.color_text))
         painter.setPen(pen)
@@ -67,6 +69,7 @@ class ShoesFrame(QWidget):
         painter.drawText(self.width() - 100, 20, text_item_price)
         self.price_line_edit.move(self.width() - 100, 4)
         painter.end()
+        return QFrame.paintEvent(self, event)
 
     # on click on this widget
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
@@ -128,8 +131,48 @@ class LineEditPrice(QLineEdit):
 
 
 if __name__ == "__main__":
+    from PySide2.QtWidgets import QVBoxLayout
     app = QApplication(sys.argv)
-    w = ShoesFrame(parent=None, pr_id=2, pr_name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
-                   pr_price=1600, pr_price_format='1600 грн.', pr_qty=3)
-    w.show()
+
+    red_E_sizes = [
+        ViewSize(prod_id='2', size=43, price=4000, price_format='4.000грн', qty=5),
+        ViewSize(prod_id='3', size=44, price=4000, price_format='4.000грн', qty=2),
+        ViewSize(prod_id='4', size=45, price=2000, price_format='2.000грн', qty=1),
+    ]
+    red_D_sizes = [
+        ViewSize(prod_id='5', size=41, price=4000, price_format='3.000грн', qty=1),
+        ViewSize(prod_id='6', size=42, price=4000, price_format='2.000грн', qty=2),
+        ViewSize(prod_id='7', size=43, price=2000, price_format='2.000грн', qty=1),
+        ViewSize(prod_id='8', size=44, price=2000, price_format='2.000грн', qty=1),
+    ]
+    red_widths = [
+        ViewWidth(width='E', sizes=red_E_sizes),
+        ViewWidth(width='D', sizes=red_D_sizes),
+    ]
+    black_E_sizes = [
+        ViewSize(prod_id='9', size=43, price=4000, price_format='4.000грн', qty=5),
+        ViewSize(prod_id='10', size=44, price=4000, price_format='4.000грн', qty=2),
+        ViewSize(prod_id='11', size=40, price=2000, price_format='2.000грн', qty=1),
+        ViewSize(prod_id='12', size=41, price=4000, price_format='3.000грн', qty=1),
+        ViewSize(prod_id='13', size=42, price=4000, price_format='2.000грн', qty=2),
+
+    ]
+    black_D_sizes = [
+        ViewSize(prod_id='14', size=43, price=2000, price_format='2.000грн', qty=1),
+        ViewSize(prod_id='15', size=44, price=2000, price_format='2.000грн', qty=1),
+    ]
+    black_widths = [
+        ViewWidth(width='E', sizes=black_E_sizes),
+        ViewWidth(width='D', sizes=black_D_sizes),
+    ]
+    colors = [
+        ViewColor(color='red', widths=red_widths),
+        ViewColor(color='black', widths=black_widths),
+    ]
+    item = ViewShoes(name='Кеды Converse Chuck 70 высокие', colors=colors)
+    win = QWidget()
+    v_box = QVBoxLayout(win)
+    frame = ShoesFrame(parent=None, item=item)
+    v_box.addWidget(frame)
+    win.show()
     sys.exit(app.exec_())

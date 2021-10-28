@@ -53,7 +53,7 @@ class ViewColor(BaseModel):
 
 
 class ViewShoes(BaseModel):
-    type: str
+    type: str = 'shoes'
     name: str
     colors: list[ViewColor]
 

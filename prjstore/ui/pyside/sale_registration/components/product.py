@@ -2,12 +2,12 @@ import sys
 
 from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QFontMetrics, QFont
-from PySide2.QtWidgets import QWidget, QApplication, QSpinBox, QPushButton, QLabel, QLineEdit
+from PySide2.QtWidgets import QWidget, QApplication, QSpinBox, QPushButton, QLabel, QLineEdit, QFrame
 
 from prjstore.ui.pyside.sale_registration.schemas import ViewProduct
 
 
-class ProductFrame(QWidget):
+class ProductFrame(QFrame):
     default_color_bg = '#E1E1E1'
     default_color_text = '#000'
     color_fon_enter = '#CCC'
@@ -28,6 +28,8 @@ class ProductFrame(QWidget):
         self.pr_qty = item.qty
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setMinimumSize(self.width_, self.height_)
+        self.setFixedHeight(self.height_)
+        self.setFrameStyle(QFrame.Panel | QFrame.Raised)
         self.color_fon = self.default_color_bg
         self.color_text = self.default_color_text
         text_item_description = f'{self.pr_id}:{self.pr_name}'
@@ -54,7 +56,7 @@ class ProductFrame(QWidget):
     def sizeHint(self):
         return QtCore.QSize(self.width_, self.height_)
 
-    def paintEvent(self, e):
+    def paintEvent(self, event: QtGui.QPaintEvent):
         self.qty_box.move(self.width() - self.qty_box.width() - 3 - self.btn_plus.width() - 10, 4)
         self.btn_plus.move(self.width() - self.btn_plus.width() - 3, 3)
         painter = QtGui.QPainter(self)
@@ -67,7 +69,6 @@ class ProductFrame(QWidget):
         pen = painter.pen()
         pen.setColor(QtGui.QColor('#555'))
         painter.setPen(pen)
-        painter.drawRect(-1, -1, painter.device().width() - 1, painter.device().height() - 1)
 
         pen.setColor(QtGui.QColor(self.color_text))
         painter.setPen(pen)
@@ -84,6 +85,8 @@ class ProductFrame(QWidget):
         self.price_line_edit.move(self.width() - 211, 4)
         painter.drawText(self.width() - pixels_qty - 85, 20, text_item_qty)
         painter.end()
+        return QFrame.paintEvent(self, event)
+
 
     # on click on this widget
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
@@ -182,8 +185,13 @@ class LineEditPrice(QLineEdit):
 
 
 if __name__ == "__main__":
+    from PySide2.QtWidgets import QVBoxLayout
     app = QApplication(sys.argv)
-    w = ProductFrame(parent=None, pr_id=2, pr_name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
-                     pr_price=1600, pr_price_format='1600 грн.', pr_qty=3)
-    w.show()
+    product = ViewProduct(type='product', prod_id='2', price=1600, price_format='1600 грн.', qty=3,
+                          name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!')
+    win = QWidget()
+    v_box = QVBoxLayout(win)
+    frame = ProductFrame(parent=None, item=product)
+    v_box.addWidget(frame)
+    win.show()
     sys.exit(app.exec_())
