@@ -4,34 +4,22 @@ from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QFontMetrics, QFont
 from PySide2.QtWidgets import QWidget, QApplication, QSpinBox, QPushButton, QLabel, QLineEdit, QFrame
 
+from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame, Item
 from prjstore.ui.pyside.sale_registration.schemas import ViewProduct
 
 
-class ProductFrame(QFrame):
-    default_color_bg = '#E1E1E1'
-    default_color_text = '#000'
-    color_fon_enter = '#CCC'
-    current_color_bg = '#1287A8'
-    current_color_text = '#fff'
-    height_ = 30
-    width_ = 300
-    font_family = 'Times'
-    font_size = 10
+class ProductFrame(ItemFrame, Item):
 
-    def __init__(self, parent, item: ViewProduct):
+    def __init__(self, parent, item_pd: ViewProduct):
         super().__init__()
         self.__parent_form = parent
-        self.pr_id = item.prod_id
-        self.pr_name = item.name
-        self.pr_price = item.price
-        self.pr_price_format = item.price_format
-        self.pr_qty = item.qty
-        self.setCursor(QtCore.Qt.PointingHandCursor)
-        self.setMinimumSize(self.width_, self.height_)
-        self.setFixedHeight(self.height_)
-        self.setFrameStyle(QFrame.Panel | QFrame.Raised)
-        self.color_fon = self.default_color_bg
-        self.color_text = self.default_color_text
+        self.pr_id = item_pd.prod_id
+        self.pr_name = item_pd.name
+        self.pr_price = item_pd.price
+        self.pr_price_format = item_pd.price_format
+        self.pr_qty = item_pd.qty
+        self.pr_price_format = item_pd.price_format
+
         text_item_description = f'{self.pr_id}:{self.pr_name}'
         self.label_item_description = LabelItemDescription(parent=self, text=text_item_description)
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
@@ -52,6 +40,12 @@ class ProductFrame(QFrame):
         return self.__parent_form
 
     parent_form = property(__get_parent_form)
+
+    def get_sale_price(self) -> float:
+        return self.price_line_edit.text()
+
+    def get_sale_qty(self) -> int:
+        return self.qty_box.text()
 
     def sizeHint(self):
         return QtCore.QSize(self.width_, self.height_)
@@ -86,7 +80,6 @@ class ProductFrame(QFrame):
         painter.drawText(self.width() - pixels_qty - 85, 20, text_item_qty)
         painter.end()
         return QFrame.paintEvent(self, event)
-
 
     # on click on this widget
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
@@ -186,12 +179,13 @@ class LineEditPrice(QLineEdit):
 
 if __name__ == "__main__":
     from PySide2.QtWidgets import QVBoxLayout
+
     app = QApplication(sys.argv)
     product = ViewProduct(type='product', prod_id='2', price=1600, price_format='1600 грн.', qty=3,
                           name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!')
     win = QWidget()
     v_box = QVBoxLayout(win)
-    frame = ProductFrame(parent=None, item=product)
+    frame = ProductFrame(parent=None, item_pd=product)
     v_box.addWidget(frame)
     win.show()
     sys.exit(app.exec_())

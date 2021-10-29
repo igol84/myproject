@@ -6,8 +6,8 @@ from PySide2.QtCore import QDate
 from prjstore.db import API_DB
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 from prjstore.ui.pyside.qt_utils import clearLayout
-from prjstore.ui.pyside.sale_registration.components.product import ProductFrame
-from prjstore.ui.pyside.sale_registration.components.shoes import ShoesFrame
+from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
+from prjstore.ui.pyside.sale_registration.components.abstract_product import Item
 from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
 from prjstore.ui.pyside.sale_registration.schemas import ModelProduct
@@ -25,7 +25,7 @@ class SaleForm(QWidget):
         self.items: dict[str, ModelProduct] = None
         self.sli_list: dict[tuple[str, float]: ModelProduct] = self.handler.get_sale_line_items()
         self.selected_sli_widget: SLI_Frame = None
-        self.selected_item_widget: ProductFrame = None
+        self.selected_item_widget: Item = None
 
         # SLI ----------------------- left panel ------------------------------
         self.ui.date_edit.setDate(QDate.currentDate())
@@ -86,12 +86,8 @@ class SaleForm(QWidget):
         self.selected_item_widget = None
         self.items = self.handler.get_store_items(search=self.ui.src_items.text())
         for item in self.items:
-            if item.type == 'shoes':
-                shoes_frame = ShoesFrame(self, item)
-                self.ui.items_layout.addWidget(shoes_frame)
-            else:
-                item_frame = ProductFrame(self, item)
-                self.ui.items_layout.addWidget(item_frame)
+            item_frame = FrameItemFactory.create(product_type=item.type, parent=self, item_pd=item)
+            self.ui.items_layout.addWidget(item_frame)
         self.ui.items_layout.addStretch(0)
 
     def on_click_scroll_items(self, event):
@@ -104,8 +100,8 @@ class SaleForm(QWidget):
 
     def put_on_sale(self):
         pr_id = self.selected_item_widget.pr_id
-        sale_price = self.selected_item_widget.price_line_edit.text()
-        sale_qty = self.selected_item_widget.qty_box.text()
+        sale_price = self.selected_item_widget.get_sale_price()
+        sale_qty = self.selected_item_widget.get_sale_qty()
         self.handler.put_on_sale(pr_id, int(sale_qty), float(sale_price))
 
         if self.handler.is_item_exists(pr_id):

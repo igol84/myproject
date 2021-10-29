@@ -4,34 +4,20 @@ from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QFontMetrics, QFont
 from PySide2.QtWidgets import QWidget, QApplication, QLabel, QLineEdit, QFrame
 
+from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame
 from prjstore.ui.pyside.sale_registration.schemas import ViewShoes, ViewSize, ViewWidth, ViewColor
 
 
-class ShoesFrame(QFrame):
-    default_color_bg = '#E1E1E1'
-    default_color_text = '#000'
-    color_fon_enter = '#CCC'
-    current_color_bg = '#1287A8'
-    current_color_text = '#fff'
-    height_ = 30
-    width_ = 300
-    font_family = 'Times'
-    font_size = 10
+class ShoesFrame(ItemFrame):
+    # height_ = 130
 
-    def __init__(self, parent, item: ViewShoes):
+    def __init__(self, parent, item_pd: ViewShoes):
         super().__init__()
         self.__parent_form = parent
-        self.pr_name = item.name
+        self.pr_name = item_pd.name
         self.pr_price = ''
         self.pr_price_format = ''
-        self.setCursor(QtCore.Qt.PointingHandCursor)
-        self.setMinimumSize(self.width_, self.height_)
-        self.setFixedHeight(self.height_)
-        self.setFrameStyle(QFrame.Panel | QFrame.Raised)
-        self.color_fon = self.default_color_bg
-        self.color_text = self.default_color_text
-        text_item_description = f'{self.pr_name}'
-        self.label_item_description = LabelItemDescription(parent=self, text=text_item_description)
+        self.label_item_description = LabelItemDescription(parent=self, text=self.pr_name)
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
         self.label_item_description.move(5, 0)
         self.price_line_edit = LineEditPrice(str(self.pr_price), parent=self)
@@ -55,18 +41,12 @@ class ShoesFrame(QFrame):
         painter.fillRect(rect, brush)
 
         pen = painter.pen()
-        pen.setColor(QtGui.QColor('#555'))
-        painter.setPen(pen)
-        # painter.drawRect(-1, -1, painter.device().width() - 1, painter.device().height() - 1)
-
         pen.setColor(QtGui.QColor(self.color_text))
         painter.setPen(pen)
         font = painter.font()
         font.setFamily(self.font_family)
         font.setPointSize(self.font_size)
         painter.setFont(font)
-        text_item_price = f'{self.pr_price_format}'
-        painter.drawText(self.width() - 100, 20, text_item_price)
         self.price_line_edit.move(self.width() - 100, 4)
         painter.end()
         return QFrame.paintEvent(self, event)
@@ -132,6 +112,7 @@ class LineEditPrice(QLineEdit):
 
 if __name__ == "__main__":
     from PySide2.QtWidgets import QVBoxLayout
+
     app = QApplication(sys.argv)
 
     red_E_sizes = [
@@ -172,7 +153,7 @@ if __name__ == "__main__":
     item = ViewShoes(name='Кеды Converse Chuck 70 высокие', colors=colors)
     win = QWidget()
     v_box = QVBoxLayout(win)
-    frame = ShoesFrame(parent=None, item=item)
+    frame = ShoesFrame(parent=None, item_pd=item)
     v_box.addWidget(frame)
     win.show()
     sys.exit(app.exec_())
