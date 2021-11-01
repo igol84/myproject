@@ -17,7 +17,6 @@ class ItemFrame(QFrame):
         super().__init__()
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setMinimumSize(self.width_, self.height_)
-        self.setFixedHeight(self.height_)
         self.setFrameStyle(QFrame.Panel | QFrame.Raised)
         self.color_fon = self.default_color_bg
         self.color_text = self.default_color_text
@@ -25,7 +24,6 @@ class ItemFrame(QFrame):
 
 class Item:
     pr_id: str
-    pr_name: str
     pr_price: float
     pr_qty: int
 

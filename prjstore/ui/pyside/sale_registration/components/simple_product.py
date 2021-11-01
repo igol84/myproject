@@ -12,6 +12,7 @@ class ProductFrame(ItemFrame, Item):
 
     def __init__(self, parent, item_pd: ViewProduct):
         super().__init__()
+        self.setFixedHeight(self.height_)
         self.__parent_form = parent
         self.pr_id = item_pd.prod_id
         self.pr_name = item_pd.name

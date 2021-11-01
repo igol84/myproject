@@ -6,8 +6,6 @@ from prjstore.ui.pyside.sale_registration.components.simple_product import Produ
 from prjstore.ui.pyside.sale_registration.components.shoes import ShoesFrame
 
 
-
-
 class FrameItemFactory:
 
     @overload

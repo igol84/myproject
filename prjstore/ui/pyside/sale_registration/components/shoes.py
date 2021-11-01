@@ -1,5 +1,3 @@
-import sys
-
 from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QFontMetrics, QFont
 from PySide2.QtWidgets import QWidget, QApplication, QLabel, QLineEdit, QFrame
@@ -111,6 +109,7 @@ class LineEditPrice(QLineEdit):
 
 
 if __name__ == "__main__":
+    import sys
     from PySide2.QtWidgets import QVBoxLayout
 
     app = QApplication(sys.argv)
