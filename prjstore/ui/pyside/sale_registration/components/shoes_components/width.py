@@ -2,7 +2,7 @@ from PySide2.QtWidgets import QWidget, QVBoxLayout, QApplication, QSizePolicy, Q
 from PySide2 import QtWidgets, QtCore
 
 from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame
-from prjstore.ui.pyside.sale_registration.components.shoes_components.size import SizeFrame
+from prjstore.ui.pyside.sale_registration.components.shoes_components import SizeFrame
 from prjstore.ui.pyside.sale_registration.schemas import ViewSize, ViewWidth
 
 
@@ -48,7 +48,6 @@ class WidthFrame(ItemFrame):
 
 if __name__ == '__main__':
     import sys
-
     sizes = [
         ViewSize(prod_id='2', size=36, price=4000, price_format='4.000грн', qty=5),
         ViewSize(prod_id='3', size=36.5, price=4000, price_format='4.000грн', qty=2),
