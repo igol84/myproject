@@ -1,23 +1,21 @@
-from PySide2.QtWidgets import QWidget, QVBoxLayout, QApplication, QSizePolicy, QLabel
+from PySide2.QtWidgets import QWidget, QVBoxLayout, QApplication, QSizePolicy, QLabel, QFrame
 from PySide2 import QtWidgets, QtCore
 
-from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame
 from prjstore.ui.pyside.sale_registration.components.shoes_components import SizeFrame
 from prjstore.ui.pyside.sale_registration.schemas import ViewSize, ViewWidth
 
 
-class WidthFrame(ItemFrame):
-    pd_width: str
+class WidthFrame(QFrame):
     pd_sizes: list[ViewSize]
+    pd_width: str
     count_in_row = 15
 
-    def __init__(self, pd_width: ViewWidth):
+    def __init__(self, pd_width: ViewWidth = ''):
         super().__init__()
         self.pd_width = pd_width.width
         self.pd_sizes = pd_width.sizes
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.setMinimumSize(self.sizeHint())
-        self.setCursor(QtCore.Qt.ArrowCursor)
+        self.adjustSize()
         v_layer = QtWidgets.QVBoxLayout()
 
         if self.pd_width:
@@ -28,23 +26,21 @@ class WidthFrame(ItemFrame):
             v_layer.addWidget(label_width)
 
         layer = QtWidgets.QHBoxLayout()
-        layer.setContentsMargins(0, 0, 0, 0)
+        layer.setMargin(0)
         layer.setAlignment(QtCore.Qt.AlignLeft)
         n = 0
-        for n, view_size in enumerate(self.pd_sizes):
-            if (n + 1) % self.count_in_row != 0:
-                layer.addWidget(SizeFrame(pd_size=view_size))
-            else:
+        for n, view_size in enumerate(self.pd_sizes, start=1):
+            if n % self.count_in_row == 0:
                 v_layer.addLayout(layer)
                 layer = QtWidgets.QHBoxLayout()
-                layer.setContentsMargins(0, 0, 0, 0)
+                layer.setMargin(0)
                 layer.setAlignment(QtCore.Qt.AlignLeft)
-        if n and (n + 1) % self.count_in_row != 0:
-            v_layer.addSpacing(10)
+            layer.addWidget(SizeFrame(pd_size=view_size))
+        if n and n % self.count_in_row != 0:
+            v_layer.addSpacing(5)
             v_layer.addLayout(layer)
 
         self.setLayout(v_layer)
-
 
 if __name__ == '__main__':
     import sys

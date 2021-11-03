@@ -1,34 +1,42 @@
-from PySide2 import QtCore, QtGui
+from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtGui import QFontMetrics, QFont
 from PySide2.QtWidgets import QWidget, QApplication, QLabel, QLineEdit, QFrame
 
 from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame
+from prjstore.ui.pyside.sale_registration.components.shoes_components import ColorFrame
 from prjstore.ui.pyside.sale_registration.schemas import ViewShoes, ViewSize, ViewWidth, ViewColor
 
 
 class ShoesFrame(ItemFrame):
     # height_ = 130
+    pr_name: str
+    pr_price: float
+    pr_colors: list[ViewColor]
 
     def __init__(self, parent, item_pd: ViewShoes):
         super().__init__()
         self.__parent_form = parent
         self.pr_name = item_pd.name
-        self.pr_price = ''
+        self.pr_price = 2.0
         self.pr_price_format = ''
-        self.label_item_description = LabelItemDescription(parent=self, text=self.pr_name)
+        self.pr_colors = item_pd.colors
+        layer = QtWidgets.QVBoxLayout()
+        layer.setMargin(0)
+        self.label_item_description = LabelItemDescription(text=self.pr_name)
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
-        self.label_item_description.move(5, 0)
-        self.price_line_edit = LineEditPrice(str(self.pr_price), parent=self)
-
+        layer.addWidget(self.label_item_description)
+        self.price_line_edit = LineEditPrice(f'{self.pr_price:g}', parent=self)
         self.price_line_edit.hide()
+        for view_color in self.pr_colors:
+            color_frame = ColorFrame(pd_color=view_color)
+            layer.addWidget(color_frame)
+        self.setLayout(layer)
 
     def __get_parent_form(self):
         return self.__parent_form
 
     parent_form = property(__get_parent_form)
 
-    def sizeHint(self):
-        return QtCore.QSize(self.width_, self.height_)
 
     def paintEvent(self, event: QtGui.QPaintEvent) -> None:
         painter = QtGui.QPainter(self)
@@ -103,7 +111,7 @@ class LineEditPrice(QLineEdit):
         font = self.font()
         font.setPointSize(ShoesFrame.font_size)
         self.setFont(font)
-        self.setFixedWidth(75)
+        self.setFixedSize(75, 22)
         validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]{1,7}[.]*[0-9]{0,2}"))
         self.setValidator(validator_reg)
 
@@ -130,8 +138,8 @@ if __name__ == "__main__":
         ViewWidth(width='D', sizes=red_D_sizes),
     ]
     black_E_sizes = [
-        ViewSize(prod_id='9', size=43, price=4000, price_format='4.000грн', qty=5),
-        ViewSize(prod_id='10', size=44, price=4000, price_format='4.000грн', qty=2),
+        ViewSize(prod_id='9', size=38, price=4000, price_format='4.000грн', qty=5),
+        ViewSize(prod_id='10', size=39, price=4000, price_format='4.000грн', qty=2),
         ViewSize(prod_id='11', size=40, price=2000, price_format='2.000грн', qty=1),
         ViewSize(prod_id='12', size=41, price=4000, price_format='3.000грн', qty=1),
         ViewSize(prod_id='13', size=42, price=4000, price_format='2.000грн', qty=2),
@@ -149,7 +157,7 @@ if __name__ == "__main__":
         ViewColor(color='red', widths=red_widths),
         ViewColor(color='black', widths=black_widths),
     ]
-    item = ViewShoes(name='Кеды Converse Chuck 70 высокие', colors=colors)
+    item = ViewShoes(name='Кеды Converse Chuck 70 высокие высокие высокие высокие', colors=colors)
     win = QWidget()
     v_box = QVBoxLayout(win)
     frame = ShoesFrame(parent=None, item_pd=item)

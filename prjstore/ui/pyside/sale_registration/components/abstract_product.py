@@ -16,7 +16,7 @@ class ItemFrame(QFrame):
     def __init__(self):
         super().__init__()
         self.setCursor(QtCore.Qt.PointingHandCursor)
-        self.setMinimumSize(self.width_, self.height_)
+        self.adjustSize()
         self.setFrameStyle(QFrame.Panel | QFrame.Raised)
         self.color_fon = self.default_color_bg
         self.color_text = self.default_color_text

@@ -25,7 +25,7 @@ class ProductFrame(ItemFrame, Item):
         self.label_item_description = LabelItemDescription(parent=self, text=text_item_description)
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
         self.label_item_description.move(5, 0)
-        self.price_line_edit = LineEditPrice(str(self.pr_price), parent=self)
+        self.price_line_edit = LineEditPrice(f'{self.pr_price:g}', parent=self)
         self.price_line_edit.returnPressed.connect(self.on_pressed_price_line_edit)
         self.qty_box = QtyBox(self)
         self.btn_plus = QPushButton(parent=self, text='+')

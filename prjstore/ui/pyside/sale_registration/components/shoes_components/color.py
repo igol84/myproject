@@ -1,12 +1,11 @@
-from PySide2.QtWidgets import QWidget, QVBoxLayout, QApplication, QSizePolicy, QLabel
+from PySide2.QtWidgets import QWidget, QVBoxLayout, QApplication, QSizePolicy, QLabel, QFrame
 from PySide2 import QtWidgets, QtCore
 
-from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame
 from prjstore.ui.pyside.sale_registration.components.shoes_components import WidthFrame
 from prjstore.ui.pyside.sale_registration.schemas import ViewWidth, ViewColor, ViewSize
 
 
-class ColorFrame(ItemFrame):
+class ColorFrame(QFrame):
     pd_color: str
     pd_widths: list[ViewWidth]
 
@@ -15,12 +14,15 @@ class ColorFrame(ItemFrame):
         self.pd_color = pd_color.color
         self.pd_widths = pd_color.widths
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.setMinimumSize(self.sizeHint())
-        self.setCursor(QtCore.Qt.ArrowCursor)
+        self.adjustSize()
+
         v_layer = QtWidgets.QVBoxLayout()
+
+
 
         if self.pd_color:
             label_color = QLabel(f'{self.pd_color}')
+            label_color.setMargin(2)
             font = label_color.font()
             font.setPointSize(16)
             font.setItalic(True)
@@ -53,7 +55,7 @@ if __name__ == '__main__':
         ViewWidth(width='D', sizes=D_sizes),
     ]
 
-    view_color = ViewColor(color='Красные', widths=widths)
+    view_color = ViewColor(color='Красные ', widths=widths)
     app = QApplication(sys.argv)
     win = QWidget()
     v_box = QVBoxLayout(win)

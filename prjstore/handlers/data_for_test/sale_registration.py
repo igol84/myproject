@@ -19,6 +19,10 @@ pc.set_product(ProductFactory.create(
     length_of_insole=28.5
 ))
 pc.set_product(ProductFactory.create(
+    product_type='shoes', prod_id='01', name='nike Jordan', price=Money(750), color='red', size=43,
+    length_of_insole=28.5
+))
+pc.set_product(ProductFactory.create(
     product_type='shoes', prod_id='05', name='nike air force мех', price=Money(1200), color='red', size=42,
     length_of_insole=27, width=Shoes.widths['Medium']
 ))
@@ -29,6 +33,14 @@ pc['07'].size = 44
 pc['07'].length_of_insole = 28.5
 pc.set_product(pc['05'].copy('08'))
 pc['08'].width = Shoes.widths['Wide']
+
+pc.set_product(pc['03'].copy('09'))
+pc['09'].size = 44
+pc['09'].length_of_insole = 28.5
+pc.set_product(pc['03'].copy('10'))
+pc['10'].size = 42
+pc['10'].length_of_insole = 27.5
+
 items = {
     5: Item(id=5, product=pc['04'], buy_price=Money(40)),
     2: Item(id=2, product=pc['02'], buy_price=Money(50.5), qty=2),
@@ -39,6 +51,8 @@ items = {
     7: Item(id=7, product=pc['06'], buy_price=Money(55.5)),
     8: Item(id=8, product=pc['07'], buy_price=Money(55.5)),
     9: Item(id=9, product=pc['08'], buy_price=Money(55.5)),
+    10: Item(id=10, product=pc['09'], buy_price=Money(55.5)),
+    11: Item(id=11, product=pc['10'], buy_price=Money(55.5)),
 }
 
 
