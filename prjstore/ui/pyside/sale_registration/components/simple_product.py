@@ -12,6 +12,7 @@ class ProductFrame(ItemFrame, Item):
 
     def __init__(self, parent, item_pd: ViewProduct):
         super().__init__()
+        self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setFixedHeight(self.height_)
         self.__parent_form = parent
         self.pr_id = item_pd.prod_id
@@ -89,18 +90,24 @@ class ProductFrame(ItemFrame, Item):
         self.color_text = self.current_color_text
         self.update()
         # return default style on the previous selected widget
-        if self.parent_form and self.parent_form.selected_item_widget \
-                and self.parent_form.selected_item_widget is not self:
-            self.parent_form.selected_item_widget.color_fon = self.default_color_bg
-            self.parent_form.selected_item_widget.color_text = self.default_color_text
-            self.parent_form.selected_item_widget.update()
-            self.parent_form.selected_item_widget.hide_elements()
         if self.parent_form:
+            if self.parent_form.selected_item_widget:
+                if self.parent_form.selected_item_widget is self:
+                    self.color_fon = self.default_color_bg
+                    self.color_text = self.default_color_text
+                    self.parent_form.selected_item_widget.hide_elements()
+                    self.parent_form.selected_item_widget = None
+                    return None
+                else:
+                    self.parent_form.selected_item_widget.color_fon = self.default_color_bg
+                    self.parent_form.selected_item_widget.color_text = self.default_color_text
+                    self.parent_form.selected_item_widget.update()
+                    self.parent_form.selected_item_widget.hide_elements()
             self.parent_form.selected_item_widget = self
-        if self.pr_qty > 1:
-            self.qty_box.show()
-        self.price_line_edit.show()
-        self.btn_plus.show()
+            if self.pr_qty > 1:
+                self.qty_box.show()
+            self.price_line_edit.show()
+            self.btn_plus.show()
         self.price_line_edit.setFocus()
         self.price_line_edit.selectAll()
 

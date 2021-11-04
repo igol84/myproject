@@ -53,10 +53,6 @@ class SaleForm(QWidget):
         self.ui.buttonBox.addButton(self.save_button, QDialogButtonBox.AcceptRole)
         self.ui.buttonBox.accepted.connect(self.press_save)
 
-    def mousePressEvent(self, event):
-        self._update_sli()
-        self._update_items_layout()
-
     # SLI ----------------------- left panel ------------------------------
     def _update_sli(self):
         clearLayout(self.ui.sli_layout)

@@ -1,4 +1,3 @@
-from PySide2 import QtCore
 from PySide2.QtWidgets import QFrame
 
 
@@ -15,7 +14,6 @@ class ItemFrame(QFrame):
 
     def __init__(self):
         super().__init__()
-        self.setCursor(QtCore.Qt.PointingHandCursor)
         self.adjustSize()
         self.setFrameStyle(QFrame.Panel | QFrame.Raised)
         self.color_fon = self.default_color_bg

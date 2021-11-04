@@ -18,13 +18,11 @@ class ColorFrame(QFrame):
 
         v_layer = QtWidgets.QVBoxLayout()
 
-
-
         if self.pd_color:
             label_color = QLabel(f'{self.pd_color}')
             label_color.setMargin(2)
             font = label_color.font()
-            font.setPointSize(16)
+            font.setPointSize(17)
             font.setItalic(True)
             label_color.setFont(font)
             label_color.setAlignment(QtCore.Qt.AlignCenter)

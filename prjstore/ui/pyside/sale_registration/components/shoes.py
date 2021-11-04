@@ -1,13 +1,13 @@
-from PySide2 import QtCore, QtGui, QtWidgets
-from PySide2.QtGui import QFontMetrics, QFont
-from PySide2.QtWidgets import QWidget, QApplication, QLabel, QLineEdit, QFrame
+from PySide2 import QtWidgets
+from PySide2.QtWidgets import QWidget, QApplication
 
 from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame
-from prjstore.ui.pyside.sale_registration.components.shoes_components import ColorFrame
+from prjstore.ui.pyside.sale_registration.components.shoes_components import ColorFrame, ShoesFrameInterface
+from prjstore.ui.pyside.sale_registration.components.shoes_components.description import ShoesDesc
 from prjstore.ui.pyside.sale_registration.schemas import ViewShoes, ViewSize, ViewWidth, ViewColor
 
 
-class ShoesFrame(ItemFrame):
+class ShoesFrame(ItemFrame, ShoesFrameInterface):
     # height_ = 130
     pr_name: str
     pr_price: float
@@ -20,100 +20,35 @@ class ShoesFrame(ItemFrame):
         self.pr_price = 2.0
         self.pr_price_format = ''
         self.pr_colors = item_pd.colors
+
         layer = QtWidgets.QVBoxLayout()
         layer.setMargin(0)
-        self.label_item_description = LabelItemDescription(text=self.pr_name)
-        self.label_item_description.setFont(QFont(self.color_text, self.font_size))
-        layer.addWidget(self.label_item_description)
-        self.price_line_edit = LineEditPrice(f'{self.pr_price:g}', parent=self)
-        self.price_line_edit.hide()
+        self.layer_desc = QtWidgets.QVBoxLayout()
+        self.layer_desc.setMargin(0)
+        self.label_item_description = ShoesDesc(parent=parent, pr_name=self.pr_name)
+        self.layer_desc.addWidget(self.label_item_description)
+        layer.addLayout(self.layer_desc)
+        self.layer_colors = QtWidgets.QVBoxLayout()
+
         for view_color in self.pr_colors:
-            color_frame = ColorFrame(pd_color=view_color)
-            layer.addWidget(color_frame)
+            self.color_frame = ColorFrame(pd_color=view_color)
+            self.layer_colors.addWidget(self.color_frame)
+        layer.addLayout(self.layer_colors)
         self.setLayout(layer)
+        self.hide_colors()
+
+    def hide_colors(self):
+        for n in range(self.layer_colors.count()):
+            self.layer_colors.itemAt(n).widget().hide()
+
+    def show_colors(self):
+        for n in range(self.layer_colors.count()):
+            self.layer_colors.itemAt(n).widget().show()
 
     def __get_parent_form(self):
         return self.__parent_form
 
     parent_form = property(__get_parent_form)
-
-
-    def paintEvent(self, event: QtGui.QPaintEvent) -> None:
-        painter = QtGui.QPainter(self)
-        brush = QtGui.QBrush()
-        brush.setColor(QtGui.QColor(self.color_fon))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        rect = QtCore.QRect(0, 0, painter.device().width(), painter.device().height())
-        painter.fillRect(rect, brush)
-
-        pen = painter.pen()
-        pen.setColor(QtGui.QColor(self.color_text))
-        painter.setPen(pen)
-        font = painter.font()
-        font.setFamily(self.font_family)
-        font.setPointSize(self.font_size)
-        painter.setFont(font)
-        self.price_line_edit.move(self.width() - 100, 4)
-        painter.end()
-        return QFrame.paintEvent(self, event)
-
-    # on click on this widget
-    def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
-        # change style
-        self.color_fon = self.current_color_bg
-        self.color_text = self.current_color_text
-        self.update()
-        # return default style on the previous selected widget
-        if self.parent_form and self.parent_form.selected_item_widget \
-                and self.parent_form.selected_item_widget is not self:
-            self.parent_form.selected_item_widget.color_fon = self.default_color_bg
-            self.parent_form.selected_item_widget.color_text = self.default_color_text
-            self.parent_form.selected_item_widget.update()
-            self.parent_form.selected_item_widget.hide_elements()
-        if self.parent_form:
-            self.parent_form.selected_item_widget = self
-        self.price_line_edit.show()
-        self.price_line_edit.setFocus()
-        self.price_line_edit.selectAll()
-
-    def hide_elements(self):
-        self.price_line_edit.hide()
-
-    def enterEvent(self, a0: QtCore.QEvent) -> None:
-        if self.parent_form and self.parent_form.selected_item_widget is not self:
-            self.color_fon = self.color_fon_enter
-            self.color_text = self.default_color_text
-        self.update()
-
-    def leaveEvent(self, a0: QtCore.QEvent) -> None:
-        if self.parent_form and self.parent_form.selected_item_widget is not self:
-            self.color_fon = self.default_color_bg
-            self.color_text = self.default_color_text
-        self.update()
-
-
-class LabelItemDescription(QLabel):
-    def paintEvent(self, event):
-        self.setToolTip(self.text())
-        painter = QtGui.QPainter(self)
-        pen = painter.pen()
-        pen.setColor(QtGui.QColor(self.parent().color_text))
-        painter.setPen(pen)
-        metrics = QFontMetrics(self.font())
-        pixels_text = metrics.elidedText(self.text(), QtCore.Qt.ElideRight, self.parent().width() - 100)
-        self.resize(metrics.size(0, pixels_text).width(), self.parent().height_)
-        painter.drawText(self.rect(), self.alignment(), pixels_text)
-
-
-class LineEditPrice(QLineEdit):
-    def __init__(self, text, parent):
-        super().__init__(text, parent)
-        font = self.font()
-        font.setPointSize(ShoesFrame.font_size)
-        self.setFont(font)
-        self.setFixedSize(75, 22)
-        validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]{1,7}[.]*[0-9]{0,2}"))
-        self.setValidator(validator_reg)
 
 
 if __name__ == "__main__":

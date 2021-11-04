@@ -17,6 +17,7 @@ class SizeFrame(ItemFrame, Item):
         self.pr_price = pd_size.price
         self.pr_qty = pd_size.qty
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.setCursor(QtCore.Qt.PointingHandCursor)
 
         layer = QtWidgets.QVBoxLayout()
         layer.setMargin(4)
@@ -44,6 +45,9 @@ class SizeFrame(ItemFrame, Item):
         layer.addWidget(line)
         layer.addWidget(label_qty)
         self.setLayout(layer)
+
+    def get_sale_price(self) -> float:
+        ...
 
 
 if __name__ == '__main__':

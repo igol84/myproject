@@ -21,7 +21,7 @@ class WidthFrame(QFrame):
         if self.pd_width:
             label_width = QLabel(f'{self.pd_width}')
             font = label_width.font()
-            font.setPointSize(15)
+            font.setPointSize(12)
             label_width.setFont(font)
             v_layer.addWidget(label_width)
 
@@ -42,8 +42,10 @@ class WidthFrame(QFrame):
 
         self.setLayout(v_layer)
 
+
 if __name__ == '__main__':
     import sys
+
     sizes = [
         ViewSize(prod_id='2', size=36, price=4000, price_format='4.000грн', qty=5),
         ViewSize(prod_id='3', size=36.5, price=4000, price_format='4.000грн', qty=2),
