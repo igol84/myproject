@@ -4,7 +4,7 @@ from PySide2.QtWidgets import QFrame
 class ItemFrame(QFrame):
     default_color_bg = '#E1E1E1'
     default_color_text = '#000'
-    color_fon_enter = '#CCC'
+    color_fon_on_enter = '#CCC'
     current_color_bg = '#1287A8'
     current_color_text = '#fff'
     height_ = 30

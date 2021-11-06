@@ -10,7 +10,7 @@ class WidthFrame(QFrame):
     pd_width: str
     count_in_row = 15
 
-    def __init__(self, pd_width: ViewWidth = ''):
+    def __init__(self, pd_width: ViewWidth = '', shoes_frame=None):
         super().__init__()
         self.pd_width = pd_width.width
         self.pd_sizes = pd_width.sizes
@@ -35,7 +35,7 @@ class WidthFrame(QFrame):
                 layer = QtWidgets.QHBoxLayout()
                 layer.setMargin(0)
                 layer.setAlignment(QtCore.Qt.AlignLeft)
-            layer.addWidget(SizeFrame(pd_size=view_size))
+            layer.addWidget(SizeFrame(pd_size=view_size, shoes_frame=shoes_frame))
         if n and n % self.count_in_row != 0:
             v_layer.addSpacing(5)
             v_layer.addLayout(layer)

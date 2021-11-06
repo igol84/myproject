@@ -9,7 +9,7 @@ class ColorFrame(QFrame):
     pd_color: str
     pd_widths: list[ViewWidth]
 
-    def __init__(self, pd_color: ViewColor):
+    def __init__(self, pd_color: ViewColor, shoes_frame=None):
         super().__init__()
         self.pd_color = pd_color.color
         self.pd_widths = pd_color.widths
@@ -29,7 +29,7 @@ class ColorFrame(QFrame):
             v_layer.addWidget(label_color)
 
         for view_width in self.pd_widths:
-            v_layer.addWidget(WidthFrame(pd_width=view_width))
+            v_layer.addWidget(WidthFrame(pd_width=view_width, shoes_frame=shoes_frame))
 
         self.setLayout(v_layer)
 

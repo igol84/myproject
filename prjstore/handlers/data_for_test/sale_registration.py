@@ -37,13 +37,14 @@ pc['08'].width = Shoes.widths['Wide']
 pc.set_product(pc['03'].copy('09'))
 pc['09'].size = 44
 pc['09'].length_of_insole = 28.5
-pc.set_product(pc['03'].copy('10'))
+pc['09'].price = Money(1200)
+pc.set_product(pc['09'].copy('10'))
 pc['10'].size = 42
 pc['10'].length_of_insole = 27.5
 
 items = {
     5: Item(id=5, product=pc['04'], buy_price=Money(40)),
-    2: Item(id=2, product=pc['02'], buy_price=Money(50.5), qty=2),
+    2: Item(id=2, product=pc['02'], buy_price=Money(50.5), qty=112),
     3: Item(id=3, product=pc['03'], buy_price=Money(50.5), qty=2),
     4: Item(id=4, product=pc['03'], buy_price=Money(55.5), qty=2),
     1: Item(id=1, product=pc['01'], buy_price=Money(55.5)),

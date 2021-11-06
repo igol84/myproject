@@ -93,7 +93,7 @@ class ProductFrame(ItemFrame, Item):
         if self.parent_form:
             if self.parent_form.selected_item_widget:
                 if self.parent_form.selected_item_widget is self:
-                    self.color_fon = self.default_color_bg
+                    self.color_fon = self.color_fon_on_enter
                     self.color_text = self.default_color_text
                     self.parent_form.selected_item_widget.hide_elements()
                     self.parent_form.selected_item_widget = None
@@ -118,7 +118,7 @@ class ProductFrame(ItemFrame, Item):
 
     def enterEvent(self, a0: QtCore.QEvent) -> None:
         if self.parent_form and self.parent_form.selected_item_widget is not self:
-            self.color_fon = self.color_fon_enter
+            self.color_fon = self.color_fon_on_enter
             self.color_text = self.default_color_text
         self.update()
 

@@ -3,7 +3,7 @@ from PySide2.QtGui import QFontMetrics, QFont
 from PySide2.QtWidgets import QWidget, QApplication, QLabel, QLineEdit, QFrame
 
 from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame
-from prjstore.ui.pyside.sale_registration.components.shoes_components import ShoesFrameInterface
+from prjstore.ui.pyside.sale_registration.components.shoes_components.shoes_frame_interface import ShoesFrameInterface
 
 
 class ShoesDesc(ItemFrame):
@@ -28,13 +28,14 @@ class ShoesDesc(ItemFrame):
         self.layer_desc.addWidget(self.label_item_description)
         layer.addLayout(self.layer_desc)
         self.price_line_edit = LineEditPrice(parent=self, text='0')
+        self.price_line_edit.returnPressed.connect(self.on_pressed_price_line_edit)
         self.price_line_edit.hide()
         self.setLayout(layer)
 
-    def __get_parent(self) -> ShoesFrameInterface:
+    def __get_shoes_frame(self) -> ShoesFrameInterface:
         return self.parent()
 
-    shoes_frame = property(__get_parent)
+    shoes_frame = property(__get_shoes_frame)
 
     def set_price(self, price: float):
         self.price_line_edit.text(f'{price:g}')
@@ -68,7 +69,7 @@ class ShoesDesc(ItemFrame):
         if self.parent_form:
             if self.parent_form.selected_item_widget:
                 if self.parent_form.selected_item_widget is self:
-                    self.color_fon = self.default_color_bg
+                    self.color_fon = self.color_fon_on_enter
                     self.color_text = self.default_color_text
                     self.parent_form.selected_item_widget.hide_elements()
                     self.parent_form.selected_item_widget = None
@@ -81,22 +82,28 @@ class ShoesDesc(ItemFrame):
                     self.parent_form.selected_item_widget.hide_elements()
             self.parent_form.selected_item_widget = self
             self.shoes_frame.show_colors()
-        self.price_line_edit.show()
-        self.price_line_edit.setFocus()
-        self.price_line_edit.selectAll()
+        return QFrame.mousePressEvent(self, event)
 
     def hide_elements(self):
         self.price_line_edit.hide()
         self.shoes_frame.hide_colors()
 
-    def enterEvent(self, a0: QtCore.QEvent) -> None:
-        pass
+    def enterEvent(self, event: QtCore.QEvent) -> None:
+        if self.parent_form and self.parent_form.selected_item_widget is not self:
+            self.color_fon = self.color_fon_on_enter
+            self.color_text = self.default_color_text
+            self.update()
+        return QFrame.enterEvent(self, event)
 
-    def leaveEvent(self, a0: QtCore.QEvent) -> None:
+    def leaveEvent(self, event: QtCore.QEvent) -> None:
         if self.parent_form and self.parent_form.selected_item_widget is not self:
             self.color_fon = self.default_color_bg
             self.color_text = self.default_color_text
-        self.update()
+            self.update()
+        return QFrame.enterEvent(self, event)
+
+    def on_pressed_price_line_edit(self):
+        print(self.price_line_edit.text())
 
 
 class LabelItemDescription(QLabel):

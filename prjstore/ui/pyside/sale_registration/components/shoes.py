@@ -1,17 +1,18 @@
 from PySide2 import QtWidgets
 from PySide2.QtWidgets import QWidget, QApplication
 
-from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame
-from prjstore.ui.pyside.sale_registration.components.shoes_components import ColorFrame, ShoesFrameInterface
-from prjstore.ui.pyside.sale_registration.components.shoes_components.description import ShoesDesc
+from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame, Item
+from prjstore.ui.pyside.sale_registration.components.shoes_components import ColorFrame, SizeFrame, ShoesDesc
+from prjstore.ui.pyside.sale_registration.components.shoes_components.shoes_frame_interface import ShoesFrameInterface
 from prjstore.ui.pyside.sale_registration.schemas import ViewShoes, ViewSize, ViewWidth, ViewColor
 
 
-class ShoesFrame(ItemFrame, ShoesFrameInterface):
+class ShoesFrame(ItemFrame, Item, ShoesFrameInterface):
     # height_ = 130
     pr_name: str
     pr_price: float
     pr_colors: list[ViewColor]
+    __selected_size_frame: SizeFrame = None
 
     def __init__(self, parent, item_pd: ViewShoes):
         super().__init__()
@@ -31,7 +32,7 @@ class ShoesFrame(ItemFrame, ShoesFrameInterface):
         self.layer_colors = QtWidgets.QVBoxLayout()
 
         for view_color in self.pr_colors:
-            self.color_frame = ColorFrame(pd_color=view_color)
+            self.color_frame = ColorFrame(shoes_frame=self, pd_color=view_color)
             self.layer_colors.addWidget(self.color_frame)
         layer.addLayout(self.layer_colors)
         self.setLayout(layer)
@@ -49,6 +50,27 @@ class ShoesFrame(ItemFrame, ShoesFrameInterface):
         return self.__parent_form
 
     parent_form = property(__get_parent_form)
+
+    def get_selected_size_frame(self) -> SizeFrame:
+        return self.__selected_size_frame
+
+    def set_selected_size_frame(self, size_frame: SizeFrame) -> None:
+        if self.__selected_size_frame:
+            self.__selected_size_frame.setStyleSheet(
+                f"background-color: {self.default_color_bg}; color: {self.default_color_text}")
+        self.__selected_size_frame = size_frame
+        self.__selected_size_frame.setStyleSheet(
+            f"background-color: {self.current_color_bg}; color: {self.current_color_text}")
+        price_text = self.__selected_size_frame.pr_price
+        self.label_item_description.price_line_edit.setText(f'{price_text:g}')
+        self.label_item_description.price_line_edit.show()
+        self.label_item_description.price_line_edit.setFocus()
+        self.label_item_description.price_line_edit.selectAll()
+
+    def del_selected_size_frame(self) -> None:
+        self.__selected_size_frame = None
+
+    selected_size_frame = property(get_selected_size_frame, set_selected_size_frame, del_selected_size_frame)
 
 
 if __name__ == "__main__":
