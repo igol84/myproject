@@ -1,9 +1,10 @@
-from PySide2.QtWidgets import QWidget, QVBoxLayout, QApplication, QLabel, QSizePolicy, QFrame
+from PySide2.QtWidgets import QWidget, QVBoxLayout, QApplication, QLabel, QSizePolicy
 from PySide2 import QtWidgets, QtCore, QtGui
 
 from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame
 from prjstore.ui.pyside.sale_registration.components.shoes_components.shoes_frame_interface import ShoesFrameInterface
 from prjstore.ui.pyside.sale_registration.schemas import ViewSize
+from prjstore.ui.pyside.utils.widgets import QHLine
 
 
 class SizeFrame(ItemFrame):
@@ -31,11 +32,7 @@ class SizeFrame(ItemFrame):
         label_size.setFont(font)
         label_size.setAlignment(QtCore.Qt.AlignCenter)
 
-        line = QFrame()
-        line.setFixedHeight(2)
-        line.setFrameShape(QFrame.HLine)
-        line.setFrameShadow(QFrame.Sunken)
-        line.setLineWidth(1)
+        line = QHLine()
 
         label_qty = QLabel(f'{self.pr_qty}')
         font = label_size.font()

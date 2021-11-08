@@ -5,6 +5,7 @@ from prjstore.ui.pyside.sale_registration.components.abstract_product import Ite
 from prjstore.ui.pyside.sale_registration.components.shoes_components import ColorFrame, SizeFrame, ShoesDesc
 from prjstore.ui.pyside.sale_registration.components.shoes_components.shoes_frame_interface import ShoesFrameInterface
 from prjstore.ui.pyside.sale_registration.schemas import ViewShoes, ViewSize, ViewWidth, ViewColor
+from prjstore.ui.pyside.utils.widgets import QHLine
 
 
 class ShoesFrame(ItemFrame, Item, ShoesFrameInterface):
@@ -31,7 +32,10 @@ class ShoesFrame(ItemFrame, Item, ShoesFrameInterface):
         layer.addLayout(self.layer_desc)
         self.layer_colors = QtWidgets.QVBoxLayout()
 
-        for view_color in self.pr_colors:
+        for n, view_color in enumerate(self.pr_colors):
+            if n:
+                line = QHLine()
+                self.layer_colors.addWidget(line)
             self.color_frame = ColorFrame(shoes_frame=self, pd_color=view_color)
             self.layer_colors.addWidget(self.color_frame)
         layer.addLayout(self.layer_colors)

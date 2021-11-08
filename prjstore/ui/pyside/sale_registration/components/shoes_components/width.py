@@ -16,31 +16,34 @@ class WidthFrame(QFrame):
         self.pd_sizes = pd_width.sizes
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.adjustSize()
-        v_layer = QtWidgets.QVBoxLayout()
+        # self.setStyleSheet(f"background-color: #808000")
+        layer_widths = QtWidgets.QVBoxLayout()
+        layer_widths.setContentsMargins(0, 0, 0, 5)
 
         if self.pd_width:
             label_width = QLabel(f'{self.pd_width}')
-            font = label_width.font()
-            font.setPointSize(12)
-            label_width.setFont(font)
-            v_layer.addWidget(label_width)
+            label_width.setStyleSheet("font-size: 12pt;")
+            layer_widths.addWidget(label_width)
 
-        layer = QtWidgets.QHBoxLayout()
-        layer.setMargin(0)
-        layer.setAlignment(QtCore.Qt.AlignLeft)
+        layer_sizes = QtWidgets.QHBoxLayout()
+        layer_sizes.setContentsMargins(5, 0, 0, 0)
+        layer_sizes.setAlignment(QtCore.Qt.AlignLeft)
         n = 0
         for n, view_size in enumerate(self.pd_sizes, start=1):
             if n % self.count_in_row == 0:
-                v_layer.addLayout(layer)
-                layer = QtWidgets.QHBoxLayout()
-                layer.setMargin(0)
-                layer.setAlignment(QtCore.Qt.AlignLeft)
-            layer.addWidget(SizeFrame(pd_size=view_size, shoes_frame=shoes_frame))
+                layer_widths.addLayout(layer_sizes)
+                layer_sizes = QtWidgets.QHBoxLayout()
+                layer_sizes.setContentsMargins(5, 0, 0, 0)
+                layer_sizes.setAlignment(QtCore.Qt.AlignLeft)
+            layer_sizes.addWidget(SizeFrame(pd_size=view_size, shoes_frame=shoes_frame))
         if n and n % self.count_in_row != 0:
-            v_layer.addSpacing(5)
-            v_layer.addLayout(layer)
+            layer_widths.addSpacing(5)
+            layer_widths.addLayout(layer_sizes)
 
-        self.setLayout(v_layer)
+        self.setLayout(layer_widths)
+
+    def count_sizes(self) -> int:
+        return len(self.pd_sizes)
 
 
 if __name__ == '__main__':
