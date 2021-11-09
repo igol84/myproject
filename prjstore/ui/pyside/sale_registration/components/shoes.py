@@ -1,41 +1,36 @@
 from PySide2 import QtWidgets
 from PySide2.QtWidgets import QWidget, QApplication
 
-from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame, Item
-from prjstore.ui.pyside.sale_registration.components.shoes_components import ColorFrame, SizeFrame, ShoesDesc
+from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
+from prjstore.ui.pyside.sale_registration.components.shoes_components import ColorFrame, SizeFrame, ShoesDescFrame
 from prjstore.ui.pyside.sale_registration.components.shoes_components.shoes_frame_interface import ShoesFrameInterface
 from prjstore.ui.pyside.sale_registration.schemas import ViewShoes, ViewSize, ViewWidth, ViewColor
-from prjstore.ui.pyside.utils.widgets import QHLine
+from prjstore.ui.pyside.utils.widgets import QHLine, ItemFrame
 
 
-class ShoesFrame(ItemFrame, Item, ShoesFrameInterface):
-    # height_ = 130
-    pr_name: str
-    pr_price: float
+class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
     pr_colors: list[ViewColor]
     __selected_size_frame: SizeFrame = None
 
     def __init__(self, parent, item_pd: ViewShoes):
         super().__init__()
+        self.setMinimumWidth(300)
         self.__parent_form = parent
         self.pr_name = item_pd.name
-        self.pr_price = 2.0
-        self.pr_price_format = ''
         self.pr_colors = item_pd.colors
 
         layer = QtWidgets.QVBoxLayout()
         layer.setMargin(0)
         self.layer_desc = QtWidgets.QVBoxLayout()
         self.layer_desc.setMargin(0)
-        self.label_item_description = ShoesDesc(parent=parent, pr_name=self.pr_name)
-        self.layer_desc.addWidget(self.label_item_description)
+        self.desc_frame = ShoesDescFrame(parent=parent, pr_name=self.pr_name)
+        self.layer_desc.addWidget(self.desc_frame)
         layer.addLayout(self.layer_desc)
         self.layer_colors = QtWidgets.QVBoxLayout()
 
         for n, view_color in enumerate(self.pr_colors):
             if n:
-                line = QHLine()
-                self.layer_colors.addWidget(line)
+                self.layer_colors.addWidget(QHLine())
             self.color_frame = ColorFrame(shoes_frame=self, pd_color=view_color)
             self.layer_colors.addWidget(self.color_frame)
         layer.addLayout(self.layer_colors)
@@ -61,15 +56,17 @@ class ShoesFrame(ItemFrame, Item, ShoesFrameInterface):
     def set_selected_size_frame(self, size_frame: SizeFrame) -> None:
         if self.__selected_size_frame:
             self.__selected_size_frame.setStyleSheet(
-                f"background-color: {self.default_color_bg}; color: {self.default_color_text}")
+                f'QFrame:hover {{color: {self.default_color_text}; background-color: {self.color_fon_on_enter};}} '
+                f'background-color: {self.default_color_bg}; color: {self.default_color_text}')
         self.__selected_size_frame = size_frame
         self.__selected_size_frame.setStyleSheet(
             f"background-color: {self.current_color_bg}; color: {self.current_color_text}")
         price_text = self.__selected_size_frame.pr_price
-        self.label_item_description.price_line_edit.setText(f'{price_text:g}')
-        self.label_item_description.price_line_edit.show()
-        self.label_item_description.price_line_edit.setFocus()
-        self.label_item_description.price_line_edit.selectAll()
+        self.desc_frame.price_line_edit.setText(f'{price_text:g}')
+        self.desc_frame.price_line_edit.show()
+        self.desc_frame.price_line_edit.setFocus()
+        self.desc_frame.price_line_edit.selectAll()
+        self.desc_frame.btn_plus.show()
 
     def del_selected_size_frame(self) -> None:
         self.__selected_size_frame = None

@@ -7,12 +7,12 @@ from prjstore.ui.pyside.sale_registration.schemas import ViewSize, ViewWidth
 
 class WidthFrame(QFrame):
     pd_sizes: list[ViewSize]
-    pd_width: str
+    pr_width: str
     count_in_row = 15
 
     def __init__(self, pd_width: ViewWidth = '', shoes_frame=None):
         super().__init__()
-        self.pd_width = pd_width.width
+        self.pr_width = pd_width.width
         self.pd_sizes = pd_width.sizes
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.adjustSize()
@@ -20,8 +20,8 @@ class WidthFrame(QFrame):
         layer_widths = QtWidgets.QVBoxLayout()
         layer_widths.setContentsMargins(0, 0, 0, 5)
 
-        if self.pd_width:
-            label_width = QLabel(f'{self.pd_width}')
+        if self.pr_width:
+            label_width = QLabel(f'{self.pr_width}')
             label_width.setStyleSheet("font-size: 12pt;")
             layer_widths.addWidget(label_width)
 

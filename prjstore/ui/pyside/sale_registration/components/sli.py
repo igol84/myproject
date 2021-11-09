@@ -6,6 +6,12 @@ from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QLabel, QLineE
 
 
 class SLI_Frame(QWidget):
+    sli_product_id: str
+    sli_product_name: str
+    sli_price: float
+    sli_price_format: str
+    sli_qty: int
+
     default_color_bg = '#E1E1E1'
     default_color_text = '#000'
     color_fon_enter = '#CCC'
@@ -16,12 +22,8 @@ class SLI_Frame(QWidget):
     font_family = 'Times'
     font_size = 10
 
-    def __init__(self, parent,
-                 sli_product_id: int,
-                 sli_product_name: str,
-                 sli_sale_price: float,
-                 sli_sale_price_format: str,
-                 sli_qty: int):
+    def __init__(self, parent, sli_product_id: int, sli_product_name: str, sli_sale_price: float,
+                 sli_sale_price_format: str, sli_qty: int):
         super().__init__()
         self.__parent_form = parent
         self.sli_product_id = sli_product_id

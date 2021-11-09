@@ -1,12 +1,12 @@
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtGui import QFontMetrics, QFont
-from PySide2.QtWidgets import QWidget, QApplication, QLabel, QLineEdit, QFrame
+from PySide2.QtWidgets import QWidget, QApplication, QLabel, QLineEdit, QFrame, QPushButton
 
-from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame
 from prjstore.ui.pyside.sale_registration.components.shoes_components.shoes_frame_interface import ShoesFrameInterface
+from prjstore.ui.pyside.utils.widgets import ItemFrame
 
 
-class ShoesDesc(ItemFrame):
+class ShoesDescFrame(ItemFrame):
     # height_ = 130
     pr_name: str
     pr_price: float
@@ -17,7 +17,6 @@ class ShoesDesc(ItemFrame):
         self.setFrameStyle(QFrame.NoFrame)
         self.parent_form = parent
         self.pr_name = pr_name
-        self.pr_price_format = ''
         self.setFixedHeight(30)
         layer = QtWidgets.QVBoxLayout()
         layer.setMargin(0)
@@ -30,6 +29,9 @@ class ShoesDesc(ItemFrame):
         self.price_line_edit = LineEditPrice(parent=self, text='0')
         self.price_line_edit.returnPressed.connect(self.on_pressed_price_line_edit)
         self.price_line_edit.hide()
+        self.btn_plus = QPushButton(parent=self, text='+')
+        self.btn_plus.setMaximumSize(25, 25)
+        self.btn_plus.hide()
         self.setLayout(layer)
 
     def __get_shoes_frame(self) -> ShoesFrameInterface:
@@ -56,6 +58,7 @@ class ShoesDesc(ItemFrame):
         font.setPointSize(self.font_size)
         painter.setFont(font)
         self.price_line_edit.move(self.width() - 100, 4)
+        self.btn_plus.move(self.width() - self.btn_plus.width() - 3, 3)
         painter.end()
         return QFrame.paintEvent(self, event)
 
@@ -68,6 +71,7 @@ class ShoesDesc(ItemFrame):
         # return default style on the previous selected widget
         if self.parent_form:
             if self.parent_form.selected_item_widget:
+                print(self.parent_form.selected_item_widget)
                 if self.parent_form.selected_item_widget is self:
                     self.color_fon = self.color_fon_on_enter
                     self.color_text = self.default_color_text
@@ -86,6 +90,7 @@ class ShoesDesc(ItemFrame):
 
     def hide_elements(self):
         self.price_line_edit.hide()
+        self.btn_plus.hide()
         self.shoes_frame.hide_colors()
 
     def enterEvent(self, event: QtCore.QEvent) -> None:
@@ -124,9 +129,9 @@ class LineEditPrice(QLineEdit):
     def __init__(self, text, parent):
         super().__init__(text, parent)
         font = self.font()
-        font.setPointSize(ShoesDesc.font_size)
+        font.setPointSize(ShoesDescFrame.font_size)
         self.setFont(font)
-        self.setFixedSize(75, 22)
+        self.setFixedSize(60, 22)
         validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]{1,7}[.]*[0-9]{0,2}"))
         self.setValidator(validator_reg)
 
@@ -138,7 +143,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = QWidget()
     v_box = QVBoxLayout(win)
-    frame = ShoesDesc(pr_name='Кеды Converse Chuck 70 высокие высокие высокие высокие')
+    frame = ShoesDescFrame(pr_name='Кеды Converse Chuck 70 высокие высокие высокие высокие')
     v_box.addWidget(frame)
     win.show()
     sys.exit(app.exec_())

@@ -4,23 +4,23 @@ from PySide2 import QtCore, QtGui
 from PySide2.QtGui import QFontMetrics, QFont
 from PySide2.QtWidgets import QWidget, QApplication, QSpinBox, QPushButton, QLabel, QLineEdit, QFrame
 
-from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame, Item
+from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
 from prjstore.ui.pyside.sale_registration.schemas import ViewProduct
+from prjstore.ui.pyside.utils.widgets import ItemFrame
 
 
-class ProductFrame(ItemFrame, Item):
-
+class ProductFrame(ItemFrame, AbstractSoldItem):
     def __init__(self, parent, item_pd: ViewProduct):
         super().__init__()
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setFixedHeight(self.height_)
+        self.setMinimumWidth(300)
         self.__parent_form = parent
         self.pr_id = item_pd.prod_id
         self.pr_name = item_pd.name
         self.pr_price = item_pd.price
         self.pr_price_format = item_pd.price_format
         self.pr_qty = item_pd.qty
-        self.pr_price_format = item_pd.price_format
 
         text_item_description = f'{self.pr_id}:{self.pr_name}'
         self.label_item_description = LabelItemDescription(parent=self, text=text_item_description)
@@ -92,13 +92,7 @@ class ProductFrame(ItemFrame, Item):
         # return default style on the previous selected widget
         if self.parent_form:
             if self.parent_form.selected_item_widget:
-                if self.parent_form.selected_item_widget is self:
-                    self.color_fon = self.color_fon_on_enter
-                    self.color_text = self.default_color_text
-                    self.parent_form.selected_item_widget.hide_elements()
-                    self.parent_form.selected_item_widget = None
-                    return None
-                else:
+                if self.parent_form.selected_item_widget is not self:
                     self.parent_form.selected_item_widget.color_fon = self.default_color_bg
                     self.parent_form.selected_item_widget.color_text = self.default_color_text
                     self.parent_form.selected_item_widget.update()

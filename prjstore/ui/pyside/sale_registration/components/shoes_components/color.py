@@ -17,9 +17,9 @@ class ColorFrame(QFrame):
         self.adjustSize()
         # self.setStyleSheet(f"background-color: #FF1493")
 
-        v_layer = QtWidgets.QVBoxLayout()
-        v_layer.setContentsMargins(0, 0, 0, 0)
-        v_layer.setSpacing(0)
+        layer_widths = QtWidgets.QVBoxLayout()
+        layer_widths.setContentsMargins(0, 0, 0, 0)
+        layer_widths.setSpacing(0)
 
         if self.pd_color:
             label_color = QLabel(f'{self.pd_color}')
@@ -29,12 +29,12 @@ class ColorFrame(QFrame):
             font.setItalic(True)
             label_color.setFont(font)
             label_color.setAlignment(QtCore.Qt.AlignCenter)
-            v_layer.addWidget(label_color)
+            layer_widths.addWidget(label_color)
 
         for view_width in self.pd_widths:
-            v_layer.addWidget(WidthFrame(pd_width=view_width, shoes_frame=shoes_frame))
+            layer_widths.addWidget(WidthFrame(pd_width=view_width, shoes_frame=shoes_frame))
 
-        self.setLayout(v_layer)
+        self.setLayout(layer_widths)
 
     def cont_sizes(self):
         return sum([len(width.sizes) for width in self.pd_widths])

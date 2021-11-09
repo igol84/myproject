@@ -1,10 +1,9 @@
 from PySide2.QtWidgets import QWidget, QVBoxLayout, QApplication, QLabel, QSizePolicy
 from PySide2 import QtWidgets, QtCore, QtGui
 
-from prjstore.ui.pyside.sale_registration.components.abstract_product import ItemFrame
 from prjstore.ui.pyside.sale_registration.components.shoes_components.shoes_frame_interface import ShoesFrameInterface
 from prjstore.ui.pyside.sale_registration.schemas import ViewSize
-from prjstore.ui.pyside.utils.widgets import QHLine
+from prjstore.ui.pyside.utils.widgets import QHLine, ItemFrame
 
 
 class SizeFrame(ItemFrame):
@@ -21,6 +20,9 @@ class SizeFrame(ItemFrame):
         self.pr_qty = pd_size.qty
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.setCursor(QtCore.Qt.PointingHandCursor)
+        self.setStyleSheet(f'QFrame:hover {{'
+                           f'color: {self.color_text}; '
+                           f'background-color: {self.color_fon_on_enter};}} ')
 
         layer = QtWidgets.QVBoxLayout()
         layer.setMargin(4)

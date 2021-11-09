@@ -7,7 +7,7 @@ from prjstore.db import API_DB
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 from prjstore.ui.pyside.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
-from prjstore.ui.pyside.sale_registration.components.abstract_product import Item
+from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
 from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
 from prjstore.ui.pyside.sale_registration.schemas import ModelProduct
@@ -24,8 +24,8 @@ class SaleForm(QWidget):
         self.handler = SaleRegistrationHandler(test=test, db=db)
         self.items: dict[str, ModelProduct] = None
         self.sli_list: dict[tuple[str, float]: ModelProduct] = self.handler.get_sale_line_items()
+        self.selected_item_widget: AbstractSoldItem = None
         self.selected_sli_widget: SLI_Frame = None
-        self.selected_item_widget: Item = None
 
         # SLI ----------------------- left panel ------------------------------
         self.ui.date_edit.setDate(QDate.currentDate())
