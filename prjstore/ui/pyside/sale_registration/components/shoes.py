@@ -37,8 +37,17 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
         self.setLayout(layer)
         self.hide_colors()
 
+    def hide_elements(self):
+        self.price_line_edit.hide()
+        self.qty_box.hide()
+        self.btn_plus.hide()
+
     def hide_colors(self):
         for n in range(self.layer_colors.count()):
+            if self.parent_form.selected_item_widget:
+                self.__selected_size_frame.setStyleSheet(
+                    f'QFrame:hover {{color: {self.default_color_text}; background-color: {self.color_fon_on_enter};}} '
+                    f'background-color: {self.default_color_bg}; color: {self.default_color_text}')
             self.layer_colors.itemAt(n).widget().hide()
 
     def show_colors(self):

@@ -71,7 +71,6 @@ class ShoesDescFrame(ItemFrame):
         # return default style on the previous selected widget
         if self.parent_form:
             if self.parent_form.selected_item_widget:
-                print(self.parent_form.selected_item_widget)
                 if self.parent_form.selected_item_widget is self:
                     self.color_fon = self.color_fon_on_enter
                     self.color_text = self.default_color_text
