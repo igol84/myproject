@@ -20,9 +20,7 @@ class SizeFrame(ItemFrame):
         self.pr_qty = pd_size.qty
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.setCursor(QtCore.Qt.PointingHandCursor)
-        self.setStyleSheet(f'QFrame:hover {{'
-                           f'color: {self.color_text}; '
-                           f'background-color: {self.color_fon_on_enter};}} ')
+        self.set_default_style()
 
         layer = QtWidgets.QVBoxLayout()
         layer.setMargin(4)
@@ -50,7 +48,12 @@ class SizeFrame(ItemFrame):
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
         if self.shoes_frame:
             self.shoes_frame.set_selected_size_frame(self)
-        # change style
+
+    def set_default_style(self) -> None:
+        self.setStyleSheet(f'QFrame:hover {{background-color: {self.color_fon_on_enter}; color: {self.color_text};}}')
+
+    def set_selected_style(self) -> None:
+        self.setStyleSheet(f'background-color: {self.current_color_bg}; color: {self.current_color_text}')
 
 
 if __name__ == '__main__':

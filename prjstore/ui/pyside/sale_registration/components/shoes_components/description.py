@@ -32,6 +32,7 @@ class ShoesDescFrame(ItemFrame):
         self.btn_plus = QPushButton(parent=self, text='+')
         self.btn_plus.setMaximumSize(25, 25)
         self.btn_plus.hide()
+        self.btn_plus.clicked.connect(self.on_push_button_plus)
         self.setLayout(layer)
 
     def __get_shoes_frame(self) -> ShoesFrameInterface:
@@ -71,7 +72,7 @@ class ShoesDescFrame(ItemFrame):
         # return default style on the previous selected widget
         if self.parent_form:
             if self.parent_form.selected_item_widget:
-                if self.parent_form.selected_item_widget is self:
+                if self.parent_form.selected_item_widget is self.parent():
                     self.color_fon = self.color_fon_on_enter
                     self.color_text = self.default_color_text
                     self.parent_form.selected_item_widget.hide_elements()
@@ -83,14 +84,9 @@ class ShoesDescFrame(ItemFrame):
                     self.parent_form.selected_item_widget.color_text = self.default_color_text
                     self.parent_form.selected_item_widget.update()
                     self.parent_form.selected_item_widget.hide_elements()
-            self.parent_form.selected_item_widget = self
+            self.parent_form.selected_item_widget = self.parent()
             self.shoes_frame.show_colors()
         return QFrame.mousePressEvent(self, event)
-
-    def hide_elements(self):
-        self.price_line_edit.hide()
-        self.btn_plus.hide()
-        self.shoes_frame.hide_colors()
 
     def enterEvent(self, event: QtCore.QEvent) -> None:
         if self.parent_form and self.parent_form.selected_item_widget is not self:
@@ -107,7 +103,16 @@ class ShoesDescFrame(ItemFrame):
         return QFrame.enterEvent(self, event)
 
     def on_pressed_price_line_edit(self):
-        print(self.price_line_edit.text())
+        if self.price_line_edit.hasFocus():
+            self.price_line_edit.clearFocus()
+        if self.parent_form:
+            self.parent_form.put_on_sale()
+        self.update()
+
+    def on_push_button_plus(self):
+        if self.parent_form:
+            self.parent_form.put_on_sale()
+        self.update()
 
 
 class LabelItemDescription(QLabel):

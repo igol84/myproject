@@ -37,17 +37,21 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
         self.setLayout(layer)
         self.hide_colors()
 
+    def get_sale_price(self) -> float:
+        return self.desc_frame.price_line_edit.text()
+
+    def get_sale_qty(self) -> int:
+        return 1
+
     def hide_elements(self):
-        self.price_line_edit.hide()
-        self.qty_box.hide()
-        self.btn_plus.hide()
+        self.desc_frame.price_line_edit.hide()
+        self.desc_frame.btn_plus.hide()
+        self.hide_colors()
 
     def hide_colors(self):
         for n in range(self.layer_colors.count()):
-            if self.parent_form.selected_item_widget:
-                self.__selected_size_frame.setStyleSheet(
-                    f'QFrame:hover {{color: {self.default_color_text}; background-color: {self.color_fon_on_enter};}} '
-                    f'background-color: {self.default_color_bg}; color: {self.default_color_text}')
+            if self.selected_size_frame:
+                self.selected_size_frame.set_default_style()
             self.layer_colors.itemAt(n).widget().hide()
 
     def show_colors(self):
@@ -64,12 +68,10 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
 
     def set_selected_size_frame(self, size_frame: SizeFrame) -> None:
         if self.__selected_size_frame:
-            self.__selected_size_frame.setStyleSheet(
-                f'QFrame:hover {{color: {self.default_color_text}; background-color: {self.color_fon_on_enter};}} '
-                f'background-color: {self.default_color_bg}; color: {self.default_color_text}')
+            self.__selected_size_frame.set_default_style()
+        self.pr_id = size_frame.pr_id
         self.__selected_size_frame = size_frame
-        self.__selected_size_frame.setStyleSheet(
-            f"background-color: {self.current_color_bg}; color: {self.current_color_text}")
+        self.__selected_size_frame.set_selected_style()
         price_text = self.__selected_size_frame.pr_price
         self.desc_frame.price_line_edit.setText(f'{price_text:g}')
         self.desc_frame.price_line_edit.show()
