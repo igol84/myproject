@@ -23,7 +23,7 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
         layer.setMargin(0)
         self.layer_desc = QtWidgets.QVBoxLayout()
         self.layer_desc.setMargin(0)
-        self.desc_frame = ShoesDescFrame(parent=parent, pr_name=self.pr_name)
+        self.desc_frame = ShoesDescFrame(parent_form=parent, shoes_frame=self)
         self.layer_desc.addWidget(self.desc_frame)
         layer.addLayout(self.layer_desc)
         self.layer_colors = QtWidgets.QVBoxLayout()

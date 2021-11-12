@@ -10,3 +10,6 @@ class AbstractSoldItem:
 
     def get_sale_qty(self) -> int:
         ...
+
+    def hide_elements(self) -> None:
+        ...

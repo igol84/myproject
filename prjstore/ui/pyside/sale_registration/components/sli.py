@@ -22,12 +22,11 @@ class SLI_Frame(QWidget):
     font_family = 'Times'
     font_size = 10
 
-    def __init__(self, parent, sli_product_id: int, sli_product_name: str, sli_sale_price: float,
+    def __init__(self, parent, sli_product_id: int, sli_desc: str, sli_sale_price: float,
                  sli_sale_price_format: str, sli_qty: int):
         super().__init__()
         self.__parent_form = parent
         self.sli_product_id = sli_product_id
-        self.sli_product_name = sli_product_name
         self.sli_price = sli_sale_price
         self.sli_price_format = sli_sale_price_format
         self.sli_qty = sli_qty
@@ -35,8 +34,7 @@ class SLI_Frame(QWidget):
         self.setMinimumSize(self.width_, self.height_)
         self.color_fon = self.default_color_bg
         self.color_text = self.default_color_text
-        text_sli_description = f'{self.sli_product_id}:{self.sli_product_name}'
-        self.label_item_description = LabelItemDescription(parent=self, text=text_sli_description)
+        self.label_item_description = LabelItemDescription(parent=self, text=sli_desc)
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
         self.label_item_description.move(5, 0)
         self.price_edit = LineEditPrice(self.sli_price, parent=self)

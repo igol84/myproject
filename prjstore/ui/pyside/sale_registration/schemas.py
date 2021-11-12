@@ -24,6 +24,16 @@ class ModelProduct(BaseModel):
     type: Optional[str] = None
     shoes: Optional[ModelShoes] = None
 
+    def get_desc(self) -> str:
+        if self.shoes:
+            desc = self.name
+            desc += f' {self.shoes.color}' if self.shoes.color else ''
+            desc += f' {self.shoes.width}' if self.shoes.width else ''
+            desc += f' {self.shoes.size}'
+        else:
+            desc = self.name
+        return desc
+
 
 class ViewProduct(BaseModel):
     prod_id: str
