@@ -17,22 +17,6 @@ class LabelItemDescription(QLabel):
         painter.drawText(self.rect(), self.alignment(), pixels_text)
 
 
-class LoadWidget(QLabel):
-    def __init__(self, parent):
-        super().__init__(parent=parent)
-        self.setWindowFlags(QtCore.Qt.FramelessWindowHint)  # transparent
-        self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-        gif = QtGui.QMovie('loading.gif')
-        gif.setScaledSize(QtCore.QSize(80, 80))
-        self.setFixedSize(gif.scaledSize())
-        self.setMovie(gif)
-        gif.start()
-
-    def paintEvent(self, event: QtGui.QPaintEvent) -> None:
-        self.move(self.parent().rect().center() - self.rect().center())
-        QLabel.paintEvent(self, event)
-
-
 class ItemFrame(QFrame):
     default_color_bg = '#E1E1E1'
     default_color_text = '#000'

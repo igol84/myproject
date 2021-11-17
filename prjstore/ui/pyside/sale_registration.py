@@ -11,24 +11,26 @@ from prjstore.ui.pyside.sale_registration.components.abstract_product import Abs
 from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
 from prjstore.ui.pyside.sale_registration.schemas import ModelProduct
-from prjstore.ui.pyside.utils.widgets import LoadWidget
+from prjstore.ui.pyside.utils.load_widget import LoadWidget
 
 
 class SaleForm(QWidget):
+    items: list[ModelProduct] = None
+    sli_list: dict[tuple[str, float]: ModelProduct] = []
+    selected_item_widget: AbstractSoldItem = None
+    selected_sli_widget: SLI_Frame = None
+
     def __init__(self, db=None, test=False):
         super().__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.resize(1200, 600)
-        self.load_widget = LoadWidget(self)
-        self.load_widget.hide()  # TODO
+        self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
+        self.load_widget.show()  # TODO
         if not test and db is None:
             db = API_DB()
         self.handler = SaleRegistrationHandler(test=test, db=db)
-        self.items: list[ModelProduct] = None
-        self.sli_list: dict[tuple[str, float]: ModelProduct] = self.handler.get_sale_line_items()
-        self.selected_item_widget: AbstractSoldItem = None
-        self.selected_sli_widget: SLI_Frame = None
+        self.sli_list = self.handler.get_sale_line_items()
 
         # SLI ----------------------- left panel ------------------------------
         self.ui.date_edit.setDate(QDate.currentDate())
