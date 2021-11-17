@@ -2,7 +2,7 @@ from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtGui import QFontMetrics, QFont
 from PySide2.QtWidgets import QLabel, QLineEdit, QFrame, QPushButton
 
-from prjstore.ui.pyside.sale_registration.components.shoes_components.shoes_frame_interface import ShoesFrameInterface
+from prjstore.ui.pyside.sale_registration.components.shoes_comps.shoes_frame_interface import ShoesFrameInterface
 
 
 class ShoesDescFrame(QFrame):

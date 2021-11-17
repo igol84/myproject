@@ -11,6 +11,7 @@ from prjstore.ui.pyside.sale_registration.components.abstract_product import Abs
 from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
 from prjstore.ui.pyside.sale_registration.schemas import ModelProduct
+from prjstore.ui.pyside.utils.widgets import LoadWidget
 
 
 class SaleForm(QWidget):
@@ -19,10 +20,12 @@ class SaleForm(QWidget):
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.resize(1200, 600)
+        self.load_widget = LoadWidget(self)
+        self.load_widget.hide()  # TODO
         if not test and db is None:
             db = API_DB()
         self.handler = SaleRegistrationHandler(test=test, db=db)
-        self.items: dict[str, ModelProduct] = None
+        self.items: list[ModelProduct] = None
         self.sli_list: dict[tuple[str, float]: ModelProduct] = self.handler.get_sale_line_items()
         self.selected_item_widget: AbstractSoldItem = None
         self.selected_sli_widget: SLI_Frame = None
@@ -99,13 +102,7 @@ class SaleForm(QWidget):
         sale_price = self.selected_item_widget.get_sale_price()
         sale_qty = self.selected_item_widget.get_sale_qty()
         self.handler.put_on_sale(pr_id, int(sale_qty), float(sale_price))
-
-        if self.handler.is_item_exists(pr_id):
-            self.selected_item_widget.pr_qty = self.handler.get_item_qty_by_product_id(pr_id)
-        else:
-            if self.ui.src_items.text():
-                del self.items[pr_id]
-            self._update_items_layout()
+        self._update_items_layout()
         self._update_sli()
         self._update_total()
         self.ui.src_items.clear()

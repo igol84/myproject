@@ -2,8 +2,8 @@ from PySide2 import QtWidgets
 from PySide2.QtWidgets import QWidget, QApplication
 
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
-from prjstore.ui.pyside.sale_registration.components.shoes_components import ColorFrame, SizeFrame, ShoesDescFrame
-from prjstore.ui.pyside.sale_registration.components.shoes_components.shoes_frame_interface import ShoesFrameInterface
+from prjstore.ui.pyside.sale_registration.components.shoes_comps import ColorFrame, SizeFrame, ShoesDescFrame
+from prjstore.ui.pyside.sale_registration.components.shoes_comps.shoes_frame_interface import ShoesFrameInterface
 from prjstore.ui.pyside.sale_registration.schemas import ViewShoes, ViewSize, ViewWidth, ViewColor
 from prjstore.ui.pyside.utils.widgets import QHLine, ItemFrame
 

@@ -1,7 +1,7 @@
 from PySide2.QtWidgets import QWidget, QVBoxLayout, QApplication, QSizePolicy, QLabel, QFrame
 from PySide2 import QtWidgets, QtCore
 
-from prjstore.ui.pyside.sale_registration.components.shoes_components import SizeFrame
+from prjstore.ui.pyside.sale_registration.components.shoes_comps import SizeFrame
 from prjstore.ui.pyside.sale_registration.schemas import ViewSize, ViewWidth
 
 

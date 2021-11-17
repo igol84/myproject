@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -21,7 +21,7 @@ class ModelProduct(BaseModel):
     price: float
     price_format: str
     qty: int
-    type: Optional[str] = None
+    type: str = ''
     shoes: Optional[ModelShoes] = None
 
     def get_desc(self) -> str:
@@ -68,7 +68,7 @@ class ViewShoes(BaseModel):
     colors: list[ViewColor]
 
 
-def create_product_schemas_by_items(items: dict[int: Item]) -> list[Union[ViewProduct, ViewShoes]]:
+def create_product_schemas_by_items(items: dict[int: Item]) -> list[ModelProduct]:
     # creating data
     products: dict[str: ModelProduct] = {}
     for item_ in items.values():

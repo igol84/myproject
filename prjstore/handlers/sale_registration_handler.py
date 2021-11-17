@@ -1,6 +1,6 @@
 import datetime
 from pprint import pprint
-from typing import Optional, Union
+from typing import Optional
 from pydantic import validate_arguments
 
 from prjstore.db import API_DB
@@ -10,7 +10,7 @@ from prjstore.domain.sale import Sale
 from prjstore.handlers.data_for_test.sale_registration import put_test_data
 
 from prjstore.ui.pyside.sale_registration.schemas import (
-    ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items, ViewShoes, ViewProduct
+    ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items
 )
 
 
@@ -26,7 +26,7 @@ class SaleRegistrationHandler:
             self._store = Store.create_from_schema(self.db.store.get(id=1))
 
     @validate_arguments
-    def get_store_items(self, search: Optional[str] = None) -> list[Union[ViewProduct, ViewShoes]]:
+    def get_store_items(self, search: Optional[str] = None) -> list[ModelProduct]:
         products: dict[int: Item] = self._store.items if not search else self.search_items(search)
         return create_product_schemas_by_items(products)
 
