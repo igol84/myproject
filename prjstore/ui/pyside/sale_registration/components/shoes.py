@@ -1,5 +1,5 @@
-from PySide2 import QtWidgets
-from PySide2.QtWidgets import QWidget, QApplication
+from PySide6 import QtWidgets
+from PySide6.QtWidgets import QWidget, QApplication
 
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
 from prjstore.ui.pyside.sale_registration.components.shoes_comps import ColorFrame, SizeFrame, ShoesDescFrame
@@ -20,9 +20,9 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
         self.pr_colors = item_pd.colors
 
         layer = QtWidgets.QVBoxLayout()
-        layer.setMargin(0)
+        layer.setContentsMargins(0, 0, 0, 0)
         self.layer_desc = QtWidgets.QVBoxLayout()
-        self.layer_desc.setMargin(0)
+        self.layer_desc.setContentsMargins(0, 0, 0, 0)
         self.desc_frame = ShoesDescFrame(parent_form=parent, shoes_frame=self)
         self.layer_desc.addWidget(self.desc_frame)
         layer.addLayout(self.layer_desc)
@@ -87,7 +87,7 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
 
 if __name__ == "__main__":
     import sys
-    from PySide2.QtWidgets import QVBoxLayout
+    from PySide6.QtWidgets import QVBoxLayout
 
     app = QApplication(sys.argv)
 
@@ -132,4 +132,4 @@ if __name__ == "__main__":
     frame = ShoesFrame(parent=None, item_pd=item)
     v_box.addWidget(frame)
     win.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

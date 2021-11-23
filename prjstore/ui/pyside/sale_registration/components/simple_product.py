@@ -1,8 +1,8 @@
 import sys
 
-from PySide2 import QtCore, QtGui
-from PySide2.QtGui import QFontMetrics, QFont
-from PySide2.QtWidgets import QWidget, QApplication, QSpinBox, QPushButton, QLabel, QLineEdit, QFrame
+from PySide6 import QtCore, QtGui
+from PySide6.QtGui import QFontMetrics, QFont
+from PySide6.QtWidgets import QWidget, QApplication, QSpinBox, QPushButton, QLabel, QLineEdit, QFrame
 
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
 from prjstore.ui.pyside.sale_registration.schemas import ViewProduct
@@ -174,13 +174,13 @@ class LineEditPrice(QLineEdit):
         font = self.font()
         font.setPointSize(ProductFrame.font_size)
         self.setFont(font)
-        self.setFixedWidth(75)
-        validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]{1,7}[.]*[0-9]{0,2}"))
+        self.setFixedSize(75, 24)
+        validator_reg = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("[0-9]{1,7}[.]*[0-9]{0,2}"))
         self.setValidator(validator_reg)
 
 
 if __name__ == "__main__":
-    from PySide2.QtWidgets import QVBoxLayout
+    from PySide6.QtWidgets import QVBoxLayout
 
     app = QApplication(sys.argv)
     product = ViewProduct(type='product', prod_id='2', price=1600, price_format='1600 грн.', qty=3,
@@ -190,4 +190,4 @@ if __name__ == "__main__":
     frame = ProductFrame(parent=None, item_pd=product)
     v_box.addWidget(frame)
     win.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

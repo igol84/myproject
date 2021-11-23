@@ -1,6 +1,6 @@
-from PySide2 import QtGui, QtCore
-from PySide2.QtGui import QFontMetrics
-from PySide2.QtWidgets import QFrame, QLabel
+from PySide6 import QtGui, QtCore
+from PySide6.QtGui import QFontMetrics
+from PySide6.QtWidgets import QFrame, QLabel
 
 
 class LabelItemDescription(QLabel):
@@ -56,7 +56,7 @@ class QVLine(QFrame):
 
 if __name__ == '__main__':
     import sys
-    from PySide2.QtWidgets import QFrame, QApplication, QWidget, QVBoxLayout
+    from PySide6.QtWidgets import QFrame, QApplication, QWidget, QVBoxLayout
 
     app = QApplication(sys.argv)
     win = QWidget()
@@ -64,4 +64,4 @@ if __name__ == '__main__':
     v_box.addWidget(QHLine())
     v_box.addWidget(QVLine())
     win.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

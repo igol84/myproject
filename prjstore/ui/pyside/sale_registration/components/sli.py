@@ -1,8 +1,8 @@
 import sys
 
-from PySide2 import QtCore, QtGui
-from PySide2.QtGui import QFontMetrics, QFont
-from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QLabel, QLineEdit
+from PySide6 import QtCore, QtGui
+from PySide6.QtGui import QFontMetrics, QFont
+from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QLabel, QLineEdit
 
 
 class SLI_Frame(QWidget):
@@ -45,7 +45,7 @@ class SLI_Frame(QWidget):
         self.btn_minus.hide()
         self.price_edit.hide()
 
-    def __get_parent_form(self):
+    def __get_parent_form(self) -> object:
         return self.__parent_form
 
     parent_form = property(__get_parent_form)
@@ -148,14 +148,14 @@ class LineEditPrice(QLineEdit):
         font.setPointSize(SLI_Frame.font_size)
         self.setFont(font)
         self.setFixedWidth(75)
-        validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]{1,7}[.]*[0-9]{0,2}"))
+        validator_reg = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("[0-9]{1,7}[.]*[0-9]{0,2}"))
         self.setValidator(validator_reg)
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     w = SLI_Frame(parent=None, sli_product_id=2,
-                  sli_product_name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
+                  sli_desc='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
                   sli_sale_price=200, sli_sale_price_format='200 грн.', sli_qty=2)
     w.show()
 
@@ -163,4 +163,4 @@ if __name__ == "__main__":
     # item2 = Item(pr=product2, qty=1000, buy_price=1200)
     # w2 = ItemFrame(parent=None, pr_item=item2)
     # w2.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

@@ -1,7 +1,7 @@
 import sys
 
-from PySide2.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
-from PySide2.QtCore import QDate
+from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
+from PySide6.QtCore import QDate
 
 from prjstore.db import API_DB
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
@@ -26,7 +26,7 @@ class SaleForm(QWidget):
         self.ui.setupUi(self)
         self.resize(1200, 600)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
-        self.load_widget.show()  # TODO
+        self.load_widget.hide()  # TODO
         if not test and db is None:
             db = API_DB()
         self.handler = SaleRegistrationHandler(test=test, db=db)
@@ -144,4 +144,4 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     w = SaleForm(test=True)
     w.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

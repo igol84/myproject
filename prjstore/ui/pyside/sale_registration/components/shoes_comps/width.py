@@ -1,5 +1,5 @@
-from PySide2.QtWidgets import QWidget, QVBoxLayout, QApplication, QSizePolicy, QLabel, QFrame
-from PySide2 import QtWidgets, QtCore
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QApplication, QSizePolicy, QLabel, QFrame
+from PySide6 import QtWidgets, QtCore
 
 from prjstore.ui.pyside.sale_registration.components.shoes_comps import SizeFrame
 from prjstore.ui.pyside.sale_registration.schemas import ViewSize, ViewWidth
@@ -79,4 +79,4 @@ if __name__ == '__main__':
     frame = WidthFrame(pd_width=view_width)
     v_box.addWidget(frame)
     win.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

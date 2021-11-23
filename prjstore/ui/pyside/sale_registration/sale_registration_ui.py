@@ -1,17 +1,24 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'sale_registration.ui'
+## Form generated from reading UI file 'sale_registrationNAzsWu.ui'
 ##
-## Created by: Qt User Interface Compiler version 5.15.2
+## Created by: Qt User Interface Compiler version 6.2.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
-
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QAbstractButton, QApplication, QComboBox, QDateEdit,
+    QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout,
+    QLabel, QLayout, QLineEdit, QScrollArea,
+    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -26,7 +33,6 @@ class Ui_Form(object):
         font = QFont()
         font.setPointSize(15)
         font.setBold(True)
-        font.setWeight(75)
         self.title.setFont(font)
         self.title.setAlignment(Qt.AlignCenter)
 
@@ -87,12 +93,11 @@ class Ui_Form(object):
         self.scroll_slis.setObjectName(u"scroll_slis")
         font1 = QFont()
         font1.setBold(False)
-        font1.setWeight(50)
         self.scroll_slis.setFont(font1)
         self.scroll_slis.setWidgetResizable(True)
         self.widget_slis = QWidget()
         self.widget_slis.setObjectName(u"widget_slis")
-        self.widget_slis.setGeometry(QRect(0, 0, 508, 615))
+        self.widget_slis.setGeometry(QRect(0, 0, 508, 605))
         self.sli_layout = QVBoxLayout(self.widget_slis)
         self.sli_layout.setObjectName(u"sli_layout")
         self.scroll_slis.setWidget(self.widget_slis)
@@ -140,7 +145,7 @@ class Ui_Form(object):
         self.scroll_items.setWidgetResizable(True)
         self.widget_items = QWidget()
         self.widget_items.setObjectName(u"widget_items")
-        self.widget_items.setGeometry(QRect(0, 0, 508, 617))
+        self.widget_items.setGeometry(QRect(0, 0, 508, 609))
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -183,7 +188,6 @@ class Ui_Form(object):
         font3 = QFont()
         font3.setPointSize(10)
         font3.setBold(False)
-        font3.setWeight(50)
         self.total.setFont(font3)
         self.total.setStyleSheet(u"margin-left: 15px")
         self.total.setWordWrap(False)

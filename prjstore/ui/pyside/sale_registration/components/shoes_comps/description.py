@@ -1,6 +1,6 @@
-from PySide2 import QtCore, QtGui, QtWidgets
-from PySide2.QtGui import QFontMetrics, QFont
-from PySide2.QtWidgets import QLabel, QLineEdit, QFrame, QPushButton
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtGui import QFontMetrics, QFont
+from PySide6.QtWidgets import QLabel, QLineEdit, QFrame, QPushButton
 
 from prjstore.ui.pyside.sale_registration.components.shoes_comps.shoes_frame_interface import ShoesFrameInterface
 
@@ -18,9 +18,9 @@ class ShoesDescFrame(QFrame):
         self.pr_name = shoes_frame.pr_name
         self.setFixedHeight(30)
         layer = QtWidgets.QVBoxLayout()
-        layer.setMargin(0)
+        layer.setContentsMargins(0, 0, 0, 0)
         self.layer_desc = QtWidgets.QVBoxLayout()
-        self.layer_desc.setMargin(3)
+        self.layer_desc.setContentsMargins(3, 3, 3, 3)
         self.label_item_description = LabelItemDescription(text=self.pr_name)
         self.label_item_description.setFont(
             QFont(self.parent_shoes_frame.color_text, self.parent_shoes_frame.font_size))
@@ -100,7 +100,6 @@ class ShoesDescFrame(QFrame):
             self.parent_shoes_frame.color_fon = self.parent_shoes_frame.default_color_bg
             self.parent_shoes_frame.color_text = self.parent_shoes_frame.default_color_text
             self.update()
-        return QFrame.enterEvent(self, event)
 
     def on_pressed_price_line_edit(self):
         if self.price_line_edit.hasFocus():
@@ -136,6 +135,6 @@ class LineEditPrice(QLineEdit):
         font = self.font()
         font.setPointSize(self.parent().parent_shoes_frame.font_size)
         self.setFont(font)
-        self.setFixedSize(60, 22)
-        validator_reg = QtGui.QRegExpValidator(QtCore.QRegExp("[0-9]{1,7}[.]*[0-9]{0,2}"))
+        self.setFixedSize(60, 24)
+        validator_reg = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("[0-9]{1,7}[.]*[0-9]{0,2}"))
         self.setValidator(validator_reg)

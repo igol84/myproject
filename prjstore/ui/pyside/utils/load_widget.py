@@ -1,5 +1,5 @@
-from PySide2 import QtCore, QtGui
-from PySide2.QtWidgets import QLabel
+from PySide6 import QtCore, QtGui
+from PySide6.QtWidgets import QLabel
 
 
 class LoadImg(QLabel):
@@ -31,7 +31,7 @@ class LoadWidget(QLabel):
 
 
 if __name__ == '__main__':
-    from PySide2.QtWidgets import QApplication, QWidget
+    from PySide6.QtWidgets import QApplication, QWidget
     import sys
 
     app = QApplication(sys.argv)
@@ -39,4 +39,4 @@ if __name__ == '__main__':
     win = LoadWidget(parent=widget, path='loading.gif')
 
     widget.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

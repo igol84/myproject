@@ -1,5 +1,5 @@
-from PySide2.QtWidgets import QWidget, QVBoxLayout, QApplication, QLabel, QSizePolicy
-from PySide2 import QtWidgets, QtCore, QtGui
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QApplication, QLabel, QSizePolicy
+from PySide6 import QtWidgets, QtCore, QtGui
 
 from prjstore.ui.pyside.sale_registration.components.shoes_comps.shoes_frame_interface import ShoesFrameInterface
 from prjstore.ui.pyside.sale_registration.schemas import ViewSize
@@ -23,7 +23,7 @@ class SizeFrame(ItemFrame):
         self.set_default_style()
 
         layer = QtWidgets.QVBoxLayout()
-        layer.setMargin(4)
+        layer.setContentsMargins(4, 4, 4, 4)
         layer.setSpacing(2)
 
         label_size = QLabel(f'{self.pr_size:g}')
