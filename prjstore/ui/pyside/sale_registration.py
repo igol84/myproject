@@ -1,7 +1,7 @@
 import sys
 
 from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
-from PySide6.QtCore import QDate
+from PySide6.QtCore import QDate, Signal, QObject, QRunnable, Slot, QThreadPool
 
 from prjstore.db import API_DB
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
@@ -14,6 +14,26 @@ from prjstore.ui.pyside.sale_registration.schemas import ModelProduct
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 
 
+class DbSignals(QObject):
+    error = Signal(str)
+    result = Signal(API_DB)
+
+
+class DbWorker(QRunnable):
+    def __init__(self):
+        super().__init__()
+        self.signals = DbSignals()
+
+    @Slot()
+    def run(self):
+        try:
+            db = API_DB()
+        except OSError:
+            self.signals.error.emit('Нет подключения к интернету.')
+        else:
+            self.signals.result.emit(db)
+
+
 class SaleForm(QWidget):
     items: list[ModelProduct] = None
     sli_list: dict[tuple[str, float]: ModelProduct] = []
@@ -22,14 +42,31 @@ class SaleForm(QWidget):
 
     def __init__(self, db=None, test=False):
         super().__init__()
+        self.db = db
+        self.test = test
+        self.handler = None
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.resize(1200, 600)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
-        self.load_widget.hide()  # TODO
-        if not test and db is None:
-            db = API_DB()
-        self.handler = SaleRegistrationHandler(test=test, db=db)
+
+        if self.test:
+            self.set_db(db)
+
+        else:
+            self.thread_pool = QThreadPool()
+            db_worker = DbWorker()
+            db_worker.signals.error.connect(self.connection_error)
+            db_worker.signals.result.connect(self.set_db)
+            self.thread_pool.start(db_worker)
+
+    def connection_error(self, err: str):
+        QMessageBox.warning(self, err, err)
+        sys.exit(app.exec())
+
+    def set_db(self, db):
+        self.db = db
+        self.handler = SaleRegistrationHandler(test=self.test, db=self.db)
         self.sli_list = self.handler.get_sale_line_items()
 
         # SLI ----------------------- left panel ------------------------------
@@ -54,9 +91,11 @@ class SaleForm(QWidget):
         self.ui.src_items.textChanged.connect(self.on_search_items_text_changed)
 
         # Items -------------------- Ok Cancel --------------------------------
-        self.save_button = QPushButton('Сохранить')
-        self.ui.buttonBox.addButton(self.save_button, QDialogButtonBox.AcceptRole)
+        save_button = QPushButton('Сохранить')
+        self.ui.buttonBox.addButton(save_button, QDialogButtonBox.AcceptRole)
         self.ui.buttonBox.accepted.connect(self.press_save)
+
+        self.load_widget.hide()
 
     # SLI ----------------------- left panel ------------------------------
     def _update_sli(self):
@@ -142,6 +181,6 @@ class SaleForm(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = SaleForm(test=True)
+    w = SaleForm(test=False)
     w.show()
     sys.exit(app.exec())
