@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'sale_registrationNAzsWu.ui'
+## Form generated from reading UI file 'sale_registrationuaQZYh.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.1
 ##
@@ -154,21 +154,6 @@ class Ui_Form(object):
         self.items_layout = QVBoxLayout(self.widget_items)
         self.items_layout.setObjectName(u"items_layout")
         self.items_layout.setContentsMargins(5, 5, 5, 5)
-        self.label_6 = QLabel(self.widget_items)
-        self.label_6.setObjectName(u"label_6")
-
-        self.items_layout.addWidget(self.label_6)
-
-        self.label_5 = QLabel(self.widget_items)
-        self.label_5.setObjectName(u"label_5")
-
-        self.items_layout.addWidget(self.label_5)
-
-        self.label_4 = QLabel(self.widget_items)
-        self.label_4.setObjectName(u"label_4")
-
-        self.items_layout.addWidget(self.label_4)
-
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.items_layout.addItem(self.verticalSpacer)
@@ -216,9 +201,6 @@ class Ui_Form(object):
         self.label_2.setText(QCoreApplication.translate("Form", u"\u041a\u0442\u043e \u043f\u0440\u043e\u0434\u0430\u043b", None))
         self.label_3.setText(QCoreApplication.translate("Form", u"\u0414\u0430\u0442\u0430 \u043f\u0440\u043e\u0434\u0430\u0436\u0438", None))
         self.title_items.setText(QCoreApplication.translate("Form", u"\u0422\u043e\u0432\u0430\u0440\u044b", None))
-        self.label_6.setText(QCoreApplication.translate("Form", u"TextLabel", None))
-        self.label_5.setText(QCoreApplication.translate("Form", u"TextLabel", None))
-        self.label_4.setText(QCoreApplication.translate("Form", u"TextLabel", None))
         self.total.setText("")
     # retranslateUi
 

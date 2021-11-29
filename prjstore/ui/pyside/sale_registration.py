@@ -45,55 +45,48 @@ class SaleForm(QWidget):
         self.db = db
         self.test = test
         self.handler = None
+        self.resize(1200, 600)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
-        self.resize(1200, 600)
+        self.ui.src_items.textChanged.connect(self.on_search_items_text_changed)
+        self.ui.date_edit.setDate(QDate.currentDate())
+        self.ui.date_edit.dateChanged.connect(self.on_date_edit_changed)
+
+        self.ui.combo_box_place_of_sale.addItem('', userData=None)
+        self.ui.combo_box_place_of_sale.currentIndexChanged.connect(self.on_combo_box_place_of_sale_changed)
+
+        self.ui.combo_box_seller.addItem('', userData=None)
+        self.ui.combo_box_seller.currentIndexChanged.connect(self.on_combo_box_seller_changed)
+
+        self.ui.buttonBox.addButton(QPushButton('Сохранить'), QDialogButtonBox.AcceptRole)
+        self.ui.buttonBox.accepted.connect(self.press_save)
+
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
         if self.test:
-            self.set_db(db)
+            self.set_data(db)
 
         else:
             self.thread_pool = QThreadPool()
             db_worker = DbWorker()
             db_worker.signals.error.connect(self.connection_error)
-            db_worker.signals.result.connect(self.set_db)
+            db_worker.signals.result.connect(self.set_data)
             self.thread_pool.start(db_worker)
 
     def connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
         sys.exit(app.exec())
 
-    def set_db(self, db):
+    def set_data(self, db):
         self.db = db
         self.handler = SaleRegistrationHandler(test=self.test, db=self.db)
         self.sli_list = self.handler.get_sale_line_items()
-
-        # SLI ----------------------- left panel ------------------------------
-        self.ui.date_edit.setDate(QDate.currentDate())
-        self.ui.date_edit.dateChanged.connect(self.on_date_edit_changed)
-
-        self.ui.combo_box_place_of_sale.addItem('', userData=None)
         for i, name_place_of_sale in self.handler.get_store_places_of_sale_names().items():
             self.ui.combo_box_place_of_sale.addItem(name_place_of_sale, userData=i)
-        self.ui.combo_box_place_of_sale.currentIndexChanged.connect(self.on_combo_box_place_of_sale_changed)
-
-        self.ui.combo_box_seller.addItem('', userData=None)
         for i, seller_name in self.handler.get_store_sellers_names().items():
             self.ui.combo_box_seller.addItem(seller_name, userData=i)
-        self.ui.combo_box_seller.currentIndexChanged.connect(self.on_combo_box_seller_changed)
-
         self._update_sli()
-
-        # Items -------------------- right panel --------------------------------
         self._update_items_layout()
-
-        self.ui.src_items.textChanged.connect(self.on_search_items_text_changed)
-
-        # Items -------------------- Ok Cancel --------------------------------
-        save_button = QPushButton('Сохранить')
-        self.ui.buttonBox.addButton(save_button, QDialogButtonBox.AcceptRole)
-        self.ui.buttonBox.accepted.connect(self.press_save)
 
         self.load_widget.hide()
 
