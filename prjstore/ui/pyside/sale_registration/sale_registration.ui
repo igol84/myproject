@@ -22,7 +22,6 @@
      <property name="font">
       <font>
        <pointsize>15</pointsize>
-       <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
@@ -108,7 +107,6 @@
             <widget class="QScrollArea" name="scroll_slis">
              <property name="font">
               <font>
-               <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
@@ -121,7 +119,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>508</width>
-                <height>615</height>
+                <height>605</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="sli_layout"/>
@@ -218,7 +216,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>508</width>
-                <height>617</height>
+                <height>609</height>
                </rect>
               </property>
               <property name="sizePolicy">
@@ -240,27 +238,6 @@
                <property name="bottomMargin">
                 <number>5</number>
                </property>
-               <item>
-                <widget class="QLabel" name="label_6">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_5">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_4">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
                <item>
                 <spacer name="verticalSpacer">
                  <property name="orientation">
@@ -289,7 +266,6 @@
        <property name="font">
         <font>
          <pointsize>10</pointsize>
-         <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>

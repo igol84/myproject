@@ -91,8 +91,8 @@ class SaleRegistrationHandler:
     def end_sale(self, date: datetime.date, current_place_of_sale_id: Optional[int],
                  current_seller_id: Optional[int]) -> bool:
         if current_place_of_sale_id is not None and current_seller_id is not None and self._sale.list_sli:
-            time = datetime.datetime.min.time()
-            self._sale.date_time = datetime.datetime.combine(date, time)
+            sale_time = datetime.datetime.now().time()
+            self._sale.date_time = datetime.datetime.combine(date, sale_time)
             self._sale.seller = self._store.sellers[current_seller_id]
             current_place = self._store.places_of_sale[current_place_of_sale_id]
             current_place.sale = self._sale
@@ -103,6 +103,9 @@ class SaleRegistrationHandler:
             if self.db.sale.create(pd_sale):
                 return True
         return False
+
+    def is_complete(self):
+        return self._sale.is_complete()
 
 
 if __name__ == '__main__':

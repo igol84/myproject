@@ -1,9 +1,8 @@
 import sys
 
 from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
-from PySide6.QtCore import QDate, Signal, QObject, QRunnable, Slot, QThreadPool
+from PySide6.QtCore import QDate, QThreadPool
 
-from prjstore.db import API_DB
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 from prjstore.ui.pyside.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
@@ -11,27 +10,8 @@ from prjstore.ui.pyside.sale_registration.components.abstract_product import Abs
 from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
 from prjstore.ui.pyside.sale_registration.schemas import ModelProduct
+from prjstore.ui.pyside.sale_registration.thread import DbConnector, DBCreateSale
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
-
-
-class DbSignals(QObject):
-    error = Signal(str)
-    result = Signal(API_DB)
-
-
-class DbWorker(QRunnable):
-    def __init__(self):
-        super().__init__()
-        self.signals = DbSignals()
-
-    @Slot()
-    def run(self):
-        try:
-            db = API_DB()
-        except OSError:
-            self.signals.error.emit('Нет подключения к интернету.')
-        else:
-            self.signals.result.emit(db)
 
 
 class SaleForm(QWidget):
@@ -42,9 +22,10 @@ class SaleForm(QWidget):
 
     def __init__(self, db=None, test=False):
         super().__init__()
+        self.thread_pool = QThreadPool()
         self.db = db
         self.test = test
-        self.handler = None
+        self.handler: SaleRegistrationHandler = None
         self.resize(1200, 600)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
@@ -67,11 +48,10 @@ class SaleForm(QWidget):
             self.set_data(db)
 
         else:
-            self.thread_pool = QThreadPool()
-            db_worker = DbWorker()
-            db_worker.signals.error.connect(self.connection_error)
-            db_worker.signals.result.connect(self.set_data)
-            self.thread_pool.start(db_worker)
+            db_connector = DbConnector()
+            db_connector.signals.error.connect(self.connection_error)
+            db_connector.signals.result.connect(self.set_data)
+            self.thread_pool.start(db_connector)
 
     def connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
@@ -80,15 +60,22 @@ class SaleForm(QWidget):
     def set_data(self, db):
         self.db = db
         self.handler = SaleRegistrationHandler(test=self.test, db=self.db)
-        self.sli_list = self.handler.get_sale_line_items()
-        for i, name_place_of_sale in self.handler.get_store_places_of_sale_names().items():
-            self.ui.combo_box_place_of_sale.addItem(name_place_of_sale, userData=i)
-        for i, seller_name in self.handler.get_store_sellers_names().items():
-            self.ui.combo_box_seller.addItem(seller_name, userData=i)
+        self._update()
+        self.load_widget.hide()
+
+    def _update(self):
+        self._update_paces_of_sales()
+        self._update_sellers_names()
         self._update_sli()
         self._update_items_layout()
 
-        self.load_widget.hide()
+    def _update_paces_of_sales(self):
+        for i, name_place_of_sale in self.handler.get_store_places_of_sale_names().items():
+            self.ui.combo_box_place_of_sale.addItem(name_place_of_sale, userData=i)
+
+    def _update_sellers_names(self):
+        for i, seller_name in self.handler.get_store_sellers_names().items():
+            self.ui.combo_box_seller.addItem(seller_name, userData=i)
 
     # SLI ----------------------- left panel ------------------------------
     def _update_sli(self):
@@ -158,10 +145,19 @@ class SaleForm(QWidget):
         current_data = self.ui.date_edit.date().toPython()
         current_place_of_sale_id = self.ui.combo_box_place_of_sale.currentData()
         current_seller_id = self.ui.combo_box_seller.currentData()
-        if self.handler.end_sale(current_data, current_place_of_sale_id, current_seller_id):
-            QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec_()
+        self.load_widget.show()
+        db_create_sale = DBCreateSale(self.handler, current_data, current_place_of_sale_id, current_seller_id)
+        db_create_sale.signals.error.connect(self.connection_error)
+        db_create_sale.signals.complete.connect(self.completed_sale)
+        self.thread_pool.start(db_create_sale)
+
+    def completed_sale(self):
+        if self.handler.is_complete():
+            self.load_widget.hide()
+            QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec()
             self.close()
         else:
+            self.load_widget.hide()
             warning_texts = []
             if not self.ui.combo_box_place_of_sale.currentText():
                 warning_texts.append('Не вабрано место продажи!')
@@ -169,7 +165,7 @@ class SaleForm(QWidget):
                 warning_texts.append('Не вабран продавец!')
             if not self.sli_list:
                 warning_texts.append('Нет товаров в списке продаж!')
-            QMessageBox(icon=QMessageBox.Warning, text='\n'.join(warning_texts)).exec_()
+            QMessageBox(icon=QMessageBox.Warning, text='\n'.join(warning_texts)).exec()
 
 
 if __name__ == "__main__":
