@@ -37,6 +37,27 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
         self.setLayout(layer)
         self.hide_colors()
 
+    def get_selected_size_frame(self) -> SizeFrame:
+        return self.__selected_size_frame
+
+    def set_selected_size_frame(self, size_frame: SizeFrame) -> None:
+        if self.__selected_size_frame:
+            self.__selected_size_frame.set_default_style()
+        self.pr_id = size_frame.pr_id
+        self.__selected_size_frame = size_frame
+        self.__selected_size_frame.set_selected_style()
+        price_text = self.__selected_size_frame.pr_price
+        self.desc_frame.price_line_edit.setText(f'{price_text:g}')
+        self.desc_frame.price_line_edit.show()
+        self.desc_frame.price_line_edit.setFocus()
+        self.desc_frame.price_line_edit.selectAll()
+        self.desc_frame.btn_plus.show()
+
+    def del_selected_size_frame(self) -> None:
+        self.__selected_size_frame = None
+
+    selected_size_frame = property(get_selected_size_frame, set_selected_size_frame, del_selected_size_frame)
+
     def get_sale_price(self) -> float:
         return self.desc_frame.price_line_edit.text()
 
@@ -62,27 +83,6 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
         return self.__parent_form
 
     parent_form = property(__get_parent_form)
-
-    def get_selected_size_frame(self) -> SizeFrame:
-        return self.__selected_size_frame
-
-    def set_selected_size_frame(self, size_frame: SizeFrame) -> None:
-        if self.__selected_size_frame:
-            self.__selected_size_frame.set_default_style()
-        self.pr_id = size_frame.pr_id
-        self.__selected_size_frame = size_frame
-        self.__selected_size_frame.set_selected_style()
-        price_text = self.__selected_size_frame.pr_price
-        self.desc_frame.price_line_edit.setText(f'{price_text:g}')
-        self.desc_frame.price_line_edit.show()
-        self.desc_frame.price_line_edit.setFocus()
-        self.desc_frame.price_line_edit.selectAll()
-        self.desc_frame.btn_plus.show()
-
-    def del_selected_size_frame(self) -> None:
-        self.__selected_size_frame = None
-
-    selected_size_frame = property(get_selected_size_frame, set_selected_size_frame, del_selected_size_frame)
 
 
 if __name__ == "__main__":
@@ -126,7 +126,7 @@ if __name__ == "__main__":
         ViewColor(color='red', widths=red_widths),
         ViewColor(color='black', widths=black_widths),
     ]
-    item = ViewShoes(name='Кеды Converse Chuck 70 высокие высокие высокие высокие', colors=colors)
+    item = ViewShoes(name="Кеды Converse Chuck 70 высокие высокие высокие высокие", colors=colors)
     win = QWidget()
     v_box = QVBoxLayout(win)
     frame = ShoesFrame(parent=None, item_pd=item)

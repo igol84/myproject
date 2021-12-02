@@ -32,48 +32,44 @@ class SaleForm(QWidget):
         self.ui.src_items.textChanged.connect(self.on_search_items_text_changed)
         self.ui.date_edit.setDate(QDate.currentDate())
         self.ui.date_edit.dateChanged.connect(self.on_date_edit_changed)
-
-        self.ui.combo_box_place_of_sale.addItem('', userData=None)
-        self.ui.combo_box_place_of_sale.currentIndexChanged.connect(self.on_combo_box_place_of_sale_changed)
-
-        self.ui.combo_box_seller.addItem('', userData=None)
-        self.ui.combo_box_seller.currentIndexChanged.connect(self.on_combo_box_seller_changed)
-
         self.ui.buttonBox.addButton(QPushButton('Сохранить'), QDialogButtonBox.AcceptRole)
         self.ui.buttonBox.accepted.connect(self.press_save)
-
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
-        if self.test:
-            self.set_data(db)
-
-        else:
+        if not self.test:
             db_connector = DbConnector()
             db_connector.signals.error.connect(self.connection_error)
             db_connector.signals.result.connect(self.set_data)
             self.thread_pool.start(db_connector)
+        else:
+            self.set_data(db)
 
     def connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
         sys.exit(app.exec())
 
-    def set_data(self, db):
-        self.db = db
-        self.handler = SaleRegistrationHandler(test=self.test, db=self.db)
-        self._update()
+    def set_data(self, data):
+        self.db, self.handler = data
+        self.update()
         self.load_widget.hide()
 
-    def _update(self):
+    def update(self):
         self._update_paces_of_sales()
         self._update_sellers_names()
         self._update_sli()
         self._update_items_layout()
 
     def _update_paces_of_sales(self):
+        self.ui.combo_box_place_of_sale.clear()
+        self.ui.combo_box_place_of_sale.addItem('', userData=None)
+        self.ui.combo_box_place_of_sale.currentIndexChanged.connect(self.on_combo_box_place_of_sale_changed)
         for i, name_place_of_sale in self.handler.get_store_places_of_sale_names().items():
             self.ui.combo_box_place_of_sale.addItem(name_place_of_sale, userData=i)
 
     def _update_sellers_names(self):
+        self.ui.combo_box_seller.clear()
+        self.ui.combo_box_seller.addItem('', userData=None)
+        self.ui.combo_box_seller.currentIndexChanged.connect(self.on_combo_box_seller_changed)
         for i, seller_name in self.handler.get_store_sellers_names().items():
             self.ui.combo_box_seller.addItem(seller_name, userData=i)
 
@@ -137,35 +133,35 @@ class SaleForm(QWidget):
         self._update_total()
 
     def edit_sale_price_in_sli(self, sli_item_id: str, old_sale_price: float, sale_price: float):
-        self.handler.edit_sale_price_in_sli(sli_item_id, old_sale_price, sale_price)
-        self._update_sli()
-        self._update_total()
+        if old_sale_price != sale_price:
+            self.handler.edit_sale_price_in_sli(sli_item_id, old_sale_price, sale_price)
+            self._update_sli()
+            self._update_total()
 
     def press_save(self):
-        current_data = self.ui.date_edit.date().toPython()
-        current_place_of_sale_id = self.ui.combo_box_place_of_sale.currentData()
-        current_seller_id = self.ui.combo_box_seller.currentData()
-        self.load_widget.show()
-        db_create_sale = DBCreateSale(self.handler, current_data, current_place_of_sale_id, current_seller_id)
-        db_create_sale.signals.error.connect(self.connection_error)
-        db_create_sale.signals.complete.connect(self.completed_sale)
-        self.thread_pool.start(db_create_sale)
+        warning_texts = []
+        if not self.ui.combo_box_place_of_sale.currentText():
+            warning_texts.append('Не вабрано место продажи!')
+        if not self.ui.combo_box_seller.currentText():
+            warning_texts.append('Не вабран продавец!')
+        if not self.sli_list:
+            warning_texts.append('Нет товаров в списке продаж!')
+        if warning_texts:
+            QMessageBox(icon=QMessageBox.Warning, text='\n'.join(warning_texts)).exec()
+        else:
+            current_data = self.ui.date_edit.date().toPython()
+            current_place_id = self.ui.combo_box_place_of_sale.currentData()
+            current_seller_id = self.ui.combo_box_seller.currentData()
+            self.load_widget.show()
+            db_create_sale = DBCreateSale(self.db, self.handler, current_data, current_place_id, current_seller_id)
+            db_create_sale.signals.error.connect(self.connection_error)
+            db_create_sale.signals.complete.connect(self.completed_sale)
+            self.thread_pool.start(db_create_sale)
 
     def completed_sale(self):
-        if self.handler.is_complete():
-            self.load_widget.hide()
-            QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec()
-            self.close()
-        else:
-            self.load_widget.hide()
-            warning_texts = []
-            if not self.ui.combo_box_place_of_sale.currentText():
-                warning_texts.append('Не вабрано место продажи!')
-            if not self.ui.combo_box_seller.currentText():
-                warning_texts.append('Не вабран продавец!')
-            if not self.sli_list:
-                warning_texts.append('Нет товаров в списке продаж!')
-            QMessageBox(icon=QMessageBox.Warning, text='\n'.join(warning_texts)).exec()
+        self.update()
+        self.load_widget.hide()
+        QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec()
 
 
 if __name__ == "__main__":

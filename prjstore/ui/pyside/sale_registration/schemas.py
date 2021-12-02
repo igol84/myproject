@@ -29,7 +29,7 @@ class ModelProduct(BaseModel):
             desc = self.name
             desc += f' {self.shoes.color}' if self.shoes.color else ''
             desc += f' {self.shoes.width}' if self.shoes.width else ''
-            desc += f' {self.shoes.size}'
+            desc += f' {self.shoes.size:g}'
         else:
             desc = self.name
         return desc

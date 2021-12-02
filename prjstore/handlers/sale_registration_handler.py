@@ -107,6 +107,9 @@ class SaleRegistrationHandler:
     def is_complete(self):
         return self._sale.is_complete()
 
+    def new_sale(self):
+        self._sale = Sale()
+
 
 if __name__ == '__main__':
     handler = SaleRegistrationHandler(test=True)

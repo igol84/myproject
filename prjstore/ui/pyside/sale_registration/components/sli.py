@@ -38,7 +38,7 @@ class SLI_Frame(QWidget):
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
         self.label_item_description.move(5, 0)
         self.price_edit = LineEditPrice(f'{self.sli_price:g}', parent=self)
-        self.price_edit.returnPressed.connect(self.on_pressed_price_line_edit)
+        self.price_edit.editingFinished.connect(self.on_pressed_price_line_edit)
         self.btn_minus = QPushButton(parent=self, text='-')
         self.btn_minus.setMaximumSize(75, 25)
         self.btn_minus.clicked.connect(self.on_push_button_plus)
