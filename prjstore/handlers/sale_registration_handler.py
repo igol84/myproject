@@ -1,5 +1,4 @@
 import datetime
-from pprint import pprint
 from typing import Optional
 from pydantic import validate_arguments
 
@@ -112,6 +111,8 @@ class SaleRegistrationHandler:
 
 
 if __name__ == '__main__':
+    from pprint import pprint
+
     handler = SaleRegistrationHandler(test=True)
     for item in handler.get_store_items():
         pprint(item)

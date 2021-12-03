@@ -9,7 +9,6 @@ from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.product_catalog import ProductCatalog
 from prjstore.domain.product_factory import ProductFactory
 from prjstore.domain.seller import Seller
-from util.money import Money
 
 
 @dataclass
@@ -33,9 +32,9 @@ class Store:
     @validate_arguments
     def search_items(self, value: str, fields: set[str]) -> dict[int: Item]:
         items = {}
-        for field in fields:
+        for field_name in fields:
             for it_id, item in self.items.items():
-                if value.lower() in getattr(item.product, field).lower():
+                if value.lower() in getattr(item.product, field_name).lower():
                     items[it_id] = item
         return items
 
