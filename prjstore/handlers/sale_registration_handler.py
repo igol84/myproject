@@ -3,17 +3,24 @@ from typing import Optional
 from pydantic import validate_arguments
 
 from prjstore.db import API_DB
+from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.domain.store import Store
 from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
 from prjstore.handlers.data_for_test.sale_registration import put_test_data
 
 from prjstore.ui.pyside.sale_registration.schemas import (
-    ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items
+    ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items, ProductId, Price,
+    create_sales_by_sales_schemas, PlaceId, SellerId
 )
 
 
 class SaleRegistrationHandler:
+    db: API_DB
+    _store: Store
+    _sale: Sale
+    _sales_by_date: dict[tuple[PlaceId, SellerId], list[Sale]]
+
     def __init__(self, db: API_DB = None, test=False):
         self.db = db
         self._sale = Sale()
@@ -23,6 +30,7 @@ class SaleRegistrationHandler:
             put_test_data(self)
         else:
             self._store = Store.create_from_schema(self.db.store.get(id=1))
+            self.update_store_sales_by_date(date=datetime.datetime.now().date())
 
     @validate_arguments
     def get_store_items(self, search: Optional[str] = None) -> list[ModelProduct]:
@@ -30,7 +38,21 @@ class SaleRegistrationHandler:
         return create_product_schemas_by_items(products)
 
     @validate_arguments
-    def get_sale_line_items(self) -> dict[tuple[str, float]: ModelProduct]:
+    def update_store_sales_by_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
+        print(date, place_id, seller_id)
+        pd_sales: list[ShowSaleWithSLIs] = self.db.sale.get_all(store_id=self._store.id, date=str(date),
+                                                                place_id=place_id, seller_id=seller_id)
+        self._sales_by_date: dict[tuple[PlaceId, SellerId], list[Sale]] = create_sales_by_sales_schemas(pd_sales)
+        # print()
+        # for pd_sale in sorted(pd_sales, key=lambda sale: (sale.place.id, sale.seller.id, sale.date_time)):
+        #     print(pd_sale.place.name, pd_sale.seller.name, pd_sale.date_time, len(pd_sale.sale_line_items))
+
+    @validate_arguments
+    def changed_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
+        self.update_store_sales_by_date(date=date, place_id=place_id, seller_id=seller_id)
+
+    @validate_arguments
+    def get_sale_line_items(self) -> dict[tuple[ProductId, Price]: ModelProduct]:
         return create_sli_schemas_by_items(self._sale.list_sli)
 
     @validate_arguments

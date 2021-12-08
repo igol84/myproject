@@ -1,10 +1,15 @@
+from collections import defaultdict, OrderedDict
 from typing import Optional
 
 from pydantic import BaseModel
 
+from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.domain.item import Item
+from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.products.shoes import Shoes
+from prjstore.domain.sale import Sale
 from prjstore.domain.sale_line_item import SaleLineItem
+from prjstore.domain.seller import Seller
 
 
 class ModelShoes(BaseModel):
@@ -33,6 +38,14 @@ class ModelProduct(BaseModel):
         else:
             desc = self.name
         return desc
+
+
+class ProductId(str):
+    pass
+
+
+class Price(float):
+    pass
 
 
 class ViewProduct(BaseModel):
@@ -105,8 +118,7 @@ def create_product_schemas_by_items(items: dict[int: Item]) -> list[ModelProduct
             width = ViewWidth(width=product.shoes.width, sizes=[size])
             color = ViewColor(color=product.shoes.color, widths=[width])
             if last_item_type != 'shoes' or (last_item_type == 'shoes' and products[-1].name != product.name):
-                shoes = ViewShoes(type=product.type, name=product.name,
-                                  colors=[color])
+                shoes = ViewShoes(type=product.type, name=product.name, colors=[color])
                 products.append(shoes)
             elif last_item_type == 'shoes' and products[-1].name == product.name:
                 if products[-1].colors[-1].color != product.shoes.color:
@@ -123,8 +135,8 @@ def create_product_schemas_by_items(items: dict[int: Item]) -> list[ModelProduct
     return products
 
 
-def create_sli_schemas_by_items(list_sli: list[SaleLineItem]) -> dict[str: ModelProduct]:
-    products: dict[tuple[str, float]: ModelProduct] = {}
+def create_sli_schemas_by_items(list_sli: list[SaleLineItem]) -> dict[tuple[ProductId, Price]: ModelProduct]:
+    products: dict[tuple[ProductId, Price]: ModelProduct] = {}
     for sli in list_sli:
         shoes = None
         if sli.item.product.product_type == 'shoes' and isinstance(sli.item.product, Shoes):
@@ -141,8 +153,41 @@ def create_sli_schemas_by_items(list_sli: list[SaleLineItem]) -> dict[str: Model
                 price_format=sli.sale_price.format(),
                 qty=sli.qty,
                 shoes=shoes
-
             )
         else:
             products[sli.item.product.prod_id, sli.sale_price.amount].qty += sli.qty
     return products
+
+
+class ModelsSeller(BaseModel):
+    seller_id: int
+    desc: str
+
+
+class ModelsPlace(BaseModel):
+    place_id: int
+    desc: str
+
+
+class ModelsSale(BaseModel):
+    place: ModelsPlace
+    seller: ModelsSeller
+    sli = list[ModelProduct]
+
+
+class PlaceId(int):
+    pass
+
+
+class SellerId(int):
+    pass
+
+
+def create_sales_by_sales_schemas(pd_sales: list[ShowSaleWithSLIs]) -> dict[tuple[PlaceId, SellerId], list[Sale]]:
+    sales_by_date: dict[tuple[int, int], list[Sale]] = defaultdict(list)
+    for pd_sale in pd_sales:
+        place = PlaceOfSale.create_from_schema(pd_sale.place)
+        seller = Seller.create_from_schema(pd_sale.seller)
+        sale = Sale.create_from_schema(pd_sale)
+        sales_by_date[(place.id, seller.id)].append(sale)
+    return OrderedDict(sorted(sales_by_date.items()))

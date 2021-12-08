@@ -6,7 +6,7 @@ from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 
 class DbConnectorSignals(QObject):
     error = Signal(str)
-    result = Signal(tuple)
+    result = Signal(SaleRegistrationHandler)
 
 
 class DbConnector(QRunnable):
@@ -22,7 +22,7 @@ class DbConnector(QRunnable):
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:
-            self.signals.result.emit((db, handler))
+            self.signals.result.emit(handler)
 
 
 class CreateSaleSignals(QObject):
@@ -31,9 +31,8 @@ class CreateSaleSignals(QObject):
 
 
 class DBCreateSale(QRunnable):
-    def __init__(self, db,  handler, current_data, current_place_of_sale_id, current_seller_id):
+    def __init__(self, handler, current_data, current_place_of_sale_id, current_seller_id):
         super().__init__()
-        self.db = db
         self.handler = handler
         self.current_data = current_data
         self.current_place_of_sale_id = current_place_of_sale_id

@@ -175,7 +175,7 @@ class Sale:
     def create_from_schema(schema: schemas.sale.ShowSaleWithSLIs) -> 'Sale':
         seller = Seller.create_from_schema(schema.seller)
         list_sli = [SaleLineItem.create_from_schema(sli) for sli in schema.sale_line_items]
-        return Sale(id=schema.id, seller=seller, list_sli=list_sli, date_time=schema.date_time)
+        return Sale(id=schema.id, seller=seller, list_sli=list_sli, date_time=schema.date_time, complete=True)
 
     @validate_arguments
     def schema_create(self, place_id: int) -> schemas.sale.CreateSale:

@@ -34,8 +34,8 @@ class APIBase(DB, Generic[CreateSchemaType, UpdateSchemaType, ReceivedSchemaType
         else:
             return self.schema(**r.json())
 
-    def get_all(self) -> list[ReceivedSchemaType]:
-        r = requests.get(f"{settings.host}/{self.prefix}", headers=self.headers)
+    def get_all(self, **kwargs) -> list[ReceivedSchemaType]:
+        r = requests.get(f"{settings.host}/{self.prefix}", headers=self.headers, params=kwargs)
         if r.status_code != 200:
             raise ConnectionError(r.text)
         else:

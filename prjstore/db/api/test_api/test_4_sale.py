@@ -44,6 +44,14 @@ class TestSeller:
         assert self.items[1] == Item.create_from_schema(db.item.get(1)).qty + 1
         assert self.items[2] == Item.create_from_schema(db.item.get(2)).qty + 2
 
+    def test_case01_get_from_date(self):
+        sale = Sale.create_from_schema(db.sale.get(self.obj_id))
+        assert sale.seller.id == 1
+        assert sale.list_sli[0].item.id == 1
+        assert sale.list_sli[1].item.id == 2
+        assert self.items[1] == Item.create_from_schema(db.item.get(1)).qty + 1
+        assert self.items[2] == Item.create_from_schema(db.item.get(2)).qty + 2
+
     def test_case02_update(self):
         sale_line_items = [CreateSaleLineItemForSale(item_id=3, sale_price=20, qty=2)]
         pd_sale = schemas.sale.UpdateSale(id=self.obj_id, place_id=2, seller_id=2, date_time=datetime.now(),

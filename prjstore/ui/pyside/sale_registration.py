@@ -9,23 +9,22 @@ from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
 from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
-from prjstore.ui.pyside.sale_registration.schemas import ModelProduct
+from prjstore.ui.pyside.sale_registration.schemas import ModelProduct, ProductId, Price
 from prjstore.ui.pyside.sale_registration.thread import DbConnector, DBCreateSale
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 
 
 class SaleForm(QWidget):
-    items: list[ModelProduct] = None
-    sli_list: dict[tuple[str, float]: ModelProduct] = []
-    selected_item_widget: AbstractSoldItem = None
-    selected_sli_widget: SLI_Frame = None
+    items: list[ModelProduct]
+    sli_list: dict[tuple[ProductId, Price]: ModelProduct]
+    selected_item_widget: AbstractSoldItem
+    selected_sli_widget: SLI_Frame
+    handler: SaleRegistrationHandler
 
-    def __init__(self, db=None, test=False):
+    def __init__(self, test=False):
         super().__init__()
         self.thread_pool = QThreadPool()
-        self.db = db
         self.test = test
-        self.handler: SaleRegistrationHandler = None
         self.resize(1200, 600)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
@@ -42,14 +41,14 @@ class SaleForm(QWidget):
             db_connector.signals.result.connect(self.set_data)
             self.thread_pool.start(db_connector)
         else:
-            self.set_data(db)
+            self.set_data(SaleRegistrationHandler(test=True))
 
     def connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
         sys.exit(app.exec())
 
-    def set_data(self, data):
-        self.db, self.handler = data
+    def set_data(self, handler: SaleRegistrationHandler):
+        self.handler = handler
         self.update()
         self.load_widget.hide()
 
@@ -87,14 +86,22 @@ class SaleForm(QWidget):
         self.ui.total.setText(self.handler.get_total())
 
     def on_date_edit_changed(self, date: QDate):
-        # self.handler.change_date(date.toPython())
-        pass
+        date_sale = date.toPython()
+        place_id = self.ui.combo_box_place_of_sale.currentData()
+        seller_id = self.ui.combo_box_seller.currentData()
+        self.handler.changed_date(date=date_sale, place_id=place_id, seller_id=seller_id)
 
-    def on_combo_box_place_of_sale_changed(self, combo_box_place_of_sale_id):
-        pass
+    def on_combo_box_place_of_sale_changed(self):
+        date_sale = self.ui.date_edit.date().toPython()
+        place_id = self.ui.combo_box_place_of_sale.currentData()
+        seller_id = self.ui.combo_box_seller.currentData()
+        self.handler.changed_date(date=date_sale, place_id=place_id, seller_id=seller_id)
 
-    def on_combo_box_seller_changed(self, combo_box_seller_id):
-        pass
+    def on_combo_box_seller_changed(self):
+        date_sale = self.ui.date_edit.date().toPython()
+        place_id = self.ui.combo_box_place_of_sale.currentData()
+        seller_id = self.ui.combo_box_seller.currentData()
+        self.handler.changed_date(date=date_sale, place_id=place_id, seller_id=seller_id)
 
     # Items -------------------- right panel --------------------------------
     def _update_items_layout(self):
@@ -153,7 +160,7 @@ class SaleForm(QWidget):
             current_place_id = self.ui.combo_box_place_of_sale.currentData()
             current_seller_id = self.ui.combo_box_seller.currentData()
             self.load_widget.show()
-            db_create_sale = DBCreateSale(self.db, self.handler, current_data, current_place_id, current_seller_id)
+            db_create_sale = DBCreateSale(self.handler, current_data, current_place_id, current_seller_id)
             db_create_sale.signals.error.connect(self.connection_error)
             db_create_sale.signals.complete.connect(self.completed_sale)
             self.thread_pool.start(db_create_sale)
