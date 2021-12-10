@@ -3,20 +3,24 @@ import sys
 from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
 from PySide6.QtCore import QDate, QThreadPool
 
+from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 from prjstore.ui.pyside.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
+from prjstore.ui.pyside.sale_registration.components.sale import Sale_Frame
 from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
-from prjstore.ui.pyside.sale_registration.schemas import ModelProduct, ProductId, Price
-from prjstore.ui.pyside.sale_registration.thread import DbConnector, DBCreateSale
+from prjstore.ui.pyside.sale_registration.schemas import ModelProduct, ProductId, Price, ViewProduct, ViewPlace, \
+    ViewSeller, ViewSale
+from prjstore.ui.pyside.sale_registration.thread import DbConnector, DBCreateSale, DBGetSales
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 
 
 class SaleForm(QWidget):
     items: list[ModelProduct]
     sli_list: dict[tuple[ProductId, Price]: ModelProduct]
+    old_sales: list[ShowSaleWithSLIs]
     selected_item_widget: AbstractSoldItem
     selected_sli_widget: SLI_Frame
     handler: SaleRegistrationHandler
@@ -30,25 +34,25 @@ class SaleForm(QWidget):
         self.ui.setupUi(self)
         self.ui.src_items.textChanged.connect(self.on_search_items_text_changed)
         self.ui.date_edit.setDate(QDate.currentDate())
-        self.ui.date_edit.dateChanged.connect(self.on_date_edit_changed)
+        self.ui.date_edit.dateChanged.connect(self.change_data)
         self.ui.buttonBox.addButton(QPushButton('Сохранить'), QDialogButtonBox.AcceptRole)
         self.ui.buttonBox.accepted.connect(self.press_save)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
         if not self.test:
             db_connector = DbConnector()
-            db_connector.signals.error.connect(self.connection_error)
+            db_connector.signals.error.connect(self._connection_error)
             db_connector.signals.result.connect(self.set_data)
             self.thread_pool.start(db_connector)
         else:
-            self.set_data(SaleRegistrationHandler(test=True))
+            self.set_data((None, SaleRegistrationHandler(test=True)))
 
-    def connection_error(self, err: str):
+    def _connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
         sys.exit(app.exec())
 
-    def set_data(self, handler: SaleRegistrationHandler):
-        self.handler = handler
+    def set_data(self, data: tuple[list[ShowSaleWithSLIs], SaleRegistrationHandler]):
+        self.handler, self.old_sales = data
         self.update()
         self.load_widget.hide()
 
@@ -61,14 +65,14 @@ class SaleForm(QWidget):
     def _update_paces_of_sales(self):
         self.ui.combo_box_place_of_sale.clear()
         self.ui.combo_box_place_of_sale.addItem('', userData=None)
-        self.ui.combo_box_place_of_sale.currentIndexChanged.connect(self.on_combo_box_place_of_sale_changed)
+        self.ui.combo_box_place_of_sale.currentIndexChanged.connect(self.change_data)
         for i, name_place_of_sale in self.handler.get_store_places_of_sale_names().items():
             self.ui.combo_box_place_of_sale.addItem(name_place_of_sale, userData=i)
 
     def _update_sellers_names(self):
         self.ui.combo_box_seller.clear()
         self.ui.combo_box_seller.addItem('', userData=None)
-        self.ui.combo_box_seller.currentIndexChanged.connect(self.on_combo_box_seller_changed)
+        self.ui.combo_box_seller.currentIndexChanged.connect(self.change_data)
         for i, seller_name in self.handler.get_store_sellers_names().items():
             self.ui.combo_box_seller.addItem(seller_name, userData=i)
 
@@ -78,30 +82,43 @@ class SaleForm(QWidget):
         self.selected_sli_widget = None
         self.sli_list = self.handler.get_sale_line_items()
         for sli in self.sli_list.values():
-            label = SLI_Frame(self, sli.prod_id, sli.get_desc(), sli.price, sli.price_format, sli.qty)
+            product_pd = ViewProduct(id=sli.prod_id, type=sli.type, name=sli.get_desc(), price=sli.price,
+                                     price_format=sli.price_format, qty=sli.qty)
+            label = SLI_Frame(self, product_pd)
             self.ui.sli_layout.addWidget(label)
+
+        for sale in self.old_sales:
+            sli_list = self.handler.get_sale_line_items(sale.id)
+            place_pd = ViewPlace(id=sale.place_id, desc=sale.place.name)
+            seller_pd = ViewSeller(id=sale.seller_id, desc=sale.seller.name)
+            list_sli_pd = []
+            print(sale.place.name, sale.seller.name, sale.id, sli_list)
+            for sli in sli_list.values():
+                sli_pd = ViewProduct(id=sli.prod_id, type=sli.type, name=sli.get_desc(), price=sli.price,
+                                     price_format=sli.price_format, qty=sli.qty)
+                list_sli_pd.append(sli_pd)
+            sale_pd = ViewSale(id=sale.id, place=place_pd, seller=seller_pd, products=list_sli_pd)
+            sale_frame = Sale_Frame(self, sale_pd)
+            self.ui.sli_layout.addWidget(sale_frame)
         self.ui.sli_layout.addStretch(0)
 
     def _update_total(self):
         self.ui.total.setText(self.handler.get_total())
 
-    def on_date_edit_changed(self, date: QDate):
-        date_sale = date.toPython()
-        place_id = self.ui.combo_box_place_of_sale.currentData()
-        seller_id = self.ui.combo_box_seller.currentData()
-        self.handler.changed_date(date=date_sale, place_id=place_id, seller_id=seller_id)
-
-    def on_combo_box_place_of_sale_changed(self):
+    def change_data(self):
         date_sale = self.ui.date_edit.date().toPython()
         place_id = self.ui.combo_box_place_of_sale.currentData()
         seller_id = self.ui.combo_box_seller.currentData()
-        self.handler.changed_date(date=date_sale, place_id=place_id, seller_id=seller_id)
+        self.load_widget.show()
+        db_get_sales = DBGetSales(self.handler, date_sale, place_id, seller_id)
+        db_get_sales.signals.error.connect(self._connection_error)
+        db_get_sales.signals.result.connect(self._completed_getting_sales)
+        self.thread_pool.start(db_get_sales)
 
-    def on_combo_box_seller_changed(self):
-        date_sale = self.ui.date_edit.date().toPython()
-        place_id = self.ui.combo_box_place_of_sale.currentData()
-        seller_id = self.ui.combo_box_seller.currentData()
-        self.handler.changed_date(date=date_sale, place_id=place_id, seller_id=seller_id)
+    def _completed_getting_sales(self, pd_sales: list[ShowSaleWithSLIs]):
+        self.old_sales = pd_sales
+        self._update_sli()
+        self.load_widget.hide()
 
     # Items -------------------- right panel --------------------------------
     def _update_items_layout(self):
@@ -161,11 +178,11 @@ class SaleForm(QWidget):
             current_seller_id = self.ui.combo_box_seller.currentData()
             self.load_widget.show()
             db_create_sale = DBCreateSale(self.handler, current_data, current_place_id, current_seller_id)
-            db_create_sale.signals.error.connect(self.connection_error)
-            db_create_sale.signals.complete.connect(self.completed_sale)
+            db_create_sale.signals.error.connect(self._connection_error)
+            db_create_sale.signals.complete.connect(self._completed_sale)
             self.thread_pool.start(db_create_sale)
 
-    def completed_sale(self):
+    def _completed_sale(self):
         self.update()
         self.load_widget.hide()
         QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec()

@@ -27,9 +27,7 @@ class SizeFrame(ItemFrame):
         layer.setSpacing(2)
 
         label_size = QLabel(f'{self.pr_size:g}')
-        font = label_size.font()
-        font.setPointSize(self.font_size)
-        label_size.setFont(font)
+        label_size.setStyleSheet(f'font-size: {self.font_size}pt;')
         label_size.setAlignment(QtCore.Qt.AlignCenter)
 
         line = QHLine()

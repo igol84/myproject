@@ -1,15 +1,13 @@
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict
 from typing import Optional
 
 from pydantic import BaseModel
 
 from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.domain.item import Item
-from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.products.shoes import Shoes
 from prjstore.domain.sale import Sale
 from prjstore.domain.sale_line_item import SaleLineItem
-from prjstore.domain.seller import Seller
 
 
 class ModelShoes(BaseModel):
@@ -49,12 +47,29 @@ class Price(float):
 
 
 class ViewProduct(BaseModel):
-    prod_id: str
+    id: str
     type: str
     name: str
     price: float
     price_format: str
     qty: int
+
+
+class ViewSeller(BaseModel):
+    id: int
+    desc: str
+
+
+class ViewPlace(BaseModel):
+    id: int
+    desc: str
+
+
+class ViewSale(BaseModel):
+    id: int
+    place: ViewPlace
+    seller: ViewSeller
+    products: list[ViewProduct]
 
 
 class ViewSize(BaseModel):
@@ -129,7 +144,7 @@ def create_product_schemas_by_items(items: dict[int: Item]) -> list[ModelProduct
                     else:
                         products[-1].colors[-1].widths[-1].sizes.append(size)
         else:
-            product = ViewProduct(prod_id=product.prod_id, type=product.type, name=product.name,
+            product = ViewProduct(id=product.prod_id, type=product.type, name=product.name,
                                   price=product.price, price_format=product.price_format, qty=product.qty)
             products.append(product)
     return products
@@ -163,16 +178,16 @@ class ModelsSeller(BaseModel):
     seller_id: int
     desc: str
 
+    def __hash__(self):
+        return hash(self.seller_id)
+
 
 class ModelsPlace(BaseModel):
     place_id: int
     desc: str
 
-
-class ModelsSale(BaseModel):
-    place: ModelsPlace
-    seller: ModelsSeller
-    sli = list[ModelProduct]
+    def __hash__(self):
+        return hash(self.place_id)
 
 
 class PlaceId(int):
@@ -183,11 +198,9 @@ class SellerId(int):
     pass
 
 
-def create_sales_by_sales_schemas(pd_sales: list[ShowSaleWithSLIs]) -> dict[tuple[PlaceId, SellerId], list[Sale]]:
-    sales_by_date: dict[tuple[int, int], list[Sale]] = defaultdict(list)
+def create_sales_by_sales_schemas(pd_sales: list[ShowSaleWithSLIs]) -> dict[int, Sale]:
+    sales_by_date: dict[int, Sale] = {}
     for pd_sale in pd_sales:
-        place = PlaceOfSale.create_from_schema(pd_sale.place)
-        seller = Seller.create_from_schema(pd_sale.seller)
         sale = Sale.create_from_schema(pd_sale)
-        sales_by_date[(place.id, seller.id)].append(sale)
+        sales_by_date[sale.id] = sale
     return OrderedDict(sorted(sales_by_date.items()))

@@ -4,6 +4,8 @@ from PySide6 import QtCore, QtGui
 from PySide6.QtGui import QFontMetrics, QFont
 from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QLabel, QLineEdit
 
+from prjstore.ui.pyside.sale_registration.schemas import ViewProduct
+
 
 class SLI_Frame(QWidget):
     sli_product_id: str
@@ -22,19 +24,19 @@ class SLI_Frame(QWidget):
     font_family = 'Times'
     font_size = 10
 
-    def __init__(self, parent, sli_product_id: int, sli_desc: str, sli_sale_price: float,
-                 sli_sale_price_format: str, sli_qty: int):
+    def __init__(self, parent, sli_pd: ViewProduct):
         super().__init__()
         self.__parent_form = parent
-        self.sli_product_id = sli_product_id
-        self.sli_price = sli_sale_price
-        self.sli_price_format = sli_sale_price_format
-        self.sli_qty = sli_qty
+        self.sli_product_id = sli_pd.id
+        self.sli_price = sli_pd.price
+        self.sli_price_format = sli_pd.price_format
+        self.sli_qty = sli_pd.qty
+        self.sli_desc = sli_pd.name
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setMinimumSize(self.width_, self.height_)
         self.color_fon = self.default_color_bg
         self.color_text = self.default_color_text
-        self.label_item_description = LabelItemDescription(parent=self, text=sli_desc)
+        self.label_item_description = LabelItemDescription(parent=self, text=self.sli_desc)
         self.label_item_description.setFont(QFont(self.color_text, self.font_size))
         self.label_item_description.move(5, 0)
         self.price_edit = LineEditPrice(f'{self.sli_price:g}', parent=self)
@@ -130,6 +132,7 @@ class SLI_Frame(QWidget):
 
 class LabelItemDescription(QLabel):
     def paintEvent(self, event):
+        self.setStyleSheet(f'background-color: rgba(0, 0, 0, 0);')
         self.setToolTip(self.text())
         painter = QtGui.QPainter(self)
         pen = painter.pen()
@@ -154,13 +157,8 @@ class LineEditPrice(QLineEdit):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = SLI_Frame(parent=None, sli_product_id=2,
-                  sli_desc='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!',
-                  sli_sale_price=200, sli_sale_price_format='200 грн.', sli_qty=2)
+    product_pd = ViewProduct(id='2', type='product', price=1600, price_format='1600 грн.', qty=3,
+                             name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!')
+    w = SLI_Frame(parent=None, sli_pd=product_pd)
     w.show()
-
-    # product2 = ProductFactory.create(product_id='2', name='Кроссовки Adidas Y-1 красные', price=10600.50)
-    # item2 = Item(pr=product2, qty=1000, buy_price=1200)
-    # w2 = ItemFrame(parent=None, pr_item=item2)
-    # w2.show()
     sys.exit(app.exec())

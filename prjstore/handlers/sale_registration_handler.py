@@ -11,25 +11,25 @@ from prjstore.handlers.data_for_test.sale_registration import put_test_data
 
 from prjstore.ui.pyside.sale_registration.schemas import (
     ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items, ProductId, Price,
-    create_sales_by_sales_schemas, PlaceId, SellerId
+    create_sales_by_sales_schemas
 )
 
 
 class SaleRegistrationHandler:
-    db: API_DB
+    _db: API_DB
     _store: Store
     _sale: Sale
-    _sales_by_date: dict[tuple[PlaceId, SellerId], list[Sale]]
+    _ledger: dict[int, Sale]
 
-    def __init__(self, db: API_DB = None, test=False):
-        self.db = db
+    def __init__(self, db: API_DB = None, store_id=1, test=False):
+        self._db = db
         self._sale = Sale()
         self.test_mode = test
         if test:
-            self._store = Store(id=1, name='test')
+            self._store = Store(id=store_id, name='test')
             put_test_data(self)
         else:
-            self._store = Store.create_from_schema(self.db.store.get(id=1))
+            self._store = Store.create_from_schema(self._db.store.get(id=1))
             self.update_store_sales_by_date(date=datetime.datetime.now().date())
 
     @validate_arguments
@@ -38,22 +38,21 @@ class SaleRegistrationHandler:
         return create_product_schemas_by_items(products)
 
     @validate_arguments
-    def update_store_sales_by_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
-        print(date, place_id, seller_id)
-        pd_sales: list[ShowSaleWithSLIs] = self.db.sale.get_all(store_id=self._store.id, date=str(date),
-                                                                place_id=place_id, seller_id=seller_id)
-        self._sales_by_date: dict[tuple[PlaceId, SellerId], list[Sale]] = create_sales_by_sales_schemas(pd_sales)
-        # print()
-        # for pd_sale in sorted(pd_sales, key=lambda sale: (sale.place.id, sale.seller.id, sale.date_time)):
-        #     print(pd_sale.place.name, pd_sale.seller.name, pd_sale.date_time, len(pd_sale.sale_line_items))
+    def update_store_sales_by_date(
+            self, date: datetime.date, place_id: int = None, seller_id: int = None
+    ) -> list[ShowSaleWithSLIs]:
+        pd_sales = self._db.sale.get_all(store_id=self._store.id, date=date, place_id=place_id, seller_id=seller_id)
+        self._ledger = create_sales_by_sales_schemas(pd_sales)
+        return pd_sales
 
     @validate_arguments
-    def changed_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
-        self.update_store_sales_by_date(date=date, place_id=place_id, seller_id=seller_id)
+    def changed_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> list[ShowSaleWithSLIs]:
+        return self.update_store_sales_by_date(date=date, place_id=place_id, seller_id=seller_id)
 
     @validate_arguments
-    def get_sale_line_items(self) -> dict[tuple[ProductId, Price]: ModelProduct]:
-        return create_sli_schemas_by_items(self._sale.list_sli)
+    def get_sale_line_items(self, sale_id: int = None) -> dict[tuple[ProductId, Price]: ModelProduct]:
+        list_sli = self._ledger[sale_id].list_sli if sale_id else self._sale.list_sli
+        return create_sli_schemas_by_items(list_sli)
 
     @validate_arguments
     def search_items(self, text: str) -> dict[str: Item]:
@@ -119,9 +118,10 @@ class SaleRegistrationHandler:
             current_place.sale = self._sale
             self._sale.completed()
             pd_sale = self._sale.schema_create(place_id=current_place_of_sale_id)
+            print(pd_sale)
             if self.test_mode:
                 return True
-            if self.db.sale.create(pd_sale):
+            if self._db.sale.create(pd_sale):
                 return True
         return False
 

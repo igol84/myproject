@@ -7,6 +7,9 @@ class Seller:
     id: int
     name: str
 
+    def __hash__(self):
+        return hash(self.id)
+
     @staticmethod
     def create_from_schema(schema: schemas.seller.Seller) -> 'Seller':
         return Seller(id=schema.id, name=schema.name)

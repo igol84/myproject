@@ -24,10 +24,7 @@ class ColorFrame(QFrame):
         if self.pd_color:
             label_color = QLabel(f'{self.pd_color}')
             label_color.setContentsMargins(3, 0, 3, 0)
-            font = label_color.font()
-            font.setPointSize(17)
-            font.setItalic(True)
-            label_color.setFont(font)
+            label_color.setStyleSheet('font-size: 17pt;')
             label_color.setAlignment(QtCore.Qt.AlignCenter)
             layer_widths.addWidget(label_color)
 

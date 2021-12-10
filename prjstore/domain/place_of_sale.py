@@ -10,6 +10,9 @@ class PlaceOfSale:
     name: str
     sale: Sale = None
 
+    def __hash__(self):
+        return hash(self.id)
+
     @staticmethod
     def create_from_schema(schema: schemas.place.Place) -> 'PlaceOfSale':
         return PlaceOfSale(id=schema.id, name=schema.name)
