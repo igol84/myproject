@@ -16,7 +16,6 @@ class Sale_Frame(QWidget):
     def __init__(self, parent, view_sale: ViewSale):
         super().__init__()
         self.__parent_form = parent
-        self.setStyleSheet('background-color: #b3a9fc;')
         self.sale_id = view_sale.id
         self.place = view_sale.place
         self.seller = view_sale.seller
@@ -24,7 +23,7 @@ class Sale_Frame(QWidget):
         layout = QtWidgets.QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         label = QLabel(f'{self.place.desc} - {self.seller.desc}')
-        label.setStyleSheet('font-size: 12pt;')
+        label.setStyleSheet('font-size: 12pt; background-color: #b3a9fc;')
         layout.addWidget(label)
         for sli in self.products:
             widget = SaleSliFrame(parent=self.__parent_form, sli_pd=sli)

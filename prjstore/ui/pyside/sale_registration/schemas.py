@@ -190,6 +190,10 @@ class ModelsPlace(BaseModel):
         return hash(self.place_id)
 
 
+class SaleId(int):
+    pass
+
+
 class PlaceId(int):
     pass
 

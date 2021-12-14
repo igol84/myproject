@@ -8,9 +8,6 @@ class SaleSliFrame(SLI_Frame):
     default_color_bg = '#afedc1'
     color_fon_enter = '#E8ffef'
 
-    def mousePressEvent(self, event) -> None:
-        pass
-
 
 if __name__ == "__main__":
     from PySide6.QtWidgets import QVBoxLayout, QApplication, QWidget

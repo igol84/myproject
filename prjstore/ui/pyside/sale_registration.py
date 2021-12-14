@@ -51,7 +51,7 @@ class SaleForm(QWidget):
         QMessageBox.warning(self, err, err)
         sys.exit(app.exec())
 
-    def set_data(self, data: tuple[list[ShowSaleWithSLIs], SaleRegistrationHandler]):
+    def set_data(self, data: tuple[SaleRegistrationHandler, list[ShowSaleWithSLIs]]):
         self.handler, self.old_sales = data
         self.update()
         self.load_widget.hide()
@@ -92,7 +92,7 @@ class SaleForm(QWidget):
             place_pd = ViewPlace(id=sale.place_id, desc=sale.place.name)
             seller_pd = ViewSeller(id=sale.seller_id, desc=sale.seller.name)
             list_sli_pd = []
-            print(sale.place.name, sale.seller.name, sale.id, sli_list)
+            print(sale.sale_line_items)
             for sli in sli_list.values():
                 sli_pd = ViewProduct(id=sli.prod_id, type=sli.type, name=sli.get_desc(), price=sli.price,
                                      price_format=sli.price_format, qty=sli.qty)
@@ -140,9 +140,9 @@ class SaleForm(QWidget):
 
     def put_on_sale(self):
         pr_id = self.selected_item_widget.pr_id
-        sale_price = self.selected_item_widget.get_sale_price()
-        sale_qty = self.selected_item_widget.get_sale_qty()
-        self.handler.put_on_sale(pr_id, int(sale_qty), float(sale_price))
+        sale_price = int(self.selected_item_widget.get_sale_price())
+        sale_qty = float(self.selected_item_widget.get_sale_qty())
+        self.handler.put_on_sale(pr_id, sale_qty, sale_price)
         self._update_items_layout()
         self._update_sli()
         self._update_total()
