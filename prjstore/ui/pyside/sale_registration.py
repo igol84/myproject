@@ -11,8 +11,7 @@ from prjstore.ui.pyside.sale_registration.components.abstract_product import Abs
 from prjstore.ui.pyside.sale_registration.components.sale import Sale_Frame
 from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
-from prjstore.ui.pyside.sale_registration.schemas import ModelProduct, ProductId, Price, ViewProduct, ViewPlace, \
-    ViewSeller, ViewSale
+from prjstore.ui.pyside.sale_registration.schemas import ModelProduct, ProductId, Price, ViewProduct
 from prjstore.ui.pyside.sale_registration.thread import DbConnector, DBCreateSale, DBGetSales
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 
@@ -51,8 +50,8 @@ class SaleForm(QWidget):
         QMessageBox.warning(self, err, err)
         sys.exit(app.exec())
 
-    def set_data(self, data: tuple[SaleRegistrationHandler, list[ShowSaleWithSLIs]]):
-        self.handler, self.old_sales = data
+    def set_data(self, handler: SaleRegistrationHandler):
+        self.handler = handler
         self.update()
         self.load_widget.hide()
 
@@ -82,23 +81,13 @@ class SaleForm(QWidget):
         self.selected_sli_widget = None
         self.sli_list = self.handler.get_sale_line_items()
         for sli in self.sli_list.values():
-            product_pd = ViewProduct(id=sli.prod_id, type=sli.type, name=sli.get_desc(), price=sli.price,
+            product_pd = ViewProduct(prod_id=sli.prod_id, type=sli.type, name=sli.get_desc(), price=sli.price,
                                      price_format=sli.price_format, qty=sli.qty)
             label = SLI_Frame(self, product_pd)
             self.ui.sli_layout.addWidget(label)
-
-        for sale in self.old_sales:
-            sli_list = self.handler.get_sale_line_items(sale.id)
-            place_pd = ViewPlace(id=sale.place_id, desc=sale.place.name)
-            seller_pd = ViewSeller(id=sale.seller_id, desc=sale.seller.name)
-            list_sli_pd = []
-            print(sale.sale_line_items)
-            for sli in sli_list.values():
-                sli_pd = ViewProduct(id=sli.prod_id, type=sli.type, name=sli.get_desc(), price=sli.price,
-                                     price_format=sli.price_format, qty=sli.qty)
-                list_sli_pd.append(sli_pd)
-            sale_pd = ViewSale(id=sale.id, place=place_pd, seller=seller_pd, products=list_sli_pd)
-            sale_frame = Sale_Frame(self, sale_pd)
+        self.old_sales = self.handler.get_old_sales()
+        for dp_sale in self.old_sales:
+            sale_frame = Sale_Frame(self, dp_sale)
             self.ui.sli_layout.addWidget(sale_frame)
         self.ui.sli_layout.addStretch(0)
 
@@ -115,8 +104,7 @@ class SaleForm(QWidget):
         db_get_sales.signals.result.connect(self._completed_getting_sales)
         self.thread_pool.start(db_get_sales)
 
-    def _completed_getting_sales(self, pd_sales: list[ShowSaleWithSLIs]):
-        self.old_sales = pd_sales
+    def _completed_getting_sales(self):
         self._update_sli()
         self.load_widget.hide()
 
@@ -148,10 +136,10 @@ class SaleForm(QWidget):
         self._update_total()
         self.ui.src_items.clear()
 
-    def put_item_form_sli_to_items(self):
-        sli_id = self.selected_sli_widget.sli_product_id
+    def put_item_form_sli_to_items(self, sale_id=None):
+        sli_product_id = self.selected_sli_widget.sli_product_id
         sli_price = self.selected_sli_widget.sli_price
-        self.handler.put_item_form_sli_to_items(sli_id, sli_price)
+        self.handler.put_item_form_sli_to_items(sli_product_id, sli_price, sale_id=sale_id)
         self._update_sli()
         self._update_items_layout()
         self._update_total()

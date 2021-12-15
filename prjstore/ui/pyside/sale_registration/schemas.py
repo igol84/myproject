@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.domain.item import Item
+from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.products.shoes import Shoes
 from prjstore.domain.sale import Sale
 from prjstore.domain.sale_line_item import SaleLineItem
@@ -46,13 +47,8 @@ class Price(float):
     pass
 
 
-class ViewProduct(BaseModel):
-    id: str
-    type: str
-    name: str
-    price: float
-    price_format: str
-    qty: int
+class ViewProduct(ModelProduct):
+    pass
 
 
 class ViewSeller(BaseModel):
@@ -144,14 +140,14 @@ def create_product_schemas_by_items(items: dict[int: Item]) -> list[ModelProduct
                     else:
                         products[-1].colors[-1].widths[-1].sizes.append(size)
         else:
-            product = ViewProduct(id=product.prod_id, type=product.type, name=product.name,
+            product = ViewProduct(prod_id=product.prod_id, type=product.type, name=product.name,
                                   price=product.price, price_format=product.price_format, qty=product.qty)
             products.append(product)
     return products
 
 
-def create_sli_schemas_by_items(list_sli: list[SaleLineItem]) -> dict[tuple[ProductId, Price]: ModelProduct]:
-    products: dict[tuple[ProductId, Price]: ModelProduct] = {}
+def create_sli_schemas_by_items(list_sli: list[SaleLineItem]) -> dict[tuple[ProductId, Price], ModelProduct]:
+    products: dict[tuple[ProductId, Price], ModelProduct] = {}
     for sli in list_sli:
         shoes = None
         if sli.item.product.product_type == 'shoes' and isinstance(sli.item.product, Shoes):
@@ -172,6 +168,18 @@ def create_sli_schemas_by_items(list_sli: list[SaleLineItem]) -> dict[tuple[Prod
         else:
             products[sli.item.product.prod_id, sli.sale_price.amount].qty += sli.qty
     return products
+
+
+def create_sale_schemas_by_ledger(ledger: dict[int, tuple[Sale, PlaceOfSale]]) -> list[ViewSale]:
+    list_sales = []
+    for sale, place in ledger.values():
+        pd_place = ViewPlace(id=place.id, desc=place.name)
+        pd_seller = ViewSeller(id=sale.seller.id, desc=sale.seller.name)
+        products: dict[tuple[ProductId, Price], ModelProduct] = create_sli_schemas_by_items(sale.list_sli)
+        products_list = [product for product in products.values()]
+        pd_sale = ViewSale(id=sale.id, place=pd_place, seller=pd_seller, products=products_list)
+        list_sales.append(pd_sale)
+    return list_sales
 
 
 class ModelsSeller(BaseModel):
@@ -202,9 +210,10 @@ class SellerId(int):
     pass
 
 
-def create_sales_by_sales_schemas(pd_sales: list[ShowSaleWithSLIs]) -> dict[int, Sale]:
+def create_sales_by_sales_schemas(pd_sales: list[ShowSaleWithSLIs]) -> dict[int, tuple[Sale, PlaceOfSale]]:
     sales_by_date: dict[int, Sale] = {}
     for pd_sale in pd_sales:
         sale = Sale.create_from_schema(pd_sale)
-        sales_by_date[sale.id] = sale
+        place = PlaceOfSale.create_from_schema(pd_sale.place)
+        sales_by_date[sale.id] = (sale, place)
     return OrderedDict(sorted(sales_by_date.items()))

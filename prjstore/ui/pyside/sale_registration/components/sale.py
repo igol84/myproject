@@ -20,6 +20,7 @@ class Sale_Frame(QWidget):
         self.place = view_sale.place
         self.seller = view_sale.seller
         self.products = view_sale.products
+        print(self.products)
         layout = QtWidgets.QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         label = QLabel(f'{self.place.desc} - {self.seller.desc}')
@@ -42,9 +43,9 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     place = ViewPlace(id=1, desc='Box')
     seller = ViewSeller(id=1, desc='Igor')
-    product_pd_1 = ViewProduct(type='product', id='2', price=1600, price_format='1600 грн.', qty=3,
+    product_pd_1 = ViewProduct(type='product', prod_id='2', price=1600, price_format='1600 грн.', qty=3,
                                name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!')
-    product_pd_2 = ViewProduct(type='product', id='3', price=600, price_format='600 грн.', qty=2,
+    product_pd_2 = ViewProduct(type='product', prod_id='3', price=600, price_format='600 грн.', qty=2,
                                name='Кроссовки Adidas красные')
     sale_pd = ViewSale(id=1, place=place, seller=seller, products=[product_pd_1, product_pd_2])
     win = QWidget()

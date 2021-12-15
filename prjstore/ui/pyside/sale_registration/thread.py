@@ -3,13 +3,12 @@ import datetime
 from PySide6.QtCore import Signal, QObject, QRunnable, Slot
 
 from prjstore.db import API_DB
-from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 
 
 class DbConnectorSignals(QObject):
     error = Signal(str)
-    result = Signal(tuple)
+    result = Signal(SaleRegistrationHandler)
 
 
 class DbConnector(QRunnable):
@@ -22,12 +21,11 @@ class DbConnector(QRunnable):
         try:
             db = API_DB()
             handler = SaleRegistrationHandler(db=db)
-            pd_sales: list[ShowSaleWithSLIs] = handler.changed_date(date=datetime.datetime.now().date())
-            sorted_pd_sales = sorted(pd_sales, key=lambda sale: (sale.place.id, sale.seller.id, sale.date_time))
+            handler.changed_date(date=datetime.datetime.now().date())
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:
-            self.signals.result.emit((handler, sorted_pd_sales))
+            self.signals.result.emit(handler)
 
 
 class CreateSaleSignals(QObject):
@@ -58,7 +56,7 @@ class DBCreateSale(QRunnable):
 
 class GetSalesSignals(QObject):
     error = Signal(str)
-    result = Signal(list)
+    result = Signal()
 
 
 class DBGetSales(QRunnable):
@@ -73,9 +71,9 @@ class DBGetSales(QRunnable):
     @Slot()
     def run(self):
         try:
-            pd_sales = self.handler.changed_date(date=self.date_sale, place_id=self.place_id, seller_id=self.seller_id)
-            sorted_pd_sales = sorted(pd_sales, key=lambda sale: (sale.place.id, sale.seller.id, sale.date_time))
+            self.handler.changed_date(date=self.date_sale, place_id=self.place_id, seller_id=self.seller_id)
+            # sorted_pd_sales = sorted(pd_sales, key=lambda sale: (sale.place.id, sale.seller.id, sale.date_time))
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:
-            self.signals.result.emit(sorted_pd_sales)
+            self.signals.result.emit()

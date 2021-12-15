@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import validate_arguments
 
 from prjstore.db import API_DB
-from prjstore.db.schemas.sale import ShowSaleWithSLIs
+from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.store import Store
 from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
@@ -11,7 +11,7 @@ from prjstore.handlers.data_for_test.sale_registration import put_test_data
 
 from prjstore.ui.pyside.sale_registration.schemas import (
     ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items, ProductId, Price,
-    create_sales_by_sales_schemas
+    create_sales_by_sales_schemas, create_sale_schemas_by_ledger, ViewSale
 )
 
 
@@ -19,7 +19,7 @@ class SaleRegistrationHandler:
     _db: API_DB
     _store: Store
     _sale: Sale
-    _ledger: dict[int, Sale]
+    __ledger: dict[int, tuple[Sale, PlaceOfSale]]
 
     def __init__(self, db: API_DB = None, store_id=1, test=False):
         self._db = db
@@ -37,22 +37,30 @@ class SaleRegistrationHandler:
         products: dict[int: Item] = self._store.items if not search else self.search_items(search)
         return create_product_schemas_by_items(products)
 
-    @validate_arguments
-    def update_store_sales_by_date(
-            self, date: datetime.date, place_id: int = None, seller_id: int = None
-    ) -> list[ShowSaleWithSLIs]:
-        pd_sales = self._db.sale.get_all(store_id=self._store.id, date=date, place_id=place_id, seller_id=seller_id)
-        self._ledger = create_sales_by_sales_schemas(pd_sales)
-        return pd_sales
+    def get_ledger(self):
+        return self.__ledger
+
+    ledger = property(get_ledger)
 
     @validate_arguments
-    def changed_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> list[ShowSaleWithSLIs]:
-        return self.update_store_sales_by_date(date=date, place_id=place_id, seller_id=seller_id)
+    def update_store_sales_by_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
+        pd_sales = self._db.sale.get_all(store_id=self._store.id, date=date, place_id=place_id, seller_id=seller_id)
+        self.__ledger = create_sales_by_sales_schemas(pd_sales)
+
+    @validate_arguments
+    def changed_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
+        self.update_store_sales_by_date(date=date, place_id=place_id, seller_id=seller_id)
 
     @validate_arguments
     def get_sale_line_items(self, sale_id: int = None) -> dict[tuple[ProductId, Price]: ModelProduct]:
-        list_sli = self._ledger[sale_id].list_sli if sale_id else self._sale.list_sli
+        list_sli = self.__ledger[sale_id][0].list_sli if sale_id else self._sale.list_sli
         return create_sli_schemas_by_items(list_sli)
+
+    def get_old_sales(self) -> list[ViewSale]:
+        return create_sale_schemas_by_ledger(self.__ledger)
+
+
+
 
     @validate_arguments
     def search_items(self, text: str) -> dict[str: Item]:
@@ -81,11 +89,15 @@ class SaleRegistrationHandler:
             return self._store.items[pr_id].qty
 
     @validate_arguments
-    def put_item_form_sli_to_items(self, pr_id: str, sli_price: float) -> None:
+    def put_item_form_sli_to_items(self, pr_id: str, sli_price: float, sale_id: int = None) -> None:
+        if sale_id:
+            self._sale = self.__ledger[sale_id][0]
         sli_s = self._sale.get_line_items_by_product_id_and_sale_price(pr_id, sli_price)
         for sli in sli_s:
             self._sale.unset_line_item(sli=sli, qty=sli.qty)
             self._store.add_item(item=sli.item, qty=sli.qty)
+        if sale_id and not self._sale.list_sli:
+            del self.__ledger[sale_id]
 
     @validate_arguments
     def edit_sale_price_in_sli(self, sli_product_id: str, old_sale_price: float, sale_price: float) -> None:

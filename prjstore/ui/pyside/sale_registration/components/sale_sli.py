@@ -8,13 +8,18 @@ class SaleSliFrame(SLI_Frame):
     default_color_bg = '#afedc1'
     color_fon_enter = '#E8ffef'
 
+    def on_push_button_plus(self):
+        if self.parent_form:
+            self.parent_form.put_item_form_sli_to_items(sale_id=self.parent().sale_id)
+        self.update()
+
 
 if __name__ == "__main__":
     from PySide6.QtWidgets import QVBoxLayout, QApplication, QWidget
 
     app = QApplication(sys.argv)
 
-    product_pd = ViewProduct(type='product', id='2', price=1600, price_format='1600 грн.', qty=3,
+    product_pd = ViewProduct(type='product', prod_id='2', price=1600, price_format='1600 грн.', qty=3,
                              name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!')
     win = QWidget()
     v_box = QVBoxLayout(win)

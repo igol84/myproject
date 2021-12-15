@@ -27,7 +27,7 @@ class SLI_Frame(QWidget):
     def __init__(self, parent, sli_pd: ViewProduct):
         super().__init__()
         self.__parent_form = parent
-        self.sli_product_id = sli_pd.id
+        self.sli_product_id = sli_pd.prod_id
         self.sli_price = sli_pd.price
         self.sli_price_format = sli_pd.price_format
         self.sli_qty = sli_pd.qty
@@ -157,7 +157,7 @@ class LineEditPrice(QLineEdit):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    product_pd = ViewProduct(id='2', type='product', price=1600, price_format='1600 грн.', qty=3,
+    product_pd = ViewProduct(prod_id='2', type='product', price=1600, price_format='1600 грн.', qty=3,
                              name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!')
     w = SLI_Frame(parent=None, sli_pd=product_pd)
     w.show()

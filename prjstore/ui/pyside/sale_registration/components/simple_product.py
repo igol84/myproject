@@ -16,7 +16,7 @@ class ProductFrame(ItemFrame, AbstractSoldItem):
         self.setFixedHeight(self.height_)
         self.setMinimumWidth(300)
         self.__parent_form = parent
-        self.pr_id = item_pd.id
+        self.pr_id = item_pd.prod_id
         self.pr_name = item_pd.name
         self.pr_price = item_pd.price
         self.pr_price_format = item_pd.price_format
@@ -183,7 +183,7 @@ if __name__ == "__main__":
     from PySide6.QtWidgets import QVBoxLayout
 
     app = QApplication(sys.argv)
-    product = ViewProduct(type='product', id='2', price=1600, price_format='1600 грн.', qty=3,
+    product = ViewProduct(type='product', prod_id='2', price=1600, price_format='1600 грн.', qty=3,
                           name='Кроссовки Adidas Y-1 красные, натуральная замша. Топ качество!')
     win = QWidget()
     v_box = QVBoxLayout(win)
