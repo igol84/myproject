@@ -12,7 +12,8 @@ from prjstore.ui.pyside.sale_registration.components.sale import Sale_Frame
 from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
 from prjstore.ui.pyside.sale_registration.schemas import ModelProduct, ProductId, Price, ViewProduct
-from prjstore.ui.pyside.sale_registration.thread import DbConnector, DBCreateSale, DBGetSales
+from prjstore.ui.pyside.sale_registration.thread import DbConnect, DBCreateSale, DBGetSales, DBPutOnSale, \
+    DbPutItemFormSliToItems
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 
 
@@ -39,12 +40,12 @@ class SaleForm(QWidget):
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
         if not self.test:
-            db_connector = DbConnector()
+            db_connector = DbConnect()
             db_connector.signals.error.connect(self._connection_error)
             db_connector.signals.result.connect(self.connected_complete)
             self.thread_pool.start(db_connector)
         else:
-            self.connected_complete((None, SaleRegistrationHandler(test=True)))
+            self.connected_complete(SaleRegistrationHandler(test=True))
 
     def _connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
@@ -85,6 +86,7 @@ class SaleForm(QWidget):
                                      price_format=sli.price_format, qty=sli.qty)
             label = SLI_Frame(self, product_pd)
             self.ui.sli_layout.addWidget(label)
+        # Old sales
         self.old_sales = self.handler.get_old_sales()
         for dp_sale in self.old_sales:
             sale_frame = Sale_Frame(self, dp_sale)
@@ -130,19 +132,33 @@ class SaleForm(QWidget):
         pr_id = self.selected_item_widget.pr_id
         sale_price = int(self.selected_item_widget.get_sale_price())
         sale_qty = float(self.selected_item_widget.get_sale_qty())
-        self.handler.put_on_sale(pr_id, sale_qty, sale_price)
+        self.load_widget.show()
+        thread = DBPutOnSale(self.handler, pr_id, sale_qty, sale_price)
+        thread.signals.error.connect(self._connection_error)
+        thread.signals.complete.connect(self._completed_put_on_sale)
+        self.thread_pool.start(thread)
+
+    def _completed_put_on_sale(self):
         self._update_items_layout()
         self._update_sli()
         self._update_total()
         self.ui.src_items.clear()
+        self.load_widget.hide()
 
     def put_item_form_sli_to_items(self, sale_id=None):
-        sli_product_id = self.selected_sli_widget.sli_product_id
+        pr_id = self.selected_sli_widget.sli_product_id
         sli_price = self.selected_sli_widget.sli_price
-        self.handler.put_item_form_sli_to_items(sli_product_id, sli_price, sale_id=sale_id)
+        self.load_widget.show()
+        thread = DbPutItemFormSliToItems(self.handler, pr_id=pr_id, sli_price=sli_price, sale_id=sale_id)
+        thread.signals.error.connect(self._connection_error)
+        thread.signals.complete.connect(self._completed_put_item_form_sli_to_items)
+        self.thread_pool.start(thread)
+
+    def _completed_put_item_form_sli_to_items(self):
         self._update_sli()
         self._update_items_layout()
         self._update_total()
+        self.load_widget.hide()
 
     def edit_sale_price_in_sli(self, sli_item_id: str, old_sale_price: float, sale_price: float):
         if old_sale_price != sale_price:

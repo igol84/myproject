@@ -87,14 +87,18 @@ class SaleRegistrationHandler:
 
     @validate_arguments
     def put_item_form_sli_to_items(self, pr_id: str, sli_price: float, sale_id: int = None) -> None:
+        tmp_sale: Sale = None
         if sale_id:
+            tmp_sale = self._sale
             self._sale = self.__ledger[sale_id][0]
         sli_s = self._sale.get_line_items_by_product_id_and_sale_price(pr_id, sli_price)
         for sli in sli_s:
             self._sale.unset_line_item(sli=sli, qty=sli.qty)
             self._store.add_item(item=sli.item, qty=sli.qty)
-        if sale_id and not self._sale.list_sli:
-            del self.__ledger[sale_id]
+        if sale_id:
+            if not self._sale.list_sli:
+                del self.__ledger[sale_id]
+            self._sale = tmp_sale
 
     @validate_arguments
     def edit_sale_price_in_sli(self, sli_product_id: str, old_sale_price: float, sale_price: float) -> None:

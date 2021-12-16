@@ -31,7 +31,7 @@ class SLI_Frame(QWidget):
         self.sli_price = sli_pd.price
         self.sli_price_format = sli_pd.price_format
         self.sli_qty = sli_pd.qty
-        self.sli_desc = sli_pd.name
+        self.sli_desc = sli_pd.get_desc()
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setMinimumSize(self.width_, self.height_)
         self.color_fon = self.default_color_bg

@@ -179,7 +179,7 @@ def create_sale_schemas_by_ledger(ledger: dict[int, tuple[Sale, PlaceOfSale]]) -
         products_list = [product for product in products.values()]
         pd_sale = ViewSale(id=sale.id, place=pd_place, seller=pd_seller, products=products_list)
         list_sales.append(pd_sale)
-    return list_sales
+    return sorted(list_sales, key=lambda sale: (sale.place.id, sale.seller.id))
 
 
 class ModelsSeller(BaseModel):
