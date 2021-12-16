@@ -6,41 +6,38 @@ from prjstore.db import API_DB
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 
 
-class DbConnectorSignals(QObject):
-    error = Signal(str)
-    result = Signal(SaleRegistrationHandler)
-
-
 class DbConnector(QRunnable):
+    class DbConnectorSignals(QObject):
+        error = Signal(str)
+        result = Signal(SaleRegistrationHandler)
+
     def __init__(self):
         super().__init__()
-        self.signals = DbConnectorSignals()
+        self.signals = self.DbConnectorSignals()
 
     @Slot()
     def run(self):
         try:
             db = API_DB()
             handler = SaleRegistrationHandler(db=db)
-            handler.changed_date(date=datetime.datetime.now().date())
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:
             self.signals.result.emit(handler)
 
 
-class CreateSaleSignals(QObject):
-    error = Signal(str)
-    complete = Signal()
-
-
 class DBCreateSale(QRunnable):
+    class CreateSaleSignals(QObject):
+        error = Signal(str)
+        complete = Signal()
+
     def __init__(self, handler, current_data, current_place_of_sale_id, current_seller_id):
         super().__init__()
         self.handler = handler
         self.current_data = current_data
         self.current_place_of_sale_id = current_place_of_sale_id
         self.current_seller_id = current_seller_id
-        self.signals = CreateSaleSignals()
+        self.signals = self.CreateSaleSignals()
 
     @Slot()
     def run(self):
@@ -54,19 +51,18 @@ class DBCreateSale(QRunnable):
             self.signals.complete.emit()
 
 
-class GetSalesSignals(QObject):
-    error = Signal(str)
-    result = Signal()
-
-
 class DBGetSales(QRunnable):
+    class GetSalesSignals(QObject):
+        error = Signal(str)
+        result = Signal()
+
     def __init__(self, handler, date_sale, place_id, seller_id):
         super().__init__()
         self.handler = handler
         self.date_sale = date_sale
         self.place_id = place_id
         self.seller_id = seller_id
-        self.signals = GetSalesSignals()
+        self.signals = self.GetSalesSignals()
 
     @Slot()
     def run(self):

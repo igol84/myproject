@@ -20,7 +20,6 @@ class Sale_Frame(QWidget):
         self.place = view_sale.place
         self.seller = view_sale.seller
         self.products = view_sale.products
-        print(self.products)
         layout = QtWidgets.QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
         label = QLabel(f'{self.place.desc} - {self.seller.desc}')

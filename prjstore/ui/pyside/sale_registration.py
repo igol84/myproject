@@ -41,16 +41,16 @@ class SaleForm(QWidget):
         if not self.test:
             db_connector = DbConnector()
             db_connector.signals.error.connect(self._connection_error)
-            db_connector.signals.result.connect(self.set_data)
+            db_connector.signals.result.connect(self.connected_complete)
             self.thread_pool.start(db_connector)
         else:
-            self.set_data((None, SaleRegistrationHandler(test=True)))
+            self.connected_complete((None, SaleRegistrationHandler(test=True)))
 
     def _connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
         sys.exit(app.exec())
 
-    def set_data(self, handler: SaleRegistrationHandler):
+    def connected_complete(self, handler: SaleRegistrationHandler):
         self.handler = handler
         self.update()
         self.load_widget.hide()

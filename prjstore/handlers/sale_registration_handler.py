@@ -59,9 +59,6 @@ class SaleRegistrationHandler:
     def get_old_sales(self) -> list[ViewSale]:
         return create_sale_schemas_by_ledger(self.__ledger)
 
-
-
-
     @validate_arguments
     def search_items(self, text: str) -> dict[str: Item]:
         return self._store.search_items(value=text, fields={'name', 'prod_id'})
@@ -130,7 +127,6 @@ class SaleRegistrationHandler:
             current_place.sale = self._sale
             self._sale.completed()
             pd_sale = self._sale.schema_create(place_id=current_place_of_sale_id)
-            print(pd_sale)
             if self.test_mode:
                 return True
             if self._db.sale.create(pd_sale):
