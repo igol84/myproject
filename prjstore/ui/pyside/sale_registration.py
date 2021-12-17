@@ -61,6 +61,7 @@ class SaleForm(QWidget):
         self._update_sellers_names()
         self._update_sli()
         self._update_items_layout()
+        self.change_data()
 
     def _update_paces_of_sales(self):
         self.ui.combo_box_place_of_sale.clear()
@@ -132,7 +133,6 @@ class SaleForm(QWidget):
         pr_id = self.selected_item_widget.pr_id
         sale_price = int(self.selected_item_widget.get_sale_price())
         sale_qty = float(self.selected_item_widget.get_sale_qty())
-        self.load_widget.show()
         thread = DBPutOnSale(self.handler, pr_id, sale_qty, sale_price)
         thread.signals.error.connect(self._connection_error)
         thread.signals.complete.connect(self._completed_put_on_sale)
@@ -143,16 +143,19 @@ class SaleForm(QWidget):
         self._update_sli()
         self._update_total()
         self.ui.src_items.clear()
-        self.load_widget.hide()
 
     def put_item_form_sli_to_items(self, sale_id=None):
         pr_id = self.selected_sli_widget.sli_product_id
         sli_price = self.selected_sli_widget.sli_price
-        self.load_widget.show()
-        thread = DbPutItemFormSliToItems(self.handler, pr_id=pr_id, sli_price=sli_price, sale_id=sale_id)
-        thread.signals.error.connect(self._connection_error)
-        thread.signals.complete.connect(self._completed_put_item_form_sli_to_items)
-        self.thread_pool.start(thread)
+        if sale_id:
+            self.load_widget.show()
+            thread = DbPutItemFormSliToItems(self.handler, pr_id=pr_id, sli_price=sli_price, sale_id=sale_id)
+            thread.signals.error.connect(self._connection_error)
+            thread.signals.complete.connect(self._completed_put_item_form_sli_to_items)
+            self.thread_pool.start(thread)
+        else:
+            self.handler.put_item_form_sli_to_items(pr_id=pr_id, sli_price=sli_price)
+            self._completed_put_item_form_sli_to_items()
 
     def _completed_put_item_form_sli_to_items(self):
         self._update_sli()

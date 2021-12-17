@@ -111,7 +111,7 @@ class DbPutItemFormSliToItems(QRunnable):
     @Slot()
     def run(self):
         try:
-            self.handler.put_item_form_sli_to_items(pr_id=self.pr_id, sli_price=self.sli_price, sale_id=self.sale_id)
+            self.handler.put_item_form_sli_to_items_in_old_sale(self.pr_id, self.sli_price, self.sale_id)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:

@@ -21,7 +21,7 @@ class LoadImg(QLabel):
 class LoadWidget(QLabel):
     def __init__(self, parent, path):
         super().__init__(parent=parent)
-        self.setStyleSheet('background-color: rgba(0, 0, 0, 50);')
+        self.setStyleSheet('background-color: rgba(0, 0, 0, 0);')
         self.setFixedSize(self.parent().rect().size())
         self.img = LoadImg(parent=self, path=path)
 

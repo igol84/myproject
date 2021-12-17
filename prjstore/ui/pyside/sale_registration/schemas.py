@@ -19,6 +19,11 @@ class ModelShoes(BaseModel):
     width_of_insole: Optional[float] = None
 
 
+class ModelSale(BaseModel):
+    sale: Sale
+    place: PlaceOfSale
+
+
 class ModelProduct(BaseModel):
     prod_id: str
     name: str
@@ -170,14 +175,16 @@ def create_sli_schemas_by_items(list_sli: list[SaleLineItem]) -> dict[tuple[Prod
     return products
 
 
-def create_sale_schemas_by_ledger(ledger: dict[int, tuple[Sale, PlaceOfSale]]) -> list[ViewSale]:
+def create_sale_schemas_by_ledger(ledger: dict[int, ModelSale]) -> list[ViewSale]:
     list_sales = []
-    for sale, place in ledger.values():
-        pd_place = ViewPlace(id=place.id, desc=place.name)
-        pd_seller = ViewSeller(id=sale.seller.id, desc=sale.seller.name)
-        products: dict[tuple[ProductId, Price], ModelProduct] = create_sli_schemas_by_items(sale.list_sli)
+    for model in ledger.values():
+        pd_place = model.place
+        pd_sale = model.sale
+        pd_place = ViewPlace(id=pd_place.id, desc=pd_place.name)
+        pd_seller = ViewSeller(id=pd_sale.seller.id, desc=pd_sale.seller.name)
+        products: dict[tuple[ProductId, Price], ModelProduct] = create_sli_schemas_by_items(pd_sale.list_sli)
         products_list = [product for product in products.values()]
-        pd_sale = ViewSale(id=sale.id, place=pd_place, seller=pd_seller, products=products_list)
+        pd_sale = ViewSale(id=pd_sale.id, place=pd_place, seller=pd_seller, products=products_list)
         list_sales.append(pd_sale)
     return sorted(list_sales, key=lambda sale: (sale.place.id, sale.seller.id))
 
@@ -215,5 +222,5 @@ def create_sales_by_sales_schemas(pd_sales: list[ShowSaleWithSLIs]) -> dict[int,
     for pd_sale in pd_sales:
         sale = Sale.create_from_schema(pd_sale)
         place = PlaceOfSale.create_from_schema(pd_sale.place)
-        sales_by_date[sale.id] = (sale, place)
+        sales_by_date[sale.id] = ModelSale(sale=sale, place=place)
     return OrderedDict(sorted(sales_by_date.items()))
