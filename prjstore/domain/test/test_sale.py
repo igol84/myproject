@@ -46,7 +46,7 @@ class Test_Sale(TestSale):
         assert str(sli) == "['item23', 0, 3, 600.0]"
 
     def test_get_line_item_by_product_id(self):
-        sli = self.sale.get_line_items_by_product_id_and_sale_price('2', 600)[0]
+        sli = self.sale.get_line_items_by('2', 600)[0]
         sli = [sli.item.product.name, sli.item.qty, sli.qty, sli.sale_price.amount]
         assert str(sli) == "['item23', 1, 2, 600.0]"
 
@@ -62,7 +62,7 @@ class Test_Sale(TestSale):
 
     def test_edit_sale_price(self):
         sli = self.sale.get_line_item_by_item_id_and_sale_price(4, 600)
-        self.sale.edit_sale_price(sli=sli, sale_price=400)
+        self.sale.edit_sale_price(sli=sli, new_sale_price=400)
         sli = [sli.item.product.name, sli.item.qty, sli.qty, sli.sale_price.amount]
         assert str(sli) == "['item23', 1, 2, 400.0]"
 
@@ -78,7 +78,7 @@ class Test_Sale(TestSale):
 
     def test_del_line_item_by_product_id_2(self):
         del self.sale[(4, 600)]
-        assert self.sale.get_line_items_by_product_id_and_sale_price('2', 600) == []
+        assert self.sale.get_line_items_by('2', 600) == []
 
     def test_del_line_items_by_item_id_and_sale_price(self):
         self.sale.del_line_items_by_item_id_and_sale_price(4, 600)

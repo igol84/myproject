@@ -3,14 +3,14 @@ from typing import Optional
 
 from pydantic import validate_arguments
 
-from prjstore.db import API_DB
+from prjstore.db import API_DB, schemas
 from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
 from prjstore.domain.store import Store
 from prjstore.handlers.data_for_test.sale_registration import put_test_data
 from prjstore.ui.pyside.sale_registration.schemas import (
     ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items, ProductId, Price,
-    create_sales_by_sales_schemas, create_sale_schemas_by_ledger, ViewSale, ModelSale
+    create_sales_by_sales_schemas, create_sale_schemas_by_ledger, ViewSale, ModelSale, ViewProduct
 )
 
 
@@ -47,7 +47,7 @@ class SaleRegistrationHandler:
     ledger = property(get_ledger)
 
     @validate_arguments
-    def get_store_items(self, search: Optional[str] = None) -> list[ModelProduct]:
+    def get_store_items(self, search: Optional[str] = None) -> list[ViewProduct]:
         products: dict[int: Item] = self.store.items if not search else self.search_items(search)
         return create_product_schemas_by_items(products)
 
@@ -96,7 +96,7 @@ class SaleRegistrationHandler:
 
     @validate_arguments
     def put_item_form_sli_to_items(self, pr_id: str, sli_price: float) -> None:
-        sli_s = self.sale.get_line_items_by_product_id_and_sale_price(pr_id, sli_price)
+        sli_s = self.sale.get_line_items_by(pr_id, sli_price)
         for sli in sli_s:
             self.sale.unset_line_item(sli=sli, qty=sli.qty)
             self.store.add_item(item=sli.item, qty=sli.qty)
@@ -105,9 +105,19 @@ class SaleRegistrationHandler:
     def put_item_form_sli_to_items_in_old_sale(self, pr_id: str, sli_price: float, sale_id: int = None) -> None:
         tmp_sale = self.sale
         self.__sale = self.ledger[sale_id].sale
-        sli_s = self.sale.get_line_items_by_product_id_and_sale_price(pr_id, sli_price)
+        sli_s = self.sale.get_line_items_by(pr_id, sli_price)
         for sli in sli_s:
             self.__db.sale_line_item.delete(sale_id=sale_id, item_id=sli.item.id, sale_price=sli_price)
+            if sli.item.id not in self.store.items:
+                pd_item = schemas.item.CreateItem(prod_id=pr_id, store_id=sale_id, qty=sli.qty,
+                                                  buy_price=sli.item.buy_price.amount)
+                self.__db.item.create(pd_item)
+            else:
+                qty = self.store.items[sli.item.id].qty + sli.qty
+                pd_item = schemas.item.UpdateItem(id=sli.item.id, prod_id=pr_id, store_id=self.store.id, qty=qty,
+                                                  buy_price=sli.item.buy_price.amount)
+                self.__db.item.update(pd_item)
+
             self.sale.unset_line_item(sli=sli, qty=sli.qty)
             self.store.add_item(item=sli.item, qty=sli.qty)
         if not self.sale.list_sli:
@@ -116,10 +126,24 @@ class SaleRegistrationHandler:
         self.__sale = tmp_sale
 
     @validate_arguments
-    def edit_sale_price_in_sli(self, sli_product_id: str, old_sale_price: float, sale_price: float) -> None:
-        sli_s = self.sale.get_line_items_by_product_id_and_sale_price(sli_product_id, old_sale_price)
+    def edit_sale_price_in_sli(self, sli_product_id: str, old_sale_price: float, new_sale_price: float) -> None:
+        sli_s = self.sale.get_line_items_by(sli_product_id, old_sale_price)
         for sli in sli_s:
-            self.sale.edit_sale_price(sli, sale_price)
+            self.sale.edit_sale_price(sli, new_sale_price)
+
+    @validate_arguments
+    def edit_sale_price_in_old_sli(self, sale_id: int, sli_prod_id: str, old_price: float, new_price: float):
+        tmp_sale = self.sale
+        self.__sale = self.ledger[sale_id].sale
+        sli_s = self.sale.get_line_items_by(sli_prod_id, old_price)
+        for sli in sli_s:
+            sli_schema = schemas.sale_line_item.CreateSaleLineItem
+            pd_sli_old = sli_schema(sale_id=self.sale.id, item_id=sli.item.id, sale_price=old_price, qty=sli.qty)
+            pd_sli_new = sli_schema(sale_id=self.sale.id, item_id=sli.item.id, sale_price=new_price, qty=sli.qty)
+            self.__db.sale_line_item.delete(**pd_sli_old.dict())
+            self.__db.sale_line_item.create(pd_sli_new)
+            self.sale.edit_sale_price(sli, new_price)
+        self.__sale = tmp_sale
 
     def get_store_places_of_sale_names(self) -> dict[int, str]:
         return {sale_id: place_of_sale.name for sale_id, place_of_sale in list(self.store.places_of_sale.items())}

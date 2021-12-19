@@ -1,7 +1,7 @@
 import sys
 
-from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
 from PySide6.QtCore import QDate, QThreadPool
+from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
 
 from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
@@ -13,7 +13,7 @@ from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
 from prjstore.ui.pyside.sale_registration.schemas import ModelProduct, ProductId, Price, ViewProduct
 from prjstore.ui.pyside.sale_registration.thread import DbConnect, DBCreateSale, DBGetSales, DBPutOnSale, \
-    DbPutItemFormSliToItems
+    DbPutItemFormSliToItems, DbEditSalePrice
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 
 
@@ -163,11 +163,22 @@ class SaleForm(QWidget):
         self._update_total()
         self.load_widget.hide()
 
-    def edit_sale_price_in_sli(self, sli_item_id: str, old_sale_price: float, sale_price: float):
-        if old_sale_price != sale_price:
-            self.handler.edit_sale_price_in_sli(sli_item_id, old_sale_price, sale_price)
-            self._update_sli()
-            self._update_total()
+    def edit_sale_price_in_sli(self, sli_prod_id: str, old_sale_price: float, new_sale_price: float, sale_id=None):
+        if old_sale_price != new_sale_price:
+            if not sale_id:
+                self.handler.edit_sale_price_in_sli(sli_prod_id, old_sale_price, new_sale_price)
+                self._completed_edit_price()
+            else:
+                self.load_widget.show()
+                thread = DbEditSalePrice(self.handler, sale_id, sli_prod_id, old_sale_price, new_sale_price)
+                thread.signals.error.connect(self._connection_error)
+                thread.signals.complete.connect(self._completed_edit_price)
+                self.thread_pool.start(thread)
+
+    def _completed_edit_price(self):
+        self._update_sli()
+        self._update_total()
+        self.load_widget.hide()
 
     def press_save(self):
         warning_texts = []

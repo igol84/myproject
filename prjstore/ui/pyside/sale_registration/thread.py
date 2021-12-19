@@ -95,6 +95,30 @@ class DBPutOnSale(QRunnable):
             self.signals.complete.emit()
 
 
+class DbEditSalePrice(QRunnable):
+    class Signals(QObject):
+        error = Signal(str)
+        complete = Signal()
+
+    def __init__(self, handler: SaleRegistrationHandler, sale_id: int, pr_id: str, old_price: float, new_price: float):
+        super().__init__()
+        self.handler = handler
+        self.sale_id = sale_id
+        self.pr_id = pr_id
+        self.old_price = old_price
+        self.new_price = new_price
+        self.signals = self.Signals()
+
+    @Slot()
+    def run(self):
+        try:
+            self.handler.edit_sale_price_in_old_sli(self.sale_id, self.pr_id, self.old_price, self.new_price)
+        except OSError:
+            self.signals.error.emit('Нет подключения к интернету.')
+        else:
+            self.signals.complete.emit()
+
+
 class DbPutItemFormSliToItems(QRunnable):
     class Signals(QObject):
         error = Signal(str)

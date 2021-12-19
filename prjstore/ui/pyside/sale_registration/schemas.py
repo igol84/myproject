@@ -97,28 +97,31 @@ class ViewShoes(BaseModel):
     colors: list[ViewColor]
 
 
-def create_product_schemas_by_items(items: dict[int: Item]) -> list[ModelProduct]:
+def create_product_schemas_by_items(items: dict[int: Item]) -> list[ViewProduct]:
     # creating data
     products: dict[str: ModelProduct] = {}
     for item_ in items.values():
-        if item_.product.prod_id not in products:
-            shoes = None
-            if item_.product.product_type == 'shoes' and isinstance(item_.product, Shoes):
-                width = getattr(item_.product.width, 'short_name', None)
-                width_of_insole = getattr(item_.product.width, 'width_of_insole', None)
-                shoes = ModelShoes(size=item_.product.size, color=item_.product.color,
-                                   length=item_.product.length_of_insole, width=width, width_of_insole=width_of_insole)
-            products[item_.product.prod_id] = ModelProduct(
-                prod_id=item_.product.prod_id,
-                type=item_.product.product_type,
-                name=item_.product.name,
-                price=item_.product.price.amount,
-                price_format=item_.product.price.format(),
-                qty=item_.qty,
-                shoes=shoes
-            )
-        else:
-            products[item_.product.prod_id].qty += item_.qty
+        if item_.qty > 0:
+            if item_.product.prod_id not in products:
+                shoes = None
+                if item_.product.product_type == 'shoes' and isinstance(item_.product, Shoes):
+                    size = item_.product.size
+                    color = item_.product.color
+                    width = getattr(item_.product.width, 'short_name', None)
+                    length = item_.product.length_of_insole
+                    insole = getattr(item_.product.width, 'width_of_insole', None)
+                    shoes = ModelShoes(size=size, color=color, length=length, width=width, width_of_insole=insole)
+                products[item_.product.prod_id] = ModelProduct(
+                    prod_id=item_.product.prod_id,
+                    type=item_.product.product_type,
+                    name=item_.product.name,
+                    price=item_.product.price.amount,
+                    price_format=item_.product.price.format(),
+                    qty=item_.qty,
+                    shoes=shoes
+                )
+            else:
+                products[item_.product.prod_id].qty += item_.qty
     # sorting data
     sorted_products = sorted(products.values(), key=lambda k: (
         k.name, getattr(k.shoes, 'color', None), getattr(k.shoes, 'width_of_insole', None),

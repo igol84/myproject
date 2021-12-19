@@ -1,16 +1,16 @@
+import locale
 from dataclasses import field
+from datetime import datetime
 from decimal import Decimal
 from typing import overload
-from datetime import datetime
-import locale
 
 from pydantic import conint, validate_arguments
 from pydantic.dataclasses import dataclass
 
 from prjstore.db import schemas
+from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.item import Item
 from prjstore.domain.sale_line_item import SaleLineItem
-from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.seller import Seller
 from util.money import Money
 
@@ -48,7 +48,7 @@ class Sale:
         return list_sli
 
     @validate_arguments
-    def get_line_items_by_product_id_and_sale_price(self, pr_id: str, sale_price: float) -> list[SaleLineItem]:
+    def get_line_items_by(self, pr_id: str, sale_price: float) -> list[SaleLineItem]:
         list_sli = []
         for sli in self.list_sli:
             if sli.item.product.prod_id == pr_id and sli.sale_price.amount == sale_price:
@@ -70,13 +70,13 @@ class Sale:
                 return sli
 
     @validate_arguments
-    def edit_sale_price(self, sli: SaleLineItem, sale_price: float):
-        old_same_sli = self.get_line_item_by_item_id_and_sale_price(sli.item.id, sale_price)
+    def edit_sale_price(self, sli: SaleLineItem, new_sale_price: float):
+        old_same_sli = self.get_line_item_by_item_id_and_sale_price(sli.item.id, new_sale_price)
         if old_same_sli:
             self.list_sli.remove(sli)
             old_same_sli.qty += sli.qty
         else:
-            sli.sale_price.amount = sale_price
+            sli.sale_price.amount = new_sale_price
 
     @validate_arguments
     def unset_line_item(self, sli: SaleLineItem, qty: int = 1) -> None:
@@ -90,7 +90,7 @@ class Sale:
 
     @validate_arguments
     def unset_line_items_by_pr_id_and_sale_price(self, pr_id: str, sale_price: float, qty: int = 1) -> None:
-        list_sli = self.get_line_items_by_product_id_and_sale_price(pr_id, sale_price)
+        list_sli = self.get_line_items_by(pr_id, sale_price)
         for sli in list_sli:
             self.unset_line_item(sli, qty)
 
