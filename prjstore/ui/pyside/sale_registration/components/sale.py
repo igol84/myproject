@@ -21,8 +21,8 @@ class Sale_Frame(QWidget):
         self.seller = view_sale.seller
         self.products = view_sale.products
         layout = QtWidgets.QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        label = QLabel(f'{self.place.desc} - {self.seller.desc}')
+        layout.setContentsMargins(0, 20, 0, 0)
+        label = QLabel(f'#{self.sale_id}: {self.place.desc} - {self.seller.desc}')
         label.setStyleSheet('font-size: 12pt; background-color: #b3a9fc;')
         layout.addWidget(label)
         for sli in self.products:
