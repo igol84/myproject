@@ -12,6 +12,7 @@ from prjstore.ui.pyside.sale_registration.schemas import (
     ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items, ProductId, Price,
     create_sales_by_sales_schemas, create_sale_schemas_by_ledger, ViewSale, ModelSale, ViewProduct
 )
+from util.money import Money
 
 
 class SaleRegistrationHandler:
@@ -152,10 +153,17 @@ class SaleRegistrationHandler:
         return {seller_id: seller.name for seller_id, seller in list(self.store.sellers.items())}
 
     def get_total(self) -> str:
+        total: Money = None
+        total_purchase: Money = None
         total_str = ''
-        if self.sale.list_sli:
-            total = self.sale.get_total()
-            total_purchase = self.sale.get_total_profit()
+        all_sales = [self.sale]
+        for model in self.ledger.values():
+            all_sales.append(model.sale)
+        for sale in all_sales:
+            if sale.list_sli:
+                total = total + sale.get_total() if total else sale.get_total()
+                total_purchase = total_purchase + sale.get_total_profit() if total_purchase else sale.get_total_profit()
+        if total:
             total_str = f'Выручка: {total.format()}; Прибыль: {total_purchase.format()}'
         return total_str
 

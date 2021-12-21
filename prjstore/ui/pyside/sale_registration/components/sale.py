@@ -22,9 +22,20 @@ class Sale_Frame(QWidget):
         self.products = view_sale.products
         layout = QtWidgets.QVBoxLayout()
         layout.setContentsMargins(0, 20, 0, 0)
-        label = QLabel(f'#{self.sale_id}: {self.place.desc} - {self.seller.desc}')
+        layout_h = QtWidgets.QHBoxLayout()
+        layout_h.setContentsMargins(0, 0, 0, 0)
+        layout_h.setSpacing(0)
+        label = QLabel(f'{self.place.desc} - {self.seller.desc}')
         label.setStyleSheet('font-size: 12pt; background-color: #b3a9fc;')
-        layout.addWidget(label)
+        label.setContentsMargins(10, 2, 0, 2)
+        label_id = QLabel(f'#{self.sale_id}')
+        label_id.setStyleSheet('font-size: 12pt; background-color: #b3a9fc;')
+        label_id.setContentsMargins(0, 2, 10, 2)
+        label_id.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+
+        layout_h.addWidget(label)
+        layout_h.addWidget(label_id)
+        layout.addLayout(layout_h)
         for sli in self.products:
             widget = SaleSliFrame(parent=self.__parent_form, sli_pd=sli)
             layout.addWidget(widget)

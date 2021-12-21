@@ -1,7 +1,8 @@
 import sys
 
+from PySide6 import QtCore
 from PySide6.QtCore import QDate, QThreadPool
-from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QDialogButtonBox, QMessageBox
+from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QMessageBox
 
 from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
@@ -35,8 +36,6 @@ class SaleForm(QWidget):
         self.ui.src_items.textChanged.connect(self.on_search_items_text_changed)
         self.ui.date_edit.setDate(QDate.currentDate())
         self.ui.date_edit.dateChanged.connect(self.change_data)
-        self.ui.buttonBox.addButton(QPushButton('Сохранить'), QDialogButtonBox.AcceptRole)
-        self.ui.buttonBox.accepted.connect(self.press_save)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
         if not self.test:
@@ -61,6 +60,7 @@ class SaleForm(QWidget):
         self._update_sellers_names()
         self._update_sli()
         self._update_items_layout()
+        self._update_total()
         self.change_data()
 
     def _update_paces_of_sales(self):
@@ -87,6 +87,10 @@ class SaleForm(QWidget):
                                      price_format=sli.price_format, qty=sli.qty)
             label = SLI_Frame(self, product_pd)
             self.ui.sli_layout.addWidget(label)
+        if self.sli_list:
+            btn_new_sale = QPushButton('Сохранить')
+            self.ui.sli_layout.addWidget(btn_new_sale, alignment=QtCore.Qt.AlignRight)
+            btn_new_sale.clicked.connect(self.press_save)
         # Old sales
         self.old_sales = self.handler.get_old_sales()
         for dp_sale in self.old_sales:
@@ -203,7 +207,6 @@ class SaleForm(QWidget):
     def _completed_sale(self):
         self.update()
         self.load_widget.hide()
-        QMessageBox(icon=QMessageBox.Information, text='Продажа выполнена!').exec()
 
 
 if __name__ == "__main__":
