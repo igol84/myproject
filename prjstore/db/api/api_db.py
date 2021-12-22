@@ -8,6 +8,7 @@ from prjstore.db.api.components.sale import API_Sale
 from prjstore.db.api.components.sale_line_item import API_SaleLineItem
 from prjstore.db.api.components.place import API_Place
 from prjstore.db.api.components.store import API_Store
+from prjstore.db.api.components.header_sale_registration import API_HeaderSaleRegistration
 
 
 class API_DB:
@@ -21,6 +22,7 @@ class API_DB:
         self.place = API_Place(self.headers)
         self.sale_line_item = API_SaleLineItem(self.headers)
         self.store = API_Store(self.headers)
+        self.header_sale_registration = API_HeaderSaleRegistration(self.headers)
 
 
 if __name__ == '__main__':

@@ -138,11 +138,13 @@ class SaleRegistrationHandler:
         self.__sale = self.ledger[sale_id].sale
         sli_s = self.sale.get_line_items_by(sli_prod_id, old_price)
         for sli in sli_s:
-            sli_schema = schemas.sale_line_item.CreateSaleLineItem
+            sli_schema = schemas.sale_line_item.SaleLineItem
             pd_sli_old = sli_schema(sale_id=self.sale.id, item_id=sli.item.id, sale_price=old_price, qty=sli.qty)
             pd_sli_new = sli_schema(sale_id=self.sale.id, item_id=sli.item.id, sale_price=new_price, qty=sli.qty)
-            self.__db.sale_line_item.delete(**pd_sli_old.dict())
-            self.__db.sale_line_item.create(pd_sli_new)
+            pd_data = schemas.header_sale_registration.EditSLIPrice(old_sli=pd_sli_old, new_sli=pd_sli_new)
+            self.__db.header_sale_registration.edit_sli_price(data=pd_data)
+            # self.__db.sale_line_item.delete(**pd_sli_old.dict())
+            # self.__db.sale_line_item.create(pd_sli_new)
             self.sale.edit_sale_price(sli, new_price)
         self.__sale = tmp_sale
 
