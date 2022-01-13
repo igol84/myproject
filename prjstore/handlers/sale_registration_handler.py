@@ -30,7 +30,7 @@ class SaleRegistrationHandler:
             self.__store = Store(id=store_id, name='test')
             put_test_data(self)
         else:
-            self.__store = Store.create_from_schema(self.__db.store.get(id=1))
+            self.__store = Store.create_from_schema(self.__db.store.get(id=store_id))
             self.update_store_sales_by_date(date=datetime.datetime.now().date())
 
     def get_sale(self):
