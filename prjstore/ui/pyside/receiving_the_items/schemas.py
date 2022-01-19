@@ -27,3 +27,9 @@ class ModelItem(BaseModel):
     shoes: Optional[ModelColorShoes] = None
 
 
+class ModelProduct(BaseModel):
+    id: int
+    type: Type =  Type.simple
+    name: str
+
+

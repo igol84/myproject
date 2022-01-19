@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'itemVWTtes.ui'
+## Form generated from reading UI file 'itemmdyTlS.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.1
 ##
@@ -16,15 +16,15 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QDialog,
-    QFrame, QGridLayout, QHeaderView, QLabel,
-    QLineEdit, QPushButton, QSizePolicy, QSpinBox,
-    QTableWidget, QTableWidgetItem, QVBoxLayout)
+                               QFrame, QGridLayout, QHeaderView, QLabel,
+                               QLineEdit, QPushButton, QSizePolicy, QSpinBox,
+                               QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(355, 551)
+        Dialog.resize(388, 525)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -47,7 +47,7 @@ class Ui_Dialog(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.price_line_edit.sizePolicy().hasHeightForWidth())
         self.price_line_edit.setSizePolicy(sizePolicy1)
-        self.price_line_edit.setMinimumSize(QSize(10, 0))
+        self.price_line_edit.setMinimumSize(QSize(70, 0))
         self.price_line_edit.setMaximumSize(QSize(70, 16777215))
 
         self.gridLayout.addWidget(self.price_line_edit, 1, 3, 1, 1)
@@ -81,7 +81,7 @@ class Ui_Dialog(object):
         self.buy_price_line_edit.setObjectName(u"buy_price_line_edit")
         sizePolicy1.setHeightForWidth(self.buy_price_line_edit.sizePolicy().hasHeightForWidth())
         self.buy_price_line_edit.setSizePolicy(sizePolicy1)
-        self.buy_price_line_edit.setMinimumSize(QSize(10, 0))
+        self.buy_price_line_edit.setMinimumSize(QSize(70, 0))
         self.buy_price_line_edit.setMaximumSize(QSize(70, 16777215))
 
         self.gridLayout.addWidget(self.buy_price_line_edit, 1, 1, 1, 1)
@@ -100,20 +100,6 @@ class Ui_Dialog(object):
 
         self.gridLayout.addWidget(self.buy_price_label, 1, 0, 1, 1)
 
-        self.name_combo_box = QComboBox(Dialog)
-        self.name_combo_box.addItem("")
-        self.name_combo_box.addItem("")
-        self.name_combo_box.addItem("")
-        self.name_combo_box.setObjectName(u"name_combo_box")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Fixed)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.name_combo_box.sizePolicy().hasHeightForWidth())
-        self.name_combo_box.setSizePolicy(sizePolicy3)
-        self.name_combo_box.setEditable(True)
-
-        self.gridLayout.addWidget(self.name_combo_box, 0, 1, 1, 4)
-
         self.qty_spin_box = QSpinBox(Dialog)
         self.qty_spin_box.setObjectName(u"qty_spin_box")
         sizePolicy1.setHeightForWidth(self.qty_spin_box.sizePolicy().hasHeightForWidth())
@@ -121,6 +107,16 @@ class Ui_Dialog(object):
         self.qty_spin_box.setValue(1)
 
         self.gridLayout.addWidget(self.qty_spin_box, 3, 3, 1, 2)
+
+        self.name_combo_box = QComboBox(Dialog)
+        self.name_combo_box.addItem("")
+        self.name_combo_box.addItem("")
+        self.name_combo_box.addItem("")
+        self.name_combo_box.addItem("")
+        self.name_combo_box.setObjectName(u"name_combo_box")
+        self.name_combo_box.setEditable(True)
+
+        self.gridLayout.addWidget(self.name_combo_box, 0, 1, 1, 4)
 
 
         self.verticalLayout_3.addLayout(self.gridLayout)
@@ -132,25 +128,8 @@ class Ui_Dialog(object):
 
         self.verticalLayout_3.addWidget(self.line)
 
-        self.gridLayout_2 = QGridLayout()
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.width_combo_box = QComboBox(Dialog)
-        self.width_combo_box.addItem("")
-        self.width_combo_box.addItem("")
-        self.width_combo_box.addItem("")
-        self.width_combo_box.setObjectName(u"width_combo_box")
-        sizePolicy1.setHeightForWidth(self.width_combo_box.sizePolicy().hasHeightForWidth())
-        self.width_combo_box.setSizePolicy(sizePolicy1)
-
-        self.gridLayout_2.addWidget(self.width_combo_box, 0, 3, 1, 1)
-
-        self.width_label = QLabel(Dialog)
-        self.width_label.setObjectName(u"width_label")
-        sizePolicy2.setHeightForWidth(self.width_label.sizePolicy().hasHeightForWidth())
-        self.width_label.setSizePolicy(sizePolicy2)
-
-        self.gridLayout_2.addWidget(self.width_label, 0, 2, 1, 1)
-
+        self.sizes_grid = QGridLayout()
+        self.sizes_grid.setObjectName(u"sizes_grid")
         self.color_combo_box = QComboBox(Dialog)
         self.color_combo_box.addItem("")
         self.color_combo_box.addItem("")
@@ -160,22 +139,36 @@ class Ui_Dialog(object):
         self.color_combo_box.setSizePolicy(sizePolicy1)
         self.color_combo_box.setEditable(True)
 
-        self.gridLayout_2.addWidget(self.color_combo_box, 0, 1, 1, 1)
+        self.sizes_grid.addWidget(self.color_combo_box, 1, 1, 1, 1)
+
+        self.width_combo_box = QComboBox(Dialog)
+        self.width_combo_box.addItem("")
+        self.width_combo_box.addItem("")
+        self.width_combo_box.addItem("")
+        self.width_combo_box.setObjectName(u"width_combo_box")
+        sizePolicy1.setHeightForWidth(self.width_combo_box.sizePolicy().hasHeightForWidth())
+        self.width_combo_box.setSizePolicy(sizePolicy1)
+
+        self.sizes_grid.addWidget(self.width_combo_box, 1, 3, 1, 1)
 
         self.color_label = QLabel(Dialog)
         self.color_label.setObjectName(u"color_label")
         sizePolicy2.setHeightForWidth(self.color_label.sizePolicy().hasHeightForWidth())
         self.color_label.setSizePolicy(sizePolicy2)
 
-        self.gridLayout_2.addWidget(self.color_label, 0, 0, 1, 1)
+        self.sizes_grid.addWidget(self.color_label, 1, 0, 1, 1)
+
+        self.width_label = QLabel(Dialog)
+        self.width_label.setObjectName(u"width_label")
+        sizePolicy2.setHeightForWidth(self.width_label.sizePolicy().hasHeightForWidth())
+        self.width_label.setSizePolicy(sizePolicy2)
+
+        self.sizes_grid.addWidget(self.width_label, 1, 2, 1, 1)
 
         self.label = QLabel(Dialog)
         self.label.setObjectName(u"label")
 
-        self.gridLayout_2.addWidget(self.label, 0, 4, 1, 1)
-
-
-        self.verticalLayout_3.addLayout(self.gridLayout_2)
+        self.sizes_grid.addWidget(self.label, 1, 4, 1, 1)
 
         self.sizes_table = QTableWidget(Dialog)
         if (self.sizes_table.columnCount() < 3):
@@ -276,7 +269,10 @@ class Ui_Dialog(object):
         self.sizes_table.verticalHeader().setCascadingSectionResizes(False)
         self.sizes_table.verticalHeader().setDefaultSectionSize(23)
 
-        self.verticalLayout_3.addWidget(self.sizes_table)
+        self.sizes_grid.addWidget(self.sizes_table, 2, 0, 1, 5)
+
+
+        self.verticalLayout_3.addLayout(self.sizes_grid)
 
         self.button_save = QPushButton(Dialog)
         self.button_save.setObjectName(u"button_save")
@@ -288,6 +284,13 @@ class Ui_Dialog(object):
 
         self.verticalLayout_3.addWidget(self.button_save)
 
+        QWidget.setTabOrder(self.buy_price_line_edit, self.width_combo_box)
+        QWidget.setTabOrder(self.width_combo_box, self.button_save)
+        QWidget.setTabOrder(self.button_save, self.qty_spin_box)
+        QWidget.setTabOrder(self.qty_spin_box, self.type_combo_box)
+        QWidget.setTabOrder(self.type_combo_box, self.sizes_table)
+        QWidget.setTabOrder(self.sizes_table, self.color_combo_box)
+        QWidget.setTabOrder(self.color_combo_box, self.price_line_edit)
 
         self.retranslateUi(Dialog)
 
@@ -323,19 +326,20 @@ class Ui_Dialog(object):
 #endif // QT_CONFIG(statustip)
         self.buy_price_label.setText(QCoreApplication.translate("Dialog", u"\u0426\u0435\u043d\u0430 \u043f\u043e\u043a\u0443\u043f\u043a\u0438", None))
         self.name_combo_box.setItemText(0, "")
-        self.name_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"Converse Chuck 70 \u0432\u044b\u0441\u043e\u043a\u0438\u0435", None))
-        self.name_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"shoes", None))
+        self.name_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"converse chak 70", None))
+        self.name_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"coca cola ", None))
+        self.name_combo_box.setItemText(3, QCoreApplication.translate("Dialog", u"nike 70", None))
+
+        self.color_combo_box.setItemText(0, "")
+        self.color_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"red", None))
+        self.color_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"black", None))
 
         self.width_combo_box.setItemText(0, "")
         self.width_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"E", None))
         self.width_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"EE", None))
 
-        self.width_label.setText(QCoreApplication.translate("Dialog", u"\u0448\u0438\u0440\u0438\u043d\u0430", None))
-        self.color_combo_box.setItemText(0, "")
-        self.color_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"red", None))
-        self.color_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"black", None))
-
         self.color_label.setText(QCoreApplication.translate("Dialog", u"\u0446\u0432\u0435\u0442", None))
+        self.width_label.setText(QCoreApplication.translate("Dialog", u"\u0448\u0438\u0440\u0438\u043d\u0430", None))
         self.label.setText("")
         ___qtablewidgetitem = self.sizes_table.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Dialog", u"\u0440\u0430\u0437\u043c\u0435\u0440", None));
