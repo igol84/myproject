@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'itemmdyTlS.ui'
+## Form generated from reading UI file 'itemKOEYFq.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.1
 ##
@@ -24,7 +24,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(388, 525)
+        Dialog.resize(341, 365)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -284,13 +284,14 @@ class Ui_Dialog(object):
 
         self.verticalLayout_3.addWidget(self.button_save)
 
-        QWidget.setTabOrder(self.buy_price_line_edit, self.width_combo_box)
-        QWidget.setTabOrder(self.width_combo_box, self.button_save)
-        QWidget.setTabOrder(self.button_save, self.qty_spin_box)
-        QWidget.setTabOrder(self.qty_spin_box, self.type_combo_box)
-        QWidget.setTabOrder(self.type_combo_box, self.sizes_table)
-        QWidget.setTabOrder(self.sizes_table, self.color_combo_box)
-        QWidget.setTabOrder(self.color_combo_box, self.price_line_edit)
+        QWidget.setTabOrder(self.name_combo_box, self.buy_price_line_edit)
+        QWidget.setTabOrder(self.buy_price_line_edit, self.price_line_edit)
+        QWidget.setTabOrder(self.price_line_edit, self.type_combo_box)
+        QWidget.setTabOrder(self.type_combo_box, self.qty_spin_box)
+        QWidget.setTabOrder(self.qty_spin_box, self.color_combo_box)
+        QWidget.setTabOrder(self.color_combo_box, self.width_combo_box)
+        QWidget.setTabOrder(self.width_combo_box, self.sizes_table)
+        QWidget.setTabOrder(self.sizes_table, self.button_save)
 
         self.retranslateUi(Dialog)
 

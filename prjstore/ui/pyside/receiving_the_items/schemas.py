@@ -1,10 +1,20 @@
 from enum import Enum
 from typing import Optional
+
 from pydantic import BaseModel
+
+
+class ModelItem(BaseModel):
+    id: Optional[int] = None
+    prod_id: Optional[int] = None
+    price_buy: Optional[float] = None
+    qty: Optional[int] = None
+
 
 class ModelSizeShoes(BaseModel):
     size: Optional[float] = None
     length: Optional[float] = None
+    qty: Optional[int] = None
 
 
 class ModelColorShoes(BaseModel):
@@ -12,24 +22,15 @@ class ModelColorShoes(BaseModel):
     width: Optional[str] = None
     sizes: list[ModelSizeShoes] = []
 
+
 class Type(Enum):
     simple = 'simple'
     shoes = 'shoes'
 
-class ModelItem(BaseModel):
-    id: Optional[int] = None
-    prod_id: Optional[int] = None
-    qty: Optional[int] = None
-    buy_price: Optional[float] = None
-    name: Optional[str] = None
-    price: Optional[float] = None
-    type: Type = Type.simple
-    shoes: Optional[ModelColorShoes] = None
-
 
 class ModelProduct(BaseModel):
     id: int
-    type: Type =  Type.simple
+    type: Type = Type.simple
     name: str
-
-
+    price_sell: float
+    shoes: Optional[ModelColorShoes] = None

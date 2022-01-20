@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>388</width>
-    <height>525</height>
+    <width>341</width>
+    <height>365</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -567,14 +567,15 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>name_combo_box</tabstop>
   <tabstop>buy_price_line_edit</tabstop>
-  <tabstop>width_combo_box</tabstop>
-  <tabstop>button_save</tabstop>
-  <tabstop>qty_spin_box</tabstop>
-  <tabstop>type_combo_box</tabstop>
-  <tabstop>sizes_table</tabstop>
-  <tabstop>color_combo_box</tabstop>
   <tabstop>price_line_edit</tabstop>
+  <tabstop>type_combo_box</tabstop>
+  <tabstop>qty_spin_box</tabstop>
+  <tabstop>color_combo_box</tabstop>
+  <tabstop>width_combo_box</tabstop>
+  <tabstop>sizes_table</tabstop>
+  <tabstop>button_save</tabstop>
  </tabstops>
  <resources/>
  <connections/>
