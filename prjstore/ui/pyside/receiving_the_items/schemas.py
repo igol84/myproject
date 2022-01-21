@@ -20,7 +20,7 @@ class ModelSizeShoes(BaseModel):
 class ModelColorShoes(BaseModel):
     color: Optional[str] = None
     width: Optional[str] = None
-    sizes: list[ModelSizeShoes] = []
+    sizes: dict[float, ModelSizeShoes] = {}
 
 
 class Type(Enum):

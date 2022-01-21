@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'itemKOEYFq.ui'
+## Form generated from reading UI file 'itemjNrJeF.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.1
 ##
@@ -24,7 +24,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(341, 365)
+        Dialog.resize(341, 558)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -145,9 +145,12 @@ class Ui_Dialog(object):
         self.width_combo_box.addItem("")
         self.width_combo_box.addItem("")
         self.width_combo_box.addItem("")
+        self.width_combo_box.addItem("")
         self.width_combo_box.setObjectName(u"width_combo_box")
         sizePolicy1.setHeightForWidth(self.width_combo_box.sizePolicy().hasHeightForWidth())
         self.width_combo_box.setSizePolicy(sizePolicy1)
+        self.width_combo_box.setMaximumSize(QSize(16777215, 16777215))
+        self.width_combo_box.setEditable(False)
 
         self.sizes_grid.addWidget(self.width_combo_box, 1, 3, 1, 1)
 
@@ -338,6 +341,7 @@ class Ui_Dialog(object):
         self.width_combo_box.setItemText(0, "")
         self.width_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"E", None))
         self.width_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"EE", None))
+        self.width_combo_box.setItemText(3, QCoreApplication.translate("Dialog", u"EEEE", None))
 
         self.color_label.setText(QCoreApplication.translate("Dialog", u"\u0446\u0432\u0435\u0442", None))
         self.width_label.setText(QCoreApplication.translate("Dialog", u"\u0448\u0438\u0440\u0438\u043d\u0430", None))
