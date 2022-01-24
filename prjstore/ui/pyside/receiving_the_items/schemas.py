@@ -29,8 +29,10 @@ class Type(Enum):
 
 
 class ModelProduct(BaseModel):
-    id: int
+    id: Optional[int] = None
     type: Type = Type.simple
     name: str
     price_sell: float
-    shoes: Optional[ModelColorShoes] = None
+    price_buy: Optional[float] = None
+    module: Optional[ModelColorShoes] = None
+    qty: Optional[int] = None
