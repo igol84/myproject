@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'itemjNrJeF.ui'
+## Form generated from reading UI file 'itemdmVHiL.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.1
 ##
@@ -310,7 +310,7 @@ class Ui_Dialog(object):
         self.qty_label.setStatusTip("")
 #endif // QT_CONFIG(statustip)
         self.qty_label.setText(QCoreApplication.translate("Dialog", u"\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e", None))
-        self.type_combo_box.setItemText(0, QCoreApplication.translate("Dialog", u"simple", None))
+        self.type_combo_box.setItemText(0, QCoreApplication.translate("Dialog", u"product", None))
         self.type_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"shoes", None))
 
         self.type_label.setText(QCoreApplication.translate("Dialog", u"\u0422\u0438\u043f", None))

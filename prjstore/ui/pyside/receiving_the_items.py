@@ -1,24 +1,31 @@
 from typing import Optional
 
 from PySide6 import QtGui, QtCore
-from PySide6.QtWidgets import QApplication, QWidget, QComboBox, QTableWidgetItem
+from PySide6.QtCore import QThreadPool
+from PySide6.QtWidgets import QApplication, QWidget, QComboBox, QTableWidgetItem, QMessageBox
 
+from prjstore.handlers.receiving_the_items_handler import ReceivingTheItemsHandler
 from prjstore.ui.pyside.receiving_the_items.items_ui import Ui_Dialog
 from prjstore.ui.pyside.receiving_the_items.schemas import ModelItem, ModelProduct, ModelColorShoes, ModelSizeShoes
+from prjstore.ui.pyside.receiving_the_items.thread import DbConnect
 from prjstore.ui.pyside.utils.custom_combo_box import CustomQCompleter
 from prjstore.ui.pyside.utils.is_digit import is_digit
+from prjstore.ui.pyside.utils.load_widget import LoadWidget
 
 
 class ItemForm(QWidget):
     pd_item: ModelItem
     list_pd_prod: list[ModelProduct]
+    handler: ReceivingTheItemsHandler
 
     def __init__(self, item: ModelItem = ModelItem(), list_pd_product=None, keywords=None, test=False):
         super().__init__()
+        self.thread_pool = QThreadPool()
         if list_pd_product is None:
             list_pd_product = []
-        self.pd_item: ModelItem = item
         self.list_pd_prod: list[ModelProduct] = list_pd_product
+        self.list_colors = ['r', 'f']
+        self.pd_item: ModelItem = item
         if keywords:
             self.keywords = keywords
         else:
@@ -35,6 +42,25 @@ class ItemForm(QWidget):
         self.ui.name_combo_box.currentIndexChanged.connect(self.on_name_combo_box_changed)
         self.ui.name_combo_box.currentTextChanged.connect(self.on_edit_name_combo_box)
         self.ui.type_combo_box.currentIndexChanged.connect(self.on_change_product_type)
+        self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
+        if not self.test:
+            db_connector = DbConnect()
+            db_connector.signals.error.connect(self.__connection_error)
+            db_connector.signals.result.connect(self.__connected_complete)
+            self.thread_pool.start(db_connector)
+        else:
+            self.__connected_complete(ReceivingTheItemsHandler(test=True))
+
+    def __connection_error(self, err: str):
+        QMessageBox.warning(self, err, err)
+        sys.exit(app.exec())
+
+    def __connected_complete(self, handler: ReceivingTheItemsHandler):
+        self.handler = handler
+        self.list_pd_prod = handler.get_products_data()
+        self.setup_ui()
+        self.update_item()
+        self.load_widget.hide()
 
     def setup_ui(self):
         self.setWindowTitle(self.keywords['header'])
@@ -55,7 +81,7 @@ class ItemForm(QWidget):
             self.ui.width_combo_box.addItem(width)
 
         self.setStyleSheet('#sizes_table #first {background-color: #85ff8b;}')
-        self.ui.sizes_table.itemChanged.connect(self.calculadora)
+        self.ui.sizes_table.itemChanged.connect(self.on_table_item_edit)
 
     def on_edit_name_combo_box(self, text):
         self.set_enabled_product_fields(True)
@@ -76,9 +102,22 @@ class ItemForm(QWidget):
         print(self.export_data())
 
     def export_data(self):
+        warning_texts = []
         product_type = self.ui.type_combo_box.currentText()
+        product_data = self.ui.name_combo_box.currentData()
+        product_id = product_data.id if product_data else None
+        product_name = self.ui.name_combo_box.currentText() if self.ui.name_combo_box.currentText() else None
+        buy_price = self.ui.buy_price_line_edit.text() if is_digit(self.ui.buy_price_line_edit.text()) else None
+        price_sell = self.ui.price_line_edit.text() if is_digit(self.ui.price_line_edit.text()) else None
         pd_shoes = None
         qty = None
+        if not product_name:
+            warning_texts.append('Не указано название продукта!')
+        if not price_sell:
+            warning_texts.append('Не указана цена продажи!')
+        if not buy_price:
+            warning_texts.append('Не указана цена покупки!')
+
         if product_type == 'shoes':
             table = self.ui.sizes_table
             rows = table.rowCount()
@@ -89,14 +128,20 @@ class ItemForm(QWidget):
                 qty_shoes = table.item(num_row, 1).text()
                 if size.isdigit() and qty_shoes.isdigit() and int(qty_shoes) > 0:
                     list_of_sizes[size] = ModelSizeShoes(size=size, length=length, qty=qty_shoes)
+            if not list_of_sizes:
+                warning_texts.append('Не указано количество ниодного размера!')
             pd_shoes = ModelColorShoes(color=self.ui.color_combo_box.currentText(),
                                        width=self.ui.width_combo_box.currentText(), sizes=list_of_sizes)
         else:
-            qty = self.ui.qty_spin_box.text()
-        pd_prod = ModelProduct(type=product_type, price_buy=self.ui.buy_price_line_edit.text(),
-                               price_sell=self.ui.price_line_edit.text(), qty=qty,
-                               module=pd_shoes, name=self.ui.name_combo_box.currentText())
-        return pd_prod
+            qty = int(self.ui.qty_spin_box.text())
+            if not qty > 0:
+                warning_texts.append('Количество должно быть больше нуля!')
+        if warning_texts:
+            QMessageBox(icon=QMessageBox.Warning, text='\n'.join(warning_texts)).exec()
+        else:
+            pd_product = ModelProduct(id=product_id, name=product_name, type=product_type, price_buy=buy_price,
+                                   price_sell=price_sell, qty=qty, module=pd_shoes)
+            return pd_product
 
     def on_name_combo_box_changed(self):
         self.update_product(self.ui.name_combo_box.currentData())
@@ -118,6 +163,7 @@ class ItemForm(QWidget):
     def update_shoes(self, pd_color_shoes: ModelColorShoes):
         # color
         self.ui.color_combo_box.clear()
+        self.ui.color_combo_box.addItem('')
         colors = {pd_prod.module.color for pd_prod in self.list_pd_prod if pd_prod.module and pd_prod.module.color}
         for color in colors:
             self.ui.color_combo_box.addItem(color)
@@ -146,7 +192,7 @@ class ItemForm(QWidget):
                     self.ui.sizes_table.setItem(i, 1, QTableWidgetItem(f'{pd_sizes[size].qty}'))
                 self.ui.sizes_table.setItem(i, 2, QTableWidgetItem(f'{pd_sizes[size].length}'))
 
-    def calculadora(self, item):
+    def on_table_item_edit(self, item):
         if item.row() == 0 and item.column() == 0 and item.text() and item.text() != self.last_added_size:
             self.last_added_size = item.text()
             second_item = self.ui.sizes_table.item(0, 0)
@@ -208,26 +254,7 @@ if __name__ == "__main__":
     import sys
 
     app = QApplication(sys.argv)
-    list_pd_prod = []
-    sizes = {38: ModelSizeShoes(size=38, length=24.5, qty=5), 39: ModelSizeShoes(size=39, length=25, qty=8),
-             42: ModelSizeShoes(size=42, length=27.5, qty=1), 43: ModelSizeShoes(size=43, length=28, qty=2)}
-    shoes = ModelColorShoes(color='black', width='EE', sizes=sizes)
-    list_pd_prod.append(ModelProduct(id=115, type='shoes', name='con chak h 70', price_sell=640.40, module=shoes))
-    list_pd_prod.append(ModelProduct(id=22, type='simple', name='battery', price_sell=840))
-    for n in range(23, 24):
-        list_pd_prod.append(ModelProduct(id=n, type='simple', name=f'battery {n}', price_sell=840 + n))
-    sizes = {36: ModelSizeShoes(size=36, length=23.5, qty=1), 37: ModelSizeShoes(size=37, length=24, qty=2),
-             38: ModelSizeShoes(size=38, length=24.5, qty=1), 39: ModelSizeShoes(size=39, length=25, qty=2),
-             41: ModelSizeShoes(size=41, length=26.5, qty=3)}
-    shoes = ModelColorShoes(color='white', sizes=sizes)
-    list_pd_prod.append(ModelProduct(id=254, type='shoes', name='con chak l 70', price_sell=420, module=shoes))
-
-    sizes = {37: ModelSizeShoes(size=37, length=24, qty=1), 38: ModelSizeShoes(size=38, length=24.5, qty=2),
-             39: ModelSizeShoes(size=39, length=25, qty=1), 40: ModelSizeShoes(size=40, length=25.5, qty=2)}
-    shoes = ModelColorShoes(color='white', sizes=sizes)
-    list_pd_prod.append(ModelProduct(id=254, type='shoes', name='con chak l 75', price_sell=425, module=shoes))
-
     pd_item = ModelItem(id=1, prod_id=115, price_buy=360)
-    w = ItemForm(pd_item, list_pd_prod, test=False)
+    w = ItemForm(item=pd_item, test=True)
     w.show()
     sys.exit(app.exec())

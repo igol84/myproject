@@ -196,11 +196,3 @@ class SaleRegistrationHandler:
 
     def new_sale(self):
         self.__sale = Sale()
-
-
-if __name__ == '__main__':
-    from pprint import pprint
-
-    handler = SaleRegistrationHandler(test=True)
-    for item in handler.get_store_items():
-        pprint(item)

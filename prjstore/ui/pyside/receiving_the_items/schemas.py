@@ -24,13 +24,13 @@ class ModelColorShoes(BaseModel):
 
 
 class Type(Enum):
-    simple = 'simple'
+    product = 'product'
     shoes = 'shoes'
 
 
 class ModelProduct(BaseModel):
     id: Optional[int] = None
-    type: Type = Type.simple
+    type: Type = Type.product
     name: str
     price_sell: float
     price_buy: Optional[float] = None
