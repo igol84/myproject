@@ -18,9 +18,16 @@ class ModelSizeShoes(BaseModel):
 
 
 class ModelColorShoes(BaseModel):
-    color: Optional[str] = None
     width: Optional[str] = None
     sizes: dict[float, ModelSizeShoes] = {}
+
+
+class ModelColorShoesExport(ModelColorShoes):
+    color: Optional[str] = None
+
+
+class ModelColorShoesShow(ModelColorShoes):
+    colors: list[str] = None
 
 
 class Type(Enum):
@@ -34,5 +41,12 @@ class ModelProduct(BaseModel):
     name: str
     price_sell: float
     price_buy: Optional[float] = None
-    module: Optional[ModelColorShoes] = None
     qty: Optional[int] = None
+
+
+class ModelProductShow(ModelProduct):
+    module: Optional[ModelColorShoesShow] = None
+
+
+class ModelProductExport(ModelProduct):
+    module: Optional[ModelColorShoesExport] = None
