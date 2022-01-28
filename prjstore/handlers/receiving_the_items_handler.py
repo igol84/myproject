@@ -2,7 +2,8 @@ from prjstore.db import API_DB
 from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.store import Store
 from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_store
-from prjstore.ui.pyside.receiving_the_items.schemas import ModelColorShoesShow, ModelProductShow,  ModelSizeShoes
+from prjstore.ui.pyside.receiving_the_items.schemas import ModelColorShoesShow, ModelProductShow, ModelSizeShoes, \
+    ModelProductForm
 
 
 class ReceivingTheItemsHandler:
@@ -11,7 +12,7 @@ class ReceivingTheItemsHandler:
 
     def __init__(self, db: API_DB = None, store_id=1, test=False):
         self.__db = db
-        self.test_mode = test
+        self.test = test
         if test:
             self.__store = Store(id=store_id, name='test')
             put_test_data_to_store(self.__store)
@@ -19,10 +20,10 @@ class ReceivingTheItemsHandler:
             self.__store = Store.create_from_schema(self.__db.store.get(id=store_id))
 
     def get_products_data(self) -> list[ModelProductShow]:
-        # return self.get_test_data()
-        return self.convert_pc_to_pd_model()
+        # return get_test_data()
+        return self.convert_pc_to_pd_model_show()
 
-    def convert_pc_to_pd_model(self) -> list[ModelProductShow]:
+    def convert_pc_to_pd_model_show(self) -> list[ModelProductShow]:
         prods: dict[str, AbstractProduct] = self.__store.pc.products
         pd_products = {}
         sorted_products = sorted(prods.values(), key=lambda k: k.prod_id)
@@ -43,33 +44,28 @@ class ReceivingTheItemsHandler:
                 if prod.product_type == 'shoes':
                     model_shoes = ModelSizeShoes(size=prod.size, length=prod.length_of_insole)
                     pd_products[key].module.sizes[prod.size] = model_shoes
+                    pd_products[key].module.colors.add(color)
         return [pr for pr in pd_products.values()]
 
-    @staticmethod
-    def get_test_data() -> list[ModelProductShow]:
-        list_pd_prod = []
-        sizes = {38: ModelSizeShoes(size=38, length=24.5, qty=5),
-                 39: ModelSizeShoes(size=39, length=25, qty=8),
-                 42: ModelSizeShoes(size=42, length=27.5, qty=1),
-                 43: ModelSizeShoes(size=43, length=28, qty=2)}
-        shoes = ModelColorShoesShow(colors=['black'], width='EE', sizes=sizes)
-        list_pd_prod.append(
-            ModelProductShow(id=115, type='shoes', name='con chak h 70', price_sell=640.40, module=shoes))
-        list_pd_prod.append(ModelProductShow(id=22, type='product', name='battery', price_sell=840))
-        for n in range(23, 24):
-            list_pd_prod.append(ModelProductShow(id=n, type='product', name=f'battery {n}', price_sell=840 + n))
-        sizes = {36: ModelSizeShoes(size=36, length=23.5, qty=1),
-                 37: ModelSizeShoes(size=37, length=24, qty=2),
-                 38: ModelSizeShoes(size=38, length=24.5, qty=1),
-                 39: ModelSizeShoes(size=39, length=25, qty=2),
-                 41: ModelSizeShoes(size=41, length=26.5, qty=3)}
-        shoes = ModelColorShoesShow(colors=['white', 'red'], sizes=sizes)
-        list_pd_prod.append(ModelProductShow(id=254, type='shoes', name='con chak l 70', price_sell=420, module=shoes))
+    def save_data(self, data: ModelProductForm):
+        if data.type.name == 'product':
+            if data.id:
+                print('create new item for product id:', data.id)
+            else:
+                print('create new product and item')
+        elif data.type.name == 'shoes':
+            for size in data.module.sizes:
+                result = self.find_shoes((data.name, data.module.color, data.module.width, size))
+                if result:
+                    print('create new item for product.shoes id:', result.prod_id)
+                else:
+                    print('create new product.shoes and item')
 
-        sizes = {37: ModelSizeShoes(size=37, length=24, qty=1),
-                 38: ModelSizeShoes(size=38, length=24.5, qty=2),
-                 39: ModelSizeShoes(size=39, length=25, qty=1),
-                 40: ModelSizeShoes(size=40, length=25.5, qty=2)}
-        shoes = ModelColorShoesShow(colors=['white', 'green'], sizes=sizes)
-        list_pd_prod.append(ModelProductShow(id=258, type='shoes', name='con chak l 75', price_sell=425, module=shoes))
-        return list_pd_prod
+    def find_shoes(self, keys):
+        products: dict[str, AbstractProduct] = self.__store.pc.search(keys[0])
+        for prod_id, prod in products.items():
+            if prod.product_type == 'shoes':
+                width = getattr(prod.width, 'short_name', '')
+                if keys == (prod.name, prod.color, width, prod.size):
+                    return products[prod_id]
+        return False

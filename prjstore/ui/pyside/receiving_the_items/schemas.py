@@ -22,12 +22,12 @@ class ModelColorShoes(BaseModel):
     sizes: dict[float, ModelSizeShoes] = {}
 
 
-class ModelColorShoesExport(ModelColorShoes):
+class ModelColorShoesForm(ModelColorShoes):
     color: Optional[str] = None
 
 
 class ModelColorShoesShow(ModelColorShoes):
-    colors: list[str] = None
+    colors: set[str] = None
 
 
 class Type(Enum):
@@ -48,5 +48,5 @@ class ModelProductShow(ModelProduct):
     module: Optional[ModelColorShoesShow] = None
 
 
-class ModelProductExport(ModelProduct):
-    module: Optional[ModelColorShoesExport] = None
+class ModelProductForm(ModelProduct):
+    module: Optional[ModelColorShoesForm] = None

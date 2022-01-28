@@ -1,24 +1,19 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'itemdmVHiL.ui'
+## Form generated from reading UI file 'itemYpKQoT.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QDialog,
-                               QFrame, QGridLayout, QHeaderView, QLabel,
+from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt)
+from PySide6.QtGui import (QFont)
+from PySide6.QtWidgets import (QAbstractItemView, QComboBox, QFrame, QGridLayout, QLabel,
                                QLineEdit, QPushButton, QSizePolicy, QSpinBox,
                                QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
+
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -117,7 +112,6 @@ class Ui_Dialog(object):
         self.name_combo_box.setEditable(True)
 
         self.gridLayout.addWidget(self.name_combo_box, 0, 1, 1, 4)
-
 
         self.verticalLayout_3.addLayout(self.gridLayout)
 
@@ -274,7 +268,6 @@ class Ui_Dialog(object):
 
         self.sizes_grid.addWidget(self.sizes_table, 2, 0, 1, 5)
 
-
         self.verticalLayout_3.addLayout(self.sizes_grid)
 
         self.button_save = QPushButton(Dialog)
@@ -299,36 +292,43 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
 
         QMetaObject.connectSlotsByName(Dialog)
+
     # setupUi
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
-#if QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
         self.qty_label.setToolTip("")
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(statustip)
+        # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(statustip)
         self.qty_label.setStatusTip("")
-#endif // QT_CONFIG(statustip)
-        self.qty_label.setText(QCoreApplication.translate("Dialog", u"\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e", None))
+        # endif // QT_CONFIG(statustip)
+        self.qty_label.setText(
+            QCoreApplication.translate("Dialog", u"\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e", None))
         self.type_combo_box.setItemText(0, QCoreApplication.translate("Dialog", u"product", None))
         self.type_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"shoes", None))
 
         self.type_label.setText(QCoreApplication.translate("Dialog", u"\u0422\u0438\u043f", None))
-#if QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
         self.price_label.setToolTip("")
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(statustip)
+        # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(statustip)
         self.price_label.setStatusTip("")
-#endif // QT_CONFIG(statustip)
-        self.price_label.setText(QCoreApplication.translate("Dialog", u"\u0426\u0435\u043d\u0430 \u043f\u0440\u043e\u0434\u0430\u0436\u0438", None))
-        self.name_label.setText(QCoreApplication.translate("Dialog", u"\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", None))
-#if QT_CONFIG(tooltip)
+        # endif // QT_CONFIG(statustip)
+        self.price_label.setText(
+            QCoreApplication.translate("Dialog", u"\u0426\u0435\u043d\u0430 \u043f\u0440\u043e\u0434\u0430\u0436\u0438",
+                                       None))
+        self.name_label.setText(
+            QCoreApplication.translate("Dialog", u"\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", None))
+        # if QT_CONFIG(tooltip)
         self.buy_price_label.setToolTip("")
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(statustip)
+        # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(statustip)
         self.buy_price_label.setStatusTip("")
-#endif // QT_CONFIG(statustip)
-        self.buy_price_label.setText(QCoreApplication.translate("Dialog", u"\u0426\u0435\u043d\u0430 \u043f\u043e\u043a\u0443\u043f\u043a\u0438", None))
+        # endif // QT_CONFIG(statustip)
+        self.buy_price_label.setText(
+            QCoreApplication.translate("Dialog", u"\u0426\u0435\u043d\u0430 \u043f\u043e\u043a\u0443\u043f\u043a\u0438",
+                                       None))
         self.name_combo_box.setItemText(0, "")
         self.name_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"converse chak 70", None))
         self.name_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"coca cola ", None))
@@ -339,19 +339,24 @@ class Ui_Dialog(object):
         self.color_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"black", None))
 
         self.width_combo_box.setItemText(0, "")
-        self.width_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"E", None))
-        self.width_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"EE", None))
-        self.width_combo_box.setItemText(3, QCoreApplication.translate("Dialog", u"EEEE", None))
+        self.width_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"D", None))
+        self.width_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"2E", None))
+        self.width_combo_box.setItemText(3, QCoreApplication.translate("Dialog", u"4E", None))
 
         self.color_label.setText(QCoreApplication.translate("Dialog", u"\u0446\u0432\u0435\u0442", None))
         self.width_label.setText(QCoreApplication.translate("Dialog", u"\u0448\u0438\u0440\u0438\u043d\u0430", None))
         self.label.setText("")
         ___qtablewidgetitem = self.sizes_table.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("Dialog", u"\u0440\u0430\u0437\u043c\u0435\u0440", None));
+        ___qtablewidgetitem.setText(
+            QCoreApplication.translate("Dialog", u"\u0440\u0430\u0437\u043c\u0435\u0440", None));
         ___qtablewidgetitem1 = self.sizes_table.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("Dialog", u"\u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e", None));
+        ___qtablewidgetitem1.setText(
+            QCoreApplication.translate("Dialog", u"\u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e",
+                                       None));
         ___qtablewidgetitem2 = self.sizes_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("Dialog", u"\u0434\u0438\u043d\u0430 \u0441\u0442\u0435\u043b\u044c\u043a\u0438", None));
+        ___qtablewidgetitem2.setText(
+            QCoreApplication.translate("Dialog", u"\u0434\u0438\u043d\u0430 \u0441\u0442\u0435\u043b\u044c\u043a\u0438",
+                                       None));
 
         __sortingEnabled = self.sizes_table.isSortingEnabled()
         self.sizes_table.setSortingEnabled(False)
@@ -395,4 +400,3 @@ class Ui_Dialog(object):
 
         self.button_save.setText(QCoreApplication.translate("Dialog", u"save", None))
     # retranslateUi
-

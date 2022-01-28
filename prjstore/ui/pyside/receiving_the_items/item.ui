@@ -266,17 +266,17 @@
        </item>
        <item>
         <property name="text">
-         <string>E</string>
+         <string>D</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>EE</string>
+         <string>2E</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>EEEE</string>
+         <string>4E</string>
         </property>
        </item>
       </widget>
