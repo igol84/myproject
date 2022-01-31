@@ -17,12 +17,15 @@ class Shoes(AbstractProduct):
         'Extra Wide': Width(name='Extra Wide', short_name='4E', width_of_insole=13)
     }
     product_type: str = 'shoes'
-    color: str = None
+    color: Optional[str] = None
     size: float = None
-    length_of_insole: float = None
-    width: Width = None
+    length_of_insole: Optional[float] = None
+    width: Optional[Width] = None
 
     ###############################################################################################
+    def str_width(self):
+        return getattr(self.width, 'name', '')
+
     @validate_arguments
     def edit(self,
              name: str = None,
@@ -50,7 +53,7 @@ class Shoes(AbstractProduct):
 
     def schema_create(self) -> schemas.product.Product:
         shoes = schemas.shoes.Shoes(id=self.prod_id, color=self.color, size=self.size, length=self.length_of_insole,
-                                    width=self.width.name)
+                                    width=self.str_width())
         return super().schema_create(shoes=shoes)
 
     def copy(self, prod_id=None) -> 'Shoes':

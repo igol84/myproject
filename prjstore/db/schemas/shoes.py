@@ -1,12 +1,14 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class BaseShoes(BaseModel):
-    id: int
-    color: str
+    id: Optional[int] = None
+    color: Optional[str] = None
     size: float
-    length: float
-    width: str
+    length: Optional[float] = None
+    width: Optional[str] = None
 
 
 class UpdateShoes(BaseModel):

@@ -259,11 +259,9 @@
        <property name="editable">
         <bool>false</bool>
        </property>
-       <item>
-        <property name="text">
-         <string/>
-        </property>
-       </item>
+       <property name="currentIndex">
+        <number>1</number>
+       </property>
        <item>
         <property name="text">
          <string>D</string>

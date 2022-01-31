@@ -267,6 +267,6 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
     pd_item = ModelItem()
-    w = ItemForm(item=pd_item, test=True)
+    w = ItemForm(item=pd_item, test=False)
     w.show()
     sys.exit(app.exec())

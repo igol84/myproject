@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'itemYpKQoT.ui'
+## Form generated from reading UI file 'itemkwsrys.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.1
 ##
@@ -136,7 +136,6 @@ class Ui_Dialog(object):
         self.sizes_grid.addWidget(self.color_combo_box, 1, 1, 1, 1)
 
         self.width_combo_box = QComboBox(Dialog)
-        self.width_combo_box.addItem("")
         self.width_combo_box.addItem("")
         self.width_combo_box.addItem("")
         self.width_combo_box.addItem("")
@@ -291,6 +290,8 @@ class Ui_Dialog(object):
 
         self.retranslateUi(Dialog)
 
+        self.width_combo_box.setCurrentIndex(1)
+
         QMetaObject.connectSlotsByName(Dialog)
 
     # setupUi
@@ -338,10 +339,9 @@ class Ui_Dialog(object):
         self.color_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"red", None))
         self.color_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"black", None))
 
-        self.width_combo_box.setItemText(0, "")
-        self.width_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"D", None))
-        self.width_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"2E", None))
-        self.width_combo_box.setItemText(3, QCoreApplication.translate("Dialog", u"4E", None))
+        self.width_combo_box.setItemText(0, QCoreApplication.translate("Dialog", u"D", None))
+        self.width_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"2E", None))
+        self.width_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"4E", None))
 
         self.color_label.setText(QCoreApplication.translate("Dialog", u"\u0446\u0432\u0435\u0442", None))
         self.width_label.setText(QCoreApplication.translate("Dialog", u"\u0448\u0438\u0440\u0438\u043d\u0430", None))

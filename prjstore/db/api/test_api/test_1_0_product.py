@@ -23,7 +23,7 @@ class TestProduct:
 
     @classmethod
     def setup_class(cls):
-        product = ProductFactory.create(prod_id='01', name='book', price=Money(amount=10))
+        product = ProductFactory.create(name='book', price=Money('10'))
         new_product = ProductFactory.create_from_schema(db.product.create(product.schema_create()))
         cls.obj_id = new_product.prod_id
 

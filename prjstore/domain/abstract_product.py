@@ -10,7 +10,7 @@ from util.money import Money, Decimal
 
 @dataclass
 class AbstractProduct(Protocol):
-    prod_id: str = None
+    prod_id: Optional[str] = None
     product_type: str = 'product'
     name: str = 'item'
     price: Money = Money(0)
