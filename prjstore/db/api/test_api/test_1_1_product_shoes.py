@@ -25,7 +25,7 @@ class TestProduct:
     @classmethod
     def setup_class(cls):
         shoes = ProductFactory.create(product_type='shoes', name='converse', price=Money(10),
-                                      color='red', size=40, length_of_insole=25.5, width=Shoes.widths['Wide'])
+                                      color='red', size=40, length_of_insole=None, width=Shoes.widths['Wide'])
         new_product = ProductFactory.create_from_schema(db.product.create(shoes.schema_create()))
         cls.obj_id = new_product.prod_id
 

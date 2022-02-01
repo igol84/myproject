@@ -75,8 +75,9 @@ class ReceivingTheItemsHandler:
         elif data.type.name == 'shoes':
             for size in data.module.sizes:
                 result = self.find_shoes((data.name, data.module.color, data.module.width, size))
+                print((data.name, data.module.color, data.module.width, size))
                 if result:
-                    print('create new item for product.shoes id:', result.prod_id)
+                    # create new item for product.shoes id:', result.prod_id
                     qty = data.module.sizes[size].qty
                     pd_item = db_schemas.item.CreateItem(prod_id=result.prod_id, store_id=self.__store.id, qty=qty,
                                                          buy_price=data.price_buy)
@@ -90,7 +91,7 @@ class ReceivingTheItemsHandler:
                     widths: dict[str, Width] = Shoes.widths
                     width = None
                     for _width in widths.values():
-                        if _width.short_name == data.module.width:
+                        if getattr(_width, 'short_name', None) == data.module.width:
                             width = _width
 
                     shoes = ProductFactory.create(product_type='shoes', name=data.name, price=Money(data.price_sell),

@@ -12,6 +12,7 @@ from util.money import Money
 @dataclass
 class Shoes(AbstractProduct):
     widths = {
+        '': None,
         'Medium': Width(name='Medium', short_name='D', width_of_insole=10),
         'Wide': Width(name='Wide', short_name='EE', width_of_insole=12),
         'Extra Wide': Width(name='Extra Wide', short_name='4E', width_of_insole=13)

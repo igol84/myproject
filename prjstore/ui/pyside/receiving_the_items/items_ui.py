@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'itemkwsrys.ui'
+## Form generated from reading UI file 'itemVojfre.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.1
 ##
@@ -19,7 +19,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(341, 558)
+        Dialog.resize(341, 398)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -364,38 +364,26 @@ class Ui_Dialog(object):
         ___qtablewidgetitem3.setText(QCoreApplication.translate("Dialog", u"35", None));
         ___qtablewidgetitem4 = self.sizes_table.item(1, 0)
         ___qtablewidgetitem4.setText(QCoreApplication.translate("Dialog", u"36", None));
-        ___qtablewidgetitem5 = self.sizes_table.item(1, 1)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("Dialog", u"1", None));
-        ___qtablewidgetitem6 = self.sizes_table.item(2, 0)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("Dialog", u"37", None));
-        ___qtablewidgetitem7 = self.sizes_table.item(2, 1)
-        ___qtablewidgetitem7.setText(QCoreApplication.translate("Dialog", u"2", None));
-        ___qtablewidgetitem8 = self.sizes_table.item(3, 0)
-        ___qtablewidgetitem8.setText(QCoreApplication.translate("Dialog", u"38", None));
-        ___qtablewidgetitem9 = self.sizes_table.item(3, 1)
-        ___qtablewidgetitem9.setText(QCoreApplication.translate("Dialog", u"2", None));
-        ___qtablewidgetitem10 = self.sizes_table.item(4, 0)
-        ___qtablewidgetitem10.setText(QCoreApplication.translate("Dialog", u"39", None));
-        ___qtablewidgetitem11 = self.sizes_table.item(4, 1)
-        ___qtablewidgetitem11.setText(QCoreApplication.translate("Dialog", u"2", None));
-        ___qtablewidgetitem12 = self.sizes_table.item(5, 0)
-        ___qtablewidgetitem12.setText(QCoreApplication.translate("Dialog", u"40", None));
-        ___qtablewidgetitem13 = self.sizes_table.item(5, 1)
-        ___qtablewidgetitem13.setText(QCoreApplication.translate("Dialog", u"2", None));
-        ___qtablewidgetitem14 = self.sizes_table.item(6, 0)
-        ___qtablewidgetitem14.setText(QCoreApplication.translate("Dialog", u"41", None));
-        ___qtablewidgetitem15 = self.sizes_table.item(6, 1)
-        ___qtablewidgetitem15.setText(QCoreApplication.translate("Dialog", u"1", None));
-        ___qtablewidgetitem16 = self.sizes_table.item(7, 0)
-        ___qtablewidgetitem16.setText(QCoreApplication.translate("Dialog", u"42", None));
-        ___qtablewidgetitem17 = self.sizes_table.item(8, 0)
-        ___qtablewidgetitem17.setText(QCoreApplication.translate("Dialog", u"43", None));
-        ___qtablewidgetitem18 = self.sizes_table.item(9, 0)
-        ___qtablewidgetitem18.setText(QCoreApplication.translate("Dialog", u"44", None));
-        ___qtablewidgetitem19 = self.sizes_table.item(10, 0)
-        ___qtablewidgetitem19.setText(QCoreApplication.translate("Dialog", u"45", None));
-        ___qtablewidgetitem20 = self.sizes_table.item(11, 0)
-        ___qtablewidgetitem20.setText(QCoreApplication.translate("Dialog", u"46", None));
+        ___qtablewidgetitem5 = self.sizes_table.item(2, 0)
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("Dialog", u"37", None));
+        ___qtablewidgetitem6 = self.sizes_table.item(3, 0)
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("Dialog", u"38", None));
+        ___qtablewidgetitem7 = self.sizes_table.item(4, 0)
+        ___qtablewidgetitem7.setText(QCoreApplication.translate("Dialog", u"39", None));
+        ___qtablewidgetitem8 = self.sizes_table.item(5, 0)
+        ___qtablewidgetitem8.setText(QCoreApplication.translate("Dialog", u"40", None));
+        ___qtablewidgetitem9 = self.sizes_table.item(6, 0)
+        ___qtablewidgetitem9.setText(QCoreApplication.translate("Dialog", u"41", None));
+        ___qtablewidgetitem10 = self.sizes_table.item(7, 0)
+        ___qtablewidgetitem10.setText(QCoreApplication.translate("Dialog", u"42", None));
+        ___qtablewidgetitem11 = self.sizes_table.item(8, 0)
+        ___qtablewidgetitem11.setText(QCoreApplication.translate("Dialog", u"43", None));
+        ___qtablewidgetitem12 = self.sizes_table.item(9, 0)
+        ___qtablewidgetitem12.setText(QCoreApplication.translate("Dialog", u"44", None));
+        ___qtablewidgetitem13 = self.sizes_table.item(10, 0)
+        ___qtablewidgetitem13.setText(QCoreApplication.translate("Dialog", u"45", None));
+        ___qtablewidgetitem14 = self.sizes_table.item(11, 0)
+        ___qtablewidgetitem14.setText(QCoreApplication.translate("Dialog", u"46", None));
         self.sizes_table.setSortingEnabled(__sortingEnabled)
 
         self.button_save.setText(QCoreApplication.translate("Dialog", u"save", None))

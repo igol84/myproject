@@ -102,7 +102,8 @@ class ItemForm(QWidget):
         self.ui.color_combo_box.clear()
         self.ui.color_combo_box.addItem('')
         for color in unics_colors:
-            self.ui.color_combo_box.addItem(color)
+            if color:
+                self.ui.color_combo_box.addItem(color)
 
     def set_enabled_product_fields(self, flag: bool):
         self.ui.price_line_edit.setEnabled(flag)
@@ -135,7 +136,8 @@ class ItemForm(QWidget):
         self.ui.color_combo_box.clear()
         self.ui.color_combo_box.addItem('')
         for color in pd_color_shoes.colors:
-            self.ui.color_combo_box.addItem(color)
+            if color:
+                self.ui.color_combo_box.addItem(color)
         # width
         self.ui.width_combo_box.setCurrentIndex(self.ui.width_combo_box.findText(pd_color_shoes.width))
         # sizes
@@ -148,8 +150,8 @@ class ItemForm(QWidget):
         min_size = self.keywords['shoes']['min_size']
         item = QTableWidgetItem('')
         self.ui.sizes_table.setItem(0, 0, item)
-        self.ui.sizes_table.setItem(0, 1, QTableWidgetItem(''))
-        self.ui.sizes_table.setItem(0, 2, QTableWidgetItem(''))
+        self.ui.sizes_table.setItem(0, 1, QTableWidgetItem())
+        self.ui.sizes_table.setItem(0, 2, QTableWidgetItem())
         item.setBackground(QtGui.QColor('#85ff8b'))
         for i, size in enumerate(range(min_size, min_size + count_sizes + 1), start=1):
             self.ui.sizes_table.setItem(i, 0, QTableWidgetItem(f'{size}'))
@@ -158,7 +160,8 @@ class ItemForm(QWidget):
             if pd_sizes and size in pd_sizes:
                 if show_qty:
                     self.ui.sizes_table.setItem(i, 1, QTableWidgetItem(f'{pd_sizes[size].qty}'))
-                self.ui.sizes_table.setItem(i, 2, QTableWidgetItem(f'{pd_sizes[size].length}'))
+                length = pd_sizes[size].length if pd_sizes[size].length else ''
+                self.ui.sizes_table.setItem(i, 2, QTableWidgetItem(f'{length}'))
 
     def on_table_item_edit(self, item):
         if item.row() == 0 and item.column() == 0 and item.text() and item.text() != self.last_added_size:
