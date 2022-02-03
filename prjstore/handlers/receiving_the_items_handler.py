@@ -1,13 +1,9 @@
 from prjstore.db import API_DB, schemas as db_schemas
 from prjstore.domain.abstract_product import AbstractProduct
-from prjstore.domain.product_factory import ProductFactory
 from prjstore.domain.products.shoes import Shoes
-from prjstore.domain.products.shoes_components import Width
 from prjstore.domain.store import Store
 from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_store
-from prjstore.ui.pyside.receiving_the_items.schemas import ModelColorShoesShow, ModelProductShow, ModelSizeShoes, \
-    ModelProductForm
-from util.money import Money
+from prjstore.ui.pyside.receiving_the_items.schemas import ModelColorShoesShow, ModelProductShow, ModelSizeShoes
 
 
 class ReceivingTheItemsHandler:
@@ -22,6 +18,10 @@ class ReceivingTheItemsHandler:
             put_test_data_to_store(self.__store)
         else:
             self.__store = Store.create_from_schema(self.__db.store.get(id=store_id))
+
+    @staticmethod
+    def get_shoes_widths():
+        return ((width_name, getattr(width, 'short_name', '')) for width_name, width in Shoes.widths.items())
 
     def get_products_data(self) -> list[ModelProductShow]:
         # return get_test_data()
@@ -51,56 +51,9 @@ class ReceivingTheItemsHandler:
                     pd_products[key].module.colors.add(color)
         return [pr for pr in pd_products.values()]
 
-    def save_data(self, data: ModelProductForm):
-        if data.type.name == 'product':
-            if data.id:
-                # create new item
-                pd_item = db_schemas.item.CreateItem(prod_id=data.id, store_id=self.__store.id, qty=data.qty,
-                                                     buy_price=data.price_buy)
-                new_item = self.__db.item.create(pd_item)
-                if new_item:
-                    return True
-            else:
-                # create new product and item
-                product = ProductFactory.create(name=data.name, price=Money(data.price_sell))
-                new_product = ProductFactory.create_from_schema(self.__db.product.create(product.schema_create()))
-                CreateRowProductCatalog = db_schemas.product_catalog.CreateRowProductCatalog
-                pd_pc_row = CreateRowProductCatalog(store_id=self.__store.id, prod_id=new_product.prod_id)
-                self.__db.product_catalog.create(pd_pc_row)
-                pd_item = db_schemas.item.CreateItem(prod_id=new_product.prod_id, store_id=self.__store.id,
-                                                     qty=data.qty, buy_price=data.price_buy)
-                new_item = self.__db.item.create(pd_item)
-                if new_item:
-                    return True
-        elif data.type.name == 'shoes':
-            for size in data.module.sizes:
-                result = self.find_shoes((data.name, data.module.color, data.module.width, size))
-                print((data.name, data.module.color, data.module.width, size))
-                if result:
-                    # create new item for product.shoes id:', result.prod_id
-                    qty = data.module.sizes[size].qty
-                    pd_item = db_schemas.item.CreateItem(prod_id=result.prod_id, store_id=self.__store.id, qty=qty,
-                                                         buy_price=data.price_buy)
-                    new_item = self.__db.item.create(pd_item)
-                    if new_item:
-                        return True
-                else:
-                    # create new product.shoes and item
-                    color = data.module.color
-                    length = data.module.sizes[size].length
-                    widths: dict[str, Width] = Shoes.widths
-                    width = None
-                    for _width in widths.values():
-                        if getattr(_width, 'short_name', None) == data.module.width:
-                            width = _width
-
-                    shoes = ProductFactory.create(product_type='shoes', name=data.name, price=Money(data.price_sell),
-                                                  color=color, size=size, length_of_insole=length, width=width)
-                    new_product = ProductFactory.create_from_schema(self.__db.product.create(shoes.schema_create()))
-                    CreateRowProductCatalog = db_schemas.product_catalog.CreateRowProductCatalog
-                    pd_pc_row = CreateRowProductCatalog(store_id=self.__store.id, prod_id=new_product.prod_id)
-                    self.__db.product_catalog.create(pd_pc_row)
-                    print(new_product)
+    def save_data(self, data: db_schemas.header_receiving_the_items.ModelProduct):
+        data.store_id = self.__store.id
+        return self.__db.header_receiving_the_items.receiving_the_items(data)
 
     def find_shoes(self, keys):
         products: dict[str, AbstractProduct] = self.__store.pc.search(keys[0])

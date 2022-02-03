@@ -4,10 +4,11 @@ from PySide6 import QtGui, QtCore
 from PySide6.QtCore import QThreadPool
 from PySide6.QtWidgets import QApplication, QWidget, QComboBox, QTableWidgetItem, QMessageBox
 
+from prjstore.db.schemas import header_receiving_the_items as db_schemas
 from prjstore.handlers.receiving_the_items_handler import ReceivingTheItemsHandler
 from prjstore.ui.pyside.receiving_the_items.items_ui import Ui_Dialog
 from prjstore.ui.pyside.receiving_the_items.schemas import ModelItem, ModelSizeShoes, \
-    ModelColorShoesForm, ModelColorShoesShow, ModelProductShow, ModelProductForm
+    ModelColorShoesShow, ModelProductShow
 from prjstore.ui.pyside.receiving_the_items.thread import DbConnect
 from prjstore.ui.pyside.utils.custom_combo_box import CustomQCompleter
 from prjstore.ui.pyside.utils.is_digit import is_digit
@@ -29,8 +30,8 @@ class ItemForm(QWidget):
         if keywords:
             self.keywords = keywords
         else:
-            self.keywords = {'header': 'Получение товара',
-                             'shoes': {'count_sizes': 12, 'min_size': 35, 'widths': ['D', 'EE', '4E'],
+            self.keywords = {'header': 'Получение товара', 'types': (('', 'product'), ('обувь', 'shoes')),
+                             'shoes': {'count_sizes': 12, 'min_size': 35,
                                        'header_shoes': ["Размеры", "Количество", "Длина стельки"]}}
         self.test = test
         self.last_added_size = ''
@@ -57,6 +58,7 @@ class ItemForm(QWidget):
     def __connected_complete(self, handler: ReceivingTheItemsHandler):
         self.handler = handler
         self.list_pd_prod = handler.get_products_data()
+        self.keywords['shoes']['widths'] = handler.get_shoes_widths()
         self.setup_ui()
         self.load_widget.hide()
 
@@ -70,16 +72,28 @@ class ItemForm(QWidget):
         self.ui.name_combo_box.setCompleter(completer)
         for pd_prod in self.list_pd_prod:
             self.ui.name_combo_box.addItem(pd_prod.name, pd_prod)
+
+        self.setup_types()
         # shoes
-        self.ui.type_combo_box.setCurrentIndex(1)
         self.ui.width_combo_box.clear()
-        self.ui.width_combo_box.addItem('')
-        for width in self.keywords['shoes']['widths']:
-            self.ui.width_combo_box.addItem(width)
+        for width_name, width in self.keywords['shoes']['widths']:
+            self.ui.width_combo_box.addItem(width, width_name)
         self.setStyleSheet('#sizes_table #first {background-color: #85ff8b;}')
         self.ui.sizes_table.itemChanged.connect(self.on_table_item_edit)
 
-    def on_edit_name_combo_box(self, text):
+    def setup_types(self):
+        self.ui.type_combo_box.clear()
+        for type_text, type_key in self.keywords['types']:
+            self.get_type_index(type_key)
+            self.ui.type_combo_box.addItem(type_text, type_key)
+        self.ui.type_combo_box.setCurrentIndex(1)
+
+    def get_type_index(self, key_name):
+        for n, (text, key) in enumerate(self.keywords['types']):
+            if key_name == key:
+                return n
+
+    def on_edit_name_combo_box(self, text: str):
         self.set_enabled_product_fields(True)
         if self.ui.name_combo_box.currentIndex() != 0:
             if self.ui.name_combo_box.currentData() and self.ui.name_combo_box.currentData().name != text:
@@ -91,7 +105,6 @@ class ItemForm(QWidget):
                 self.set_enabled_product_fields(False)
         else:
             self.show_all_colors()
-            self.ui.type_combo_box.setCurrentIndex(1)
 
     def show_all_colors(self):
         colors = set()
@@ -120,7 +133,7 @@ class ItemForm(QWidget):
         self.ui.qty_spin_box.setValue(1)
         if pd_product:
             self.ui.price_line_edit.setText(f'{pd_product.price_sell: g}')
-            self.ui.type_combo_box.setCurrentText(pd_product.type.name)
+            self.ui.type_combo_box.setCurrentIndex(self.get_type_index(key_name=pd_product.type.name))
             self.on_change_product_type()
             if pd_product.type.name == 'shoes':
                 self.update_shoes(pd_product.module)
@@ -139,7 +152,8 @@ class ItemForm(QWidget):
             if color:
                 self.ui.color_combo_box.addItem(color)
         # width
-        self.ui.width_combo_box.setCurrentIndex(self.ui.width_combo_box.findText(pd_color_shoes.width))
+        if index := self.ui.width_combo_box.findText(pd_color_shoes.width) >= 0:
+            self.ui.width_combo_box.setCurrentIndex(index)
         # sizes
         self.update_size_table(pd_color_shoes.sizes)
 
@@ -168,13 +182,12 @@ class ItemForm(QWidget):
             self.last_added_size = item.text()
             second_item = self.ui.sizes_table.item(0, 0)
             second_item.setBackground(self.ui.sizes_table.item(2, 0).background())
-
             self.ui.sizes_table.insertRow(0)
             item = QTableWidgetItem('')
             self.ui.sizes_table.setItem(0, 0, item)
             item.setBackground(QtGui.QColor('#85ff8b'))
-            self.ui.sizes_table.setItem(0, 1, QTableWidgetItem(''))
-            self.ui.sizes_table.setItem(0, 2, QTableWidgetItem(''))
+            self.ui.sizes_table.setItem(0, 1, QTableWidgetItem())
+            self.ui.sizes_table.setItem(0, 2, QTableWidgetItem())
         self.ui.sizes_table.sortByColumn(0, QtCore.Qt.AscendingOrder)
 
     def update_item(self):
@@ -188,7 +201,7 @@ class ItemForm(QWidget):
                     self.ui.name_combo_box.setCurrentIndex(self.ui.name_combo_box.findData(pd_product))
 
     def on_change_product_type(self):
-        current_data = self.ui.type_combo_box.currentText()
+        current_data = self.ui.type_combo_box.currentData()
         if current_data == 'shoes':
             self.show_shoes()
         else:
@@ -220,12 +233,12 @@ class ItemForm(QWidget):
         self.adjustSize()
         self.__hide_qty()
 
-    def get_data(self) -> ModelProductForm:
+    def get_data(self) -> db_schemas.ModelProduct:
         warning_texts = []
-        product_type = self.ui.type_combo_box.currentText()
+        product_type = self.ui.type_combo_box.currentData()
         product_data = self.ui.name_combo_box.currentData()
         product_id = product_data.id if product_data else None
-        product_name = self.ui.name_combo_box.currentText() if self.ui.name_combo_box.currentText() else None
+        product_name = self.ui.name_combo_box.currentText().strip() if self.ui.name_combo_box.currentText() else None
         buy_price = self.ui.buy_price_line_edit.text() if is_digit(self.ui.buy_price_line_edit.text()) else None
         price_sell = self.ui.price_line_edit.text() if is_digit(self.ui.price_line_edit.text()) else None
         pd_shoes = None
@@ -240,7 +253,7 @@ class ItemForm(QWidget):
         if product_type == 'shoes':
             table = self.ui.sizes_table
             rows = table.rowCount()
-            list_of_sizes = {}
+            list_of_sizes = []
             for num_row in range(rows):
                 size = table.item(num_row, 0).text()
                 length = None
@@ -248,11 +261,11 @@ class ItemForm(QWidget):
                     length = table.item(num_row, 2).text()
                 qty_shoes = table.item(num_row, 1).text()
                 if size.isdigit() and qty_shoes.isdigit() and int(qty_shoes) > 0:
-                    list_of_sizes[size] = ModelSizeShoes(size=size, length=length, qty=qty_shoes)
+                    list_of_sizes.append(db_schemas.ModelSizeShoes(size=size, length=length, qty=qty_shoes))
             if not list_of_sizes:
                 warning_texts.append('Не указано количество ниодного размера!')
-            pd_shoes = ModelColorShoesForm(color=self.ui.color_combo_box.currentText(),
-                                           width=self.ui.width_combo_box.currentText(), sizes=list_of_sizes)
+            pd_shoes = db_schemas.ModelShoes(color=self.ui.color_combo_box.currentText(),
+                                             width=self.ui.width_combo_box.currentData(), sizes=list_of_sizes)
         else:
             qty = int(self.ui.qty_spin_box.text())
             if not qty > 0:
@@ -260,8 +273,9 @@ class ItemForm(QWidget):
         if warning_texts:
             QMessageBox(icon=QMessageBox.Warning, text='\n'.join(warning_texts)).exec()
         else:
-            pd_product = ModelProductForm(id=product_id, name=product_name, type=product_type, price_buy=buy_price,
-                                          price_sell=price_sell, qty=qty, module=pd_shoes)
+            pd_product = db_schemas.ModelProduct(id=product_id, name=product_name, type=product_type,
+                                                 price_buy=buy_price,
+                                                 price_sell=price_sell, qty=qty, module=pd_shoes)
             return pd_product
 
 
