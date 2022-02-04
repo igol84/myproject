@@ -19,6 +19,9 @@ class ReceivingTheItemsHandler:
         else:
             self.__store = Store.create_from_schema(self.__db.store.get(id=store_id))
 
+    def get_store_id(self):
+        return self.__store.id
+
     @staticmethod
     def get_shoes_widths():
         return ((width_name, getattr(width, 'short_name', '')) for width_name, width in Shoes.widths.items())

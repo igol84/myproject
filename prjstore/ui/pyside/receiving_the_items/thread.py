@@ -1,6 +1,6 @@
 from PySide6.QtCore import Signal, QObject, QRunnable, Slot
 
-from prjstore.db import API_DB
+from prjstore.db import API_DB, schemas
 from prjstore.handlers.receiving_the_items_handler import ReceivingTheItemsHandler
 
 
@@ -24,22 +24,22 @@ class DbConnect(QRunnable):
             self.signals.result.emit(handler)
 
 
-class DBGetProducts(QRunnable):
+class DBSaveData(QRunnable):
     class Signals(QObject):
         error = Signal(str)
-        result = Signal()
+        complete = Signal()
 
-    def __init__(self, handler):
+    def __init__(self, handler: ReceivingTheItemsHandler, data: schemas.header_receiving_the_items.ModelProduct):
         super().__init__()
         self.handler = handler
+        self.data = data
         self.signals = self.Signals()
 
     @Slot()
     def run(self):
         try:
-            self.handler.get_products()
+            self.handler.save_data(data=self.data)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:
-            self.signals.result.emit()
-
+            self.signals.complete.emit()

@@ -9,7 +9,7 @@ from prjstore.handlers.receiving_the_items_handler import ReceivingTheItemsHandl
 from prjstore.ui.pyside.receiving_the_items.items_ui import Ui_Dialog
 from prjstore.ui.pyside.receiving_the_items.schemas import ModelItem, ModelSizeShoes, \
     ModelColorShoesShow, ModelProductShow
-from prjstore.ui.pyside.receiving_the_items.thread import DbConnect
+from prjstore.ui.pyside.receiving_the_items.thread import DbConnect, DBSaveData
 from prjstore.ui.pyside.utils.custom_combo_box import CustomQCompleter
 from prjstore.ui.pyside.utils.is_digit import is_digit
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
@@ -124,7 +124,15 @@ class ItemForm(QWidget):
 
     def on_clicked_button(self):
         if data := self.get_data():
-            self.handler.save_data(data)
+            if not self.test:
+                self.load_widget.show()
+                db_save_data = DBSaveData(self.handler, data)
+                db_save_data.signals.error.connect(self.__connection_error)
+                db_save_data.signals.complete.connect(self.__completed_save)
+                self.thread_pool.start(db_save_data)
+
+    def __completed_save(self):
+        self.load_widget.hide()
 
     def on_name_combo_box_changed(self):
         self.update_product(self.ui.name_combo_box.currentData())
@@ -152,8 +160,10 @@ class ItemForm(QWidget):
             if color:
                 self.ui.color_combo_box.addItem(color)
         # width
-        if index := self.ui.width_combo_box.findText(pd_color_shoes.width) >= 0:
-            self.ui.width_combo_box.setCurrentIndex(index)
+
+        if index := self.ui.width_combo_box.findText(pd_color_shoes.width):
+            if index >= 0:
+                self.ui.width_combo_box.setCurrentIndex(index)
         # sizes
         self.update_size_table(pd_color_shoes.sizes)
 
