@@ -1,14 +1,9 @@
-from typing import Optional
-
-from PySide6 import QtGui, QtCore
-from PySide6.QtCore import QThreadPool
-from PySide6.QtWidgets import QApplication, QWidget, QComboBox, QTableWidgetItem, QMessageBox
+from qt_core import *
 
 from prjstore.db.schemas import header_receiving_the_items as db_schemas
 from prjstore.handlers.receiving_the_items_handler import ReceivingTheItemsHandler
 from prjstore.ui.pyside.receiving_the_items.items_ui import Ui_Dialog
-from prjstore.ui.pyside.receiving_the_items.schemas import ModelItem, ModelSizeShoes, \
-    ModelColorShoesShow, ModelProductShow
+from prjstore.ui.pyside.receiving_the_items.schemas import *
 from prjstore.ui.pyside.receiving_the_items.thread import DbConnect, DBSaveData
 from prjstore.ui.pyside.utils.custom_combo_box import CustomQCompleter
 from prjstore.ui.pyside.utils.is_digit import is_digit
@@ -65,7 +60,7 @@ class ItemForm(QWidget):
     def setup_ui(self):
         self.setWindowTitle(self.keywords['header'])
         self.ui.name_combo_box.addItem('')
-        self.ui.name_combo_box.setItemData(0, QtGui.QBrush(QtGui.QColor("#BDFFB4")), role=QtCore.Qt.BackgroundRole)
+        self.ui.name_combo_box.setItemData(0, QBrush(QColor("#BDFFB4")), role=Qt.BackgroundRole)
         self.ui.name_combo_box.setInsertPolicy(QComboBox.NoInsert)
         completer = CustomQCompleter(self.ui.name_combo_box)
         completer.setModel(self.ui.name_combo_box.model())
@@ -176,7 +171,7 @@ class ItemForm(QWidget):
         self.ui.sizes_table.setItem(0, 0, item)
         self.ui.sizes_table.setItem(0, 1, QTableWidgetItem())
         self.ui.sizes_table.setItem(0, 2, QTableWidgetItem())
-        item.setBackground(QtGui.QColor('#85ff8b'))
+        item.setBackground(QColor('#85ff8b'))
         for i, size in enumerate(range(min_size, min_size + count_sizes + 1), start=1):
             self.ui.sizes_table.setItem(i, 0, QTableWidgetItem(f'{size}'))
             self.ui.sizes_table.setItem(i, 1, QTableWidgetItem())
@@ -195,10 +190,10 @@ class ItemForm(QWidget):
             self.ui.sizes_table.insertRow(0)
             item = QTableWidgetItem('')
             self.ui.sizes_table.setItem(0, 0, item)
-            item.setBackground(QtGui.QColor('#85ff8b'))
+            item.setBackground(QColor('#85ff8b'))
             self.ui.sizes_table.setItem(0, 1, QTableWidgetItem())
             self.ui.sizes_table.setItem(0, 2, QTableWidgetItem())
-        self.ui.sizes_table.sortByColumn(0, QtCore.Qt.AscendingOrder)
+        self.ui.sizes_table.sortByColumn(0, Qt.AscendingOrder)
 
     def update_item(self):
         if self.pd_item.price_buy:
@@ -240,7 +235,7 @@ class ItemForm(QWidget):
             x = self.ui.sizes_grid.itemAt(i).widget()
             x.show()
         self.ui.sizes_grid.activate()
-        self.adjustSize()
+        # self.adjustSize()
         self.__hide_qty()
 
     def get_data(self) -> db_schemas.ModelProduct:

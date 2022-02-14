@@ -1,20 +1,15 @@
 import sys
 
-from PySide6 import QtCore
-from PySide6.QtCore import QDate, QThreadPool
-from PySide6.QtWidgets import QWidget, QApplication, QPushButton, QMessageBox
+from qt_core import *
 
-from prjstore.db.schemas.sale import ShowSaleWithSLIs
-from prjstore.handlers.sale_registration_handler import SaleRegistrationHandler
 from prjstore.ui.pyside.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
 from prjstore.ui.pyside.sale_registration.components.sale import Sale_Frame
 from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
 from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
-from prjstore.ui.pyside.sale_registration.schemas import ModelProduct, ProductId, Price, ViewProduct
-from prjstore.ui.pyside.sale_registration.thread import DbConnect, DBCreateSale, DBGetSales, DBPutOnSale, \
-    DbPutItemFormSliToItems, DbEditSalePrice
+from prjstore.ui.pyside.sale_registration.schemas import *
+from prjstore.ui.pyside.sale_registration.thread import *
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 
 
@@ -26,13 +21,15 @@ class SaleForm(QWidget):
     selected_sli_widget: SLI_Frame
     handler: SaleRegistrationHandler
 
-    def __init__(self, test=False):
+    def __init__(self, dark_style=False, test=False):
         super().__init__()
         self.thread_pool = QThreadPool()
         self.test = test
         self.resize(1200, 600)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        if dark_style:
+            self.setup_dark_style()
         self.ui.src_items.textChanged.connect(self.on_search_items_text_changed)
         self.ui.date_edit.setDate(QDate.currentDate())
         self.ui.date_edit.dateChanged.connect(self.change_data)
@@ -45,6 +42,14 @@ class SaleForm(QWidget):
             self.thread_pool.start(db_connector)
         else:
             self.connected_complete(SaleRegistrationHandler(test=True))
+
+    def setup_dark_style(self):
+        self.setStyleSheet(
+            '#SaleForm, #title {background-color: #2F303B; color: #F8F8F2;}'
+            '#title, .QLabel {color: #F8F8F2;}'
+            '#date_edit {background-color: #2F303B; border:2px solid #484B5E;  color: #F8F8F2;}'
+            'QComboBox {background-color: #2F303B; border:2px solid #484B5E;  color: #F8F8F2;}'
+        )
 
     def _connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
@@ -89,7 +94,7 @@ class SaleForm(QWidget):
             self.ui.sli_layout.addWidget(label)
         if self.sli_list:
             btn_new_sale = QPushButton('Сохранить')
-            self.ui.sli_layout.addWidget(btn_new_sale, alignment=QtCore.Qt.AlignRight)
+            self.ui.sli_layout.addWidget(btn_new_sale, alignment=Qt.AlignRight)
             btn_new_sale.clicked.connect(self.press_save)
         # Old sales
         self.old_sales = self.handler.get_old_sales()
@@ -211,6 +216,6 @@ class SaleForm(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = SaleForm(test=False)
+    w = SaleForm(test=False, dark_style=True)
     w.show()
     sys.exit(app.exec())

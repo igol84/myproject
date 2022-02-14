@@ -8,11 +8,7 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QMetaObject, QSize, Qt)
-from PySide6.QtGui import (QFont)
-from PySide6.QtWidgets import (QAbstractItemView, QComboBox, QFrame, QGridLayout, QLabel,
-                               QLineEdit, QPushButton, QSizePolicy, QSpinBox,
-                               QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
+from ..qt_core import *
 
 
 class Ui_Dialog(object):
