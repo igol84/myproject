@@ -28,6 +28,7 @@ class SaleForm(QWidget):
         self.resize(1200, 600)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.dark_style = dark_style
         if dark_style:
             self.setup_dark_style()
         self.ui.src_items.textChanged.connect(self.on_search_items_text_changed)
@@ -45,10 +46,11 @@ class SaleForm(QWidget):
 
     def setup_dark_style(self):
         self.setStyleSheet(
-            '#SaleForm, #title {background-color: #2F303B; color: #F8F8F2;}'
-            '#title, .QLabel {color: #F8F8F2;}'
-            '#date_edit {background-color: #2F303B; border:2px solid #484B5E;  color: #F8F8F2;}'
-            'QComboBox {background-color: #2F303B; border:2px solid #484B5E;  color: #F8F8F2;}'
+            '#SaleForm, #title {background-color: #2F303B; color: #F8F8F2;}\n'
+            'QLabel {color: #F8F8F2;}\n'
+            'QComboBox, QDateEdit {background-color: #121212; color: #dcdcdc; border:2px solid #484B5E;}\n'
+            'QLineEdit {background-color: #121212; color: #dcdcdc;}\n'
+            '#widget_slis, #widget_items {background-color: #2F303B; border:2px solid #484B5E;  color: #F8F8F2;}'
         )
 
     def _connection_error(self, err: str):

@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QApplication, QLabel, QSizePolicy
 from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QApplication, QLabel, QSizePolicy
 
 from prjstore.ui.pyside.sale_registration.components.shoes_comps.shoes_frame_interface import ShoesFrameInterface
 from prjstore.ui.pyside.sale_registration.schemas import ViewSize
@@ -18,9 +18,9 @@ class SizeFrame(ItemFrame):
         self.pr_size = pd_size.size
         self.pr_price = pd_size.price
         self.pr_qty = pd_size.qty
+        self.selected = False
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.setCursor(QtCore.Qt.PointingHandCursor)
-        self.set_default_style()
 
         layer = QtWidgets.QVBoxLayout()
         layer.setContentsMargins(4, 4, 4, 4)
@@ -41,14 +41,26 @@ class SizeFrame(ItemFrame):
         layer.addWidget(label_size)
         layer.addWidget(line)
         layer.addWidget(label_qty)
+        self.set_default_style()
         self.setLayout(layer)
 
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
         if self.shoes_frame:
             self.shoes_frame.set_selected_size_frame(self)
 
+    def enterEvent(self, event):
+        if not self.selected:
+            self.set_hover_style()
+
+    def leaveEvent(self, event):
+        if not self.selected:
+            self.set_default_style()
+
     def set_default_style(self) -> None:
-        self.setStyleSheet(f'QFrame:hover {{background-color: {self.color_fon_on_enter}; color: {self.color_text};}}')
+        self.setStyleSheet(f'background-color: {self.default_color_bg}; color: {self.default_color_text};')
+
+    def set_hover_style(self) -> None:
+        self.setStyleSheet(f'background-color: {self.color_fon_on_enter}; color: {self.color_text};')
 
     def set_selected_style(self) -> None:
         self.setStyleSheet(f'background-color: {self.current_color_bg}; color: {self.current_color_text}')

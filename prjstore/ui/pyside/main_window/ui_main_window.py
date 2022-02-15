@@ -125,7 +125,7 @@ class UI_MainWindow(object):
         # application pages
         self.pages = QStackedWidget()
         self.pages.setObjectName(u"SaleForm")
-        self.pages.setStyleSheet('#SaleForm {background-color: #2F303B; color: #F8F8F2}')
+        self.pages.setStyleSheet('#SaleForm {background-color: #2F303B;}')
 
         self.page_1 = pages['sale_form']
         self.pages.addWidget(self.page_1)

@@ -43,9 +43,11 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
     def set_selected_size_frame(self, size_frame: SizeFrame) -> None:
         if self.__selected_size_frame:
             self.__selected_size_frame.set_default_style()
+            self.__selected_size_frame.selected = False
         self.pr_id = size_frame.pr_id
         self.__selected_size_frame = size_frame
         self.__selected_size_frame.set_selected_style()
+        self.__selected_size_frame.selected = True
         price_text = self.__selected_size_frame.pr_price
         self.desc_frame.price_line_edit.setText(f'{price_text:g}')
         self.desc_frame.price_line_edit.show()
