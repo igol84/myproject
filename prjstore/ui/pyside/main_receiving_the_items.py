@@ -1,13 +1,12 @@
-from qt_core import *
-
 from prjstore.db.schemas import header_receiving_the_items as db_schemas
 from prjstore.handlers.receiving_the_items_handler import ReceivingTheItemsHandler
-from prjstore.ui.pyside.receiving_the_items.items_ui import Ui_Dialog
 from prjstore.ui.pyside.receiving_the_items.schemas import *
 from prjstore.ui.pyside.receiving_the_items.thread import DbConnect, DBSaveData
+from prjstore.ui.pyside.receiving_the_items.ui_item import Ui_Dialog
 from prjstore.ui.pyside.utils.custom_combo_box import CustomQCompleter
 from prjstore.ui.pyside.utils.is_digit import is_digit
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
+from qt_core import *
 
 
 class ItemForm(QWidget):
@@ -15,7 +14,8 @@ class ItemForm(QWidget):
     list_pd_prod: list[ModelProductShow]
     handler: ReceivingTheItemsHandler
 
-    def __init__(self, item: ModelItem = ModelItem(), list_pd_product=None, keywords=None, test=False):
+    def __init__(self, item: ModelItem = ModelItem(), list_pd_product=None, keywords=None, test=False,
+                 dark_style=False):
         super().__init__()
         self.thread_pool = QThreadPool()
         if list_pd_product is None:
@@ -32,6 +32,9 @@ class ItemForm(QWidget):
         self.last_added_size = ''
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
+        self.dark_style = dark_style
+        if self.dark_style:
+            self.setup_dark_style()
         self.ui.button_save.clicked.connect(self.on_clicked_button)
         self.ui.name_combo_box.clear()
         self.ui.name_combo_box.currentIndexChanged.connect(self.on_name_combo_box_changed)
@@ -73,8 +76,16 @@ class ItemForm(QWidget):
         self.ui.width_combo_box.clear()
         for width_name, width in self.keywords['shoes']['widths']:
             self.ui.width_combo_box.addItem(width, width_name)
-        self.setStyleSheet('#sizes_table #first {background-color: #85ff8b;}')
         self.ui.sizes_table.itemChanged.connect(self.on_table_item_edit)
+
+    def setup_dark_style(self):
+        self.setStyleSheet(
+            '#Dialog {background-color: #2F303B; color: #F8F8F2;}\n'
+            'QLabel {color: #F8F8F2;}\n'
+            'QComboBox, QDateEdit {background-color: #121212; color: #dcdcdc; border:2px solid #484B5E;}\n'
+            'QLineEdit {background-color: #121212; color: #dcdcdc;}\n'
+            '#widget_slis, #widget_items {background-color: #2F303B; border:2px solid #484B5E;  color: #F8F8F2;}'
+        )
 
     def setup_types(self):
         self.ui.type_combo_box.clear()
@@ -289,6 +300,6 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
     pd_item = ModelItem()
-    w = ItemForm(item=pd_item, test=False)
+    w = ItemForm(item=pd_item, test=False, dark_style=True)
     w.show()
     sys.exit(app.exec())

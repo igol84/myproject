@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'itemVojfre.ui'
+## Form generated from reading UI file 'itemiGfGhG.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.2.1
 ##
@@ -10,12 +10,11 @@
 
 from ..qt_core import *
 
-
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(341, 398)
+        Dialog.resize(660, 656)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -24,6 +23,13 @@ class Ui_Dialog(object):
         Dialog.setLayoutDirection(Qt.LeftToRight)
         self.verticalLayout_3 = QVBoxLayout(Dialog)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.frame = QFrame(Dialog)
+        self.frame.setObjectName(u"frame")
+        self.frame.setFrameShape(QFrame.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Raised)
+
+        self.verticalLayout_3.addWidget(self.frame)
+
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
         self.qty_label = QLabel(Dialog)
@@ -105,9 +111,11 @@ class Ui_Dialog(object):
         self.name_combo_box.addItem("")
         self.name_combo_box.addItem("")
         self.name_combo_box.setObjectName(u"name_combo_box")
+        self.name_combo_box.setMaximumSize(QSize(260, 16777215))
         self.name_combo_box.setEditable(True)
 
         self.gridLayout.addWidget(self.name_combo_box, 0, 1, 1, 4)
+
 
         self.verticalLayout_3.addLayout(self.gridLayout)
 
@@ -120,48 +128,6 @@ class Ui_Dialog(object):
 
         self.sizes_grid = QGridLayout()
         self.sizes_grid.setObjectName(u"sizes_grid")
-        self.color_combo_box = QComboBox(Dialog)
-        self.color_combo_box.addItem("")
-        self.color_combo_box.addItem("")
-        self.color_combo_box.addItem("")
-        self.color_combo_box.setObjectName(u"color_combo_box")
-        sizePolicy1.setHeightForWidth(self.color_combo_box.sizePolicy().hasHeightForWidth())
-        self.color_combo_box.setSizePolicy(sizePolicy1)
-        self.color_combo_box.setEditable(True)
-
-        self.sizes_grid.addWidget(self.color_combo_box, 1, 1, 1, 1)
-
-        self.width_combo_box = QComboBox(Dialog)
-        self.width_combo_box.addItem("")
-        self.width_combo_box.addItem("")
-        self.width_combo_box.addItem("")
-        self.width_combo_box.setObjectName(u"width_combo_box")
-        sizePolicy1.setHeightForWidth(self.width_combo_box.sizePolicy().hasHeightForWidth())
-        self.width_combo_box.setSizePolicy(sizePolicy1)
-        self.width_combo_box.setMaximumSize(QSize(16777215, 16777215))
-        self.width_combo_box.setEditable(False)
-
-        self.sizes_grid.addWidget(self.width_combo_box, 1, 3, 1, 1)
-
-        self.color_label = QLabel(Dialog)
-        self.color_label.setObjectName(u"color_label")
-        sizePolicy2.setHeightForWidth(self.color_label.sizePolicy().hasHeightForWidth())
-        self.color_label.setSizePolicy(sizePolicy2)
-
-        self.sizes_grid.addWidget(self.color_label, 1, 0, 1, 1)
-
-        self.width_label = QLabel(Dialog)
-        self.width_label.setObjectName(u"width_label")
-        sizePolicy2.setHeightForWidth(self.width_label.sizePolicy().hasHeightForWidth())
-        self.width_label.setSizePolicy(sizePolicy2)
-
-        self.sizes_grid.addWidget(self.width_label, 1, 2, 1, 1)
-
-        self.label = QLabel(Dialog)
-        self.label.setObjectName(u"label")
-
-        self.sizes_grid.addWidget(self.label, 1, 4, 1, 1)
-
         self.sizes_table = QTableWidget(Dialog)
         if (self.sizes_table.columnCount() < 3):
             self.sizes_table.setColumnCount(3)
@@ -237,6 +203,7 @@ class Ui_Dialog(object):
         self.sizes_table.setItem(11, 0, __qtablewidgetitem33)
         self.sizes_table.setObjectName(u"sizes_table")
         self.sizes_table.setEnabled(True)
+        self.sizes_table.setMinimumSize(QSize(0, 310))
         font = QFont()
         font.setPointSize(8)
         font.setKerning(True)
@@ -263,6 +230,51 @@ class Ui_Dialog(object):
 
         self.sizes_grid.addWidget(self.sizes_table, 2, 0, 1, 5)
 
+        self.label = QLabel(Dialog)
+        self.label.setObjectName(u"label")
+
+        self.sizes_grid.addWidget(self.label, 1, 4, 1, 1)
+
+        self.color_combo_box = QComboBox(Dialog)
+        self.color_combo_box.addItem("")
+        self.color_combo_box.addItem("")
+        self.color_combo_box.addItem("")
+        self.color_combo_box.setObjectName(u"color_combo_box")
+        sizePolicy1.setHeightForWidth(self.color_combo_box.sizePolicy().hasHeightForWidth())
+        self.color_combo_box.setSizePolicy(sizePolicy1)
+        self.color_combo_box.setMinimumSize(QSize(80, 0))
+        self.color_combo_box.setEditable(True)
+
+        self.sizes_grid.addWidget(self.color_combo_box, 1, 1, 1, 1)
+
+        self.width_label = QLabel(Dialog)
+        self.width_label.setObjectName(u"width_label")
+        sizePolicy2.setHeightForWidth(self.width_label.sizePolicy().hasHeightForWidth())
+        self.width_label.setSizePolicy(sizePolicy2)
+
+        self.sizes_grid.addWidget(self.width_label, 1, 2, 1, 1)
+
+        self.width_combo_box = QComboBox(Dialog)
+        self.width_combo_box.addItem("")
+        self.width_combo_box.addItem("")
+        self.width_combo_box.addItem("")
+        self.width_combo_box.setObjectName(u"width_combo_box")
+        sizePolicy1.setHeightForWidth(self.width_combo_box.sizePolicy().hasHeightForWidth())
+        self.width_combo_box.setSizePolicy(sizePolicy1)
+        self.width_combo_box.setMinimumSize(QSize(80, 0))
+        self.width_combo_box.setMaximumSize(QSize(16777215, 16777215))
+        self.width_combo_box.setEditable(False)
+
+        self.sizes_grid.addWidget(self.width_combo_box, 1, 3, 1, 1)
+
+        self.color_label = QLabel(Dialog)
+        self.color_label.setObjectName(u"color_label")
+        sizePolicy2.setHeightForWidth(self.color_label.sizePolicy().hasHeightForWidth())
+        self.color_label.setSizePolicy(sizePolicy2)
+
+        self.sizes_grid.addWidget(self.color_label, 1, 0, 1, 1)
+
+
         self.verticalLayout_3.addLayout(self.sizes_grid)
 
         self.button_save = QPushButton(Dialog)
@@ -275,6 +287,10 @@ class Ui_Dialog(object):
 
         self.verticalLayout_3.addWidget(self.button_save)
 
+        self.verticalSpacer = QSpacerItem(514, 163, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_3.addItem(self.verticalSpacer)
+
         QWidget.setTabOrder(self.name_combo_box, self.buy_price_line_edit)
         QWidget.setTabOrder(self.buy_price_line_edit, self.price_line_edit)
         QWidget.setTabOrder(self.price_line_edit, self.type_combo_box)
@@ -282,77 +298,54 @@ class Ui_Dialog(object):
         QWidget.setTabOrder(self.qty_spin_box, self.color_combo_box)
         QWidget.setTabOrder(self.color_combo_box, self.width_combo_box)
         QWidget.setTabOrder(self.width_combo_box, self.sizes_table)
-        QWidget.setTabOrder(self.sizes_table, self.button_save)
 
         self.retranslateUi(Dialog)
 
         self.width_combo_box.setCurrentIndex(1)
 
-        QMetaObject.connectSlotsByName(Dialog)
 
+        QMetaObject.connectSlotsByName(Dialog)
     # setupUi
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
-        # if QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
         self.qty_label.setToolTip("")
-        # endif // QT_CONFIG(tooltip)
-        # if QT_CONFIG(statustip)
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(statustip)
         self.qty_label.setStatusTip("")
-        # endif // QT_CONFIG(statustip)
-        self.qty_label.setText(
-            QCoreApplication.translate("Dialog", u"\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e", None))
+#endif // QT_CONFIG(statustip)
+        self.qty_label.setText(QCoreApplication.translate("Dialog", u"\u041a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e", None))
         self.type_combo_box.setItemText(0, QCoreApplication.translate("Dialog", u"product", None))
         self.type_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"shoes", None))
 
         self.type_label.setText(QCoreApplication.translate("Dialog", u"\u0422\u0438\u043f", None))
-        # if QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
         self.price_label.setToolTip("")
-        # endif // QT_CONFIG(tooltip)
-        # if QT_CONFIG(statustip)
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(statustip)
         self.price_label.setStatusTip("")
-        # endif // QT_CONFIG(statustip)
-        self.price_label.setText(
-            QCoreApplication.translate("Dialog", u"\u0426\u0435\u043d\u0430 \u043f\u0440\u043e\u0434\u0430\u0436\u0438",
-                                       None))
-        self.name_label.setText(
-            QCoreApplication.translate("Dialog", u"\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", None))
-        # if QT_CONFIG(tooltip)
+#endif // QT_CONFIG(statustip)
+        self.price_label.setText(QCoreApplication.translate("Dialog", u"\u0426\u0435\u043d\u0430 \u043f\u0440\u043e\u0434\u0430\u0436\u0438", None))
+        self.name_label.setText(QCoreApplication.translate("Dialog", u"\u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435", None))
+#if QT_CONFIG(tooltip)
         self.buy_price_label.setToolTip("")
-        # endif // QT_CONFIG(tooltip)
-        # if QT_CONFIG(statustip)
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(statustip)
         self.buy_price_label.setStatusTip("")
-        # endif // QT_CONFIG(statustip)
-        self.buy_price_label.setText(
-            QCoreApplication.translate("Dialog", u"\u0426\u0435\u043d\u0430 \u043f\u043e\u043a\u0443\u043f\u043a\u0438",
-                                       None))
+#endif // QT_CONFIG(statustip)
+        self.buy_price_label.setText(QCoreApplication.translate("Dialog", u"\u0426\u0435\u043d\u0430 \u043f\u043e\u043a\u0443\u043f\u043a\u0438", None))
         self.name_combo_box.setItemText(0, "")
         self.name_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"converse chak 70", None))
         self.name_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"coca cola ", None))
         self.name_combo_box.setItemText(3, QCoreApplication.translate("Dialog", u"nike 70", None))
 
-        self.color_combo_box.setItemText(0, "")
-        self.color_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"red", None))
-        self.color_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"black", None))
-
-        self.width_combo_box.setItemText(0, QCoreApplication.translate("Dialog", u"D", None))
-        self.width_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"2E", None))
-        self.width_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"4E", None))
-
-        self.color_label.setText(QCoreApplication.translate("Dialog", u"\u0446\u0432\u0435\u0442", None))
-        self.width_label.setText(QCoreApplication.translate("Dialog", u"\u0448\u0438\u0440\u0438\u043d\u0430", None))
-        self.label.setText("")
         ___qtablewidgetitem = self.sizes_table.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(
-            QCoreApplication.translate("Dialog", u"\u0440\u0430\u0437\u043c\u0435\u0440", None));
+        ___qtablewidgetitem.setText(QCoreApplication.translate("Dialog", u"\u0440\u0430\u0437\u043c\u0435\u0440", None));
         ___qtablewidgetitem1 = self.sizes_table.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(
-            QCoreApplication.translate("Dialog", u"\u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e",
-                                       None));
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("Dialog", u"\u043a\u043e\u043b\u0438\u0447\u0435\u0441\u0442\u0432\u043e", None));
         ___qtablewidgetitem2 = self.sizes_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(
-            QCoreApplication.translate("Dialog", u"\u0434\u0438\u043d\u0430 \u0441\u0442\u0435\u043b\u044c\u043a\u0438",
-                                       None));
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("Dialog", u"\u0434\u0438\u043d\u0430 \u0441\u0442\u0435\u043b\u044c\u043a\u0438", None));
 
         __sortingEnabled = self.sizes_table.isSortingEnabled()
         self.sizes_table.setSortingEnabled(False)
@@ -382,5 +375,17 @@ class Ui_Dialog(object):
         ___qtablewidgetitem14.setText(QCoreApplication.translate("Dialog", u"46", None));
         self.sizes_table.setSortingEnabled(__sortingEnabled)
 
+        self.label.setText("")
+        self.color_combo_box.setItemText(0, "")
+        self.color_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"red", None))
+        self.color_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"black", None))
+
+        self.width_label.setText(QCoreApplication.translate("Dialog", u"\u0448\u0438\u0440\u0438\u043d\u0430", None))
+        self.width_combo_box.setItemText(0, QCoreApplication.translate("Dialog", u"D", None))
+        self.width_combo_box.setItemText(1, QCoreApplication.translate("Dialog", u"2E", None))
+        self.width_combo_box.setItemText(2, QCoreApplication.translate("Dialog", u"4E", None))
+
+        self.color_label.setText(QCoreApplication.translate("Dialog", u"\u0446\u0432\u0435\u0442", None))
         self.button_save.setText(QCoreApplication.translate("Dialog", u"save", None))
     # retranslateUi
+

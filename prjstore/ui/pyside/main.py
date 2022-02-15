@@ -12,7 +12,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle('Title')
         self.sale_form = SaleForm(dark_style=True)
-        self.items_form = ItemForm()
+        self.items_form = ItemForm(dark_style=True)
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self, {'sale_form': self.sale_form, 'items_form': self.items_form})
         self.sale_form.setup_dark_style()

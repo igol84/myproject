@@ -127,15 +127,17 @@ class UI_MainWindow(object):
         self.pages.setObjectName(u"SaleForm")
         self.pages.setStyleSheet('#SaleForm {background-color: #2F303B;}')
 
-        self.page_1 = pages['sale_form']
+
+
+        self.page_1 = pages['items_form']
+        self.page_1.setMaximumWidth(340)
+        self.page_1.setMinimumWidth(340)
+        self.page_1.setObjectName(u"page_2")
         self.pages.addWidget(self.page_1)
 
-        self.page_2 = pages['items_form']
-        self.page_2.setMaximumWidth(400)
-        self.page_2.setMinimumWidth(400)
-        self.page_2.setObjectName(u"page_2")
-
+        self.page_2 = pages['sale_form']
         self.pages.addWidget(self.page_2)
+
         self.page_3 = QWidget()
         self.page_3.setObjectName(u"page_3")
         self.verticalLayout = QVBoxLayout(self.page_3)
@@ -147,7 +149,7 @@ class UI_MainWindow(object):
         self.verticalLayout.addWidget(self.label)
 
         self.pages.addWidget(self.page_3)
-        self.pages.setCurrentWidget( self.page_3)
+        self.pages.setCurrentWidget(self.page_3)
 
         # BOTTOM BAR
         self.bottom_bar = QFrame()
