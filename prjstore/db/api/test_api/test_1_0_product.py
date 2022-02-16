@@ -3,7 +3,7 @@ from prjstore.domain.product_factory import ProductFactory
 from util.money import Money
 
 count_rows = 0
-db = API_DB()
+db = API_DB({'username': '', 'password': ''})
 
 
 def setup_method():

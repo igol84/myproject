@@ -11,8 +11,11 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Title')
-        self.sale_form = SaleForm(dark_style=True)
-        self.items_form = ItemForm(dark_style=True)
+        with open('C:\\Users\\Public\\data', 'r') as file:
+            lst = [line.strip() for line in file]
+        self.user_data = {'username': lst[0], 'password': lst[1]}
+        self.sale_form = SaleForm(dark_style=True, user_data=self.user_data)
+        self.items_form = ItemForm(dark_style=True, user_data=self.user_data)
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self, {'sale_form': self.sale_form, 'items_form': self.items_form})
         self.sale_form.setup_dark_style()
@@ -20,7 +23,7 @@ class MainWindow(QMainWindow):
         self.ui.btn_1.clicked.connect(self.show_page_1)
         self.ui.btn_2.clicked.connect(self.show_page_2)
         self.ui.settings_button.clicked.connect(self.show_page_3)
-        self.show_page_1()
+        self.show_page_2()
         self.show()
 
     def reset_selection(self):

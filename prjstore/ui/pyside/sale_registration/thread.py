@@ -9,17 +9,18 @@ class DbConnect(QRunnable):
         error = Signal(str)
         result = Signal(SaleRegistrationHandler)
 
-    def __init__(self):
+    def __init__(self, user_data):
         super().__init__()
         self.signals = self.Signals()
+        self.user_data = user_data
 
     @Slot()
     def run(self):
         try:
-            db = API_DB()
-            handler = SaleRegistrationHandler(db=db)
+            db = API_DB(self.user_data)
+            handler = SaleRegistrationHandler(db)
         except OSError:
-            self.signals.error.emit('Нет подключения к интернету.')
+            self.signals.error.emit('Connection Error.')
         else:
             self.signals.result.emit(handler)
 
@@ -42,7 +43,7 @@ class DBGetSales(QRunnable):
         try:
             self.handler.changed_date(date=self.date_sale, place_id=self.place_id, seller_id=self.seller_id)
         except OSError:
-            self.signals.error.emit('Нет подключения к интернету.')
+            self.signals.error.emit('Connection Error.')
         else:
             self.signals.result.emit()
 
@@ -67,7 +68,7 @@ class DBCreateSale(QRunnable):
             if self.handler.is_complete():
                 self.handler.new_sale()
         except OSError:
-            self.signals.error.emit('Нет подключения к интернету.')
+            self.signals.error.emit('Connection Error.')
         else:
             self.signals.complete.emit()
 
@@ -90,7 +91,7 @@ class DBPutOnSale(QRunnable):
         try:
             self.handler.put_on_sale(pr_id=self.pr_id, qty=self.sale_qty, sale_price=self.sale_price)
         except OSError:
-            self.signals.error.emit('Нет подключения к интернету.')
+            self.signals.error.emit('Connection Error.')
         else:
             self.signals.complete.emit()
 
@@ -114,7 +115,7 @@ class DbEditSalePrice(QRunnable):
         try:
             self.handler.edit_sale_price_in_old_sli(self.sale_id, self.pr_id, self.old_price, self.new_price)
         except OSError:
-            self.signals.error.emit('Нет подключения к интернету.')
+            self.signals.error.emit('Connection Error.')
         else:
             self.signals.complete.emit()
 
@@ -137,6 +138,6 @@ class DbPutItemFormSliToItems(QRunnable):
         try:
             self.handler.put_item_form_sli_to_items_in_old_sale(self.pr_id, self.sli_price, self.sale_id)
         except OSError:
-            self.signals.error.emit('Нет подключения к интернету.')
+            self.signals.error.emit('Connection Error.')
         else:
             self.signals.complete.emit()

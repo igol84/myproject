@@ -2,7 +2,7 @@ from prjstore.db import API_DB, schemas
 from prjstore.domain.seller import Seller
 
 count_rows = 0
-db = API_DB()
+db = API_DB({'username': 'qwe', 'password': 'qwe'})
 
 
 def setup_method():

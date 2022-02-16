@@ -10,8 +10,9 @@ class ReceivingTheItemsHandler:
     __db: API_DB
     __store: Store
 
-    def __init__(self, db: API_DB = None, store_id=1, test=False):
+    def __init__(self, db: API_DB = None, test=False):
         self.__db = db
+        store_id = db.headers['store_id']
         self.test = test
         if test:
             self.__store = Store(id=store_id, name='test')

@@ -22,10 +22,11 @@ class SaleRegistrationHandler:
     __sale: Sale
     __ledger: dict[int, ModelSale]
 
-    def __init__(self, db: API_DB = None, store_id=1, test=False):
+    def __init__(self, db: API_DB = None, test=False):
         self.__db = db
         self.__sale = Sale()
         self.test_mode = test
+        store_id = db.headers['store_id']
         if test:
             self.__store = Store(id=store_id, name='test')
             put_test_data(self)

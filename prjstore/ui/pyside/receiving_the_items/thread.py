@@ -9,15 +9,16 @@ class DbConnect(QRunnable):
         error = Signal(str)
         result = Signal(ReceivingTheItemsHandler)
 
-    def __init__(self):
+    def __init__(self, user_data):
         super().__init__()
         self.signals = self.Signals()
+        self.user_data = user_data
 
     @Slot()
     def run(self):
         try:
-            db = API_DB()
-            handler = ReceivingTheItemsHandler(db=db)
+            db = API_DB(self.user_data)
+            handler = ReceivingTheItemsHandler(db)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:
