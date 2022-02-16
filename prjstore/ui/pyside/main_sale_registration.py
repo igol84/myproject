@@ -21,9 +21,10 @@ class SaleForm(QWidget):
     selected_sli_widget: SLI_Frame
     handler: SaleRegistrationHandler
 
-    def __init__(self, dark_style=False, test=False, user_data=None):
+    def __init__(self, dark_style=False, test=False, user_data=None, db=None):
         super().__init__()
         self.user_data = user_data
+        self.db = db
         self.thread_pool = QThreadPool()
         self.test = test
         self.resize(1200, 600)
@@ -38,7 +39,7 @@ class SaleForm(QWidget):
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
         if not self.test:
-            db_connector = DbConnect(self.user_data)
+            db_connector = DbConnect(self.user_data, self.db)
             db_connector.signals.error.connect(self._connection_error)
             db_connector.signals.result.connect(self.connected_complete)
             self.thread_pool.start(db_connector)

@@ -14,6 +14,7 @@ from prjstore.db.api.components.header_receiving_the_items import API_HeaderRece
 
 class API_DB:
     def __init__(self, user_data):
+        print('d')
         self.headers = auth(user_data)
         self.seller = API_Seller(self.headers)
         self.product = API_Product(self.headers)
