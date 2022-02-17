@@ -1,5 +1,6 @@
 from prjstore.db.schemas import header_receiving_the_items as db_schemas
 from prjstore.handlers.receiving_the_items_handler import ReceivingTheItemsHandler
+from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.receiving_the_items.schemas import *
 from prjstore.ui.pyside.receiving_the_items.thread import DbConnect, DBSaveData
 from prjstore.ui.pyside.receiving_the_items.ui_item import Ui_Dialog
@@ -14,9 +15,10 @@ class ItemForm(QWidget):
     list_pd_prod: list[ModelProductShow]
     handler: ReceivingTheItemsHandler
 
-    def __init__(self, item: ModelItem = ModelItem(), list_pd_product=None, keywords=None, test=False,
+    def __init__(self, parent=None, item: ModelItem = ModelItem(), list_pd_product=None, keywords=None, test=False,
                  dark_style=False, user_data=None, db=None):
         super().__init__()
+        self.parent: MainWindowInterface = parent
         self.user_data = user_data
         self.db = db
         self.thread_pool = QThreadPool()
@@ -57,8 +59,8 @@ class ItemForm(QWidget):
 
     def __connected_complete(self, handler: ReceivingTheItemsHandler):
         self.handler = handler
-        self.list_pd_prod = handler.get_products_data()
-        self.keywords['shoes']['widths'] = handler.get_shoes_widths()
+        self.list_pd_prod = self.handler.get_products_data()
+        self.keywords['shoes']['widths'] = self.handler.get_shoes_widths()
         self.setup_ui()
         self.load_widget.hide()
 
@@ -79,6 +81,13 @@ class ItemForm(QWidget):
         for width_name, width in self.keywords['shoes']['widths']:
             self.ui.width_combo_box.addItem(width, width_name)
         self.ui.sizes_table.itemChanged.connect(self.on_table_item_edit)
+
+    def update_data(self):
+        self.load_widget.show()
+        self.list_pd_prod = self.handler.get_products_data()
+        self.keywords['shoes']['widths'] = self.handler.get_shoes_widths()
+        self.setup_ui()
+        self.load_widget.hide()
 
     def setup_dark_style(self):
         self.setStyleSheet(
@@ -141,6 +150,8 @@ class ItemForm(QWidget):
 
     def __completed_save(self):
         self.load_widget.hide()
+        if self.parent:
+            self.parent.on_update_items()
 
     def on_name_combo_box_changed(self):
         self.update_product(self.ui.name_combo_box.currentData())

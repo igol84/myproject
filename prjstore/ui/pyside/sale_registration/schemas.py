@@ -109,7 +109,7 @@ def create_product_schemas_by_items(items: dict[int: Item]) -> list[ViewProduct]
                     color = item_.product.color
                     width = getattr(item_.product.width, 'short_name', None)
                     length = item_.product.length_of_insole
-                    insole = getattr(item_.product.width, 'width_of_insole', None)
+                    insole = getattr(item_.product.width, 'width_of_insole', 0)
                     shoes = ModelShoes(size=size, color=color, length=length, width=width, width_of_insole=insole)
                 products[item_.product.prod_id] = ModelProduct(
                     prod_id=item_.product.prod_id,
@@ -124,8 +124,8 @@ def create_product_schemas_by_items(items: dict[int: Item]) -> list[ViewProduct]
                 products[item_.product.prod_id].qty += item_.qty
     # sorting data
     sorted_products = sorted(products.values(), key=lambda k: (
-        k.name, getattr(k.shoes, 'color', None), getattr(k.shoes, 'width_of_insole', None),
-        getattr(k.shoes, 'size', None)))
+        k.name, getattr(k.shoes, 'color', None), getattr(k.shoes, 'width_of_insole', 0),
+        getattr(k.shoes, 'size', 0)))
 
     # grouping data
     products = []

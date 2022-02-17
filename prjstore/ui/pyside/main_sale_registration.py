@@ -1,7 +1,6 @@
 import sys
 
-from qt_core import *
-
+from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
@@ -11,6 +10,7 @@ from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
 from prjstore.ui.pyside.sale_registration.schemas import *
 from prjstore.ui.pyside.sale_registration.thread import *
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
+from qt_core import *
 
 
 class SaleForm(QWidget):
@@ -21,8 +21,9 @@ class SaleForm(QWidget):
     selected_sli_widget: SLI_Frame
     handler: SaleRegistrationHandler
 
-    def __init__(self, dark_style=False, test=False, user_data=None, db=None):
+    def __init__(self, parent=None, dark_style=False, test=False, user_data=None, db=None):
         super().__init__()
+        self.parent: MainWindowInterface = parent
         self.user_data = user_data
         self.db = db
         self.thread_pool = QThreadPool()
@@ -134,13 +135,14 @@ class SaleForm(QWidget):
             self.ui.items_layout.addWidget(item_frame)
         self.ui.items_layout.addStretch(0)
 
-    def on_click_scroll_items(self, event):
-        if event:
-            pass
-        self._update_items_layout()
-
     def on_search_items_text_changed(self):
         self._update_items_layout()
+
+    def update_items_data(self):
+        self.load_widget.show()
+        self.handler.update_data()
+        self._update_items_layout()
+        self.load_widget.hide()
 
     def put_on_sale(self):
         pr_id = self.selected_item_widget.pr_id

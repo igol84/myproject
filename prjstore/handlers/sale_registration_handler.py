@@ -26,12 +26,12 @@ class SaleRegistrationHandler:
         self.__db = db
         self.__sale = Sale()
         self.test_mode = test
-        store_id = db.headers['store_id']
+        self.store_id = db.headers['store_id']
         if test:
-            self.__store = Store(id=store_id, name='test')
+            self.__store = Store(id=self.store_id, name='test')
             put_test_data(self)
         else:
-            self.__store = Store.create_from_schema(self.__db.store.get(id=store_id))
+            self.update_data()
             self.update_store_sales_by_date(date=datetime.datetime.now().date())
 
     def get_sale(self):
@@ -48,6 +48,9 @@ class SaleRegistrationHandler:
         return self.__ledger
 
     ledger = property(get_ledger)
+
+    def update_data(self):
+        self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
 
     @validate_arguments
     def get_store_items(self, search: Optional[str] = None) -> list[ViewProduct]:

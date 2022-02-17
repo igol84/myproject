@@ -12,13 +12,13 @@ class ReceivingTheItemsHandler:
 
     def __init__(self, db: API_DB = None, test=False):
         self.__db = db
-        store_id = db.headers['store_id']
+        self.store_id = db.headers['store_id']
         self.test = test
         if test:
-            self.__store = Store(id=store_id, name='test')
+            self.__store = Store(id=self.store_id, name='test')
             put_test_data_to_store(self.__store)
         else:
-            self.__store = Store.create_from_schema(self.__db.store.get(id=store_id))
+            self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
 
     def get_store_id(self):
         return self.__store.id

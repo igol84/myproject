@@ -81,7 +81,7 @@ class UI_MainWindow(object):
         self.left_menu_label_version.setAlignment(Qt.AlignLeft)
         self.left_menu_label_version.setMinimumHeight(30)
         self.left_menu_label_version.setMaximumHeight(30)
-        self.left_menu_label_version.setStyleSheet('QPushButton: #C3CCDF; margin-left: 5px; margin-top: 5px')
+        self.left_menu_label_version.setStyleSheet('color: #C3CCDF; margin-left: 5px; margin-top: 5px')
 
         # ADD To LAYOUT
         self.left_menu_layout.addWidget(self.left_menu_top_frame)
