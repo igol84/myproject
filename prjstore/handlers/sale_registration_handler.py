@@ -25,6 +25,7 @@ class SaleRegistrationHandler:
     def __init__(self, db: API_DB = None, test=False):
         self.__db = db
         self.__sale = Sale()
+        self.__ledger = {}
         self.test_mode = test
         self.store_id = db.headers['store_id']
         if test:
@@ -60,7 +61,7 @@ class SaleRegistrationHandler:
     @validate_arguments
     def update_store_sales_by_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
         pd_sales = self.__db.sale.get_all(store_id=self.store.id, date=date, place_id=place_id, seller_id=seller_id)
-        self.__ledger = create_sales_by_sales_schemas(pd_sales)
+        self.__ledger.update(create_sales_by_sales_schemas(pd_sales))
 
     @validate_arguments
     def changed_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
@@ -191,7 +192,8 @@ class SaleRegistrationHandler:
             pd_sale = self.sale.schema_create(place_id=current_place_of_sale_id)
             if self.test_mode:
                 return True
-            if self.__db.sale.create(pd_sale):
+            if new_sale := self.__db.sale.create(pd_sale):
+                self.__ledger.update(create_sales_by_sales_schemas([new_sale]))
                 return True
         return False
 
