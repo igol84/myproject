@@ -76,14 +76,12 @@ class SaleForm(QWidget):
     def _update_paces_of_sales(self):
         self.ui.combo_box_place_of_sale.clear()
         self.ui.combo_box_place_of_sale.addItem('', userData=None)
-        self.ui.combo_box_place_of_sale.currentIndexChanged.connect(self.change_data)
         for i, name_place_of_sale in self.handler.get_store_places_of_sale_names().items():
             self.ui.combo_box_place_of_sale.addItem(name_place_of_sale, userData=i)
 
     def _update_sellers_names(self):
         self.ui.combo_box_seller.clear()
         self.ui.combo_box_seller.addItem('', userData=None)
-        self.ui.combo_box_seller.currentIndexChanged.connect(self.change_data)
         for i, seller_name in self.handler.get_store_sellers_names().items():
             self.ui.combo_box_seller.addItem(seller_name, userData=i)
 

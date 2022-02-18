@@ -33,7 +33,6 @@ class SaleRegistrationHandler:
             put_test_data(self)
         else:
             self.update_data()
-            self.update_store_sales_by_date(date=datetime.datetime.now().date())
 
     def get_sale(self):
         return self.__sale
@@ -61,7 +60,7 @@ class SaleRegistrationHandler:
     @validate_arguments
     def update_store_sales_by_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
         pd_sales = self.__db.sale.get_all(store_id=self.store.id, date=date, place_id=place_id, seller_id=seller_id)
-        self.__ledger.update(create_sales_by_sales_schemas(pd_sales))
+        self.__ledger = create_sales_by_sales_schemas(pd_sales)
 
     @validate_arguments
     def changed_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
