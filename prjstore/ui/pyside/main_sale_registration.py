@@ -70,7 +70,6 @@ class SaleForm(QWidget):
         self._update_sellers_names()
         self._update_sli()
         self._update_items_layout()
-        self._update_total()
         self.change_data()
 
     def _update_paces_of_sales(self):
@@ -121,6 +120,7 @@ class SaleForm(QWidget):
 
     def _completed_getting_sales(self):
         self._update_sli()
+        self._update_total()
         self.load_widget.hide()
 
     # Items -------------------- right panel --------------------------------
