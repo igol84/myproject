@@ -40,7 +40,8 @@ class MainWindow(QMainWindow, MainWindowInterface):
 
         self.ui.btn_1.clicked.connect(self.show_page_1)
         self.ui.btn_2.clicked.connect(self.show_page_2)
-        self.ui.settings_button.clicked.connect(self.show_page_3)
+        self.ui.login_button.clicked.connect(self.show_page_3)
+        self.ui.settings_button.clicked.connect(self.show_page_4)
         self.show_page_2()
 
         self.load_widget.hide()
@@ -65,8 +66,13 @@ class MainWindow(QMainWindow, MainWindowInterface):
 
     def show_page_3(self):
         self.reset_selection()
-        self.ui.settings_button.set_active(True)
+        self.ui.login_button.set_active(True)
         self.ui.pages.setCurrentWidget(self.ui.page_3)
+
+    def show_page_4(self):
+        self.reset_selection()
+        self.ui.settings_button.set_active(True)
+        self.ui.pages.setCurrentWidget(self.ui.page_4)
 
 
 if __name__ == '__main__':
