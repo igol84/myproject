@@ -1,6 +1,7 @@
 import sys
 
 from prjstore.db import API_DB
+from prjstore.ui.pyside.login.login_frame import LoginFrame
 from prjstore.ui.pyside.main_receiving_the_items import ItemForm
 from prjstore.ui.pyside.main_sale_registration import SaleForm
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
@@ -15,13 +16,18 @@ class MainWindow(QMainWindow, MainWindowInterface):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Title')
-
         self.thread_pool = QThreadPool()
+        self.login_form = LoginFrame()
+        self.moduls: dict[QWidget] = dict()
+        self.moduls['login_form'] = self.login_form
+        self.moduls['sale_form'] = QWidget()
+        self.moduls['items_form'] = QWidget()
         self.ui = UI_MainWindow()
-        self.ui.setup_ui(self, {'sale_form': QWidget(), 'items_form': QWidget()})
+        self.ui.setup_ui(self, self.moduls)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
         self.show()
-        db_connector = DbConnect()
+
+        db_connector = DbConnect(self.login_form.get_user_data())
         db_connector.signals.error.connect(self.__connection_error)
         db_connector.signals.result.connect(self.__connected_complete)
         self.thread_pool.start(db_connector)
@@ -34,8 +40,10 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.__db = db
         self.sale_form = SaleForm(parent=self, dark_style=True, db=db)
         self.items_form = ItemForm(parent=self, dark_style=True, db=db)
+        self.moduls['sale_form'] = self.sale_form
+        self.moduls['items_form'] = self.items_form
         self.ui = UI_MainWindow()
-        self.ui.setup_ui(self, {'sale_form': self.sale_form, 'items_form': self.items_form})
+        self.ui.setup_ui(self, self.moduls)
         self.sale_form.setup_dark_style()
 
         self.ui.btn_1.clicked.connect(self.show_page_1)

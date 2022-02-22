@@ -8,11 +8,9 @@ class DbConnect(QRunnable):
         error = Signal(str)
         result = Signal(API_DB)
 
-    def __init__(self):
+    def __init__(self, user_data):
         super().__init__()
-        with open('C:\\Users\\Public\\data', 'r') as file:
-            lst = [line.strip() for line in file]
-        self.user_data = {'username': lst[0], 'password': lst[1]}
+        self.user_data = user_data
         self.signals = self.Signals()
 
     @Slot()

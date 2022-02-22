@@ -1,4 +1,3 @@
-from prjstore.ui.pyside.login.login_frame import LoginFrame
 from prjstore.ui.pyside.qt_core import *
 
 # IMPORT CUSTOM WIDGETS
@@ -6,7 +5,7 @@ from prjstore.ui.pyside.utils.push_button import PyPushBottom
 
 
 class UI_MainWindow(object):
-    def setup_ui(self, parent: QMainWindow, pages: list):
+    def setup_ui(self, parent: QMainWindow, pages: dict):
         if not parent.objectName():
             parent.setObjectName('MainWindow')
 
@@ -142,7 +141,7 @@ class UI_MainWindow(object):
 
         self.page_3 = QFrame()
         self.verticalLayout_3 = QVBoxLayout(self.page_3)
-        self.login_frame = LoginFrame()
+        self.login_frame =  pages['login_form']
         self.verticalLayout_3.addWidget(self.login_frame)
         self.pages.addWidget(self.page_3)
 
