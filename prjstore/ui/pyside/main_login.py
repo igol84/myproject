@@ -3,11 +3,13 @@ import os
 from PySide6.QtWidgets import QFrame, QApplication
 
 from prjstore.ui.pyside.login.ui_login import Ui_Frame
+from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 
 
 class LoginFrame(QFrame):
-    def __init__(self):
+    def __init__(self, parent=None):
         super().__init__()
+        self.parent: MainWindowInterface = parent
         self.ui = Ui_Frame()
         self.ui.setupUi(self)
         self.ui.ok.clicked.connect(self.save_user_data)
@@ -37,15 +39,17 @@ class LoginFrame(QFrame):
         self.ui.passw.setText(password)
 
     def get_user_data(self) -> dict:
-        name = self.ui.name.text()
-        password = self.ui.passw.text()
+        name = self.ui.name.text() if self.ui.name.text() else 'name'
+        password = self.ui.passw.text() if self.ui.passw.text() else 'password'
         return {'username': name, 'password': password}
 
     def save_user_data(self):
         name = self.ui.name.text()
         password = self.ui.passw.text()
         with open(self.file_path, 'w') as f:
-            f.write(f'{name}\n{password}')
+            f.write(f'{name} \n{password} ')
+        if self.parent:
+            self.parent.start_connection()
 
 
 if __name__ == '__main__':

@@ -10,7 +10,7 @@ from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
 from prjstore.ui.pyside.sale_registration.schemas import *
 from prjstore.ui.pyside.sale_registration.thread import *
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
-from qt_core import *
+from prjstore.ui.pyside.utils.qt_core import *
 
 
 class SaleForm(QWidget):

@@ -1,7 +1,6 @@
-from prjstore.ui.pyside.qt_core import *
-
 # IMPORT CUSTOM WIDGETS
 from prjstore.ui.pyside.utils.push_button import PyPushBottom
+from prjstore.ui.pyside.utils.qt_core import *
 
 
 class UI_MainWindow(object):
@@ -47,13 +46,13 @@ class UI_MainWindow(object):
 
         # TOP BUTTONS
         self.toggle_button = PyPushBottom(text='', icon_path='icon_menu.svg', icon_color='green')
-        self.btn_1 = PyPushBottom(text='Новый товар', icon_path='icon_new_items.svg', is_active=True)
-        self.btn_2 = PyPushBottom(text='Продажа', icon_path='icon_sale.svg')
+        self.btn_new_items = PyPushBottom(text='Новый товар', icon_path='icon_new_items.svg', is_active=True)
+        self.btn_sale = PyPushBottom(text='Продажа', icon_path='icon_sale.svg')
 
         # ADD BUTTONS TO LAYOUT
         self.left_menu_top_layout.addWidget(self.toggle_button)
-        self.left_menu_top_layout.addWidget(self.btn_1)
-        self.left_menu_top_layout.addWidget(self.btn_2)
+        self.left_menu_top_layout.addWidget(self.btn_new_items)
+        self.left_menu_top_layout.addWidget(self.btn_sale)
 
         # MENU SPICER
         # //////////////////////////////////////////////////////////////////
@@ -130,31 +129,30 @@ class UI_MainWindow(object):
         self.pages.setObjectName(u"SaleForm")
         self.pages.setStyleSheet('#SaleForm {background-color: #2F303B;}')
 
-        self.page_1 = pages['items_form']
-        self.page_1.setMaximumWidth(340)
-        self.page_1.setMinimumWidth(340)
-        self.page_1.setObjectName(u"page_2")
-        self.pages.addWidget(self.page_1)
+        self.page_items_form = pages['items_form']
+        self.page_items_form.setMaximumWidth(340)
+        self.page_items_form.setMinimumWidth(340)
+        self.page_items_form.setObjectName(u"page_2")
+        self.pages.addWidget(self.page_items_form)
 
-        self.page_2 = pages['sale_form']
-        self.pages.addWidget(self.page_2)
+        self.page_sale_form = pages['sale_form']
+        self.pages.addWidget(self.page_sale_form)
 
-        self.page_3 = QFrame()
-        self.verticalLayout_3 = QVBoxLayout(self.page_3)
-        self.login_frame =  pages['login_form']
+        self.page_login_form = QFrame()
+        self.verticalLayout_3 = QVBoxLayout(self.page_login_form)
+        self.login_frame = pages['login_form']
         self.verticalLayout_3.addWidget(self.login_frame)
-        self.pages.addWidget(self.page_3)
+        self.pages.addWidget(self.page_login_form)
 
-        self.page_4 = QWidget()
-        self.page_4.setObjectName(u"page_3")
-        self.verticalLayout_4 = QVBoxLayout(self.page_4)
+        self.page_settings = QWidget()
+        self.page_settings.setObjectName(u"page_3")
+        self.verticalLayout_4 = QVBoxLayout(self.page_settings)
         self.verticalLayout_4.setObjectName(u"verticalLayout")
-        self.label = QLabel(self.page_4)
+        self.label = QLabel(self.page_settings)
         self.label.setObjectName(u"label")
         self.label.setAlignment(Qt.AlignCenter)
         self.verticalLayout_4.addWidget(self.label)
-        self.pages.addWidget(self.page_4)
-
+        self.pages.addWidget(self.page_settings)
 
         # BOTTOM BAR
         self.bottom_bar = QFrame()

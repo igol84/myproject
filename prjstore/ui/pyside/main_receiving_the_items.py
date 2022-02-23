@@ -7,7 +7,7 @@ from prjstore.ui.pyside.receiving_the_items.ui_item import Ui_Dialog
 from prjstore.ui.pyside.utils.custom_combo_box import CustomQCompleter
 from prjstore.ui.pyside.utils.is_digit import is_digit
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
-from qt_core import *
+from prjstore.ui.pyside.utils.qt_core import *
 
 
 class ItemForm(QWidget):

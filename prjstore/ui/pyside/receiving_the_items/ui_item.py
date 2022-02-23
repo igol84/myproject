@@ -8,7 +8,7 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from ..qt_core import *
+from prjstore.ui.pyside.utils.qt_core import *
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):

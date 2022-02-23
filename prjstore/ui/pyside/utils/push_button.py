@@ -1,6 +1,6 @@
 import os.path
 
-from ..qt_core import *
+from prjstore.ui.pyside.utils.qt_core import *
 
 
 class PyPushBottom(QPushButton):
@@ -67,7 +67,8 @@ class PyPushBottom(QPushButton):
 
         qp.end()
 
-    def draw_icon(self, qp, image, rect, color):
+    @staticmethod
+    def draw_icon(qp, image, rect, color):
         # Format path
         app_path = os.path.abspath(os.getcwd())
         folder = 'main_window/images/icons'
