@@ -15,18 +15,34 @@ from prjstore.ui.pyside.utils.qt_core import *
 class MainWindow(QMainWindow, MainWindowInterface):
     def __init__(self):
         super().__init__()
+        self.__db = None
+        self.ui = None
+        self.items_form = None
+        self.sale_form = None
         self.setWindowTitle('Title')
         self.thread_pool = QThreadPool()
         self.login_form = LoginFrame(self)
-        moduls: dict[QWidget] = dict()
-        moduls['login_form'] = self.login_form
-        moduls['sale_form'] = QWidget()
-        moduls['items_form'] = QWidget()
-        self.ui = UI_MainWindow()
-        self.ui.setup_ui(self, moduls)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
+        self.setup_ui()
         self.show()
         self.start_connection()
+
+    def setup_ui(self, db=None):
+        if db:
+            self.__db = db
+            self.sale_form = SaleForm(self, dark_style=True, db=db)
+            self.items_form = ItemForm(self, dark_style=True, db=db)
+            self.sale_form.setup_dark_style()
+        else:
+            self.sale_form = QWidget()
+            self.items_form = QWidget()
+
+        moduls: dict[QWidget] = dict()
+        moduls['login_form'] = self.login_form
+        moduls['sale_form'] = self.sale_form
+        moduls['items_form'] = self.items_form
+        self.ui = UI_MainWindow()
+        self.ui.setup_ui(self, moduls)
 
     def start_connection(self):
         db_connector = DbConnect(self.login_form.get_user_data())
@@ -40,27 +56,13 @@ class MainWindow(QMainWindow, MainWindowInterface):
         sys.exit(app.exec())
 
     def __authentication_error(self, err: str):
-        moduls: dict[QWidget] = dict()
-        moduls['login_form'] = self.login_form
-        moduls['sale_form'] = QWidget()
-        moduls['items_form'] = QWidget()
-        self.ui = UI_MainWindow()
-        self.ui.setup_ui(self, moduls)
+        self.setup_ui()
         self.show_login_page()
         self.load_widget.hide()
         QMessageBox.warning(self, err, err)
 
     def __connected_complete(self, db: API_DB):
-        self.__db = db
-        self.sale_form = SaleForm(self, dark_style=True, db=db)
-        self.items_form = ItemForm(self, dark_style=True, db=db)
-        moduls: dict[QWidget] = dict()
-        moduls['login_form'] = self.login_form
-        moduls['sale_form'] = self.sale_form
-        moduls['items_form'] = self.items_form
-        self.ui = UI_MainWindow()
-        self.ui.setup_ui(self, moduls)
-        self.sale_form.setup_dark_style()
+        self.setup_ui(db)
 
         self.ui.btn_new_items.clicked.connect(self.show_receiving_the_items_page)
         self.ui.btn_sale.clicked.connect(self.show_sale_registration_page)

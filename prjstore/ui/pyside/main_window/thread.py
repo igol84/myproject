@@ -1,7 +1,7 @@
 from PySide6.QtCore import Signal, QObject, QRunnable, Slot
 
 from prjstore.db import API_DB
-from prjstore.db.api.authorization import AuthException
+from prjstore.db.api.authentication import AuthException
 
 
 class DbConnect(QRunnable):
