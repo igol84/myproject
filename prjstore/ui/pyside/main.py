@@ -23,6 +23,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.thread_pool = QThreadPool()
         self.login_form = LoginFrame(self)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
+        self.load_widget.show()
         self.setup_ui()
         self.show()
         self.start_connection()

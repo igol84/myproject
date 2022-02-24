@@ -1,5 +1,5 @@
 from prjstore.db import schemas
-from prjstore.db.api.authentication import auth
+from prjstore.db.api.authorizations import auth
 from prjstore.db.api.components.seller import API_Seller
 from prjstore.db.api.components.product import API_Product
 from prjstore.db.api.components.product_catalog import API_ProductCatalog

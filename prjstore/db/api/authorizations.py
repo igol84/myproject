@@ -3,13 +3,13 @@ import requests
 from prjstore.db.api import settings
 
 
-class AuthException(Exception):  # Authexecption may be misspelled...
+class AuthException(Exception):
     pass
 
 
 def auth(user_data):
-    r = requests.post(f'{settings.host}/login',
-                      data={'username': user_data['username'], 'password': user_data['password']})
+    data = {'username': user_data['username'], 'password': user_data['password']}
+    r = requests.post(f'{settings.host}/login', data)
     if r.status_code == 404:
         err = r.json()['detail']
         raise AuthException(err)
