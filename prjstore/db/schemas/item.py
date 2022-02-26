@@ -1,3 +1,5 @@
+from datetime import date
+
 from pydantic import BaseModel
 from prjstore.db.schemas.product import Product
 
@@ -7,6 +9,7 @@ class BaseItem(BaseModel):
     store_id: int
     qty: int
     buy_price: float
+    date_buy: date
 
 
 class CreateItem(BaseItem):

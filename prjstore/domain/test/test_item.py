@@ -1,3 +1,5 @@
+from datetime import date
+
 from prjstore.domain.item import Item
 from prjstore.domain.product_catalog import ProductCatalog
 from prjstore.domain.test.test_products_catalog import TestProductCatalog
@@ -10,7 +12,7 @@ class TestItem:
         self.pc = ProductCatalog()
         TestProductCatalog.setup(self)
         self.items = {
-            1: Item(id=1, product=self.pc.products['1'], buy_price=(40,)),
+            1: Item(id=1, product=self.pc.products['1'], buy_price=(40,), date_buy=date.today()),
             2: Item(id=2, product=self.pc.products['3'], buy_price=(50.5,), qty=2),
             3: Item(id=3, product=self.pc.products['6'], buy_price=(100.5,)),
             4: Item(id=4, product=self.pc.products['2'], qty=3, buy_price=(200,)),

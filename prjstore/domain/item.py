@@ -1,3 +1,5 @@
+from datetime import date
+
 from pydantic import conint, validate_arguments
 from pydantic.dataclasses import dataclass
 
@@ -13,14 +15,17 @@ class Item:
     id: int = None
     qty: conint(ge=0) = 1
     buy_price: Money = Money(0)
+    date_buy: date = date.today()
 
     @staticmethod
     def create_from_schema(schema: schemas.item.ShowItemWithProduct) -> 'Item':
         product = ProductFactory.create_from_schema(schema.product)
-        return Item(id=schema.id, product=product, qty=schema.qty, buy_price=Money(schema.buy_price))
+        return Item(id=schema.id, product=product, qty=schema.qty, buy_price=Money(schema.buy_price),
+                    date_buy=schema.date_buy)
 
     @validate_arguments
     def schema_create(self, store_id: int) -> schemas.item.ShowItemWithProduct:
         product = self.product.schema_create()
-        return schemas.item.ShowItemWithProduct(id=self.id, prod_id=self.product.prod_id, store_id=store_id,
-                                                qty=self.qty, buy_price=self.buy_price.amount, product=product)
+        return schemas.item.ShowItemWithProduct(
+            id=self.id, prod_id=self.product.prod_id, store_id=store_id, qty=self.qty, buy_price=self.buy_price.amount,
+            product=product, date_buy=self.date_buy)
