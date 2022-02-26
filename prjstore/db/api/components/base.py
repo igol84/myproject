@@ -20,7 +20,7 @@ class APIBase(DB, Generic[CreateSchemaType, UpdateSchemaType, ReceivedSchemaType
         self.headers = headers
 
     def create(self, new_obj: CreateSchemaType) -> ReceivedSchemaType:
-        r = requests.post(f'{settings.host}/{self.prefix}', data=new_obj.json(), headers=self.headers)
+        r = requests.post(f'{settings.host}/{self.prefix}/', data=new_obj.json(), headers=self.headers)
         if r.status_code != 201:
             raise ConnectionError(r.text)
         else:
@@ -35,7 +35,7 @@ class APIBase(DB, Generic[CreateSchemaType, UpdateSchemaType, ReceivedSchemaType
             return self.schema(**r.json())
 
     def get_all(self, **kwargs) -> list[ReceivedSchemaType]:
-        r = requests.get(f"{settings.host}/{self.prefix}", headers=self.headers, params=kwargs)
+        r = requests.get(f"{settings.host}/{self.prefix}/", headers=self.headers, params=kwargs)
         if r.status_code != 200:
             raise ConnectionError(r.text)
         else:
