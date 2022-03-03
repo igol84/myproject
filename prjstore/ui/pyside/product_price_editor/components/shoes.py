@@ -65,8 +65,8 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
 
     def hide_colors(self):
         for n in range(self.layer_colors.count()):
-            if self.selected_size_frame:
-                self.selected_size_frame.set_default_style()
+            if self.selected_size_frame and self.selected_size_frame.selected:
+                self.selected_size_frame.set_selected(False)
             self.layer_colors.itemAt(n).widget().hide()
 
     def show_colors(self):

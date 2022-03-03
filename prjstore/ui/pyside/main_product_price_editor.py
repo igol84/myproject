@@ -11,7 +11,7 @@ from prjstore.ui.pyside.utils.qt_core import *
 
 
 class SaleForm(QWidget):
-    items: list[ModelProduct]
+    products: list[ModelProduct]
     selected_item_widget: AbstractItem
     handler: ProductPriceEditor
 
@@ -40,8 +40,9 @@ class SaleForm(QWidget):
         QMessageBox.warning(self, err, err)
         sys.exit(app.exec())
 
-    def connected_complete(self, handler):
+    def connected_complete(self, handler: ProductPriceEditor):
         self.handler = handler
+        self.products = self.handler.get_store_products()
 
         self.update()
         self.load_widget.hide()
@@ -50,9 +51,11 @@ class SaleForm(QWidget):
         self._update_items_layout()
 
     def _update_items_layout(self):
+        self.selected_item_widget = None
         self.layout = QVBoxLayout()
-        for _ in range(100):
-            self.layout.addWidget(QLabel('d'))
+        for item in self.products:
+            item_frame = FrameProductFactory.create(product_type=item.type, parent=self, item_pd=item)
+            self.layout.addWidget(item_frame)
         self.ui.product_frame.setLayout(self.layout)
 
 

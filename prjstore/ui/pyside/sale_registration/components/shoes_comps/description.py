@@ -72,9 +72,9 @@ class ShoesDescFrame(QFrame):
         # return default style on the previous selected widget
         if self.parent_form:
             if self.parent_form.selected_item_widget:
-                if self.parent_form.selected_item_widget is self.parent():
-                    self.parent().color_fon = self.parent_shoes_frame.color_fon_on_enter
-                    self.parent().color_text = self.parent_shoes_frame.default_color_text
+                if self.parent_form.selected_item_widget is self.shoes_frame:
+                    self.shoes_frame.color_fon = self.parent_shoes_frame.color_fon_on_enter
+                    self.shoes_frame.color_text = self.parent_shoes_frame.default_color_text
                     self.parent_form.selected_item_widget.hide_elements()
                     self.parent_form.selected_item_widget = None
                     self.shoes_frame.hide_colors()

@@ -15,7 +15,7 @@ class WidthFrame(QFrame):
         self.adjustSize()
         # self.setStyleSheet(f"background-color: #808000")
         layer_widths = QVBoxLayout()
-        layer_widths.setContentsMargins(0, 0, 0, 5)
+        layer_widths.setContentsMargins(5, 0, 5, 5)
 
         if self.pr_width:
             label_width = QLabel(f'{self.pr_width}')

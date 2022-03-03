@@ -2,7 +2,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtGui import QFontMetrics, QFont
 from PySide6.QtWidgets import QLabel, QLineEdit, QFrame, QPushButton
 
-from prjstore.ui.pyside.sale_registration.components.shoes_comps.shoes_frame_interface import ShoesFrameInterface
+from prjstore.ui.pyside.product_price_editor.components.shoes_comps.shoes_frame_interface import ShoesFrameInterface
 
 
 class ShoesDescFrame(QFrame):
@@ -29,10 +29,10 @@ class ShoesDescFrame(QFrame):
         self.price_line_edit = LineEditPrice(parent=self, text='0')
         self.price_line_edit.returnPressed.connect(self.on_pressed_price_line_edit)
         self.price_line_edit.hide()
-        self.btn_plus = QPushButton(parent=self, text='+')
-        self.btn_plus.setMaximumSize(25, 25)
+        self.btn_plus = QPushButton(parent=self, text='edit')
+        self.btn_plus.setMaximumSize(75, 25)
         self.btn_plus.hide()
-        self.btn_plus.clicked.connect(self.on_push_button_plus)
+        self.btn_plus.clicked.connect(self.on_push_button_edit)
         self.setLayout(layer)
 
     def __get_shoes_frame(self) -> ShoesFrameInterface:
@@ -58,7 +58,7 @@ class ShoesDescFrame(QFrame):
         font.setFamily(self.parent().font_family)
         font.setPointSize(self.parent().font_size)
         painter.setFont(font)
-        self.price_line_edit.move(self.width() - 100, 4)
+        self.price_line_edit.move(self.width() - 143, 4)
         self.btn_plus.move(self.width() - self.btn_plus.width() - 3, 3)
         painter.end()
         return QFrame.paintEvent(self, event)
@@ -108,9 +108,9 @@ class ShoesDescFrame(QFrame):
             self.parent_form.put_on_sale()
         self.update()
 
-    def on_push_button_plus(self):
+    def on_push_button_edit(self):
         if self.parent_form:
-            self.parent_form.put_on_sale()
+            print('clik!')
         self.update()
 
 

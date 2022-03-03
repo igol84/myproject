@@ -97,6 +97,7 @@ class ProductFrame(ItemFrame, AbstractItem):
         self.line_edit_price.selectAll()
 
     def hide_elements(self):
+        self.line_edit_product_description.hide()
         self.line_edit_price.hide()
         self.btn_edit.hide()
 
@@ -114,19 +115,14 @@ class ProductFrame(ItemFrame, AbstractItem):
 
     def on_push_button_edit(self):
         if self.parent_form:
-            self.parent_form.put_on_sale()
+            print('clik!')
         self.update()
 
     def on_pressed_price_line_edit(self):
         if self.line_edit_price.hasFocus():
             self.line_edit_price.clearFocus()
-        if self.parent_form:
-            self.parent_form.put_on_sale()
-        self.update()
+        self.on_push_button_edit()
 
-    def on_press_enter_on_qty_box_edit(self):
-        if self.parent_form:
-            self.parent_form.put_on_sale()
         self.update()
 
 
@@ -141,21 +137,6 @@ class LabelItemDescription(QLabel):
         pixels_text = metrics.elidedText(self.text(), Qt.ElideRight, self.parent().width() - 220)
         self.resize(metrics.size(0, pixels_text).width(), self.parent().height_)
         painter.drawText(self.rect(), self.alignment(), pixels_text)
-
-
-class QtyBox(QSpinBox):
-    def __init__(self, parent):
-        super().__init__(parent)
-        font = self.font()
-        font.setPointSize(ProductFrame.font_size)
-        self.setFont(font)
-
-    def keyPressEvent(self, event: QKeyEvent) -> None:
-        if event.key() == Qt.Key_Enter:
-            self.clearFocus()
-            self.parent().on_press_enter_on_qty_box_edit()
-        else:
-            QSpinBox.keyPressEvent(self, event)
 
 
 class LineEditPrice(QLineEdit):

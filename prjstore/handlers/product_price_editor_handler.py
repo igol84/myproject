@@ -3,7 +3,7 @@ from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.item import Item
 from prjstore.domain.store import Store
 from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_store
-
+from prjstore.ui.pyside.product_price_editor.schemas import create_product_schemas_by_items, ViewProduct
 
 
 class ProductPriceEditor:
@@ -27,6 +27,10 @@ class ProductPriceEditor:
 
     def get_store_id(self):
         return self.__store.id
+
+    def get_store_products(self) -> list[ViewProduct]:
+        products: dict[int: Item] = self.store.items
+        return create_product_schemas_by_items(products)
 
     def save_data(self, data: db_schemas.header_receiving_the_items.ModelProduct):
         data.store_id = self.__store.id
