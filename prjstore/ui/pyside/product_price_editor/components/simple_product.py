@@ -28,7 +28,7 @@ class ProductFrame(ItemFrame, AbstractItem):
         self.line_edit_price.returnPressed.connect(self.on_pressed_price_line_edit)
         self.btn_edit = QPushButton(parent=self, text='edit')
         self.btn_edit.setMaximumSize(75, 25)
-        self.btn_edit.clicked.connect(self.on_push_button_plus)
+        self.btn_edit.clicked.connect(self.on_push_button_edit)
 
         self.line_edit_product_description.hide()
         self.line_edit_price.hide()
@@ -112,7 +112,7 @@ class ProductFrame(ItemFrame, AbstractItem):
             self.color_text = self.default_color_text
         self.update()
 
-    def on_push_button_plus(self):
+    def on_push_button_edit(self):
         if self.parent_form:
             self.parent_form.put_on_sale()
         self.update()

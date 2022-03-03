@@ -76,4 +76,4 @@ if __name__ == '__main__':
     frame = SizeFrame(pd_size=view_size)
     v_box.addWidget(frame)
     win.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

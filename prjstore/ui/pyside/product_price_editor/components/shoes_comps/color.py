@@ -1,8 +1,7 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QApplication, QSizePolicy, QLabel, QFrame
-from PySide6 import QtWidgets, QtCore
+from prjstore.ui.pyside.utils.qt_core import *
 
-from prjstore.ui.pyside.sale_registration.components.shoes_comps import WidthFrame
-from prjstore.ui.pyside.sale_registration.schemas import ViewWidth, ViewColor, ViewSize
+from prjstore.ui.pyside.product_price_editor.components.shoes_comps import WidthFrame
+from prjstore.ui.pyside.product_price_editor.schemas import ViewWidth, ViewColor, ViewSize
 
 
 class ColorFrame(QFrame):
@@ -13,11 +12,8 @@ class ColorFrame(QFrame):
         super().__init__()
         self.pd_color = pd_color.color
         self.pd_widths = pd_color.widths
-        self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        self.adjustSize()
-        # self.setStyleSheet(f"background-color: #FF1493")
 
-        layer_widths = QtWidgets.QVBoxLayout()
+        layer_widths = QVBoxLayout()
         layer_widths.setContentsMargins(0, 0, 0, 0)
         layer_widths.setSpacing(0)
 
@@ -25,7 +21,7 @@ class ColorFrame(QFrame):
             label_color = QLabel(f'{self.pd_color}')
             label_color.setContentsMargins(3, 0, 3, 0)
             label_color.setStyleSheet('font-size: 17pt;')
-            label_color.setAlignment(QtCore.Qt.AlignCenter)
+            label_color.setAlignment(Qt.AlignCenter)
             layer_widths.addWidget(label_color)
 
         for view_width in self.pd_widths:
@@ -63,4 +59,4 @@ if __name__ == '__main__':
     frame = ColorFrame(pd_color=view_color)
     v_box.addWidget(frame)
     win.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

@@ -2,11 +2,11 @@ from typing import overload, Optional, Literal
 
 from pydantic import validate_arguments
 
-from prjstore.ui.pyside.sale_registration.components.simple_product import ProductFrame
-from prjstore.ui.pyside.sale_registration.components.shoes import ShoesFrame
+from prjstore.ui.pyside.product_price_editor.components.simple_product import ProductFrame
+from prjstore.ui.pyside.product_price_editor.components.shoes import ShoesFrame
 
 
-class FrameItemFactory:
+class FrameProductFactory:
 
     @overload
     @staticmethod
@@ -21,6 +21,7 @@ class FrameItemFactory:
     @staticmethod
     @validate_arguments
     def create(product_type: Literal['product', 'shoes'] = 'product', *args, **kwargs):
+        print(product_type)
         products = {
             'product': ProductFrame,
             'shoes': ShoesFrame,

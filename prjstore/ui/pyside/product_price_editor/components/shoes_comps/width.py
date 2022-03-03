@@ -1,23 +1,20 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QApplication, QSizePolicy, QLabel, QFrame
-from PySide6 import QtWidgets, QtCore
+from prjstore.ui.pyside.utils.qt_core import *
 
-from prjstore.ui.pyside.sale_registration.components.shoes_comps import SizeFrame
-from prjstore.ui.pyside.sale_registration.schemas import ViewSize, ViewWidth
+from prjstore.ui.pyside.product_price_editor.components.shoes_comps import SizeFrame
+from prjstore.ui.pyside.product_price_editor.schemas import ViewSize, ViewWidth
 
 
 class WidthFrame(QFrame):
     pd_sizes: list[ViewSize]
     pr_width: str
-    count_in_row = 15
 
     def __init__(self, pd_width: ViewWidth = '', shoes_frame=None):
         super().__init__()
         self.pr_width = pd_width.width
         self.pd_sizes = pd_width.sizes
-        self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.adjustSize()
         # self.setStyleSheet(f"background-color: #808000")
-        layer_widths = QtWidgets.QVBoxLayout()
+        layer_widths = QVBoxLayout()
         layer_widths.setContentsMargins(0, 0, 0, 5)
 
         if self.pr_width:
@@ -25,20 +22,9 @@ class WidthFrame(QFrame):
             label_width.setStyleSheet("font-size: 12pt;")
             layer_widths.addWidget(label_width)
 
-        layer_sizes = QtWidgets.QHBoxLayout()
-        layer_sizes.setContentsMargins(5, 0, 0, 0)
-        layer_sizes.setAlignment(QtCore.Qt.AlignLeft)
-        n = 0
-        for n, view_size in enumerate(self.pd_sizes, start=1):
-            if n % self.count_in_row == 0:
-                layer_widths.addLayout(layer_sizes)
-                layer_sizes = QtWidgets.QHBoxLayout()
-                layer_sizes.setContentsMargins(5, 0, 0, 0)
-                layer_sizes.setAlignment(QtCore.Qt.AlignLeft)
-            layer_sizes.addWidget(SizeFrame(pd_size=view_size, shoes_frame=shoes_frame))
-        if n and n % self.count_in_row != 0:
-            layer_widths.addSpacing(5)
-            layer_widths.addLayout(layer_sizes)
+        for view_size in self.pd_sizes:
+            layer_widths.addWidget(SizeFrame(pd_size=view_size, shoes_frame=shoes_frame))
+
 
         self.setLayout(layer_widths)
 

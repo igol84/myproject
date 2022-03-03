@@ -1,14 +1,13 @@
-from PySide6 import QtWidgets
-from PySide6.QtWidgets import QWidget, QApplication
+from prjstore.ui.pyside.utils.qt_core import *
 
-from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
-from prjstore.ui.pyside.sale_registration.components.shoes_comps import ColorFrame, SizeFrame, ShoesDescFrame
-from prjstore.ui.pyside.sale_registration.components.shoes_comps.shoes_frame_interface import ShoesFrameInterface
-from prjstore.ui.pyside.sale_registration.schemas import ViewShoes, ViewSize, ViewWidth, ViewColor
+from prjstore.ui.pyside.product_price_editor.components.abstract_product import AbstractItem
+from prjstore.ui.pyside.product_price_editor.components.shoes_comps import ColorFrame, SizeFrame, ShoesDescFrame
+from prjstore.ui.pyside.product_price_editor.components.shoes_comps.shoes_frame_interface import ShoesFrameInterface
+from prjstore.ui.pyside.product_price_editor.schemas import ViewShoes, ViewSize, ViewWidth, ViewColor
 from prjstore.ui.pyside.utils.widgets import QHLine, ItemFrame
 
 
-class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
+class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
     pr_colors: list[ViewColor]
     __selected_size_frame: SizeFrame = None
 
@@ -19,14 +18,14 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
         self.pr_name = item_pd.name
         self.pr_colors = item_pd.colors
 
-        layer = QtWidgets.QVBoxLayout()
+        layer = QVBoxLayout()
         layer.setContentsMargins(0, 0, 0, 0)
-        self.layer_desc = QtWidgets.QVBoxLayout()
+        self.layer_desc = QVBoxLayout()
         self.layer_desc.setContentsMargins(0, 0, 0, 0)
         self.desc_frame = ShoesDescFrame(parent_form=parent, shoes_frame=self)
         self.layer_desc.addWidget(self.desc_frame)
         layer.addLayout(self.layer_desc)
-        self.layer_colors = QtWidgets.QVBoxLayout()
+        self.layer_colors = QVBoxLayout()
 
         for n, view_color in enumerate(self.pr_colors):
             if n:
@@ -42,17 +41,13 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
 
     def set_selected_size_frame(self, size_frame: SizeFrame) -> None:
         if self.__selected_size_frame:
-            self.__selected_size_frame.set_default_style()
-            self.__selected_size_frame.selected = False
+            self.__selected_size_frame.set_selected(False)
         self.pr_id = size_frame.pr_id
         self.__selected_size_frame = size_frame
-        self.__selected_size_frame.set_selected_style()
-        self.__selected_size_frame.selected = True
+        self.__selected_size_frame.set_selected()
         price_text = self.__selected_size_frame.pr_price
         self.desc_frame.price_line_edit.setText(f'{price_text:g}')
         self.desc_frame.price_line_edit.show()
-        self.desc_frame.price_line_edit.setFocus()
-        self.desc_frame.price_line_edit.selectAll()
         self.desc_frame.btn_plus.show()
 
     def del_selected_size_frame(self) -> None:
@@ -62,9 +57,6 @@ class ShoesFrame(ItemFrame, AbstractSoldItem, ShoesFrameInterface):
 
     def get_sale_price(self) -> float:
         return self.desc_frame.price_line_edit.text()
-
-    def get_sale_qty(self) -> int:
-        return 1
 
     def hide_elements(self):
         self.desc_frame.price_line_edit.hide()

@@ -63,4 +63,4 @@ if __name__ == '__main__':
     frame = ColorFrame(pd_color=view_color)
     v_box.addWidget(frame)
     win.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
