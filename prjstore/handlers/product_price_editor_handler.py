@@ -1,4 +1,5 @@
-from prjstore.db import API_DB, schemas as db_schemas
+from prjstore.db import API_DB
+from prjstore.db.schemas.handler_product_price_editor import ModelProduct
 from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.item import Item
 from prjstore.domain.store import Store
@@ -32,9 +33,10 @@ class ProductPriceEditor:
         products: dict[int: Item] = self.store.items
         return create_product_schemas_by_items(products)
 
-    def save_data(self, data: db_schemas.header_receiving_the_items.ModelProduct):
-        data.store_id = self.__store.id
-        return self.__db.header_receiving_the_items.receiving_the_items(data)
+    def edit_product(self, pr_id, price) -> float:
+        data = ModelProduct(id=pr_id, price_for_sale=price)
+        new: ModelProduct = self.__db.handler_product_price_editor.edit_product(data)
+        return new.price_for_sale
 
     def find_shoes(self, keys):
         products: dict[str, AbstractProduct] = self.__store.pc.search(keys[0])

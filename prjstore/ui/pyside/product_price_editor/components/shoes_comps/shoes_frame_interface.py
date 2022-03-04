@@ -14,3 +14,6 @@ class ShoesFrameInterface:
 
     def del_selected_size_frame(self) -> None:
         ...
+
+    def edit_size_frame(self, size_frame) -> None:
+        ...

@@ -8,8 +8,9 @@ from prjstore.db.api.components.sale import API_Sale
 from prjstore.db.api.components.sale_line_item import API_SaleLineItem
 from prjstore.db.api.components.place import API_Place
 from prjstore.db.api.components.store import API_Store
-from prjstore.db.api.components.header_sale_registration import API_HeaderSaleRegistration
-from prjstore.db.api.components.header_receiving_the_items import API_HeaderReceivingTheItems
+from prjstore.db.api.components.handler_sale_registration import API_HandlerSaleRegistration
+from prjstore.db.api.components.handler_receiving_the_items import API_HandlerReceivingTheItems
+from prjstore.db.api.components.handler_product_price_editor import API_HandlerProductPriceEditor
 
 
 class API_DB:
@@ -23,8 +24,9 @@ class API_DB:
         self.place = API_Place(self.headers)
         self.sale_line_item = API_SaleLineItem(self.headers)
         self.store = API_Store(self.headers)
-        self.header_sale_registration = API_HeaderSaleRegistration(self.headers)
-        self.header_receiving_the_items = API_HeaderReceivingTheItems(self.headers)
+        self.header_sale_registration = API_HandlerSaleRegistration(self.headers)
+        self.header_receiving_the_items = API_HandlerReceivingTheItems(self.headers)
+        self.handler_product_price_editor = API_HandlerProductPriceEditor(self.headers)
 
 
 if __name__ == '__main__':

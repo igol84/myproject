@@ -1,3 +1,5 @@
+import datetime
+
 from prjstore.db import API_DB, schemas
 from prjstore.domain.item import Item
 
@@ -22,7 +24,7 @@ class TestSeller:
 
     @classmethod
     def setup_class(cls):
-        pd_item = schemas.item.CreateItem(prod_id=2, store_id=1, qty=10, buy_price=10.5)
+        pd_item = schemas.item.CreateItem(prod_id=2, store_id=1, qty=10, buy_price=10.5, date_buy=datetime.date.today())
         new_item = db.item.create(pd_item)
         cls.obj_id = new_item.id
 
@@ -33,7 +35,8 @@ class TestSeller:
         assert item.buy_price.amount == 10.5
 
     def test_case02_update(self):
-        pd_item = schemas.item.UpdateItem(id=self.obj_id, prod_id=3, store_id=1, qty=12, buy_price=11.5)
+        pd_item = schemas.item.UpdateItem(id=self.obj_id, prod_id=3, store_id=1, qty=12, buy_price=11.5,
+                                          date_buy=datetime.date.today())
         item = Item.create_from_schema(db.item.update(pd_item))
         assert item.product.prod_id == '3'
         assert item.qty == 12

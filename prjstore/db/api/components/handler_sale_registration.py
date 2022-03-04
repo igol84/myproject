@@ -1,11 +1,11 @@
 import requests
 
 from prjstore.db.api import settings
-from prjstore.db.schemas import header_sale_registration as schema
+from prjstore.db.schemas import handler_sale_registration as schema
 
 
-class API_HeaderSaleRegistration:
-    prefix = 'header_sale_registration'
+class API_HandlerSaleRegistration:
+    prefix = 'handler_sale_registration'
 
     def __init__(self, headers):
         self.headers = headers

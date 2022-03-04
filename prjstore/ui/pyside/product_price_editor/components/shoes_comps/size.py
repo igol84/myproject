@@ -91,7 +91,8 @@ class SizeFrame(ItemFrame):
 
     def on_clicked(self):
         self.set_selected(False)
-        print(self.pr_id, self.line_edit_price.text())
+        if self.shoes_frame:
+            self.shoes_frame.edit_size_frame(self)
 
     def set_selected(self, flag: bool = True):
         if flag:

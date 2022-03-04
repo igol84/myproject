@@ -117,14 +117,14 @@ class ShoesDescFrame(QFrame):
 class LabelItemDescription(QLabel):
     def paintEvent(self, event):
         self.setToolTip(self.text())
-        self.setFixedSize(self.parent().width() - 100, 21)
+        self.setFixedSize(self.parent().width() - 150, 21)
         painter = QtGui.QPainter(self)
         pen = painter.pen()
         pen.setColor(QtGui.QColor(self.parent().parent_shoes_frame.color_text))
         painter.setPen(pen)
         metrics = QFontMetrics(self.font())
         pixels_text = metrics.elidedText(self.text(), QtCore.Qt.ElideRight,
-                                         self.parent().parent_shoes_frame.width() - 100)
+                                         self.parent().parent_shoes_frame.width() - 150)
         self.resize(metrics.size(0, pixels_text).width(), self.parent().parent_shoes_frame.height_)
         painter.drawText(self.rect(), self.alignment(), pixels_text)
 

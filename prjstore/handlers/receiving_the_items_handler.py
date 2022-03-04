@@ -55,7 +55,7 @@ class ReceivingTheItemsHandler:
                     pd_products[key].module.colors.add(color)
         return [pr for pr in pd_products.values()]
 
-    def save_data(self, data: db_schemas.header_receiving_the_items.ModelProduct):
+    def save_data(self, data: db_schemas.handler_receiving_the_items.ModelProduct):
         data.store_id = self.__store.id
         return self.__db.header_receiving_the_items.receiving_the_items(data)
 

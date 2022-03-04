@@ -1,7 +1,7 @@
 import sys
 
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
-from prjstore.ui.pyside.qt_utils import clearLayout
+from prjstore.ui.pyside.utils.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
 from prjstore.ui.pyside.sale_registration.components.sale import Sale_Frame

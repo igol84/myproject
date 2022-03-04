@@ -31,7 +31,7 @@ class DBSaveData(QRunnable):
         error = Signal(str)
         complete = Signal()
 
-    def __init__(self, handler: ReceivingTheItemsHandler, data: schemas.header_receiving_the_items.ModelProduct):
+    def __init__(self, handler: ReceivingTheItemsHandler, data: schemas.handler_receiving_the_items.ModelProduct):
         super().__init__()
         self.handler = handler
         self.data = data

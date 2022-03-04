@@ -3,6 +3,7 @@ import sys
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.product_price_editor.components import FrameProductFactory
 from prjstore.ui.pyside.product_price_editor.components.abstract_product import AbstractItem
+from prjstore.ui.pyside.product_price_editor.components.shoes_comps import SizeFrame
 from prjstore.ui.pyside.product_price_editor.schemas import *
 from prjstore.ui.pyside.product_price_editor.thread import *
 from prjstore.ui.pyside.product_price_editor.ui_product_price_edit import UI_Frame
@@ -58,6 +59,12 @@ class SaleForm(QWidget):
             self.layout.addWidget(item_frame)
         self.ui.product_frame.setLayout(self.layout)
 
+    def on_edit_size(self, size_frame: SizeFrame):
+        pr_id = size_frame.pr_id
+        price = size_frame.line_edit_price.text()
+
+        new_price = self.handler.edit_product(pr_id, price)
+        size_frame.label_price.setText(f'{new_price:.2f}' + size_frame.label_price.text()[-1])
 
 
 if __name__ == "__main__":

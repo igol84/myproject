@@ -1,9 +1,8 @@
-from prjstore.ui.pyside.utils.qt_core import *
-
 from prjstore.ui.pyside.product_price_editor.components.abstract_product import AbstractItem
 from prjstore.ui.pyside.product_price_editor.components.shoes_comps import ColorFrame, SizeFrame, ShoesDescFrame
 from prjstore.ui.pyside.product_price_editor.components.shoes_comps.shoes_frame_interface import ShoesFrameInterface
 from prjstore.ui.pyside.product_price_editor.schemas import ViewShoes, ViewSize, ViewWidth, ViewColor
+from prjstore.ui.pyside.utils.qt_core import *
 from prjstore.ui.pyside.utils.widgets import QHLine, ItemFrame
 
 
@@ -77,6 +76,9 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
         return self.__parent_form
 
     parent_form = property(__get_parent_form)
+
+    def edit_size_frame(self, size_frame: SizeFrame) -> None:
+        self.parent_form.on_edit_size(size_frame)
 
 
 if __name__ == "__main__":

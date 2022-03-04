@@ -1,4 +1,4 @@
-from prjstore.db.schemas import header_receiving_the_items as db_schemas
+from prjstore.db.schemas import handler_receiving_the_items as db_schemas
 from prjstore.handlers.receiving_the_items_handler import ReceivingTheItemsHandler
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.receiving_the_items.schemas import *

@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import validate_arguments
 
 from prjstore.db import API_DB, schemas
-from prjstore.db.schemas.header_sale_registration import SaleLineItemKeys, PutItemFromOldSale
+from prjstore.db.schemas.handler_sale_registration import SaleLineItemKeys, PutItemFromOldSale
 from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
 from prjstore.domain.store import Store
@@ -153,7 +153,7 @@ class SaleRegistrationHandler:
             sli_schema = schemas.sale_line_item.SaleLineItem
             pd_sli_old = sli_schema(sale_id=self.sale.id, item_id=sli.item.id, sale_price=old_price, qty=sli.qty)
             pd_sli_new = sli_schema(sale_id=self.sale.id, item_id=sli.item.id, sale_price=new_price, qty=sli.qty)
-            pd_data = schemas.header_sale_registration.EditSLIPrice(old_sli=pd_sli_old, new_sli=pd_sli_new)
+            pd_data = schemas.handler_sale_registration.EditSLIPrice(old_sli=pd_sli_old, new_sli=pd_sli_new)
             self.__db.header_sale_registration.edit_sli_price(data=pd_data)
             self.sale.edit_sale_price(sli, new_price)
         self.__sale = tmp_sale
