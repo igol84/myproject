@@ -14,7 +14,7 @@ from prjstore.ui.pyside.utils.qt_core import *
 class SaleForm(QWidget):
     products: list[ModelProduct]
     selected_item_widget: AbstractItem
-    handler: ProductPriceEditor
+    handler: ProductPriceEditorHandler
 
     def __init__(self, parent=None, test=False, user_data=None, list_pd_product=None, db=None):
         super().__init__()
@@ -29,19 +29,20 @@ class SaleForm(QWidget):
         self.resize(500, 600)
         self.ui = UI_Frame()
         self.ui.setup_ui(self)
+        self.selected_size_frame: SizeFrame = None
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
         if not self.test:
             db_connector = DbConnect(self.user_data, self.db)
-            db_connector.signals.error.connect(self._connection_error)
+            db_connector.signals.error.connect(self.__connection_error)
             db_connector.signals.result.connect(self.connected_complete)
             self.thread_pool.start(db_connector)
 
-    def _connection_error(self, err: str):
+    def __connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
         sys.exit(app.exec())
 
-    def connected_complete(self, handler: ProductPriceEditor):
+    def connected_complete(self, handler: ProductPriceEditorHandler):
         self.handler = handler
         self.products = self.handler.get_store_products()
 
@@ -60,11 +61,22 @@ class SaleForm(QWidget):
         self.ui.product_frame.setLayout(self.layout)
 
     def on_edit_size(self, size_frame: SizeFrame):
+        self.selected_size_frame = size_frame
         pr_id = size_frame.pr_id
+        size = size_frame.line_edit_size.text()
         price = size_frame.line_edit_price.text()
+        pd_size = ModelProductForm(id=pr_id, size=size, price_for_sale=price)
+        self.load_widget.show()
+        db_create_sale = DBEditSize(self.handler, pd_size)
+        db_create_sale.signals.error.connect(self.__connection_error)
+        db_create_sale.signals.result.connect(self.__update_complete)
+        self.thread_pool.start(db_create_sale)
 
-        new_price = self.handler.edit_product(pr_id, price)
-        size_frame.label_price.setText(f'{new_price:.2f}' + size_frame.label_price.text()[-1])
+    def __update_complete(self, pd_size: ModelProductForm):
+        currency = self.selected_size_frame.label_price.text()[-1]
+        self.selected_size_frame.label_size.setText(f'{pd_size.size:g}')
+        self.selected_size_frame.label_price.setText(f'{pd_size.price_for_sale:.2f}' + currency)
+        self.load_widget.hide()
 
 
 if __name__ == "__main__":

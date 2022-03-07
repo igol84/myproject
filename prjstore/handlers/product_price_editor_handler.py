@@ -7,7 +7,7 @@ from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_s
 from prjstore.ui.pyside.product_price_editor.schemas import create_product_schemas_by_items, ViewProduct
 
 
-class ProductPriceEditor:
+class ProductPriceEditorHandler:
     __db: API_DB
     __store: Store
 
@@ -33,10 +33,9 @@ class ProductPriceEditor:
         products: dict[int: Item] = self.store.items
         return create_product_schemas_by_items(products)
 
-    def edit_product(self, pr_id, price) -> float:
-        data = ModelProduct(id=pr_id, price_for_sale=price)
-        new: ModelProduct = self.__db.handler_product_price_editor.edit_product(data)
-        return new.price_for_sale
+    def edit_product(self, data: ModelProduct) -> float:
+        new_data: ModelProduct = self.__db.handler_product_price_editor.edit_product(data)
+        return new_data
 
     def find_shoes(self, keys):
         products: dict[str, AbstractProduct] = self.__store.pc.search(keys[0])

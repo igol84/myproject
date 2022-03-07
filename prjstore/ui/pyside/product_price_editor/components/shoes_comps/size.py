@@ -1,6 +1,5 @@
 from prjstore.ui.pyside.product_price_editor.components.shoes_comps.shoes_frame_interface import ShoesFrameInterface
 from prjstore.ui.pyside.product_price_editor.schemas import ViewSize
-from prjstore.ui.pyside.utils.format_price import format_price
 from prjstore.ui.pyside.utils.qt_core import *
 from prjstore.ui.pyside.utils.widgets import ItemFrame
 
@@ -30,6 +29,14 @@ class SizeFrame(ItemFrame):
         self.label_size.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.label_size.setStyleSheet(f'font-size: {self.font_size}pt;')
 
+        self.line_edit_size = QLineEdit(f'{self.pr_size:g}')
+        self.line_edit_size.setStyleSheet(f'background-color: #EEE; color: #000')
+        self.line_edit_size.hide()
+        self.line_edit_size.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.line_edit_size.setFixedWidth(50)
+        validator_reg = QRegularExpressionValidator(QRegularExpression("[0-9]{1,7}[.]*[0-9]{0,2}"))
+        self.line_edit_size.setValidator(validator_reg)
+
         self.label_qty = QLabel(f'{self.pr_qty}')
         self.label_qty.setContentsMargins(0, 0, 10, 0)
         self.label_qty.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -45,7 +52,7 @@ class SizeFrame(ItemFrame):
         self.label_price.setFont(font)
         self.label_price.setAlignment(Qt.AlignRight)
 
-        self.line_edit_price = QLineEdit(format_price(self.pr_price))
+        self.line_edit_price = QLineEdit(f'{self.pr_price:g}')
         self.line_edit_price.setStyleSheet(f'background-color: #EEE; color: #000')
         self.line_edit_price.hide()
         self.line_edit_price.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -59,6 +66,7 @@ class SizeFrame(ItemFrame):
         self.btn.clicked.connect(self.on_clicked)
 
         layer.addWidget(self.label_size)
+        layer.addWidget(self.line_edit_size)
         layer.addWidget(self.label_qty)
         layer.addSpacerItem(QSpacerItem(0, 10, QSizePolicy.Expanding, QSizePolicy.Expanding))
         layer.addWidget(self.label_price)
@@ -98,6 +106,8 @@ class SizeFrame(ItemFrame):
         if flag:
             self.selected = True
             self.label_price.hide()
+            self.label_size.hide()
+            self.line_edit_size.show()
             self.line_edit_price.show()
             self.line_edit_price.setFocus()
             self.line_edit_price.selectAll()
@@ -106,6 +116,8 @@ class SizeFrame(ItemFrame):
         else:
             self.selected = False
             self.label_price.show()
+            self.label_size.show()
+            self.line_edit_size.hide()
             self.line_edit_price.hide()
             self.btn.hide()
             self.set_default_style()

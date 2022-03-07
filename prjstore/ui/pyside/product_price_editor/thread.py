@@ -1,13 +1,14 @@
 from PySide6.QtCore import Signal, QObject, QRunnable, Slot
 
 from prjstore.db import API_DB
-from prjstore.handlers.product_price_editor_handler import ProductPriceEditor
+from prjstore.db.schemas.handler_product_price_editor import ModelProduct as ModelProductForm
+from prjstore.handlers.product_price_editor_handler import ProductPriceEditorHandler
 
 
 class DbConnect(QRunnable):
     class Signals(QObject):
         error = Signal(str)
-        result = Signal(ProductPriceEditor)
+        result = Signal(ProductPriceEditorHandler)
 
     def __init__(self, user_data, db: API_DB = None):
         super().__init__()
@@ -19,7 +20,7 @@ class DbConnect(QRunnable):
     def run(self):
         try:
             db = self.db if self.db else API_DB(self.user_data)
-            handler = ProductPriceEditor(db)
+            handler = ProductPriceEditorHandler(db)
         except OSError:
             self.signals.error.emit('Connection Error.')
         else:
@@ -47,3 +48,24 @@ class DBGetSales(QRunnable):
             self.signals.error.emit('Connection Error.')
         else:
             self.signals.result.emit()
+
+
+class DBEditSize(QRunnable):
+    class Signals(QObject):
+        error = Signal(str)
+        result = Signal(ModelProductForm)
+
+    def __init__(self, handler: ProductPriceEditorHandler, pd_size: ModelProductForm):
+        super().__init__()
+        self.handler = handler
+        self.pd_size = pd_size
+        self.signals = self.Signals()
+
+    @Slot()
+    def run(self):
+        try:
+            pd_size: ModelProductForm = self.handler.edit_product(self.pd_size)
+        except OSError:
+            self.signals.error.emit('Нет подключения к интернету.')
+        else:
+            self.signals.result.emit(pd_size)
