@@ -1,7 +1,6 @@
-from prjstore.ui.pyside.utils.qt_core import *
-
 from prjstore.ui.pyside.product_price_editor.components.shoes_comps import SizeFrame
 from prjstore.ui.pyside.product_price_editor.schemas import ViewSize, ViewWidth
+from prjstore.ui.pyside.utils.qt_core import *
 
 
 class WidthFrame(QFrame):
@@ -10,21 +9,22 @@ class WidthFrame(QFrame):
 
     def __init__(self, pd_width: ViewWidth = '', shoes_frame=None):
         super().__init__()
-        self.pr_width = pd_width.width
-        self.pd_sizes = pd_width.sizes
+        self.widgets_of_sizes: dict[str, SizeFrame] = {}
+        pr_width = pd_width.width
+        pd_sizes = pd_width.sizes
         self.adjustSize()
-        # self.setStyleSheet(f"background-color: #808000")
         layer_widths = QVBoxLayout()
         layer_widths.setContentsMargins(5, 0, 5, 5)
 
-        if self.pr_width:
-            label_width = QLabel(f'{self.pr_width}')
+        if pr_width:
+            label_width = QLabel(f'{pr_width}')
             label_width.setStyleSheet("font-size: 12pt;")
             layer_widths.addWidget(label_width)
 
-        for view_size in self.pd_sizes:
-            layer_widths.addWidget(SizeFrame(pd_size=view_size, shoes_frame=shoes_frame))
-
+        for view_size in pd_sizes:
+            size_frame = SizeFrame(pd_size=view_size, shoes_frame=shoes_frame)
+            self.widgets_of_sizes[view_size.prod_id] = size_frame
+            layer_widths.addWidget(size_frame)
 
         self.setLayout(layer_widths)
 

@@ -5,31 +5,31 @@ from prjstore.ui.pyside.utils.widgets import ItemFrame
 
 
 class SizeFrame(ItemFrame):
-    pr_size: float
+    __pr_price: float
     height_ = 30
 
     def __init__(self, pd_size: ViewSize, shoes_frame=None):
         super().__init__()
         self.shoes_frame: ShoesFrameInterface = shoes_frame
         self.pr_id = pd_size.prod_id
-        self.pr_size = pd_size.size
-        self.pr_price = pd_size.price
+        self.__pr_size = pd_size.size
+        self.__pr_price = pd_size.price
         self.pr_price_format = pd_size.price_format
         self.pr_qty = pd_size.qty
-        self.selected = False
+        self.__selected = False
         self.setCursor(Qt.PointingHandCursor)
         self.setFixedHeight(self.height_)
         self.setMinimumWidth(260)
 
         layer = QHBoxLayout()
         layer.setContentsMargins(4, 4, 4, 4)
-        self.label_size = QLabel(f'{self.pr_size:g}')
+        self.label_size = QLabel(f'{self.__pr_size:g}')
         self.label_size.setContentsMargins(5, 0, 5, 0)
         self.label_size.setFixedWidth(50)
         self.label_size.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.label_size.setStyleSheet(f'font-size: {self.font_size}pt;')
 
-        self.line_edit_size = QLineEdit(f'{self.pr_size:g}')
+        self.line_edit_size = QLineEdit(f'{self.__pr_size:g}')
         self.line_edit_size.setStyleSheet(f'background-color: #EEE; color: #000')
         self.line_edit_size.hide()
         self.line_edit_size.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -52,7 +52,7 @@ class SizeFrame(ItemFrame):
         self.label_price.setFont(font)
         self.label_price.setAlignment(Qt.AlignRight)
 
-        self.line_edit_price = QLineEdit(f'{self.pr_price:g}')
+        self.line_edit_price = QLineEdit(f'{self.__pr_price:g}')
         self.line_edit_price.setStyleSheet(f'background-color: #EEE; color: #000')
         self.line_edit_price.hide()
         self.line_edit_price.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -74,6 +74,26 @@ class SizeFrame(ItemFrame):
         layer.addWidget(self.btn)
         self.set_default_style()
         self.setLayout(layer)
+
+    def get_price(self) -> float:
+        return self.__pr_price
+
+    def set_price(self, price: float) -> None:
+        currency = self.label_price.text()[-1]
+        self.label_price.setText(f'{price:.2f}' + currency)
+        self.line_edit_price.setText(f'{price:g}')
+        self.__pr_price = price
+
+    price = property(get_price, set_price)
+
+    def get_size(self) -> float:
+        return self.__pr_size
+
+    def set_size(self, size: float) -> None:
+        self.label_size.setText(f'{size:g}')
+        self.__pr_size = size
+
+    size = property(get_size, set_size)
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         self.set_selected()
@@ -98,13 +118,16 @@ class SizeFrame(ItemFrame):
         self.setStyleSheet(f'background-color: {self.current_color_bg}; color: {self.current_color_text}')
 
     def on_clicked(self):
-        self.set_selected(False)
+        self.selected = False
         if self.shoes_frame:
             self.shoes_frame.edit_size_frame(self)
 
-    def set_selected(self, flag: bool = True):
+    def get_selected(self) -> bool:
+        return self.__selected
+
+    def set_selected(self, flag: bool = True) -> None:
         if flag:
-            self.selected = True
+            self.__selected = True
             self.label_price.hide()
             self.label_size.hide()
             self.line_edit_size.show()
@@ -114,13 +137,15 @@ class SizeFrame(ItemFrame):
             self.btn.show()
             self.set_selected_style()
         else:
-            self.selected = False
+            self.__selected = False
             self.label_price.show()
             self.label_size.show()
             self.line_edit_size.hide()
             self.line_edit_price.hide()
             self.btn.hide()
             self.set_default_style()
+
+    selected = property(get_selected, set_selected)
 
 
 if __name__ == '__main__':

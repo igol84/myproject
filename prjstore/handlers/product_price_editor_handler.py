@@ -1,5 +1,5 @@
 from prjstore.db import API_DB
-from prjstore.db.schemas.handler_product_price_editor import ModelProduct
+from prjstore.db.schemas.handler_product_price_editor import *
 from prjstore.domain.abstract_product import AbstractProduct
 from prjstore.domain.item import Item
 from prjstore.domain.store import Store
@@ -36,6 +36,11 @@ class ProductPriceEditorHandler:
     def edit_product(self, data: ModelProduct) -> float:
         new_data: ModelProduct = self.__db.handler_product_price_editor.edit_product(data)
         return new_data
+
+    def edit_shoes(self, data: ModelShoes) -> float:
+        new_data: ModelShoes = self.__db.handler_product_price_editor.edit_shoes(data)
+        return new_data
+
 
     def find_shoes(self, keys):
         products: dict[str, AbstractProduct] = self.__store.pc.search(keys[0])

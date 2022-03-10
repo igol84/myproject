@@ -6,27 +6,28 @@ from prjstore.ui.pyside.product_price_editor.components.shoes_comps.shoes_frame_
 
 
 class ShoesDescFrame(QFrame):
-    pr_name: str
-    pr_price: float
-
     def __init__(self, parent_form=None, shoes_frame=None):
         super().__init__()
+        self.__selected: bool = False
         self.setCursor(QtCore.Qt.PointingHandCursor)
         self.setFrameStyle(QFrame.NoFrame)
         self.parent_form = parent_form
         self.parent_shoes_frame = shoes_frame
-        self.pr_name = shoes_frame.pr_name
         self.setFixedHeight(30)
         layer = QtWidgets.QVBoxLayout()
         layer.setContentsMargins(0, 0, 0, 0)
         self.layer_desc = QtWidgets.QVBoxLayout()
         self.layer_desc.setContentsMargins(3, 3, 3, 3)
-        self.label_item_description = LabelItemDescription(text=self.pr_name)
+        self.label_item_description = LabelItemDescription(text=shoes_frame.pr_name)
         self.label_item_description.setFont(
             QFont(self.parent_shoes_frame.color_text, self.parent_shoes_frame.font_size))
         self.layer_desc.addWidget(self.label_item_description)
         layer.addLayout(self.layer_desc)
-        self.price_line_edit = LineEditPrice(parent=self, text='0')
+
+        self.line_edit_desc = LineEditDesc(parent=self, text=shoes_frame.pr_name)
+        self.line_edit_desc.hide()
+
+        self.price_line_edit = LineEditPrice(parent=self)
         self.price_line_edit.returnPressed.connect(self.on_pressed_price_line_edit)
         self.price_line_edit.hide()
         self.btn_plus = QPushButton(parent=self, text='edit')
@@ -41,7 +42,14 @@ class ShoesDescFrame(QFrame):
     shoes_frame = property(__get_shoes_frame)
 
     def set_price(self, price: float):
-        self.price_line_edit.text(f'{price:g}')
+        self.price_line_edit.setText(f'{price:g}')
+
+    def set_desc(self, name: str):
+        self.label_item_description.setText(name)
+
+    def set_data(self, name: str, price: float):
+        self.set_desc(name)
+        self.set_price(price)
 
     def paintEvent(self, event: QtGui.QPaintEvent) -> None:
         painter = QtGui.QPainter(self)
@@ -61,6 +69,7 @@ class ShoesDescFrame(QFrame):
         self.price_line_edit.move(self.width() - 143, 4)
         self.btn_plus.move(self.width() - self.btn_plus.width() - 3, 3)
         painter.end()
+        self.line_edit_desc.setFixedWidth(self.width() - 150)
         return QFrame.paintEvent(self, event)
 
     # on click on this widget
@@ -109,12 +118,33 @@ class ShoesDescFrame(QFrame):
         self.update()
 
     def on_push_button_edit(self):
-        if self.parent_form:
-            print('clik!')
+        if self.parent_shoes_frame:
+            self.parent_shoes_frame.on_press_edit()
         self.update()
+
+    def get_selected(self) -> bool:
+        return self.__selected
+
+    def set_selected(self, flag: bool = True) -> None:
+        self.__selected = flag
+        if flag:
+            self.price_line_edit.show()
+            self.btn_plus.show()
+            self.label_item_description.hide()
+            self.line_edit_desc.show()
+        else:
+            self.price_line_edit.hide()
+            self.btn_plus.hide()
+            self.label_item_description.show()
+            self.line_edit_desc.hide()
+
+    selected = property(get_selected, set_selected)
 
 
 class LabelItemDescription(QLabel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def paintEvent(self, event):
         self.setToolTip(self.text())
         self.setFixedSize(self.parent().width() - 150, 21)
@@ -129,9 +159,19 @@ class LabelItemDescription(QLabel):
         painter.drawText(self.rect(), self.alignment(), pixels_text)
 
 
+class LineEditDesc(QLineEdit):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        font = self.font()
+        font.setPointSize(self.parent().parent_shoes_frame.font_size)
+        self.setFont(font)
+        self.setFixedHeight(23)
+        self.move(4, 4)
+
+
 class LineEditPrice(QLineEdit):
-    def __init__(self, text, parent):
-        super().__init__(text, parent)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         font = self.font()
         font.setPointSize(self.parent().parent_shoes_frame.font_size)
         self.setFont(font)

@@ -2,6 +2,7 @@ from PySide6.QtCore import Signal, QObject, QRunnable, Slot
 
 from prjstore.db import API_DB
 from prjstore.db.schemas.handler_product_price_editor import ModelProduct as ModelProductForm
+from prjstore.db.schemas.handler_product_price_editor import ModelShoes as ModelShoesForm
 from prjstore.handlers.product_price_editor_handler import ProductPriceEditorHandler
 
 
@@ -69,3 +70,24 @@ class DBEditSize(QRunnable):
             self.signals.error.emit('Нет подключения к интернету.')
         else:
             self.signals.result.emit(pd_size)
+
+
+class DBEditShoes(QRunnable):
+    class Signals(QObject):
+        error = Signal(str)
+        result = Signal(ModelShoesForm)
+
+    def __init__(self, handler: ProductPriceEditorHandler, pd_shoes: ModelShoesForm):
+        super().__init__()
+        self.handler = handler
+        self.pd_shoes = pd_shoes
+        self.signals = self.Signals()
+
+    @Slot()
+    def run(self):
+        try:
+            pd_shoes: ModelProductForm = self.handler.edit_shoes(self.pd_shoes)
+        except OSError:
+            self.signals.error.emit('Нет подключения к интернету.')
+        else:
+            self.signals.result.emit(pd_shoes)
