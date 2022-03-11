@@ -102,7 +102,7 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
 
     def on_color_edit(self, color_frame):
         if self.parent_form:
-            self.parent_form.on_color_edit(color_frame)
+            self.parent_form.on_color_edit(self.pr_name, color_frame)
 
     def set_price_of_all_sizes(self, price):
         for color in self.widgets_color.values():

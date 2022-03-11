@@ -3,6 +3,7 @@ from PySide6.QtCore import Signal, QObject, QRunnable, Slot
 from prjstore.db import API_DB
 from prjstore.db.schemas.handler_product_price_editor import ModelProduct as ModelProductForm
 from prjstore.db.schemas.handler_product_price_editor import ModelShoes as ModelShoesForm
+from prjstore.db.schemas.handler_product_price_editor import ModelColor as ModelColorForm
 from prjstore.handlers.product_price_editor_handler import ProductPriceEditorHandler
 
 
@@ -87,6 +88,27 @@ class DBEditShoes(QRunnable):
     def run(self):
         try:
             pd_shoes: ModelProductForm = self.handler.edit_shoes(self.pd_shoes)
+        except OSError:
+            self.signals.error.emit('Нет подключения к интернету.')
+        else:
+            self.signals.result.emit(pd_shoes)
+
+
+class DBEditColor(QRunnable):
+    class Signals(QObject):
+        error = Signal(str)
+        result = Signal(ModelColorForm)
+
+    def __init__(self, handler: ProductPriceEditorHandler, pd_color: ModelShoesForm):
+        super().__init__()
+        self.handler = handler
+        self.pd_color = pd_color
+        self.signals = self.Signals()
+
+    @Slot()
+    def run(self):
+        try:
+            pd_shoes: ModelColorForm = self.handler.edit_color(self.pd_color)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:

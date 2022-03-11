@@ -86,18 +86,23 @@ class SaleForm(QWidget):
             self.selected_shoes_frame.selected_size_frame.set_selected(False)
         self.load_widget.hide()
 
-    def on_color_edit(self, color_frame: ColorFrame):
+    def on_color_edit(self, pr_name:str, color_frame: ColorFrame):
         self.selected_color_frame = color_frame
         color = color_frame.color
         new_color = color_frame.header.line_edit_color.text()
         price = color_frame.header.line_edit_price.text()
         price = price if price else None
-        ps_shoes = ModelColor(color=color, new_color=new_color, price_for_sale=price)
+        ps_color = ModelColor(name=pr_name, color=color, new_color=new_color, price_for_sale=price)
         self.load_widget.show()
-        self.__update_color_complete(ps_shoes)
+        db_edit_color = DBEditColor(self.handler, ps_color)
+        db_edit_color.signals.error.connect(self.__connection_error)
+        db_edit_color.signals.result.connect(self.__update_color_complete)
+        self.thread_pool.start(db_edit_color)
 
     def __update_color_complete(self, pd_color: ModelColor):
         self.selected_color_frame.color = pd_color.new_color
+        if pd_color.price_for_sale is not None:
+            self.selected_color_frame.set_price_of_all_sizes(pd_color.price_for_sale)
         self.load_widget.hide()
 
     def on_edit_size(self, size_frame: SizeFrame):

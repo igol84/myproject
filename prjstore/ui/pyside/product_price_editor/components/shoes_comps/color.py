@@ -72,6 +72,12 @@ class ColorFrame(QFrame):
         self.selected = False
         self.shoes_frame.on_color_edit(self)
 
+    def set_price_of_all_sizes(self, new_price: float):
+        for width in self.frames_of_width.values():
+            for size in width.widgets_of_sizes.values():
+                size.price = new_price
+
+
 
 class HeaderOfColor(QWidget):
     def __init__(self, text: str = '', *args, **kwargs):

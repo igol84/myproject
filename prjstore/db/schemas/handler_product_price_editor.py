@@ -10,6 +10,7 @@ class ModelProduct(BaseModel):
 
 
 class ModelColor(BaseModel):
+    name: str
     color: str
     new_color: str = None
     price_for_sale: float = None

@@ -33,14 +33,17 @@ class ProductPriceEditorHandler:
         products: dict[int: Item] = self.store.items
         return create_product_schemas_by_items(products)
 
-    def edit_product(self, data: ModelProduct) -> float:
+    def edit_product(self, data: ModelProduct) -> ModelProduct:
         new_data: ModelProduct = self.__db.handler_product_price_editor.edit_product(data)
         return new_data
 
-    def edit_shoes(self, data: ModelShoes) -> float:
+    def edit_shoes(self, data: ModelShoes) -> ModelShoes:
         new_data: ModelShoes = self.__db.handler_product_price_editor.edit_shoes(data)
         return new_data
 
+    def edit_color(self, data: ModelColor) -> ModelColor:
+        new_data: ModelShoes = self.__db.handler_product_price_editor.edit_color(data)
+        return new_data
 
     def find_shoes(self, keys):
         products: dict[str, AbstractProduct] = self.__store.pc.search(keys[0])

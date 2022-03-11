@@ -25,3 +25,11 @@ class API_HandlerProductPriceEditor:
             raise ConnectionError(r.text)
         else:
             return schema.ModelShoes(**r.json())
+
+    def edit_color(self, data: schema.ModelColor) -> schema.ModelColor:
+        r = requests.put(f"{settings.host}/{self.prefix}/edit_color",
+                         data=data.json(), headers=self.headers)
+        if r.status_code != 202:
+            raise ConnectionError(r.text)
+        else:
+            return schema.ModelColor(**r.json())
