@@ -10,9 +10,10 @@ from prjstore.ui.pyside.product_price_editor.thread import *
 from prjstore.ui.pyside.product_price_editor.ui_product_price_edit import UI_Frame
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 from prjstore.ui.pyside.utils.qt_core import *
+from prjstore.ui.pyside.utils.qt_utils import clearLayout
 
 
-class SaleForm(QWidget):
+class PriceEditor(QWidget):
     products: list[schemas.ModelProduct]
     selected_item_widget: AbstractItem
     handler: ProductPriceEditorHandler
@@ -34,6 +35,7 @@ class SaleForm(QWidget):
         self.selected_color_frame: ColorFrame = None
         self.selected_size_frame: SizeFrame = None
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
+        self.ui.src_products.textChanged.connect(self.on_search_text_changed)
 
         if not self.test:
             db_connector = DbConnect(self.user_data, self.db)
@@ -41,27 +43,25 @@ class SaleForm(QWidget):
             db_connector.signals.result.connect(self.connected_complete)
             self.thread_pool.start(db_connector)
 
+    def on_search_text_changed(self):
+        self._update_items_layout()
+
     def __connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
         sys.exit(app.exec())
 
     def connected_complete(self, handler: ProductPriceEditorHandler):
         self.handler = handler
-        self.products = self.handler.get_store_products()
-
-        self.update()
+        self._update_items_layout()
         self.load_widget.hide()
 
-    def update(self):
-        self._update_items_layout()
-
     def _update_items_layout(self):
+        self.products = self.handler.get_store_products(search=self.ui.src_products.text())
+        clearLayout(self.ui.layout)
         self.selected_item_widget = None
-        self.layout = QVBoxLayout()
         for item in self.products:
             item_frame = FrameProductFactory.create(product_type=item.type, parent=self, item_pd=item)
-            self.layout.addWidget(item_frame)
-        self.ui.product_frame.setLayout(self.layout)
+            self.ui.layout.addWidget(item_frame)
 
     def on_press_edit_by_name(self, shoes_frame: ShoesFrame):
         self.selected_shoes_frame = shoes_frame
@@ -77,16 +77,16 @@ class SaleForm(QWidget):
         self.thread_pool.start(db_edit_shoes)
 
     def __update_shoes_complete(self, pd_shoes: ModelShoes):
-        self.selected_shoes_frame.desc_frame.set_selected(False)
+        self.selected_shoes_frame.desc_frame.selected = False
         if pd_shoes.price_for_sale is not None:
             self.selected_shoes_frame.set_price_of_all_sizes(pd_shoes.price_for_sale)
         if pd_shoes.new_name is not None:
             self.selected_shoes_frame.set_new_name(pd_shoes.new_name)
         if self.selected_shoes_frame.selected_size_frame:
-            self.selected_shoes_frame.selected_size_frame.set_selected(False)
+            self.selected_shoes_frame.selected_size_frame.selected = False
         self.load_widget.hide()
 
-    def on_color_edit(self, pr_name:str, color_frame: ColorFrame):
+    def on_color_edit(self, pr_name: str, color_frame: ColorFrame):
         self.selected_color_frame = color_frame
         color = color_frame.color
         new_color = color_frame.header.line_edit_color.text()
@@ -125,6 +125,6 @@ class SaleForm(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = SaleForm(test=False, user_data={'username': 'qwe', 'password': 'qwe'})
+    w = PriceEditor(test=False, user_data={'username': 'qwe', 'password': 'qwe'})
     w.show()
     sys.exit(app.exec())

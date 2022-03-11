@@ -39,7 +39,7 @@ class ColorFrame(QFrame):
     def set_selected(self, flag: bool = True) -> None:
         self.__selected = flag
         if flag:
-            self.shoes_frame.on_selected_color()
+            self.shoes_frame.on_selected_color(self)
             for width in self.frames_of_width.values():
                 for size in width.widgets_of_sizes.values():
                     size.selected = False
@@ -76,7 +76,6 @@ class ColorFrame(QFrame):
         for width in self.frames_of_width.values():
             for size in width.widgets_of_sizes.values():
                 size.price = new_price
-
 
 
 class HeaderOfColor(QWidget):

@@ -39,6 +39,17 @@ class Store:
         return items
 
     @validate_arguments
+    def get_items_by_pr_name(self, name: str) -> list[Item]:
+        items = [item for item in self.items.values() if item.product.name == name and item.qty > 0]
+        return items
+
+    @validate_arguments
+    def get_items_by_name_and_color(self, name: str, color: str) -> list[Item]:
+        items = [item for item in self.items.values()
+                 if item.product.name == name and item.product.color == color and item.qty > 0]
+        return items
+
+    @validate_arguments
     def add_item(self, item: Item, qty: int = 1):
         if item.id not in self.items:
             self.items[item.id] = item

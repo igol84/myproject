@@ -1,9 +1,9 @@
 from PySide6.QtCore import Signal, QObject, QRunnable, Slot
 
 from prjstore.db import API_DB
-from prjstore.db.schemas.handler_product_price_editor import ModelProduct as ModelProductForm
-from prjstore.db.schemas.handler_product_price_editor import ModelShoes as ModelShoesForm
 from prjstore.db.schemas.handler_product_price_editor import ModelColor as ModelColorForm
+from prjstore.db.schemas.handler_product_price_editor import ModelShoes as ModelShoesForm
+from prjstore.db.schemas.handler_product_price_editor import ModelSize as ModelProductForm
 from prjstore.handlers.product_price_editor_handler import ProductPriceEditorHandler
 
 
@@ -66,7 +66,7 @@ class DBEditSize(QRunnable):
     @Slot()
     def run(self):
         try:
-            pd_size: ModelProductForm = self.handler.edit_product(self.pd_size)
+            pd_size: ModelProductForm = self.handler.edit_size(self.pd_size)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:

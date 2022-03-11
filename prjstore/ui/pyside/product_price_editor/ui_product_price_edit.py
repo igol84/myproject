@@ -16,21 +16,24 @@ class UI_Frame(object):
         self.scroll.setWidgetResizable(True)
         self.scroll.setObjectName('ScrollArea')
         # Product Frame
-        self.product_layout = QFrame()
-        self.frame_layout = QVBoxLayout()
-        self.frame_layout.setContentsMargins(0, 0, 0, 0)
-        self.frame_layout.setSpacing(0)
-        self.product_layout.setLayout(self.frame_layout)
-        self.product_layout.setObjectName('ProductFrame')
+        self.scroll_frame = QFrame()
+        self.scroll_layout = QVBoxLayout()
+        self.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        self.scroll_layout.setSpacing(0)
+        self.scroll_frame.setLayout(self.scroll_layout)
+        self.scroll_frame.setObjectName('ProductFrame')
 
         self.product_frame = QFrame()
-        self.frame_layout.addWidget(self.product_frame)
+        self.scroll_layout.addWidget(self.product_frame)
+
+        self.layout = QVBoxLayout()
+        self.product_frame.setLayout(self.layout)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-        self.frame_layout.addItem(self.verticalSpacer)
+        self.scroll_layout.addItem(self.verticalSpacer)
 
         # Add to frame layout
-        self.scroll.setWidget(self.product_layout)
+        self.scroll.setWidget(self.scroll_frame)
 
         # Add to layout
         self.layuot.addWidget(self.src_products)

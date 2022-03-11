@@ -15,6 +15,7 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
         self.setMinimumWidth(300)
         self.__parent_form = parent
         self.__selected_size_frame = None
+        self.__selected_color_frame = None
         self.pr_name = item_pd.name
         self.pr_colors = item_pd.colors
         self.widgets_color: dict[str, ColorFrame] = {}
@@ -97,8 +98,13 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
         if self.parent_form:
             self.parent_form.on_edit_size(size_frame)
 
-    def on_selected_color(self):
+    def on_selected_color(self, color_frame):
         self.desc_frame.selected = False
+        if self.__selected_size_frame:
+            self.__selected_size_frame.selected = False
+        if self.__selected_color_frame:
+            self.__selected_color_frame.selected = False
+        self.__selected_color_frame = color_frame
 
     def on_color_edit(self, color_frame):
         if self.parent_form:
