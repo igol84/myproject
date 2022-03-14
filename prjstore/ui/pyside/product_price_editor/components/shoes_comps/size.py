@@ -5,15 +5,18 @@ from prjstore.ui.pyside.utils.widgets import ItemFrame
 
 
 class SizeFrame(ItemFrame):
-    __pr_price: float
+    pr_id: str
+    __price: float
+    __size: float
+    __selected: bool
     height_ = 30
 
     def __init__(self, pd_size: ViewSize, shoes_frame=None):
         super().__init__()
         self.shoes_frame: ShoesFrameInterface = shoes_frame
-        self.pr_id = pd_size.prod_id
-        self.__pr_size = pd_size.size
-        self.__pr_price = pd_size.price
+        self.__id = pd_size.prod_id
+        self.__size = pd_size.size
+        self.__price = pd_size.price
         self.pr_price_format = pd_size.price_format
         self.pr_qty = pd_size.qty
         self.__selected = False
@@ -23,13 +26,13 @@ class SizeFrame(ItemFrame):
 
         layer = QHBoxLayout()
         layer.setContentsMargins(4, 4, 4, 4)
-        self.label_size = QLabel(f'{self.__pr_size:g}')
+        self.label_size = QLabel(f'{self.__size:g}')
         self.label_size.setContentsMargins(5, 0, 5, 0)
         self.label_size.setFixedWidth(50)
         self.label_size.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.label_size.setStyleSheet(f'font-size: {self.font_size}pt;')
 
-        self.line_edit_size = QLineEdit(f'{self.__pr_size:g}')
+        self.line_edit_size = QLineEdit(f'{self.__size:g}')
         self.line_edit_size.setStyleSheet(f'background-color: #EEE; color: #000')
         self.line_edit_size.hide()
         self.line_edit_size.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -52,7 +55,7 @@ class SizeFrame(ItemFrame):
         self.label_price.setFont(font)
         self.label_price.setAlignment(Qt.AlignRight)
 
-        self.line_edit_price = QLineEdit(f'{self.__pr_price:g}')
+        self.line_edit_price = QLineEdit(f'{self.__price:g}')
         self.line_edit_price.setStyleSheet(f'background-color: #EEE; color: #000')
         self.line_edit_price.hide()
         self.line_edit_price.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -63,7 +66,7 @@ class SizeFrame(ItemFrame):
         self.btn = QPushButton('edit')
         self.btn.setStyleSheet(f'background-color: #EEE; color: #000')
         self.btn.hide()
-        self.btn.clicked.connect(self.on_clicked)
+        self.btn.clicked.connect(self.on_clicked_edit)
 
         layer.addWidget(self.label_size)
         layer.addWidget(self.line_edit_size)
@@ -75,8 +78,13 @@ class SizeFrame(ItemFrame):
         self.set_default_style()
         self.setLayout(layer)
 
+    def get_id(self) -> str:
+        return self.__id
+
+    pr_id = property(get_id)
+
     def get_price(self) -> float:
-        return self.__pr_price
+        return self.__price
 
     def set_price(self, price: float) -> None:
         currency = self.label_price.text()[-1]
@@ -87,11 +95,11 @@ class SizeFrame(ItemFrame):
     price = property(get_price, set_price)
 
     def get_size(self) -> float:
-        return self.__pr_size
+        return self.__size
 
     def set_size(self, size: float) -> None:
         self.label_size.setText(f'{size:g}')
-        self.__pr_size = size
+        self.__size = size
 
     size = property(get_size, set_size)
 
@@ -117,7 +125,7 @@ class SizeFrame(ItemFrame):
     def set_selected_style(self) -> None:
         self.setStyleSheet(f'background-color: {self.current_color_bg}; color: {self.current_color_text}')
 
-    def on_clicked(self):
+    def on_clicked_edit(self):
         self.selected = False
         if self.shoes_frame:
             self.shoes_frame.edit_size_frame(self)

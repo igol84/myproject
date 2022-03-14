@@ -38,6 +38,13 @@ class ProductPriceEditorHandler:
     def search_items(self, text: str) -> dict[str: Item]:
         return self.store.search_items(value=text, fields={'name', 'prod_id'})
 
+    def edit_product(self, data: ModelProductForm) -> ModelProductForm:
+        # edit on DB
+        new_data: ModelSize = self.__db.handler_product_price_editor.edit_product(data)
+        # edit in Domain Model
+
+        return new_data
+
     def edit_size(self, data: ModelSize) -> ModelSize:
         # edit on DB
         new_data: ModelSize = self.__db.handler_product_price_editor.edit_size(data)

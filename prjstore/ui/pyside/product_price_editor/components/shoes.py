@@ -16,7 +16,7 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
         self.__parent_form = parent
         self.__selected_size_frame = None
         self.__selected_color_frame = None
-        self.pr_name = item_pd.name
+        self.__name = item_pd.name
         self.pr_colors = item_pd.colors
         self.widgets_color: dict[str, ColorFrame] = {}
         self.widgets_h_line: list[QHLine] = []
@@ -42,6 +42,15 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
         self.setLayout(layer)
         self.hide_colors()
 
+    def get_name(self) -> str:
+        return self.__name
+
+    def set_name(self, name: str) -> None:
+        self.__name = name
+        self.desc_frame.set_desc(name)
+
+    name = property(get_name, set_name)
+
     def get_selected_size_frame(self) -> SizeFrame:
         return self.__selected_size_frame
 
@@ -49,7 +58,6 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
         self.desc_frame.selected = False
         if self.__selected_size_frame:
             self.__selected_size_frame.selected = False
-        self.pr_id = size_frame.pr_id
         self.__selected_size_frame = size_frame
         self.__selected_size_frame.selected = True
         price_text = self.__selected_size_frame.price
@@ -70,8 +78,6 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
         self.hide_colors()
 
     def hide_colors(self):
-        if self.selected_size_frame and self.selected_size_frame.selected:
-            self.selected_size_frame.selected = False
         for color in self.widgets_color.values():
             color.selected = False
             color.hide()
@@ -79,7 +85,6 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
             h_line.hide()
 
     def show_colors(self):
-        self.desc_frame.selected = True
         for color in self.widgets_color.values():
             color.show()
         for h_line in self.widgets_h_line:
@@ -108,7 +113,7 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
 
     def on_color_edit(self, color_frame):
         if self.parent_form:
-            self.parent_form.on_color_edit(self.pr_name, color_frame)
+            self.parent_form.on_press_edit_by_color(self.__name, color_frame)
 
     def set_price_of_all_sizes(self, price):
         for color in self.widgets_color.values():

@@ -3,6 +3,12 @@ from typing import Optional
 from pydantic import BaseModel
 
 
+class ModelProductForm(BaseModel):
+    id: int
+    new_name: str
+    new_price: float
+
+
 class ModelSize(BaseModel):
     id: Optional[int] = None
     size: float

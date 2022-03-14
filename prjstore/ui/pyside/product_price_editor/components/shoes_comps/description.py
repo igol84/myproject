@@ -18,13 +18,13 @@ class ShoesDescFrame(QFrame):
         layer.setContentsMargins(0, 0, 0, 0)
         self.layer_desc = QtWidgets.QVBoxLayout()
         self.layer_desc.setContentsMargins(3, 3, 3, 3)
-        self.label_item_description = LabelItemDescription(text=shoes_frame.pr_name)
+        self.label_item_description = LabelItemDescription(text=shoes_frame.name)
         self.label_item_description.setFont(
             QFont(self.parent_shoes_frame.color_text, self.parent_shoes_frame.font_size))
         self.layer_desc.addWidget(self.label_item_description)
         layer.addLayout(self.layer_desc)
 
-        self.line_edit_desc = LineEditDesc(parent=self, text=shoes_frame.pr_name)
+        self.line_edit_desc = LineEditDesc(parent=self, text=shoes_frame.name)
         self.line_edit_desc.hide()
 
         self.price_line_edit = LineEditPrice(parent=self)
@@ -47,9 +47,11 @@ class ShoesDescFrame(QFrame):
     def set_desc(self, name: str):
         self.label_item_description.setText(name)
 
-    def set_data(self, name: str, price: float):
-        self.set_desc(name)
-        self.set_price(price)
+    def set_data(self, name: str = None, price: float = None):
+        if name is not None:
+            self.set_desc(name)
+        if price is not None:
+            self.set_price(price)
 
     def paintEvent(self, event: QtGui.QPaintEvent) -> None:
         painter = QtGui.QPainter(self)
@@ -87,13 +89,16 @@ class ShoesDescFrame(QFrame):
                     self.parent_form.selected_item_widget.hide_elements()
                     self.parent_form.selected_item_widget = None
                     self.shoes_frame.hide_colors()
+                    self.selected = False
                     return None
                 else:
                     self.parent_form.selected_item_widget.color_fon = self.parent_shoes_frame.default_color_bg
                     self.parent_form.selected_item_widget.color_text = self.parent_shoes_frame.default_color_text
                     self.parent_form.selected_item_widget.update()
                     self.parent_form.selected_item_widget.hide_elements()
+                    self.parent_form.selected_item_widget.selected = False
             self.parent_form.selected_item_widget = self.parent()
+        self.selected = True
         self.shoes_frame.show_colors()
         return QFrame.mousePressEvent(self, event)
 

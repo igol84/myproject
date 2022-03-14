@@ -17,19 +17,17 @@ class UI_Frame(object):
         self.scroll.setObjectName('ScrollArea')
         # Product Frame
         self.scroll_frame = QFrame()
-        self.scroll_layout = QVBoxLayout()
+        self.scroll_layout = QVBoxLayout(self.scroll_frame)
         self.scroll_layout.setContentsMargins(0, 0, 0, 0)
         self.scroll_layout.setSpacing(0)
-        self.scroll_frame.setLayout(self.scroll_layout)
         self.scroll_frame.setObjectName('ProductFrame')
 
         self.product_frame = QFrame()
         self.scroll_layout.addWidget(self.product_frame)
 
-        self.layout = QVBoxLayout()
-        self.product_frame.setLayout(self.layout)
+        self.layout = QVBoxLayout(self.product_frame)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.verticalSpacer = QSpacerItem(1, 1000, QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.scroll_layout.addItem(self.verticalSpacer)
 
         # Add to frame layout

@@ -3,7 +3,7 @@ import sys
 from prjstore.db.schemas.handler_product_price_editor import ModelShoes, ModelColor
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.product_price_editor import schemas
-from prjstore.ui.pyside.product_price_editor.components import FrameProductFactory, ShoesFrame
+from prjstore.ui.pyside.product_price_editor.components import FrameProductFactory, ShoesFrame, ProductFrame
 from prjstore.ui.pyside.product_price_editor.components.abstract_product import AbstractItem
 from prjstore.ui.pyside.product_price_editor.components.shoes_comps import SizeFrame, ColorFrame
 from prjstore.ui.pyside.product_price_editor.thread import *
@@ -31,6 +31,7 @@ class PriceEditor(QWidget):
         self.resize(500, 600)
         self.ui = UI_Frame()
         self.ui.setup_ui(self)
+        self.selected_product_frame: ProductFrame = None
         self.selected_shoes_frame: ShoesFrame = None
         self.selected_color_frame: ColorFrame = None
         self.selected_size_frame: SizeFrame = None
@@ -63,9 +64,27 @@ class PriceEditor(QWidget):
             item_frame = FrameProductFactory.create(product_type=item.type, parent=self, item_pd=item)
             self.ui.layout.addWidget(item_frame)
 
+    def on_press_edit_simple_product(self, product_frame: ProductFrame):
+        self.selected_product_frame = product_frame
+        pr_id = product_frame.pr_id
+        new_name = product_frame.line_edit_name.text()
+        new_price = product_frame.line_edit_price.text()
+        pd_data = ModelProductForm(id=pr_id, new_name=new_name, new_price=new_price)
+        self.load_widget.show()
+        db_edit_product = DBEditProduct(self.handler, pd_data)
+        db_edit_product.signals.error.connect(self.__connection_error)
+        db_edit_product.signals.result.connect(self.__update_product_complete)
+        self.thread_pool.start(db_edit_product)
+
+    def __update_product_complete(self, pd_data: ModelProductForm):
+        self.selected_product_frame.name = pd_data.new_name
+        self.selected_product_frame.price = pd_data.new_price
+
+        self.load_widget.hide()
+
     def on_press_edit_by_name(self, shoes_frame: ShoesFrame):
         self.selected_shoes_frame = shoes_frame
-        name = shoes_frame.pr_name
+        name = shoes_frame.name
         new_price = shoes_frame.desc_frame.price_line_edit.text()
         new_price = new_price if new_price else None
         new_name = shoes_frame.desc_frame.line_edit_desc.text()
@@ -86,7 +105,7 @@ class PriceEditor(QWidget):
             self.selected_shoes_frame.selected_size_frame.selected = False
         self.load_widget.hide()
 
-    def on_color_edit(self, pr_name: str, color_frame: ColorFrame):
+    def on_press_edit_by_color(self, pr_name: str, color_frame: ColorFrame):
         self.selected_color_frame = color_frame
         color = color_frame.color
         new_color = color_frame.header.line_edit_color.text()
@@ -110,14 +129,14 @@ class PriceEditor(QWidget):
         pr_id = size_frame.pr_id
         size = size_frame.line_edit_size.text()
         price = size_frame.line_edit_price.text()
-        pd_size = ModelProductForm(id=pr_id, size=size, price_for_sale=price)
+        pd_size = ModelSizeForm(id=pr_id, size=size, price_for_sale=price)
         self.load_widget.show()
         db_edit_size = DBEditSize(self.handler, pd_size)
         db_edit_size.signals.error.connect(self.__connection_error)
         db_edit_size.signals.result.connect(self.__update_size_complete)
         self.thread_pool.start(db_edit_size)
 
-    def __update_size_complete(self, pd_size: ModelProductForm):
+    def __update_size_complete(self, pd_size: ModelSizeForm):
         self.selected_size_frame.size = pd_size.size
         self.selected_size_frame.price = pd_size.price_for_sale
         self.load_widget.hide()

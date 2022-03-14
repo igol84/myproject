@@ -3,7 +3,8 @@ from PySide6.QtCore import Signal, QObject, QRunnable, Slot
 from prjstore.db import API_DB
 from prjstore.db.schemas.handler_product_price_editor import ModelColor as ModelColorForm
 from prjstore.db.schemas.handler_product_price_editor import ModelShoes as ModelShoesForm
-from prjstore.db.schemas.handler_product_price_editor import ModelSize as ModelProductForm
+from prjstore.db.schemas.handler_product_price_editor import ModelSize as ModelSizeForm
+from prjstore.db.schemas.handler_product_price_editor import ModelProductForm
 from prjstore.handlers.product_price_editor_handler import ProductPriceEditorHandler
 
 
@@ -29,35 +30,32 @@ class DbConnect(QRunnable):
             self.signals.result.emit(handler)
 
 
-class DBGetSales(QRunnable):
+class DBEditProduct(QRunnable):
     class Signals(QObject):
         error = Signal(str)
-        result = Signal()
+        result = Signal(ModelProductForm)
 
-    def __init__(self, handler, date_sale, place_id, seller_id):
+    def __init__(self, handler: ProductPriceEditorHandler, pd_data: ModelProductForm):
         super().__init__()
         self.handler = handler
-        self.date_sale = date_sale
-        self.place_id = place_id
-        self.seller_id = seller_id
+        self.pd_data = pd_data
         self.signals = self.Signals()
 
     @Slot()
     def run(self):
         try:
-            self.handler.changed_date(date=self.date_sale, place_id=self.place_id, seller_id=self.seller_id)
+            pd_data: ModelSizeForm = self.handler.edit_product(self.pd_data)
         except OSError:
-            self.signals.error.emit('Connection Error.')
+            self.signals.error.emit('Нет подключения к интернету.')
         else:
-            self.signals.result.emit()
-
+            self.signals.result.emit(pd_data)
 
 class DBEditSize(QRunnable):
     class Signals(QObject):
         error = Signal(str)
-        result = Signal(ModelProductForm)
+        result = Signal(ModelSizeForm)
 
-    def __init__(self, handler: ProductPriceEditorHandler, pd_size: ModelProductForm):
+    def __init__(self, handler: ProductPriceEditorHandler, pd_size: ModelSizeForm):
         super().__init__()
         self.handler = handler
         self.pd_size = pd_size
@@ -66,7 +64,7 @@ class DBEditSize(QRunnable):
     @Slot()
     def run(self):
         try:
-            pd_size: ModelProductForm = self.handler.edit_size(self.pd_size)
+            pd_size: ModelSizeForm = self.handler.edit_size(self.pd_size)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:
@@ -87,7 +85,7 @@ class DBEditShoes(QRunnable):
     @Slot()
     def run(self):
         try:
-            pd_shoes: ModelProductForm = self.handler.edit_shoes(self.pd_shoes)
+            pd_shoes: ModelSizeForm = self.handler.edit_shoes(self.pd_shoes)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:

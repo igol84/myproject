@@ -60,7 +60,7 @@ class ColorFrame(QFrame):
 
     def set_color(self, color: str) -> None:
         self.__color = color
-        self.header.label_color.setText(color)
+        self.header.set_color(color)
 
     color = property(get_color, set_color)
 
@@ -113,6 +113,9 @@ class HeaderOfColor(QWidget):
 
     def on_push_button_edit(self):
         self.parent().on_color_edit()
+
+    def set_color(self, color: str):
+        self.label_color.setText(color)
 
 
 class LineEditColor(QLineEdit):
