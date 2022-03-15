@@ -42,7 +42,10 @@ class ProductPriceEditorHandler:
         # edit on DB
         new_data: ModelSize = self.__db.handler_product_price_editor.edit_product(data)
         # edit in Domain Model
-
+        items = self.store.get_items_by_pr_id(data.id)
+        for item in items:
+            item.product.name = data.new_name
+            item.product.price.amount = data.new_price
         return new_data
 
     def edit_size(self, data: ModelSize) -> ModelSize:

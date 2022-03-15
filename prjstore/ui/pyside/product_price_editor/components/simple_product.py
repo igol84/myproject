@@ -100,9 +100,9 @@ class ProductFrame(ItemFrame, ShoesFrameInterface):
         return self.__price
 
     def set_price(self, price: float) -> None:
+        self.__price = price
         currency = self.label_price.text()[-1]
         self.label_price.setText(f'{price:.2f}' + currency)
-        self.__price = price
 
     price = property(get_price, set_price)
 
@@ -110,7 +110,6 @@ class ProductFrame(ItemFrame, ShoesFrameInterface):
         self.selected = False
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
-
         if self.parent_form:
             if self.parent_form.selected_item_widget:
                 self.parent_form.selected_item_widget.hide_elements()
@@ -140,9 +139,10 @@ class ProductFrame(ItemFrame, ShoesFrameInterface):
         self.setStyleSheet(f'background-color: {self.current_color_bg}; color: {self.current_color_text}')
 
     def on_clicked_edit(self):
-        self.__selected = False
-        if self.__parent_form:
-            self.__parent_form.on_press_edit_simple_product(self)
+        self.selected = False
+        if self.parent_form:
+            self.parent_form.on_press_edit_simple_product(self)
+            self.parent_form.selected_item_widget = None
 
     def get_selected(self) -> bool:
         return self.__selected
