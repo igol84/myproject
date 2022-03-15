@@ -32,8 +32,6 @@ class ProductFrame(ItemFrame, ShoesFrameInterface):
         self.label_name.setStyleSheet(f'font-size: {self.font_size}pt;')
         self.label_name.setAlignment(Qt.AlignLeft)
 
-
-
         self.line_edit_name = QLineEdit(self.__name)
         self.line_edit_name.setStyleSheet(f'background-color: #EEE; color: #000')
         self.line_edit_name.hide()
@@ -109,26 +107,17 @@ class ProductFrame(ItemFrame, ShoesFrameInterface):
     price = property(get_price, set_price)
 
     def hide_elements(self):
-        pass
+        self.selected = False
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
-        # change style
-        self.color_fon = self.current_color_bg
-        self.color_text = self.current_color_text
 
-        # return default style on the previous selected widget
         if self.parent_form:
             if self.parent_form.selected_item_widget:
+                self.parent_form.selected_item_widget.hide_elements()
                 if self.parent_form.selected_item_widget is self:
-                    self.parent_form.selected_item_widget.hide_elements()
                     self.parent_form.selected_item_widget = None
                     self.selected = False
                     return None
-                else:
-                    self.parent_form.selected_item_widget.color_fon = self.default_color_bg
-                    self.parent_form.selected_item_widget.color_text = self.default_color_text
-                    self.parent_form.selected_item_widget.update()
-                    self.parent_form.selected_item_widget.hide_elements()
             self.parent_form.selected_item_widget = self
         self.selected = True
         return QFrame.mousePressEvent(self, event)
@@ -145,7 +134,7 @@ class ProductFrame(ItemFrame, ShoesFrameInterface):
         self.setStyleSheet(f'background-color: {self.default_color_bg}; color: {self.default_color_text};')
 
     def set_hover_style(self) -> None:
-        self.setStyleSheet(f'background-color: {self.color_fon_on_enter}; color: {self.color_text};')
+        self.setStyleSheet(f'background-color: {self.color_fon_on_enter}; color: {self.default_color_text};')
 
     def set_selected_style(self) -> None:
         self.setStyleSheet(f'background-color: {self.current_color_bg}; color: {self.current_color_text}')

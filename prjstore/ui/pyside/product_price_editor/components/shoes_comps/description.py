@@ -25,15 +25,19 @@ class ShoesDescFrame(QFrame):
         layer.addLayout(self.layer_desc)
 
         self.line_edit_desc = LineEditDesc(parent=self, text=shoes_frame.name)
+        self.line_edit_desc.setStyleSheet(f'background-color: #EEE; color: #000')
         self.line_edit_desc.hide()
 
         self.price_line_edit = LineEditPrice(parent=self)
+        self.price_line_edit.setStyleSheet(f'background-color: #EEE; color: #000')
         self.price_line_edit.returnPressed.connect(self.on_pressed_price_line_edit)
         self.price_line_edit.hide()
         self.btn_plus = QPushButton(parent=self, text='edit')
         self.btn_plus.setMaximumSize(75, 25)
+        self.btn_plus.setStyleSheet(f'background-color: #EEE; color: #000')
         self.btn_plus.hide()
         self.btn_plus.clicked.connect(self.on_push_button_edit)
+        self.set_default_style()
         self.setLayout(layer)
 
     def __get_shoes_frame(self) -> ShoesFrameInterface:
@@ -55,12 +59,6 @@ class ShoesDescFrame(QFrame):
 
     def paintEvent(self, event: QtGui.QPaintEvent) -> None:
         painter = QtGui.QPainter(self)
-        brush = QtGui.QBrush()
-        brush.setColor(QtGui.QColor(self.parent().color_fon))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        rect = QtCore.QRect(0, 0, painter.device().width(), 30)
-        painter.fillRect(rect, brush)
-
         pen = painter.pen()
         pen.setColor(QtGui.QColor(self.parent().color_text))
         painter.setPen(pen)
@@ -76,44 +74,42 @@ class ShoesDescFrame(QFrame):
 
     # on click on this widget
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> None:
-        # change style
-        self.parent_shoes_frame.color_fon = self.parent_shoes_frame.current_color_bg
-        self.parent_shoes_frame.color_text = self.parent_shoes_frame.current_color_text
-
-        # return default style on the previous selected widget
         if self.parent_form:
             if self.parent_form.selected_item_widget:
+                self.parent_form.selected_item_widget.hide_elements()
                 if self.parent_form.selected_item_widget is self.parent():
-                    self.parent().color_fon = self.parent_shoes_frame.color_fon_on_enter
-                    self.parent().color_text = self.parent_shoes_frame.default_color_text
-                    self.parent_form.selected_item_widget.hide_elements()
                     self.parent_form.selected_item_widget = None
-                    self.shoes_frame.hide_colors()
                     self.selected = False
+                    self.shoes_frame.hide_colors()
                     return None
-                else:
-                    self.parent_form.selected_item_widget.color_fon = self.parent_shoes_frame.default_color_bg
-                    self.parent_form.selected_item_widget.color_text = self.parent_shoes_frame.default_color_text
-                    self.parent_form.selected_item_widget.update()
-                    self.parent_form.selected_item_widget.hide_elements()
-                    self.parent_form.selected_item_widget.selected = False
             self.parent_form.selected_item_widget = self.parent()
         self.selected = True
-        self.shoes_frame.show_colors()
         return QFrame.mousePressEvent(self, event)
 
+    def set_default_style(self) -> None:
+        color_bg = self.parent_shoes_frame.default_color_bg
+        color_text = self.parent_shoes_frame.default_color_text
+        self.setStyleSheet(f'background-color: {color_bg}; color: {color_text};')
+
+    def set_hover_style(self) -> None:
+        color_bg = self.parent_shoes_frame.color_fon_on_enter
+        color_text = self.parent_shoes_frame.default_color_text
+        self.setStyleSheet(f'background-color: {color_bg}; color: {color_text};')
+
+    def set_selected_style(self) -> None:
+        color_bg = self.parent_shoes_frame.current_color_bg
+        color_text = self.parent_shoes_frame.current_color_text
+        self.setStyleSheet(f'background-color: {color_bg}; color: {color_text};')
+
     def enterEvent(self, event: QtCore.QEvent) -> None:
-        if self.parent_form and self.parent_form.selected_item_widget is not self.parent_shoes_frame:
-            self.parent_shoes_frame.color_fon = self.parent_shoes_frame.color_fon_on_enter
-            self.parent_shoes_frame.color_text = self.parent_shoes_frame.default_color_text
-            self.update()
+        if not self.selected:
+            self.set_hover_style()
         return QFrame.enterEvent(self, event)
 
     def leaveEvent(self, event: QtCore.QEvent) -> None:
-        if self.parent_form and self.parent_form.selected_item_widget is not self.parent_shoes_frame:
-            self.parent_shoes_frame.color_fon = self.parent_shoes_frame.default_color_bg
-            self.parent_shoes_frame.color_text = self.parent_shoes_frame.default_color_text
-            self.update()
+        if not self.selected:
+            self.set_default_style()
+        return QFrame.leaveEvent(self, event)
 
     def on_pressed_price_line_edit(self):
         if self.price_line_edit.hasFocus():
@@ -133,11 +129,14 @@ class ShoesDescFrame(QFrame):
     def set_selected(self, flag: bool = True) -> None:
         self.__selected = flag
         if flag:
+            self.set_selected_style()
+            self.shoes_frame.show_colors()
             self.price_line_edit.show()
             self.btn_plus.show()
             self.label_item_description.hide()
             self.line_edit_desc.show()
         else:
+            self.set_default_style()
             self.price_line_edit.hide()
             self.btn_plus.hide()
             self.label_item_description.show()
