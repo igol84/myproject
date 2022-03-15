@@ -83,6 +83,7 @@ class ShoesDescFrame(QFrame):
                     self.shoes_frame.hide_colors()
                     return None
             self.parent_form.selected_item_widget = self.parent()
+        self.shoes_frame.show_colors()
         self.selected = True
         return QFrame.mousePressEvent(self, event)
 
@@ -130,7 +131,6 @@ class ShoesDescFrame(QFrame):
         self.__selected = flag
         if flag:
             self.set_selected_style()
-            self.shoes_frame.show_colors()
             self.price_line_edit.show()
             self.btn_plus.show()
             self.label_item_description.hide()

@@ -40,14 +40,14 @@ class ColorFrame(QFrame):
         self.__selected = flag
         if flag:
             self.shoes_frame.on_selected_color(self)
-            for width in self.frames_of_width.values():
-                for size in width.widgets_of_sizes.values():
-                    size.selected = False
             self.header.label_color.hide()
             self.header.line_edit_color.show()
             self.header.line_edit_price.show()
             self.header.btn_edit.show()
         else:
+            for width in self.frames_of_width.values():
+                for size in width.widgets_of_sizes.values():
+                    size.selected = False
             self.header.label_color.show()
             self.header.line_edit_color.hide()
             self.header.line_edit_price.hide()

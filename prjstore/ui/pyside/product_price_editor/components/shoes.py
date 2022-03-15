@@ -60,10 +60,8 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
             self.__selected_size_frame.selected = False
         self.__selected_size_frame = size_frame
         self.__selected_size_frame.selected = True
-        price_text = self.__selected_size_frame.price
-        self.desc_frame.set_price(price_text)
-        for color in self.widgets_color.values():
-            color.selected = False
+        price = self.__selected_size_frame.price
+        self.desc_frame.set_price(price)
 
     def del_selected_size_frame(self) -> None:
         self.__selected_size_frame = None
