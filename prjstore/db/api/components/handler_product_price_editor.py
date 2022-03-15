@@ -18,26 +18,26 @@ class API_HandlerProductPriceEditor:
         else:
             return schema.ModelProductForm(**r.json())
 
-    def edit_size(self, data: schema.ModelSize) -> schema.ModelSize:
+    def edit_size(self, data: schema.ModelSizeForm) -> schema.ModelSizeForm:
         r = requests.put(f"{settings.host}/{self.prefix}/edit_size",
                          data=data.json(), headers=self.headers)
         if r.status_code != 202:
             raise ConnectionError(r.text)
         else:
-            return schema.ModelSize(**r.json())
+            return schema.ModelSizeForm(**r.json())
 
-    def edit_shoes(self, data: schema.ModelShoes) -> schema.ModelShoes:
+    def edit_shoes(self, data: schema.ModelShoesForm) -> schema.ModelShoesForm:
         r = requests.put(f"{settings.host}/{self.prefix}/edit_shoes",
                          data=data.json(), headers=self.headers)
         if r.status_code != 202:
             raise ConnectionError(r.text)
         else:
-            return schema.ModelShoes(**r.json())
+            return schema.ModelShoesForm(**r.json())
 
-    def edit_color(self, data: schema.ModelColor) -> schema.ModelColor:
+    def edit_color(self, data: schema.ModelColorForm) -> schema.ModelColorForm:
         r = requests.put(f"{settings.host}/{self.prefix}/edit_color",
                          data=data.json(), headers=self.headers)
         if r.status_code != 202:
             raise ConnectionError(r.text)
         else:
-            return schema.ModelColor(**r.json())
+            return schema.ModelColorForm(**r.json())
