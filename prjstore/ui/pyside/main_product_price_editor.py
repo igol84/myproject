@@ -99,7 +99,7 @@ class PriceEditor(QWidget):
         if pd_shoes.price_for_sale is not None:
             self.selected_shoes_frame.set_price_of_all_sizes(pd_shoes.price_for_sale)
         if pd_shoes.new_name is not None:
-            self.selected_shoes_frame.set_new_name(pd_shoes.new_name)
+            self.selected_shoes_frame.name = pd_shoes.new_name
         if self.selected_shoes_frame.selected_size_frame:
             self.selected_shoes_frame.selected_size_frame.selected = False
         self.load_widget.hide()

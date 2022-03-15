@@ -119,9 +119,6 @@ class ShoesFrame(ItemFrame, AbstractItem, ShoesFrameInterface):
                 for size in width.widgets_of_sizes.values():
                     size.price = price
 
-    def set_new_name(self, name: str):
-        self.desc_frame.set_desc(name)
-
 
 if __name__ == "__main__":
     import sys
