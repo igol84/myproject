@@ -50,6 +50,7 @@ class DBEditProduct(QRunnable):
         else:
             self.signals.result.emit(pd_data)
 
+
 class DBEditSize(QRunnable):
     class Signals(QObject):
         error = Signal(str)
