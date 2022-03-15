@@ -87,10 +87,10 @@ class SizeFrame(ItemFrame):
         return self.__price
 
     def set_price(self, price: float) -> None:
+        self.__price = price
         currency = self.label_price.text()[-1]
         self.label_price.setText(f'{price:.2f}' + currency)
         self.line_edit_price.setText(f'{price:g}')
-        self.__pr_price = price
 
     price = property(get_price, set_price)
 
