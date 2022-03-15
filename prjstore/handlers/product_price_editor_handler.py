@@ -40,7 +40,7 @@ class ProductPriceEditorHandler:
 
     def edit_product(self, data: ModelProductForm) -> ModelProductForm:
         # edit on DB
-        new_data: ModelSize = self.__db.handler_product_price_editor.edit_product(data)
+        new_data: ModelSizeForm = self.__db.handler_product_price_editor.edit_product(data)
         # edit in Domain Model
         items = self.store.get_items_by_pr_id(data.id)
         for item in items:
@@ -48,9 +48,9 @@ class ProductPriceEditorHandler:
             item.product.price.amount = data.new_price
         return new_data
 
-    def edit_size(self, data: ModelSize) -> ModelSize:
+    def edit_size(self, data: ModelSizeForm) -> ModelSizeForm:
         # edit on DB
-        new_data: ModelSize = self.__db.handler_product_price_editor.edit_size(data)
+        new_data: ModelSizeForm = self.__db.handler_product_price_editor.edit_size(data)
         # edit in Domain Model
         sizes = self.store.get_items_by_pr_id(data.id)
         for size in sizes:
@@ -58,9 +58,9 @@ class ProductPriceEditorHandler:
             size.product.size = data.size
         return new_data
 
-    def edit_shoes(self, data: ModelShoes) -> ModelShoes:
+    def edit_shoes(self, data: ModelShoesForm) -> ModelShoesForm:
         # edit on DB
-        new_data: ModelShoes = self.__db.handler_product_price_editor.edit_shoes(data)
+        new_data: ModelShoesForm = self.__db.handler_product_price_editor.edit_shoes(data)
         # edit in Domain Model
         list_shoes = self.store.get_items_by_pr_name(data.name)
         for shoes in list_shoes:
@@ -68,9 +68,9 @@ class ProductPriceEditorHandler:
             shoes.product.price.amount = data.price_for_sale
         return new_data
 
-    def edit_color(self, data: ModelColor) -> ModelColor:
+    def edit_color(self, data: ModelColorForm) -> ModelColorForm:
         # edit on DB
-        new_data: ModelShoes = self.__db.handler_product_price_editor.edit_color(data)
+        new_data: ModelShoesForm = self.__db.handler_product_price_editor.edit_color(data)
         # edit in Domain Model
         list_shoes = self.store.get_items_by_name_and_color(data.name, data.color)
         for shoes in list_shoes:
