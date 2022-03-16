@@ -6,6 +6,7 @@ class UI_Frame(object):
         if not parent.objectName():
             parent.setObjectName('ProductPriceEdit')
         self.layuot = QVBoxLayout(parent)
+        self.layuot.setObjectName('VBoxLayout')
 
         # Searcher
         self.src_products = QLineEdit()

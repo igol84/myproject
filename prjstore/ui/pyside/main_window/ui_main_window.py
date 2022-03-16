@@ -46,12 +46,14 @@ class UI_MainWindow(object):
 
         # TOP BUTTONS
         self.toggle_button = PyPushBottom(text='', icon_path='icon_menu.svg', icon_color='green')
+        self.btn_price_editor = PyPushBottom(text='Редактор товаров', icon_path='icon_product_price_editor.svg')
         self.btn_new_items = PyPushBottom(text='Новый товар', icon_path='icon_new_items.svg', is_active=True)
         self.btn_sale = PyPushBottom(text='Продажа', icon_path='icon_sale.svg')
 
         # ADD BUTTONS TO LAYOUT
         self.left_menu_top_layout.addWidget(self.toggle_button)
         self.left_menu_top_layout.addWidget(self.btn_new_items)
+        self.left_menu_top_layout.addWidget(self.btn_price_editor)
         self.left_menu_top_layout.addWidget(self.btn_sale)
 
         # MENU SPICER
@@ -134,6 +136,11 @@ class UI_MainWindow(object):
         self.page_items_form.setMinimumWidth(340)
         self.page_items_form.setObjectName(u"page_2")
         self.pages.addWidget(self.page_items_form)
+
+        self.page_product_price_editor = pages['price_editor_form']
+        self.page_product_price_editor.setMaximumWidth(600)
+        self.page_product_price_editor.setMinimumWidth(600)
+        self.pages.addWidget(self.page_product_price_editor)
 
         self.page_sale_form = pages['sale_form']
         self.pages.addWidget(self.page_sale_form)

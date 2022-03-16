@@ -215,6 +215,8 @@ class SaleForm(QWidget):
 
     def _completed_sale(self):
         self.update()
+        if self.parent:
+            self.parent.on_update_sale_registration()
         self.load_widget.hide()
 
 

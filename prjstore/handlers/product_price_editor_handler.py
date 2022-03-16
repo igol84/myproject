@@ -20,12 +20,15 @@ class ProductPriceEditorHandler:
             self.__store = Store(id=self.store_id, name='test')
             put_test_data_to_store(self.__store)
         else:
-            self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
+            self.update_data()
 
     def get_store(self):
         return self.__store
 
     store = property(get_store)
+
+    def update_data(self):
+        self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
 
     def get_store_id(self):
         return self.__store.id
