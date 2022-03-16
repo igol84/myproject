@@ -15,7 +15,7 @@ class ShoesDescFrame(QFrame):
         self.setFrameStyle(QFrame.NoFrame)
         self.parent_form = parent_form
         self.parent_shoes_frame = shoes_frame
-        self.pr_name = shoes_frame.__name
+        self.pr_name = shoes_frame.pr_name
         self.setFixedHeight(30)
         layer = QtWidgets.QVBoxLayout()
         layer.setContentsMargins(0, 0, 0, 0)

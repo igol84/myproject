@@ -64,7 +64,6 @@ class SaleRegistrationHandler:
 
     @validate_arguments
     def changed_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
-
         self.update_store_sales_by_date(date=date, place_id=place_id, seller_id=seller_id)
 
     @validate_arguments

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic.dataclasses import dataclass
 
 
@@ -5,4 +7,4 @@ from pydantic.dataclasses import dataclass
 class Width:
     name: str
     short_name: str
-    width_of_insole: float
+    width_of_insole: Optional[float] = None

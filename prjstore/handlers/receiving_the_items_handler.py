@@ -18,10 +18,13 @@ class ReceivingTheItemsHandler:
             self.__store = Store(id=self.store_id, name='test')
             put_test_data_to_store(self.__store)
         else:
-            self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
+            self.update_data()
 
     def get_store_id(self):
         return self.__store.id
+
+    def update_data(self):
+        self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
 
     @staticmethod
     def get_shoes_widths():
@@ -55,9 +58,9 @@ class ReceivingTheItemsHandler:
                     pd_products[key].module.colors.add(color)
         return [pr for pr in pd_products.values()]
 
-    def save_data(self, data: db_schemas.handler_receiving_the_items.ModelProduct):
+    def save_data(self, data: db_schemas.handler_receiving_the_items.ModelProduct) -> None:
         data.store_id = self.__store.id
-        return self.__db.header_receiving_the_items.receiving_the_items(data)
+        self.__db.header_receiving_the_items.receiving_the_items(data)
 
     def find_shoes(self, keys):
         products: dict[str, AbstractProduct] = self.__store.pc.search(keys[0])

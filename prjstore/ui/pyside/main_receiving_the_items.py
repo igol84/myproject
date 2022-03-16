@@ -59,20 +59,18 @@ class ItemForm(QWidget):
 
     def __connected_complete(self, handler: ReceivingTheItemsHandler):
         self.handler = handler
-        self.list_pd_prod = self.handler.get_products_data()
-        self.keywords['shoes']['widths'] = self.handler.get_shoes_widths()
-        self.setup_ui()
-        self.load_widget.hide()
+        self.update_data()
 
     def setup_ui(self):
         self.setWindowTitle(self.keywords['header'])
+        self.ui.name_combo_box.clear()
         self.ui.name_combo_box.addItem('')
         self.ui.name_combo_box.setItemData(0, QBrush(QColor("#BDFFB4")), role=Qt.BackgroundRole)
         self.ui.name_combo_box.setInsertPolicy(QComboBox.NoInsert)
         completer = CustomQCompleter(self.ui.name_combo_box)
         completer.setModel(self.ui.name_combo_box.model())
         self.ui.name_combo_box.setCompleter(completer)
-        for pd_prod in self.list_pd_prod:
+        for pd_prod in sorted(self.list_pd_prod, key=lambda k: k.id, reverse=True):
             self.ui.name_combo_box.addItem(pd_prod.name, pd_prod)
 
         self.setup_types()
@@ -149,6 +147,7 @@ class ItemForm(QWidget):
                 self.thread_pool.start(db_save_data)
 
     def __completed_save(self):
+        self.update_data()
         self.load_widget.hide()
         if self.parent:
             self.parent.on_update_items()
