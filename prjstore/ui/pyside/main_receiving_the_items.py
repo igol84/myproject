@@ -45,13 +45,17 @@ class ItemForm(QWidget):
         self.ui.name_combo_box.currentTextChanged.connect(self.on_edit_name_combo_box)
         self.ui.type_combo_box.currentIndexChanged.connect(self.on_change_product_type)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
-        if not self.test:
-            db_connector = DbConnect(self.user_data, self.db)
-            db_connector.signals.error.connect(self.__connection_error)
-            db_connector.signals.result.connect(self.__connected_complete)
-            self.thread_pool.start(db_connector)
+        if not self.parent:
+            if not self.test:
+                db_connector = DbConnect(self.user_data, self.db)
+                db_connector.signals.error.connect(self.__connection_error)
+                db_connector.signals.result.connect(self.__connected_complete)
+                self.thread_pool.start(db_connector)
+            else:
+                self.__connected_complete(ReceivingTheItemsHandler(test=True))
         else:
-            self.__connected_complete(ReceivingTheItemsHandler(test=True))
+            store = self.parent.handler.store
+            self.__connected_complete(ReceivingTheItemsHandler(db=self.db, store=store))
 
     def __connection_error(self, err: str):
         QMessageBox.warning(self, err, err)

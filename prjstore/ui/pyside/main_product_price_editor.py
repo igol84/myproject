@@ -40,11 +40,15 @@ class PriceEditor(QWidget):
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
         self.ui.src_products.textChanged.connect(self.on_search_text_changed)
 
-        if not self.test:
-            db_connector = DbConnect(self.user_data, self.db)
-            db_connector.signals.error.connect(self.__connection_error)
-            db_connector.signals.result.connect(self.connected_complete)
-            self.thread_pool.start(db_connector)
+        if not self.parent:
+            if not self.test:
+                db_connector = DbConnect(self.user_data, self.db)
+                db_connector.signals.error.connect(self.__connection_error)
+                db_connector.signals.result.connect(self.connected_complete)
+                self.thread_pool.start(db_connector)
+        else:
+            store = self.parent.handler.store
+            self.connected_complete(ProductPriceEditorHandler(db=self.db, store=store))
 
     def setup_dark_style(self):
         self.setStyleSheet(
