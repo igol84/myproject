@@ -12,7 +12,7 @@ class ProductPriceEditorHandler:
     __db: API_DB
     __store: Store
 
-    def __init__(self, db: API_DB = None, test=False):
+    def __init__(self, db: API_DB = None, test=False, store=None):
         self.__db = db
         self.store_id = db.headers['store_id']
         self.test = test
@@ -20,15 +20,18 @@ class ProductPriceEditorHandler:
             self.__store = Store(id=self.store_id, name='test')
             put_test_data_to_store(self.__store)
         else:
-            self.update_data()
+            self.update_data(store)
 
     def get_store(self):
         return self.__store
 
     store = property(get_store)
 
-    def update_data(self):
-        self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
+    def update_data(self, store: Store):
+        if not store:
+            self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
+        else:
+            self.__store = store
 
     def get_store_id(self):
         return self.__store.id

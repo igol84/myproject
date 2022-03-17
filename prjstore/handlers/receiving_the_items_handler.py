@@ -10,7 +10,7 @@ class ReceivingTheItemsHandler:
     __db: API_DB
     __store: Store
 
-    def __init__(self, db: API_DB = None, test=False):
+    def __init__(self, db: API_DB = None, test=False, store: Store = None):
         self.__db = db
         self.store_id = db.headers['store_id']
         self.test = test
@@ -18,13 +18,16 @@ class ReceivingTheItemsHandler:
             self.__store = Store(id=self.store_id, name='test')
             put_test_data_to_store(self.__store)
         else:
-            self.update_data()
+            self.update_data(store)
 
     def get_store_id(self):
         return self.__store.id
 
-    def update_data(self):
-        self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
+    def update_data(self, store):
+        if not store:
+            self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
+        else:
+            self.__store = store
 
     @staticmethod
     def get_shoes_widths():

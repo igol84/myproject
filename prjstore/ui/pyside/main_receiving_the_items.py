@@ -80,8 +80,8 @@ class ItemForm(QWidget):
             self.ui.width_combo_box.addItem(width, width_name)
         self.ui.sizes_table.itemChanged.connect(self.on_table_item_edit)
 
-    def update_data(self):
-        self.handler.update_data()
+    def update_data(self, store=None):
+        self.handler.update_data(store)
         self.update_layout()
 
     def update_layout(self):
@@ -152,9 +152,9 @@ class ItemForm(QWidget):
 
     def __completed_save(self):
         self.update_layout()
-        self.load_widget.hide()
         if self.parent:
             self.parent.on_update_receiving_items()
+        self.load_widget.hide()
 
     def on_name_combo_box_changed(self):
         self.update_product(self.ui.name_combo_box.currentData())

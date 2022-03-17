@@ -41,7 +41,6 @@ class DBSaveData(QRunnable):
     def run(self):
         try:
             self.handler.save_data(data=self.data)
-            self.handler.update_data()
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:

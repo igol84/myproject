@@ -1,7 +1,6 @@
 import sys
 
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
-from prjstore.ui.pyside.utils.qt_utils import clearLayout
 from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
 from prjstore.ui.pyside.sale_registration.components.sale import Sale_Frame
@@ -11,6 +10,7 @@ from prjstore.ui.pyside.sale_registration.schemas import *
 from prjstore.ui.pyside.sale_registration.thread import *
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 from prjstore.ui.pyside.utils.qt_core import *
+from prjstore.ui.pyside.utils.qt_utils import clearLayout
 
 
 class SaleForm(QWidget):
@@ -39,13 +39,17 @@ class SaleForm(QWidget):
         self.ui.date_edit.dateChanged.connect(self.change_data)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
-        if not self.test:
-            db_connector = DbConnect(self.user_data, self.db)
-            db_connector.signals.error.connect(self._connection_error)
-            db_connector.signals.result.connect(self.connected_complete)
-            self.thread_pool.start(db_connector)
+        if not self.parent:
+            if not self.test:
+                db_connector = DbConnect(self.user_data, self.db)
+                db_connector.signals.error.connect(self._connection_error)
+                db_connector.signals.result.connect(self.connected_complete)
+                self.thread_pool.start(db_connector)
+            else:
+                self.connected_complete(SaleRegistrationHandler(test=True))
         else:
-            self.connected_complete(SaleRegistrationHandler(test=True))
+            store = self.parent.handler.store
+            self.connected_complete(SaleRegistrationHandler(db=self.db, store=store))
 
     def setup_dark_style(self):
         self.setStyleSheet(
@@ -136,9 +140,9 @@ class SaleForm(QWidget):
     def on_search_items_text_changed(self):
         self._update_items_layout()
 
-    def update_items_data(self):
+    def update_items_data(self, store=None):
         self.load_widget.show()
-        self.handler.update_data()
+        self.handler.update_data(store)
         self._update_items_layout()
         self.load_widget.hide()
 

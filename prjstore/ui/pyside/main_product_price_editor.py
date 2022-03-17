@@ -69,9 +69,9 @@ class PriceEditor(QWidget):
         self.update_items_layout()
         self.load_widget.hide()
 
-    def update_data(self):
+    def update_data(self, store=None):
         self.load_widget.show()
-        self.handler.update_data()
+        self.handler.update_data(store)
         self.update_items_layout()
         self.load_widget.hide()
 

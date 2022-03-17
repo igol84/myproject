@@ -1,6 +1,7 @@
 import sys
 
 from prjstore.db import API_DB
+from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.main_login import LoginFrame
 from prjstore.ui.pyside.main_product_price_editor import PriceEditor
 from prjstore.ui.pyside.main_receiving_the_items import ItemForm
@@ -14,9 +15,12 @@ from prjstore.ui.pyside.utils.qt_core import *
 
 
 class MainWindow(QMainWindow, MainWindowInterface):
+    handler: MainHandler
+
     def __init__(self):
         super().__init__()
         self.__db = None
+        self.handler = None
         self.ui = None
         self.items_form: ItemForm = None
         self.sale_form: SaleForm = None
@@ -33,6 +37,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
     def setup_ui(self, db=None):
         if db:
             self.__db = db
+            self.handler = MainHandler(db)
             self.sale_form = SaleForm(self, dark_style=True, db=db)
             self.price_editor_form = PriceEditor(self, dark_style=True, db=db)
             self.items_form = ItemForm(self, dark_style=True, db=db)
@@ -112,15 +117,19 @@ class MainWindow(QMainWindow, MainWindowInterface):
     # -------------------on update pages-------------------------
 
     def on_update_receiving_items(self):
-        self.sale_form.update_items_data()
-        self.price_editor_form.update_data()
+        self.handler.update_data()
+        self.items_form.update_data(self.handler.store)
+        self.sale_form.update_items_data(self.handler.store)
+        self.price_editor_form.update_data(self.handler.store)
 
     def on_update_product_price_editor(self):
-        self.sale_form.update_items_data()
-        self.items_form.update_data()
+        self.handler.update_data()
+        self.sale_form.update_items_data(self.handler.store)
+        self.items_form.update_data(self.handler.store)
 
     def on_update_sale_registration(self):
-        self.price_editor_form.update_data()
+        self.handler.update_data()
+        self.price_editor_form.update_data(self.handler.store)
 
 
 if __name__ == '__main__':

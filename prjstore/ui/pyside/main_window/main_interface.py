@@ -1,4 +1,11 @@
+from prjstore.handlers.main_handler import MainHandler
+
+
 class MainWindowInterface:
+    handler: MainHandler
+
+    def start_connection(self):
+        ...
 
     def on_update_receiving_items(self) -> None:
         ...
