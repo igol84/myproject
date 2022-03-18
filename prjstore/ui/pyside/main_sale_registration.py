@@ -24,6 +24,8 @@ class SaleForm(QWidget):
     def __init__(self, parent=None, dark_style=False, test=False, user_data=None, db=None):
         super().__init__()
         self.parent: MainWindowInterface = parent
+        if parent:
+            self.parent.register_observer(self)
         self.user_data = user_data
         self.db = db
         self.thread_pool = QThreadPool()
@@ -66,10 +68,10 @@ class SaleForm(QWidget):
 
     def connected_complete(self, handler: SaleRegistrationHandler):
         self.handler = handler
-        self.update()
+        self.update_ui()
         self.load_widget.hide()
 
-    def update(self):
+    def update_ui(self):
         self._update_paces_of_sales()
         self._update_sellers_names()
         self._update_sli()
@@ -140,10 +142,10 @@ class SaleForm(QWidget):
     def on_search_items_text_changed(self):
         self._update_items_layout()
 
-    def update_items_data(self, store=None):
+    def update_data(self, store=None):
         self.load_widget.show()
         self.handler.update_data(store)
-        self._update_items_layout()
+        self.update_ui()
         self.load_widget.hide()
 
     def put_on_sale(self):
@@ -159,6 +161,8 @@ class SaleForm(QWidget):
         self._update_items_layout()
         self._update_sli()
         self._update_total()
+        if self.parent:
+            self.parent.data_changed(self)
         self.ui.src_items.clear()
 
     def put_item_form_sli_to_items(self, sale_id=None):
@@ -178,6 +182,8 @@ class SaleForm(QWidget):
         self._update_sli()
         self._update_items_layout()
         self._update_total()
+        if self.parent:
+            self.parent.data_changed(self)
         self.load_widget.hide()
 
     def edit_sale_price_in_sli(self, sli_prod_id: str, old_sale_price: float, new_sale_price: float, sale_id=None):
@@ -195,6 +201,8 @@ class SaleForm(QWidget):
     def _completed_edit_price(self):
         self._update_sli()
         self._update_total()
+        if self.parent:
+            self.parent.data_changed(self)
         self.load_widget.hide()
 
     def press_save(self):
@@ -218,9 +226,9 @@ class SaleForm(QWidget):
             self.thread_pool.start(db_create_sale)
 
     def _completed_sale(self):
-        self.update()
+        self.update_ui()
         if self.parent:
-            self.parent.on_update_sale_registration()
+            self.parent.data_changed(self)
         self.load_widget.hide()
 
 

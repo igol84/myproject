@@ -19,6 +19,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
 
     def __init__(self):
         super().__init__()
+        self.observers = []
         self.__db = None
         self.handler = None
         self.ui = None
@@ -33,6 +34,21 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.setup_ui()
         self.show()
         self.start_connection()
+
+    def register_observer(self, observer) -> None:
+        self.observers.append(observer)
+
+    def remove_observer(self, observer) -> None:
+        del self.observers[observer]
+
+    def notify_observer(self, this_observer=None) -> None:
+        for observer in self.observers:
+            if observer is not this_observer:
+                observer.update_data(store=self.handler.store)
+
+    def data_changed(self, this_observer=None) -> None:
+        self.handler.update_data(this_observer.handler.store)
+        self.notify_observer(this_observer)
 
     def setup_ui(self, db=None):
         if db:
@@ -113,23 +129,6 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.reset_selection()
         self.ui.settings_button.set_active(True)
         self.ui.pages.setCurrentWidget(self.ui.page_settings)
-
-    # -------------------on update pages-------------------------
-
-    def on_update_receiving_items(self):
-        self.handler.update_data()
-        self.items_form.update_data(self.handler.store)
-        self.sale_form.update_items_data(self.handler.store)
-        self.price_editor_form.update_data(self.handler.store)
-
-    def on_update_product_price_editor(self):
-        self.handler.update_data()
-        self.sale_form.update_items_data(self.handler.store)
-        self.items_form.update_data(self.handler.store)
-
-    def on_update_sale_registration(self):
-        self.handler.update_data()
-        self.price_editor_form.update_data(self.handler.store)
 
 
 if __name__ == '__main__':

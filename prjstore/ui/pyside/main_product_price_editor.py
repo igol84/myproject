@@ -1,5 +1,6 @@
 import sys
 
+from prjstore.ui.pyside.interface_observer import ObserverInterface
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.product_price_editor import schemas
 from prjstore.ui.pyside.product_price_editor.components import FrameProductFactory, ShoesFrame, ProductFrame
@@ -12,14 +13,17 @@ from prjstore.ui.pyside.utils.qt_core import *
 from prjstore.ui.pyside.utils.qt_utils import clearLayout
 
 
-class PriceEditor(QWidget):
+class PriceEditor(QWidget, ObserverInterface):
     products: list[schemas.ModelProduct]
     selected_item_widget: AbstractItem
     handler: ProductPriceEditorHandler
 
     def __init__(self, parent=None, test=False, user_data=None, list_pd_product=None, db=None, dark_style=False):
         super().__init__()
+        self.handler = None
         self.parent: MainWindowInterface = parent
+        if parent:
+            self.parent.register_observer(self)
         self.user_data = user_data
         self.db = db
         self.thread_pool = QThreadPool()
@@ -48,7 +52,8 @@ class PriceEditor(QWidget):
                 self.thread_pool.start(db_connector)
         else:
             store = self.parent.handler.store
-            self.connected_complete(ProductPriceEditorHandler(db=self.db, store=store))
+            handler = ProductPriceEditorHandler(db=self.db, store=store)
+            self.connected_complete(handler)
 
     def setup_dark_style(self):
         self.setStyleSheet(
@@ -61,7 +66,7 @@ class PriceEditor(QWidget):
 
     def on_search_text_changed(self):
         self.load_widget.show()
-        self.update_items_layout()
+        self.update_ui()
         self.load_widget.hide()
 
     def __connection_error(self, err: str):
@@ -70,16 +75,16 @@ class PriceEditor(QWidget):
 
     def connected_complete(self, handler: ProductPriceEditorHandler):
         self.handler = handler
-        self.update_items_layout()
+        self.update_ui()
         self.load_widget.hide()
 
     def update_data(self, store=None):
         self.load_widget.show()
         self.handler.update_data(store)
-        self.update_items_layout()
+        self.update_ui()
         self.load_widget.hide()
 
-    def update_items_layout(self):
+    def update_ui(self):
         self.products = self.handler.get_store_products(search=self.ui.src_products.text())
         clearLayout(self.ui.layout)
         self.selected_item_widget = None
@@ -103,7 +108,7 @@ class PriceEditor(QWidget):
         self.selected_product_frame.name = pd_data.new_name
         self.selected_product_frame.price = pd_data.new_price
         if self.parent:
-            self.parent.on_update_product_price_editor()
+            self.parent.data_changed(self)
         self.load_widget.hide()
 
     def on_press_edit_by_name(self, shoes_frame: ShoesFrame):
@@ -128,7 +133,7 @@ class PriceEditor(QWidget):
         if self.selected_shoes_frame.selected_size_frame:
             self.selected_shoes_frame.selected_size_frame.selected = False
         if self.parent:
-            self.parent.on_update_product_price_editor()
+            self.parent.data_changed(self)
         self.load_widget.hide()
 
     def on_press_edit_by_color(self, pr_name: str, color_frame: ColorFrame):
@@ -149,7 +154,7 @@ class PriceEditor(QWidget):
         if pd_color.price_for_sale is not None:
             self.selected_color_frame.set_price_of_all_sizes(pd_color.price_for_sale)
         if self.parent:
-            self.parent.on_update_product_price_editor()
+            self.parent.data_changed(self)
         self.load_widget.hide()
 
     def on_edit_size(self, size_frame: SizeFrame):
@@ -169,7 +174,7 @@ class PriceEditor(QWidget):
         self.selected_size_frame.price = pd_size.price_for_sale
         self.load_widget.hide()
         if self.parent:
-            self.parent.on_update_product_price_editor()
+            self.parent.data_changed(self)
 
 
 if __name__ == "__main__":

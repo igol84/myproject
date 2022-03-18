@@ -17,6 +17,9 @@ class MainHandler:
 
     store = property(get_store, set_store)
 
-    def update_data(self):
-        store_id = self.__db.headers['store_id']
-        self.__store = Store.create_from_schema(self.__db.store.get(id=store_id))
+    def update_data(self, store=None):
+        if not store:
+            store_id = self.__db.headers['store_id']
+            self.__store = Store.create_from_schema(self.__db.store.get(id=store_id))
+        else:
+            self.__store = store

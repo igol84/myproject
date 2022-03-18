@@ -1,17 +1,12 @@
 from prjstore.handlers.main_handler import MainHandler
+from prjstore.ui.pyside.interface_subject import SubjectInterface
 
 
-class MainWindowInterface:
+class MainWindowInterface(SubjectInterface):
     handler: MainHandler
 
     def start_connection(self):
         ...
 
-    def on_update_receiving_items(self) -> None:
-        ...
-
-    def on_update_product_price_editor(self) -> None:
-        ...
-
-    def on_update_sale_registration(self) -> None:
+    def data_changed(self, this_observer) -> None:
         ...

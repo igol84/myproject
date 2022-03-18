@@ -19,6 +19,8 @@ class ItemForm(QWidget):
                  dark_style=False, user_data=None, db=None):
         super().__init__()
         self.parent: MainWindowInterface = parent
+        if parent:
+            self.parent.register_observer(self)
         self.user_data = user_data
         self.db = db
         self.thread_pool = QThreadPool()
@@ -63,7 +65,7 @@ class ItemForm(QWidget):
 
     def __connected_complete(self, handler: ReceivingTheItemsHandler):
         self.handler = handler
-        self.update_layout()
+        self.update_ui()
 
     def setup_ui(self):
         self.setWindowTitle(self.keywords['header'])
@@ -85,10 +87,12 @@ class ItemForm(QWidget):
         self.ui.sizes_table.itemChanged.connect(self.on_table_item_edit)
 
     def update_data(self, store=None):
+        self.load_widget.show()
         self.handler.update_data(store)
-        self.update_layout()
+        self.update_ui()
+        self.load_widget.hide()
 
-    def update_layout(self):
+    def update_ui(self):
         self.load_widget.show()
         self.list_pd_prod = self.handler.get_products_data()
         self.keywords['shoes']['widths'] = self.handler.get_shoes_widths()
@@ -155,9 +159,9 @@ class ItemForm(QWidget):
                 self.thread_pool.start(db_save_data)
 
     def __completed_save(self):
-        self.update_layout()
+        self.update_ui()
         if self.parent:
-            self.parent.on_update_receiving_items()
+            self.parent.data_changed(self)
         self.load_widget.hide()
 
     def on_name_combo_box_changed(self):

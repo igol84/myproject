@@ -20,6 +20,11 @@ class ReceivingTheItemsHandler:
         else:
             self.update_data(store)
 
+    def get_store(self):
+        return self.__store
+
+    store = property(get_store)
+
     def get_store_id(self):
         return self.__store.id
 
