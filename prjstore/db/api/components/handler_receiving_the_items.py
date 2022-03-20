@@ -16,3 +16,5 @@ class API_HandlerReceivingTheItems:
                          data=data.json(), headers=self.headers)
         if r.status_code != 202:
             raise ConnectionError(r.text)
+        else:
+            return schema.OutputItems(**r.json())

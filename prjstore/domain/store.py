@@ -50,6 +50,13 @@ class Store:
         return items
 
     @validate_arguments
+    def set_item(self, item: Item):
+        if item.id not in self.items:
+            self.items[item.id] = item
+        else:
+            self.items[item.id].qty += item.qty
+
+    @validate_arguments
     def add_item(self, item: Item, qty: int = 1):
         if item.id not in self.items:
             self.items[item.id] = item

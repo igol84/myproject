@@ -1,6 +1,7 @@
 from PySide6.QtCore import Signal, QObject, QRunnable, Slot
 
-from prjstore.db import API_DB, schemas
+from prjstore.db import API_DB
+from prjstore.db.schemas import handler_receiving_the_items as db_schema
 from prjstore.handlers.receiving_the_items_handler import ReceivingTheItemsHandler
 
 
@@ -31,7 +32,7 @@ class DBSaveData(QRunnable):
         error = Signal(str)
         complete = Signal()
 
-    def __init__(self, handler: ReceivingTheItemsHandler, data: schemas.handler_receiving_the_items.ModelProduct):
+    def __init__(self, handler: ReceivingTheItemsHandler, data: db_schema.ModelProduct):
         super().__init__()
         self.handler = handler
         self.data = data

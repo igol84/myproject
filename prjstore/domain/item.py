@@ -23,6 +23,11 @@ class Item:
         return Item(id=schema.id, product=product, qty=schema.qty, buy_price=Money(schema.buy_price),
                     date_buy=schema.date_buy)
 
+    @staticmethod
+    def create_from_schema_with_product(schema: schemas.item.Item, product: AbstractProduct) -> 'Item':
+        return Item(id=schema.id, product=product, qty=schema.qty, buy_price=Money(schema.buy_price),
+                    date_buy=schema.date_buy)
+
     @validate_arguments
     def schema_create(self, store_id: int) -> schemas.item.ShowItemWithProduct:
         product = self.product.schema_create()
