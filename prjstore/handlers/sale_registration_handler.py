@@ -126,7 +126,7 @@ class SaleRegistrationHandler:
         for sli in sli_s:
             list_del_items.append(SaleLineItemKeys(sale_id=sale_id, item_id=sli.item.id, sale_price=sli_price))
             if sli.item.id not in self.store.items:
-                pd_item = schemas.item.CreateItem(prod_id=pr_id, store_id=sale_id, qty=sli.qty,
+                pd_item = schemas.item.CreateItem(prod_id=pr_id, store_id=self.store.id, qty=sli.qty,
                                                   buy_price=sli.item.buy_price.amount, date_buy=sli.item.date_buy)
                 list_new_items.append(pd_item)
             else:
