@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import validate_arguments
 
 from prjstore.db import API_DB, schemas
-from prjstore.db.schemas.handler_sale_registration import SaleLineItemKeys, PutItemFromOldSale
+from prjstore.db.schemas import handler_sale_registration as handler_schemas
 from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
 from prjstore.domain.store import Store
@@ -92,8 +92,6 @@ class SaleRegistrationHandler:
         for sale_item in sale_items:
             qty_line_item = sale_item.qty if qty_need_to_add > sale_item.qty else qty_need_to_add
             self.__sale.add_line_item(item=sale_item, qty=qty_line_item, sale_price=sale_price)
-            if sale_item.qty == 0:
-                del self.store.items[sale_item.id]
             qty_need_to_add -= qty_line_item
             if qty_need_to_add == 0:
                 break
@@ -124,7 +122,8 @@ class SaleRegistrationHandler:
         list_update_items = []
         delete = False
         for sli in sli_s:
-            list_del_items.append(SaleLineItemKeys(sale_id=sale_id, item_id=sli.item.id, sale_price=sli_price))
+            pd_key = handler_schemas.SaleLineItemKeys(sale_id=sale_id, item_id=sli.item.id, sale_price=sli_price)
+            list_del_items.append(pd_key)
             if sli.item.id not in self.store.items:
                 pd_item = schemas.item.CreateItem(prod_id=pr_id, store_id=self.store.id, qty=sli.qty,
                                                   buy_price=sli.item.buy_price.amount, date_buy=sli.item.date_buy)
@@ -139,8 +138,9 @@ class SaleRegistrationHandler:
         if not self.sale.list_sli:
             delete = True
             del self.__ledger[sale_id]
-        data = PutItemFromOldSale(sale_id=sale_id, list_del_sli=list_del_items, list_new_items=list_new_items,
-                                  list_update_items=list_update_items, delete=delete)
+        data = handler_schemas.PutItemFromOldSale(
+            sale_id=sale_id, list_del_sli=list_del_items, list_new_items=list_new_items,
+            list_update_items=list_update_items, delete=delete)
         self.__db.header_sale_registration.put_items_from_old_sale(data=data)
         self.__sale = tmp_sale
 
@@ -196,10 +196,12 @@ class SaleRegistrationHandler:
             current_place.sale = self.sale
             self.sale.completed()
             pd_sale = self.sale.schema_create(place_id=current_place_of_sale_id)
+            db_end_sale = handler_schemas.EndSale(sale=pd_sale)
             if self.test_mode:
                 return True
-            if new_sale := self.__db.sale.create(pd_sale):
-                self.__ledger.update(create_sales_by_sales_schemas([new_sale]))
+            new_sale: handler_schemas.OutputEndSale = self.__db.header_sale_registration.end_sale(db_end_sale)
+            if new_sale.sale:
+                self.__ledger.update(create_sales_by_sales_schemas([new_sale.sale]))
                 return True
         return False
 

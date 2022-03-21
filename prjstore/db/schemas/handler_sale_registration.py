@@ -1,7 +1,16 @@
 from pydantic import BaseModel
 
 from prjstore.db.schemas.item import CreateItem, UpdateItem
+from prjstore.db.schemas.sale import CreateSale, ShowSaleWithSLIs
 from prjstore.db.schemas.sale_line_item import SaleLineItem
+
+
+class EndSale(BaseModel):
+    sale: CreateSale
+
+
+class OutputEndSale(BaseModel):
+    sale: ShowSaleWithSLIs
 
 
 class EditSLIPrice(BaseModel):

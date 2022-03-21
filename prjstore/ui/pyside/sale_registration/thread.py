@@ -56,7 +56,7 @@ class DBCreateSale(QRunnable):
 
     def __init__(self, handler, current_data, current_place_of_sale_id, current_seller_id):
         super().__init__()
-        self.handler = handler
+        self.handler: SaleRegistrationHandler = handler
         self.current_data = current_data
         self.current_place_of_sale_id = current_place_of_sale_id
         self.current_seller_id = current_seller_id

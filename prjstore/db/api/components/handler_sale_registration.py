@@ -10,6 +10,14 @@ class API_HandlerSaleRegistration:
     def __init__(self, headers):
         self.headers = headers
 
+    def end_sale(self, data: schema.EndSale) -> schema.OutputEndSale:
+        r = requests.put(f"{settings.host}/{self.prefix}/end_sale",
+                         data=data.json(), headers=self.headers)
+        if r.status_code != 202:
+            raise ConnectionError(r.text)
+        else:
+            return schema.OutputEndSale(**r.json())
+
     def edit_sli_price(self, data: schema.EditSLIPrice):
         r = requests.put(f"{settings.host}/{self.prefix}/edit_sli_price",
                          data=data.json(), headers=self.headers)
