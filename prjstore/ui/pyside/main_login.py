@@ -38,6 +38,14 @@ class LoginFrame(QFrame):
         self.ui.name.setText(mame)
         self.ui.passw.setText(password)
 
+    def get_name(self) -> str:
+        return self.ui.name.text()
+
+    def set_name(self, name: str):
+        self.ui.name.setText(name)
+
+    name = property(get_name, set_name)
+
     def get_user_data(self) -> dict:
         name = self.ui.name.text() if self.ui.name.text() else 'name'
         password = self.ui.passw.text() if self.ui.passw.text() else 'password'

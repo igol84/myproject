@@ -26,11 +26,8 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.items_form: ItemForm = None
         self.sale_form: SaleForm = None
         self.price_editor_form: PriceEditor = None
-        self.setWindowTitle('Title')
         self.thread_pool = QThreadPool()
         self.login_form = LoginFrame(self)
-        self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
-        self.load_widget.show()
         self.setup_ui()
         self.show()
         self.start_connection()
@@ -58,7 +55,9 @@ class MainWindow(QMainWindow, MainWindowInterface):
             self.price_editor_form = PriceEditor(self, dark_style=True, db=db)
             self.items_form = ItemForm(self, dark_style=True, db=db)
             self.sale_form.setup_dark_style()
+            self.setWindowTitle(f'Shop - {self.login_form.name}')
         else:
+            self.setWindowTitle(f'Shop')
             self.sale_form = QWidget()
             self.price_editor_form = QWidget()
             self.items_form = QWidget()
@@ -70,6 +69,8 @@ class MainWindow(QMainWindow, MainWindowInterface):
         moduls['items_form'] = self.items_form
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self, moduls)
+        self.ui.load_widget = LoadWidget(parent=self.ui.pages, path='utils/loading.gif')
+        self.ui.load_widget.show()
 
     def start_connection(self):
         db_connector = DbConnect(self.login_form.get_user_data())
@@ -85,7 +86,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
     def __authentication_error(self, err: str):
         self.setup_ui()
         self.show_login_page()
-        self.load_widget.hide()
+        self.ui.load_widget.hide()
         QMessageBox.warning(self, err, err)
 
     def __connected_complete(self, db: API_DB):
@@ -97,8 +98,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.ui.login_button.clicked.connect(self.show_login_page)
         self.ui.settings_button.clicked.connect(self.show_settings_page_page)
         self.show_sale_registration_page()
-
-        self.load_widget.hide()
+        self.ui.load_widget.hide()
 
     def reset_selection(self):
         for btn in self.ui.left_menu.findChildren(QPushButton):
