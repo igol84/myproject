@@ -1,5 +1,6 @@
 import sys
 
+from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
@@ -38,7 +39,7 @@ class SaleForm(QWidget):
             self.setup_dark_style()
         self.ui.src_items.textChanged.connect(self.on_search_items_text_changed)
         self.ui.date_edit.setDate(QDate.currentDate())
-        self.ui.date_edit.dateChanged.connect(self.change_data)
+        self.ui.date_edit.dateChanged.connect(self.on_change_data)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
         if not self.parent:
@@ -76,7 +77,7 @@ class SaleForm(QWidget):
         self._update_sellers_names()
         self._update_sli()
         self._update_items_layout()
-        self.change_data()
+        self.on_change_data()
 
     def _update_paces_of_sales(self):
         self.ui.combo_box_place_of_sale.clear()
@@ -114,7 +115,7 @@ class SaleForm(QWidget):
     def _update_total(self):
         self.ui.total.setText(self.handler.get_total())
 
-    def change_data(self):
+    def on_change_data(self):
         date_sale = self.ui.date_edit.date().toPython()
         place_id = self.ui.combo_box_place_of_sale.currentData()
         seller_id = self.ui.combo_box_seller.currentData()

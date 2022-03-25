@@ -1,3 +1,5 @@
+from dataclasses import field
+
 from pydantic.dataclasses import dataclass
 
 from prjstore.db import schemas
@@ -8,6 +10,7 @@ from prjstore.domain.sale import Sale
 class PlaceOfSale:
     id: int
     name: str
+    ledger: dict[int, Sale] = field(default_factory=dict)
     sale: Sale = None
 
     def __hash__(self):

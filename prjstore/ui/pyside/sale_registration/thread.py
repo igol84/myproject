@@ -42,7 +42,7 @@ class DBGetSales(QRunnable):
     @Slot()
     def run(self):
         try:
-            self.handler.changed_date(date=self.date_sale, place_id=self.place_id, seller_id=self.seller_id)
+            self.handler.on_changed_date(date=self.date_sale, place_id=self.place_id, seller_id=self.seller_id)
         except OSError:
             self.signals.error.emit('Connection Error.')
         else:

@@ -1,13 +1,10 @@
-from collections import OrderedDict
 from typing import Optional
 
 from pydantic import BaseModel
 
-from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.domain.item import Item
 from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.products.shoes import Shoes
-from prjstore.domain.sale import Sale
 from prjstore.domain.sale_line_item import SaleLineItem
 
 
@@ -17,11 +14,6 @@ class ModelShoes(BaseModel):
     length: Optional[float] = None
     width: Optional[str] = None
     width_of_insole: Optional[float] = None
-
-
-class ModelSale(BaseModel):
-    sale: Sale
-    place: PlaceOfSale
 
 
 class ModelProduct(BaseModel):
@@ -178,52 +170,15 @@ def create_sli_schemas_by_items(list_sli: list[SaleLineItem]) -> dict[tuple[Prod
     return products
 
 
-def create_sale_schemas_by_ledger(ledger: dict[int, ModelSale]) -> list[ViewSale]:
+def create_sale_schemas_by_ledger(places: dict[int, PlaceOfSale]) -> list[ViewSale]:
     list_sales = []
-    for model in ledger.values():
-        pd_place = model.place
-        pd_sale = model.sale
-        pd_place = ViewPlace(id=pd_place.id, desc=pd_place.name)
-        pd_seller = ViewSeller(id=pd_sale.seller.id, desc=pd_sale.seller.name)
-        products: dict[tuple[ProductId, Price], ModelProduct] = create_sli_schemas_by_items(pd_sale.list_sli)
-        products_list = [product for product in products.values()]
-        pd_sale = ViewSale(id=pd_sale.id, place=pd_place, seller=pd_seller, products=products_list)
-        list_sales.append(pd_sale)
-    return sorted(list_sales, key=lambda sale: (sale.place.id, sale.seller.id))
-
-
-class ModelsSeller(BaseModel):
-    seller_id: int
-    desc: str
-
-    def __hash__(self):
-        return hash(self.seller_id)
-
-
-class ModelsPlace(BaseModel):
-    place_id: int
-    desc: str
-
-    def __hash__(self):
-        return hash(self.place_id)
-
-
-class SaleId(int):
-    pass
-
-
-class PlaceId(int):
-    pass
-
-
-class SellerId(int):
-    pass
-
-
-def create_sales_by_sales_schemas(pd_sales: list[ShowSaleWithSLIs]) -> dict[int, tuple[Sale, PlaceOfSale]]:
-    sales_by_date: dict[int, Sale] = {}
-    for pd_sale in pd_sales:
-        sale = Sale.create_from_schema(pd_sale)
-        place = PlaceOfSale.create_from_schema(pd_sale.place)
-        sales_by_date[sale.id] = ModelSale(sale=sale, place=place)
-    return OrderedDict(sorted(sales_by_date.items()))
+    for place in places.values():
+        pd_place = ViewPlace(id=place.id, desc=place.name)
+        for sale in place.ledger.values():
+            pd_seller = ViewSeller(id=sale.seller.id, desc=sale.seller.name)
+            products: dict[tuple[ProductId, Price], ModelProduct]
+            products = create_sli_schemas_by_items(sale.list_sli)
+            products_list = [product for product in products.values()]
+            pd_sale = ViewSale(id=sale.id, place=pd_place, seller=pd_seller, products=products_list)
+            list_sales.append(pd_sale)
+    return sorted(list_sales, key=lambda _sale: (_sale.place.id, _sale.seller.id))
