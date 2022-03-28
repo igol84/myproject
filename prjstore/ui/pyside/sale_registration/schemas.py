@@ -171,7 +171,7 @@ def create_sli_schemas_by_items(list_sli: list[SaleLineItem]) -> dict[tuple[Prod
     return products
 
 
-def create_sale_schemas_by_ledger(places: dict[int, PlaceOfSale], date: datetime.date) -> list[ViewSale]:
+def create_sale_schemas_by_places(places: dict[int, PlaceOfSale], date: datetime.date) -> list[ViewSale]:
     list_sales = []
     for place in places.values():
         pd_place = ViewPlace(id=place.id, desc=place.name)

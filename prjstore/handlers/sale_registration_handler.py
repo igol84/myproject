@@ -12,7 +12,7 @@ from prjstore.domain.store import Store
 from prjstore.handlers.data_for_test.sale_registration import put_test_data
 from prjstore.ui.pyside.sale_registration.schemas import (
     ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items, ProductId, Price,
-    create_sale_schemas_by_ledger, ViewSale, ViewProduct
+    create_sale_schemas_by_places, ViewSale, ViewProduct
 )
 from util.money import Money
 
@@ -60,6 +60,10 @@ class SaleRegistrationHandler:
     @validate_arguments
     def update_store_ledgers_by_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
         pd_sales: list[ShowSaleWithSLIs]
+        for place in self.store.places_of_sale.values():
+            for sale in place.ledger.values():
+                if sale.date_time.date() == date:
+                    return None
         pd_sales = self.__db.sale.get_all(store_id=self.store.id, date=date, place_id=place_id, seller_id=seller_id)
         for pd_sale in pd_sales:
             sale = Sale.create_from_schema(pd_sale)
@@ -80,7 +84,7 @@ class SaleRegistrationHandler:
         return create_sli_schemas_by_items(list_sli)
 
     def get_old_sales(self, date: datetime.date = None) -> list[ViewSale]:
-        return create_sale_schemas_by_ledger(self.store.places_of_sale, date)
+        return create_sale_schemas_by_places(self.store.places_of_sale, date)
 
     @validate_arguments
     def search_items(self, text: str) -> dict[str: Item]:
