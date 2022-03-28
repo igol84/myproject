@@ -59,8 +59,6 @@ class SaleRegistrationHandler:
 
     @validate_arguments
     def update_store_ledgers_by_date(self, date: datetime.date, place_id: int = None, seller_id: int = None) -> None:
-        for place in self.store.places_of_sale.values():
-            place.ledger.clear()
         pd_sales: list[ShowSaleWithSLIs]
         pd_sales = self.__db.sale.get_all(store_id=self.store.id, date=date, place_id=place_id, seller_id=seller_id)
         for pd_sale in pd_sales:
@@ -81,8 +79,8 @@ class SaleRegistrationHandler:
                     break
         return create_sli_schemas_by_items(list_sli)
 
-    def get_old_sales(self) -> list[ViewSale]:
-        return create_sale_schemas_by_ledger(self.store.places_of_sale)
+    def get_old_sales(self, date: datetime.date = None) -> list[ViewSale]:
+        return create_sale_schemas_by_ledger(self.store.places_of_sale, date)
 
     @validate_arguments
     def search_items(self, text: str) -> dict[str: Item]:
@@ -183,13 +181,15 @@ class SaleRegistrationHandler:
     def get_store_sellers_names(self) -> dict[int, str]:
         return {seller_id: seller.name for seller_id, seller in list(self.store.sellers.items())}
 
-    def get_total(self) -> str:
+    def get_total(self, date: datetime.date) -> str:
         total: Money = None
         total_purchase: Money = None
         total_str = ''
         all_sales = [self.sale]
         for place in self.store.places_of_sale.values():
-            all_sales.extend(place.ledger.values())
+            for sale in place.ledger.values():
+                if sale.date_time.date() == date:
+                    all_sales.append(sale)
         for sale in all_sales:
             if sale.list_sli:
                 total = total + sale.get_total() if total else sale.get_total()

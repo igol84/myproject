@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -170,15 +171,16 @@ def create_sli_schemas_by_items(list_sli: list[SaleLineItem]) -> dict[tuple[Prod
     return products
 
 
-def create_sale_schemas_by_ledger(places: dict[int, PlaceOfSale]) -> list[ViewSale]:
+def create_sale_schemas_by_ledger(places: dict[int, PlaceOfSale], date: datetime.date) -> list[ViewSale]:
     list_sales = []
     for place in places.values():
         pd_place = ViewPlace(id=place.id, desc=place.name)
         for sale in place.ledger.values():
-            pd_seller = ViewSeller(id=sale.seller.id, desc=sale.seller.name)
-            products: dict[tuple[ProductId, Price], ModelProduct]
-            products = create_sli_schemas_by_items(sale.list_sli)
-            products_list = [product for product in products.values()]
-            pd_sale = ViewSale(id=sale.id, place=pd_place, seller=pd_seller, products=products_list)
-            list_sales.append(pd_sale)
+            if sale.date_time.date() == date:
+                pd_seller = ViewSeller(id=sale.seller.id, desc=sale.seller.name)
+                products: dict[tuple[ProductId, Price], ModelProduct]
+                products = create_sli_schemas_by_items(sale.list_sli)
+                products_list = [product for product in products.values()]
+                pd_sale = ViewSale(id=sale.id, place=pd_place, seller=pd_seller, products=products_list)
+                list_sales.append(pd_sale)
     return sorted(list_sales, key=lambda _sale: (_sale.place.id, _sale.seller.id))

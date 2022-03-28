@@ -106,14 +106,16 @@ class SaleForm(QWidget):
             self.ui.sli_layout.addWidget(btn_new_sale, alignment=Qt.AlignRight)
             btn_new_sale.clicked.connect(self.press_save)
         # Old sales
-        self.old_sales = self.handler.get_old_sales()
+        date_sale = self.ui.date_edit.date().toPython()
+        self.old_sales = self.handler.get_old_sales(date_sale)
         for dp_sale in self.old_sales:
             sale_frame = Sale_Frame(self, dp_sale)
             self.ui.sli_layout.addWidget(sale_frame)
         self.ui.sli_layout.addStretch(0)
 
     def _update_total(self):
-        self.ui.total.setText(self.handler.get_total())
+        date_sale = self.ui.date_edit.date().toPython()
+        self.ui.total.setText(self.handler.get_total(date_sale))
 
     def on_change_data(self):
         date_sale = self.ui.date_edit.date().toPython()
