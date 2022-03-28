@@ -20,8 +20,7 @@ class DbConnect(QRunnable):
     def run(self):
         try:
             db = API_DB(self.user_data)
-        except  requests.exceptions.RequestException as err:
-
+        except requests.exceptions.RequestException as err:
             self.signals.connection_error.emit('Connection Error.', str(err))
         except ConnectionError:
             self.signals.connection_error.emit('Connection Error.', 'Connection Error.')

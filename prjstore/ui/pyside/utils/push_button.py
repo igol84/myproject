@@ -72,7 +72,6 @@ class PyPushBottom(QPushButton):
         folder = 'main_window/images/icons'
         path = os.path.join(app_path, folder)
         icon_path = os.path.normpath(os.path.join(path, image))
-
         # Draw icon
         icon = QPixmap(icon_path)
         qp.drawPixmap((rect.width() - icon.width()) / 2, (rect.height() - icon.height()) / 2, icon)
