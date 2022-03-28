@@ -79,8 +79,8 @@ class MainWindow(QMainWindow, MainWindowInterface):
         db_connector.signals.result.connect(self.__connected_complete)
         self.thread_pool.start(db_connector)
 
-    def __connection_error(self, err: str):
-        QMessageBox.warning(self, err, err)
+    def __connection_error(self, err: str, desc: str):
+        QMessageBox.warning(self, err, desc)
         sys.exit(app.exec())
 
     def __authentication_error(self, err: str):

@@ -1,3 +1,4 @@
+import requests
 from PySide6.QtCore import Signal, QObject, QRunnable, Slot
 
 from prjstore.db import API_DB
@@ -6,7 +7,7 @@ from prjstore.db.api.authorizations import AuthException
 
 class DbConnect(QRunnable):
     class Signals(QObject):
-        connection_error = Signal(str)
+        connection_error = Signal(str, str)
         authentication_error = Signal(str)
         result = Signal(API_DB)
 
@@ -19,8 +20,11 @@ class DbConnect(QRunnable):
     def run(self):
         try:
             db = API_DB(self.user_data)
+        except  requests.exceptions.RequestException as err:
+
+            self.signals.connection_error.emit('Connection Error.', str(err))
         except ConnectionError:
-            self.signals.connection_error.emit('Connection Error.')
+            self.signals.connection_error.emit('Connection Error.', 'Connection Error.')
         except AuthException:
             self.signals.authentication_error.emit('Authentication Error.')
         else:
