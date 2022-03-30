@@ -48,38 +48,44 @@ class ProductPriceEditorHandler:
         # edit on DB
         new_data: ModelSizeForm = self.__db.handler_product_price_editor.edit_product(data)
         # edit in Domain Model
-        items = self.store.get_items_by_pr_id(data.id)
-        for item in items:
-            item.product.name = data.new_name
-            item.product.price.amount = data.new_price
+        product = self.store.pc[data.id]
+        if data.new_name is not None:
+            product.name = data.new_name
+        if data.new_price is not None:
+            product.price.amount = data.new_price
         return new_data
 
     def edit_size(self, data: ModelSizeForm) -> ModelSizeForm:
         # edit on DB
         new_data: ModelSizeForm = self.__db.handler_product_price_editor.edit_size(data)
         # edit in Domain Model
-        sizes = self.store.get_items_by_pr_id(data.id)
-        for size in sizes:
-            size.product.price.amount = data.price_for_sale
-            size.product.size = data.size
+        product = self.store.pc[data.id]
+        if data.price_for_sale is not None:
+            product.price.amount = data.price_for_sale
+        if data.size is not None:
+            product.size = data.size
         return new_data
 
     def edit_shoes(self, data: ModelShoesForm) -> ModelShoesForm:
         # edit on DB
         new_data: ModelShoesForm = self.__db.handler_product_price_editor.edit_shoes(data)
         # edit in Domain Model
-        list_shoes = self.store.get_items_by_pr_name(data.name)
-        for shoes in list_shoes:
-            shoes.product.name = data.new_name
-            shoes.product.price.amount = data.price_for_sale
+        products = self.store.pc.find(name=data.name)
+        for product in products:
+            if data.new_name is not None:
+                product.name = data.new_name
+            if data.price_for_sale is not None:
+                product.price.amount = data.price_for_sale
         return new_data
 
     def edit_color(self, data: ModelColorForm) -> ModelColorForm:
         # edit on DB
         new_data: ModelShoesForm = self.__db.handler_product_price_editor.edit_color(data)
         # edit in Domain Model
-        list_shoes = self.store.get_items_by_name_and_color(data.name, data.color)
-        for shoes in list_shoes:
-            shoes.product.color = data.new_color
-            shoes.product.price.amount = data.price_for_sale
+        products = self.store.pc.find(name=data.name, shoes={'color': data.color})
+        for product in products:
+            if data.new_color is not None:
+                product.color = data.new_color
+            if data.price_for_sale is not None:
+                product.price.amount = data.price_for_sale
         return new_data

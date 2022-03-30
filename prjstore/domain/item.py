@@ -5,6 +5,7 @@ from pydantic.dataclasses import dataclass
 
 from prjstore.db import schemas
 from prjstore.domain.abstract_product import AbstractProduct
+from prjstore.domain.product_catalog import ProductCatalog
 from prjstore.domain.product_factory import ProductFactory
 from util.money import Money
 
@@ -18,8 +19,10 @@ class Item:
     date_buy: date = date.today()
 
     @staticmethod
-    def create_from_schema(schema: schemas.item.ShowItemWithProduct) -> 'Item':
+    def create_from_schema(schema: schemas.item.ShowItemWithProduct, pc: ProductCatalog = None) -> 'Item':
         product = ProductFactory.create_from_schema(schema.product)
+        if pc and schema.product.id in pc.products:
+            product = pc[schema.product.id]
         return Item(id=schema.id, product=product, qty=schema.qty, buy_price=Money(schema.buy_price),
                     date_buy=schema.date_buy)
 

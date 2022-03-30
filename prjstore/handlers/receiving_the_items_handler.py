@@ -50,6 +50,7 @@ class ReceivingTheItemsHandler:
         pd_products = {}
         sorted_products = sorted(prods.values(), key=lambda k: k.prod_id)
         for prod in sorted_products:
+
             color = getattr(prod, 'color', None)
             width_type = getattr(prod, 'width', None)
             width = getattr(width_type, 'name', None)

@@ -44,6 +44,20 @@ class ProductCatalog:
                     products[product.prod_id] = product
         return products
 
+    @validate_arguments
+    def find(self, name: str = None, shoes: dict = None) -> list[AbstractProduct]:
+        products = []
+        if name and shoes is None:
+            for product in self.products.values():
+                if name == product.name:
+                    products.append(product)
+        elif name and shoes:
+            for product in self.products.values():
+                if product.product_type == 'shoes' and name == product.name:
+                    if 'color' in shoes and product.color == shoes['color']:
+                        products.append(product)
+        return products
+
     @staticmethod
     def create_from_schema(schema: list[schemas.product_catalog.ShowRowProductCatalogWithProduct]) -> 'ProductCatalog':
         pc = ProductCatalog()

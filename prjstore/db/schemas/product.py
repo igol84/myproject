@@ -20,7 +20,7 @@ class UpdateProduct(CreateProduct):
 
 
 class Product(BaseProduct):
-    id: Optional[int] = None
+    id: Optional[str] = None
     shoes: Optional[Shoes] = None
 
     class Config:

@@ -47,10 +47,10 @@ class SaleRegistrationHandler:
 
     def update_data(self, store: Store):
         self.__sale = Sale()
-        if store:
-            self.__store = store
-        else:
+        if not store:
             self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
+        else:
+            self.__store = store
 
     @validate_arguments
     def get_store_items(self, search: Optional[str] = None) -> list[ViewProduct]:

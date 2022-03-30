@@ -39,17 +39,6 @@ class Store:
         return items
 
     @validate_arguments
-    def get_items_by_pr_name(self, name: str) -> list[Item]:
-        items = [item for item in self.items.values() if item.product.name == name and item.qty > 0]
-        return items
-
-    @validate_arguments
-    def get_items_by_name_and_color(self, name: str, color: str) -> list[Item]:
-        items = [item for item in self.items.values()
-                 if item.product.name == name and item.product.color == color and item.qty > 0]
-        return items
-
-    @validate_arguments
     def set_item(self, item: Item):
         if item.id not in self.items:
             self.items[item.id] = item
@@ -65,7 +54,7 @@ class Store:
     @staticmethod
     def create_from_schema(schema: schemas.store.StoreWithDetails) -> 'Store':
         pc = ProductCatalog.create_from_schema(schema.products_catalog)
-        items = {item.id: item for item in [Item.create_from_schema(item_pd) for item_pd in schema.items]}
+        items = {item.id: item for item in [Item.create_from_schema(item_pd, pc) for item_pd in schema.items]}
         places = {place.id: place for place in [PlaceOfSale.create_from_schema(place_pd) for place_pd in schema.places]}
         sellers = {seller.id: seller for seller in
                    [Seller.create_from_schema(seller_pd) for seller_pd in schema.sellers]}

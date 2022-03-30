@@ -112,13 +112,13 @@ class PriceEditor(QWidget, ObserverInterface):
         self.load_widget.hide()
 
     def on_press_edit_by_name(self, shoes_frame: ShoesFrame):
+        self.load_widget.show()
         self.selected_shoes_frame = shoes_frame
         name = shoes_frame.name
         new_price = shoes_frame.desc_frame.price_line_edit.text()
         new_price = new_price if new_price else None
         new_name = shoes_frame.desc_frame.line_edit_desc.text()
         ps_shoes = ModelShoesForm(name=name, new_name=new_name, price_for_sale=new_price)
-        self.load_widget.show()
         db_edit_shoes = DBEditShoes(self.handler, ps_shoes)
         db_edit_shoes.signals.error.connect(self.__connection_error)
         db_edit_shoes.signals.result.connect(self.__update_shoes_complete)

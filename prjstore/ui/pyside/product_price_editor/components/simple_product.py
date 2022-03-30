@@ -177,7 +177,7 @@ if __name__ == '__main__':
     win = QWidget()
     v_box = QVBoxLayout(win)
     pd_product = ViewProduct(prod_id='12', name='battery', price=122.6, price_format='126.60$', qty=5)
-    frame = ProductFrame(pd_product=pd_product)
+    frame = ProductFrame(item_pd=pd_product)
     v_box.addWidget(frame)
     win.show()
     sys.exit(app.exec())
