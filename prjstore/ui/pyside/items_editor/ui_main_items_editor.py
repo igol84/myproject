@@ -1,16 +1,18 @@
 from prjstore.ui.pyside.utils.qt_core import *
 
 
-class UI_Frame(object):
-    def setup_ui(self, parent: QFrame):
-        if not parent.objectName():
-            parent.setObjectName('ProductPriceEdit')
-        self.layout = QVBoxLayout(parent)
+class UI_ItemsEditor:
+    def setup_ui(self, items_editor_frame: QFrame):
+        if not items_editor_frame.objectName():
+            items_editor_frame.setObjectName('ItemsEditor')
+        items_editor_frame.resize(500, 600)
+        items_editor_frame.setMinimumWidth(600)
+        self.layout = QVBoxLayout(items_editor_frame)
         self.layout.setObjectName('VBoxLayout')
 
         # Searcher
-        self.src_products = QLineEdit()
-        self.src_products.setObjectName('ProductLineEdit')
+        self.src_items = QLineEdit()
+        self.src_items.setObjectName('LineEditStcItems')
 
         # Scroll Area
         self.scroll = QScrollArea()
@@ -25,7 +27,7 @@ class UI_Frame(object):
 
         self.product_frame = QFrame()
 
-        self.layout_products = QVBoxLayout(self.product_frame)
+        self.layout_items = QVBoxLayout(self.product_frame)
 
         self.scroll_layout.addWidget(self.product_frame)
         self.scroll_layout.addItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Expanding))
@@ -34,5 +36,5 @@ class UI_Frame(object):
         self.scroll.setWidget(self.scroll_frame)
 
         # Add to layout
-        self.layout.addWidget(self.src_products)
+        self.layout.addWidget(self.src_items)
         self.layout.addWidget(self.scroll)

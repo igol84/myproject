@@ -86,11 +86,11 @@ class PriceEditor(QWidget, ObserverInterface):
 
     def update_ui(self):
         self.products = self.handler.get_store_products(search=self.ui.src_products.text())
-        clearLayout(self.ui.layout)
+        clearLayout(self.ui.layout_products)
         self.selected_item_widget = None
         for item in self.products:
             item_frame = FrameProductFactory.create(product_type=item.type, parent=self, item_pd=item)
-            self.ui.layout.addWidget(item_frame)
+            self.ui.layout_products.addWidget(item_frame)
 
     def on_press_edit_simple_product(self, product_frame: ProductFrame):
         self.selected_product_frame = product_frame
