@@ -15,7 +15,6 @@ class ItemWidget(ItemFrame):
     __date_buy: datetime.date
     __dates_of_sale: list[datetime.date]
 
-    __parent: object
     __selected: bool
 
     def __init__(self, item_pd: ViewItem, parent=None):
@@ -32,6 +31,8 @@ class ItemWidget(ItemFrame):
         self.date_buy = item_pd.date_buy
         self.__dates_of_sale = item_pd.dates_of_sale
         self.set_default_style()
+        self.ui.button_edit.clicked.connect(self.on_clicked_edit)
+        self.ui.button_del.clicked.connect(self.on_clicked_del)
 
     def get_parent(self):
         return self.__parent
@@ -95,20 +96,22 @@ class ItemWidget(ItemFrame):
         self.__selected = flag
         if flag:
             self.set_selected_style()
-            self.ui.button.show()
-            self.ui.empty_button.hide()
             self.ui.qty_box.show()
             self.ui.label_qty.hide()
             self.ui.line_edit_price_buy.show()
             self.ui.label_price_buy.hide()
+            self.ui.empty_button.hide()
+            self.ui.button_edit.show()
+            self.ui.button_del.show()
         else:
             self.set_default_style()
-            self.ui.button.hide()
-            self.ui.empty_button.show()
             self.ui.qty_box.hide()
             self.ui.label_qty.show()
             self.ui.line_edit_price_buy.hide()
             self.ui.label_price_buy.show()
+            self.ui.empty_button.show()
+            self.ui.button_edit.hide()
+            self.ui.button_del.hide()
 
     selected = property(get_selected, set_selected)
 
@@ -135,6 +138,18 @@ class ItemWidget(ItemFrame):
         else:
             self.selected = True
         return QFrame.mousePressEvent(self, event)
+
+    def on_clicked_edit(self):
+        if self.parent_widget:
+            self.parent_widget.on_press_edit_item(self)
+        else:
+            self.selected = False
+
+    def on_clicked_del(self):
+        if self.parent_widget:
+            self.parent_widget.on_press_del_item(self)
+        else:
+            self.selected = False
 
 
 if __name__ == '__main__':

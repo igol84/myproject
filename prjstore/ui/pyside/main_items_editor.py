@@ -1,10 +1,11 @@
 import sys
 
+from prjstore.db.schemas import handler_items_editor as db_schemas
 from prjstore.handlers.items_editor_handler import ItemsEditorHandler
 from prjstore.ui.pyside.interface_observer import ObserverInterface
 from prjstore.ui.pyside.items_editor import schemas
 from prjstore.ui.pyside.items_editor.components.item_widget import ItemWidget
-from prjstore.ui.pyside.items_editor.thread import DbConnect
+from prjstore.ui.pyside.items_editor.thread import DbConnect, DBEditItem, DBDeleteItem
 from prjstore.ui.pyside.items_editor.ui_items_editor import UI_ItemsEditor
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
@@ -63,10 +64,13 @@ class ItemsEditor(QWidget, ObserverInterface):
                 self.__selected_item_widget.selected = False
             self.__selected_item_widget = selected_item_widget
         else:
-            self.__selected_item_widget.selected = False
-            self.__selected_item_widget = None
+            del self.selected_item_widget
 
-    selected_item_widget = property(get_selected_item_widget, set_selected_item_widget)
+    def del_selected_item_widget(self) -> None:
+        self.__selected_item_widget.selected = False
+        self.__selected_item_widget = None
+
+    selected_item_widget = property(get_selected_item_widget, set_selected_item_widget, del_selected_item_widget)
 
     def setup_dark_style(self):
         self.setStyleSheet(
@@ -103,6 +107,36 @@ class ItemsEditor(QWidget, ObserverInterface):
         for pd_item in self.__pd_items:
             item_frame = ItemWidget(item_pd=pd_item, parent=self)
             self.ui.layout_items.addWidget(item_frame)
+
+    def on_press_edit_item(self, selected_item_widget: ItemWidget) -> None:
+        item_id = selected_item_widget.item_id
+        qty = selected_item_widget.ui.qty_box.text()
+        price = selected_item_widget.ui.line_edit_price_buy.text()
+        pd_data = db_schemas.ItemForm(id=item_id, new_qty=qty, new_price=price)
+        self.load_widget.show()
+        db_edit_item = DBEditItem(self.handler, pd_data)
+        db_edit_item.signals.error.connect(self.__connection_error)
+        db_edit_item.signals.result.connect(self.__update_item_complete)
+        self.thread_pool.start(db_edit_item)
+
+    def __update_item_complete(self, data: db_schemas.ItemForm):
+        self.selected_item_widget.qty = data.new_qty
+        self.selected_item_widget.price_buy = data.new_price
+        del self.selected_item_widget
+        self.load_widget.hide()
+
+    def on_press_del_item(self, selected_item_widget: ItemWidget) -> None:
+        item_id = selected_item_widget.item_id
+        self.load_widget.show()
+        db_edit_product = DBDeleteItem(self.handler, item_id)
+        db_edit_product.signals.error.connect(self.__connection_error)
+        db_edit_product.signals.complete.connect(self.__deleted_item_complete)
+        self.thread_pool.start(db_edit_product)
+
+    def __deleted_item_complete(self):
+        self.selected_item_widget.hide()
+        del self.selected_item_widget
+        self.load_widget.hide()
 
 
 if __name__ == "__main__":

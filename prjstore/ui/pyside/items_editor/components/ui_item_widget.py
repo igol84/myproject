@@ -48,17 +48,23 @@ class UI_ItemWidget:
         self.label_date_buy = QLabel()
         self.label_date_buy = QLabel()
         self.label_date_buy.setObjectName('LabelDateBuy')
-        self.label_date_buy.setFixedWidth(80)
+        self.label_date_buy.setFixedWidth(60)
 
         self.empty_button = QWidget()
         self.empty_button.setObjectName('LabelButton')
-        self.empty_button.setFixedWidth(50)
+        self.empty_button.setFixedWidth(70)
 
-        self.button = QPushButton('del')
-        self.button.setStyleSheet(f'background-color: #EEE; color: #000')
-        self.button.setObjectName('LabelButton')
-        self.button.setFixedWidth(50)
-        self.button.hide()
+        self.button_edit = QPushButton('ok')
+        self.button_edit.setStyleSheet(f'background-color: #EEE; color: #000')
+        self.button_edit.setObjectName('LabelButton')
+        self.button_edit.setFixedWidth(30)
+        self.button_edit.hide()
+
+        self.button_del = QPushButton('del')
+        self.button_del.setStyleSheet(f'background-color: #EEE; color: #000')
+        self.button_del.setObjectName('LabelButton')
+        self.button_del.setFixedWidth(35)
+        self.button_del.hide()
 
         # Add to layout
         self.layuot.addWidget(self.label_prod_id)
@@ -69,7 +75,8 @@ class UI_ItemWidget:
         self.layuot.addWidget(self.label_price_buy)
         self.layuot.addWidget(self.line_edit_price_buy)
         self.layuot.addWidget(self.label_date_buy)
-        self.layuot.addWidget(self.button)
+        self.layuot.addWidget(self.button_edit)
+        self.layuot.addWidget(self.button_del)
         self.layuot.addWidget(self.empty_button)
 
 

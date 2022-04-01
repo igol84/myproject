@@ -3,6 +3,7 @@ from typing import Optional
 from pydantic import validate_arguments
 
 from prjstore.db import API_DB
+from prjstore.db.schemas import handler_items_editor as db_schemas
 from prjstore.domain.item import Item
 from prjstore.domain.store import Store
 from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_store
@@ -53,3 +54,19 @@ class ItemsEditorHandler:
     @validate_arguments
     def search_items(self, text: str) -> dict[str: Item]:
         return self.__store.search_items(value=text, fields={'name', 'prod_id'})
+
+    def edit_item(self, pd_item: db_schemas.ItemForm):
+        # edit on DB
+        # new_data: ModelSizeForm = self.__db.handler_product_price_editor.edit_size(data)
+        new_data = pd_item
+        # edit in Domain Model
+        item = self.__store.items[pd_item.id]
+        item.qty = pd_item.new_qty
+        item.buy_price.amount = pd_item.new_price
+        return new_data
+
+    def delete_item(self, item_id: int) -> None:
+        # edit on DB
+        # new_data: ModelSizeForm = self.__db.handler_product_price_editor.edit_size(data)
+        # edit in Domain Model
+        del self.__store.items[item_id]

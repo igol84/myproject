@@ -1,10 +1,7 @@
 from PySide6.QtCore import Signal, QObject, QRunnable, Slot
 
 from prjstore.db import API_DB
-from prjstore.db.schemas.handler_product_price_editor import ModelColorForm
-from prjstore.db.schemas.handler_product_price_editor import ModelShoesForm
-from prjstore.db.schemas.handler_product_price_editor import ModelSizeForm
-from prjstore.db.schemas.handler_product_price_editor import ModelProductForm
+from prjstore.db.schemas.handler_product_price_editor import *
 from prjstore.handlers.product_price_editor_handler import ProductPriceEditorHandler
 
 
