@@ -23,14 +23,15 @@ class UI_ItemsEditor:
         self.scroll_layout = QVBoxLayout(self.scroll_frame)
         self.scroll_layout.setContentsMargins(0, 0, 0, 0)
         self.scroll_layout.setSpacing(0)
-        self.scroll_frame.setObjectName('ProductFrame')
+        self.scroll_frame.setObjectName('ItemsFrame')
 
         self.product_frame = QFrame()
+        self.product_frame.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         self.layout_items = QVBoxLayout(self.product_frame)
 
         self.scroll_layout.addWidget(self.product_frame)
-        self.scroll_layout.addItem(QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Expanding))
+        self.scroll_layout.addItem(QSpacerItem(0, 100, QSizePolicy.Expanding, QSizePolicy.Expanding))
 
         # Add to frame layout
         self.scroll.setWidget(self.scroll_frame)

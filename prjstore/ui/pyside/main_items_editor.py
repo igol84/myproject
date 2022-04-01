@@ -5,7 +5,7 @@ from prjstore.ui.pyside.interface_observer import ObserverInterface
 from prjstore.ui.pyside.items_editor import schemas
 from prjstore.ui.pyside.items_editor.components.item_widget import ItemWidget
 from prjstore.ui.pyside.items_editor.thread import DbConnect
-from prjstore.ui.pyside.items_editor.ui_main_items_editor import UI_ItemsEditor
+from prjstore.ui.pyside.items_editor.ui_items_editor import UI_ItemsEditor
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 from prjstore.ui.pyside.utils.qt_core import *
@@ -38,6 +38,7 @@ class ItemsEditor(QWidget, ObserverInterface):
             self.setup_dark_style()
         self.__selected_item_widget = None
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
+        self.ui.src_items.textChanged.connect(self.on_search_text_changed)
 
         if not self.parent:
             if not self.test:
@@ -62,17 +63,17 @@ class ItemsEditor(QWidget, ObserverInterface):
                 self.__selected_item_widget.selected = False
             self.__selected_item_widget = selected_item_widget
         else:
-            del self.selected_item_widget
+            self.__selected_item_widget.selected = False
+            self.__selected_item_widget = None
 
-    def del_set_selected_item_widget(self) -> None:
-        self.__selected_item_widget.selected = False
-        self.__selected_item_widget = None
-
-    selected_item_widget = property(get_selected_item_widget, set_selected_item_widget, del_set_selected_item_widget)
+    selected_item_widget = property(get_selected_item_widget, set_selected_item_widget)
 
     def setup_dark_style(self):
         self.setStyleSheet(
-            ''
+            '#ItemsEditor, #ItemsFrame {background-color: #2F303B; color: #F8F8F2;}\n'
+            'QLabel {color: #F8F8F2;}\n'
+            'QComboBox, QDateEdit {background-color: #121212; color: #dcdcdc; border:2px solid #484B5E;}\n'
+            'QLineEdit {background-color: #121212; color: #dcdcdc;}'
         )
 
     def on_search_text_changed(self):

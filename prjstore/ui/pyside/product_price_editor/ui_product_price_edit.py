@@ -24,6 +24,7 @@ class UI_Frame(object):
         self.scroll_frame.setObjectName('ProductFrame')
 
         self.product_frame = QFrame()
+        self.product_frame.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         self.layout_products = QVBoxLayout(self.product_frame)
 
