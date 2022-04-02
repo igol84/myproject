@@ -11,6 +11,7 @@ from prjstore.db.api.components.store import API_Store
 from prjstore.db.api.components.handler_sale_registration import API_HandlerSaleRegistration
 from prjstore.db.api.components.handler_receiving_the_items import API_HandlerReceivingTheItems
 from prjstore.db.api.components.handler_product_price_editor import API_HandlerProductPriceEditor
+from prjstore.db.api.components.handler_items_editor import API_HandlerItemEditor
 
 
 class API_DB:
@@ -27,6 +28,7 @@ class API_DB:
         self.header_sale_registration = API_HandlerSaleRegistration(self.headers)
         self.header_receiving_the_items = API_HandlerReceivingTheItems(self.headers)
         self.handler_product_price_editor = API_HandlerProductPriceEditor(self.headers)
+        self.handler_items_editor = API_HandlerItemEditor(self.headers)
 
 
 if __name__ == '__main__':

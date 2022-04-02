@@ -30,9 +30,9 @@ class DbConnect(QRunnable):
 class DBEditItem(QRunnable):
     class Signals(QObject):
         error = Signal(str)
-        result = Signal(schemas.ItemForm)
+        result = Signal(schemas.ItemFormEdit)
 
-    def __init__(self, handler: ItemsEditorHandler, pd_data: schemas.ItemForm):
+    def __init__(self, handler: ItemsEditorHandler, pd_data: schemas.ItemFormEdit):
         super().__init__()
         self.handler = handler
         self.pd_data = pd_data
@@ -41,7 +41,7 @@ class DBEditItem(QRunnable):
     @Slot()
     def run(self):
         try:
-            pd_data: schemas.ItemForm = self.handler.edit_item(self.pd_data)
+            pd_data: schemas.ItemFormEdit = self.handler.edit_item(self.pd_data)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:
@@ -53,16 +53,16 @@ class DBDeleteItem(QRunnable):
         error = Signal(str)
         complete = Signal()
 
-    def __init__(self, handler: ItemsEditorHandler, item_id: int):
+    def __init__(self, handler: ItemsEditorHandler, pd_data: schemas.ItemFormDel):
         super().__init__()
         self.handler = handler
-        self.item_id = item_id
+        self.pd_data = pd_data
         self.signals = self.Signals()
 
     @Slot()
     def run(self):
         try:
-            self.handler.delete_item(self.item_id)
+            self.handler.delete_item(self.pd_data)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:

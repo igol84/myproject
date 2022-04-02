@@ -55,18 +55,17 @@ class ItemsEditorHandler:
     def search_items(self, text: str) -> dict[str: Item]:
         return self.__store.search_items(value=text, fields={'name', 'prod_id'})
 
-    def edit_item(self, pd_item: db_schemas.ItemForm):
+    def edit_item(self, data: db_schemas.ItemFormEdit):
         # edit on DB
-        # new_data: ModelSizeForm = self.__db.handler_product_price_editor.edit_size(data)
-        new_data = pd_item
+        new_data: db_schemas.ItemFormEdit = self.__db.handler_items_editor.edit_item(data)
         # edit in Domain Model
-        item = self.__store.items[pd_item.id]
-        item.qty = pd_item.new_qty
-        item.buy_price.amount = pd_item.new_price
+        item = self.__store.items[data.id]
+        item.qty = data.new_qty
+        item.buy_price.amount = data.new_price
         return new_data
 
-    def delete_item(self, item_id: int) -> None:
+    def delete_item(self, data: db_schemas.ItemFormDel) -> None:
         # edit on DB
-        # new_data: ModelSizeForm = self.__db.handler_product_price_editor.edit_size(data)
+        self.__db.handler_items_editor.del_item(data)
         # edit in Domain Model
-        del self.__store.items[item_id]
+        del self.__store.items[data.id]

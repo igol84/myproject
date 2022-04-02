@@ -6,7 +6,7 @@ from prjstore.ui.pyside.interface_observer import ObserverInterface
 from prjstore.ui.pyside.items_editor import schemas
 from prjstore.ui.pyside.items_editor.components.item_widget import ItemWidget
 from prjstore.ui.pyside.items_editor.thread import DbConnect, DBEditItem, DBDeleteItem
-from prjstore.ui.pyside.items_editor.ui_items_editor import UI_ItemsEditor
+from prjstore.ui.pyside.items_editor.ui_items_editor import UI_ItemsEditor, DelMessageBox
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 from prjstore.ui.pyside.utils.qt_core import *
@@ -77,7 +77,8 @@ class ItemsEditor(QWidget, ObserverInterface):
             '#ItemsEditor, #ItemsFrame {background-color: #2F303B; color: #F8F8F2;}\n'
             'QLabel {color: #F8F8F2;}\n'
             'QComboBox, QDateEdit {background-color: #121212; color: #dcdcdc; border:2px solid #484B5E;}\n'
-            'QLineEdit {background-color: #121212; color: #dcdcdc;}'
+            'QLineEdit {background-color: #121212; color: #dcdcdc;}\n'
+            'QMessageBox {background-color: #121212; color: #dcdcdc;}'
         )
 
     def on_search_text_changed(self):
@@ -112,26 +113,29 @@ class ItemsEditor(QWidget, ObserverInterface):
         item_id = selected_item_widget.item_id
         qty = selected_item_widget.ui.qty_box.text()
         price = selected_item_widget.ui.line_edit_price_buy.text()
-        pd_data = db_schemas.ItemForm(id=item_id, new_qty=qty, new_price=price)
+        pd_data = db_schemas.ItemFormEdit(id=item_id, new_qty=qty, new_price=price)
         self.load_widget.show()
         db_edit_item = DBEditItem(self.handler, pd_data)
         db_edit_item.signals.error.connect(self.__connection_error)
         db_edit_item.signals.result.connect(self.__update_item_complete)
         self.thread_pool.start(db_edit_item)
 
-    def __update_item_complete(self, data: db_schemas.ItemForm):
+    def __update_item_complete(self, data: db_schemas.ItemFormEdit):
         self.selected_item_widget.qty = data.new_qty
         self.selected_item_widget.price_buy = data.new_price
         del self.selected_item_widget
         self.load_widget.hide()
 
     def on_press_del_item(self, selected_item_widget: ItemWidget) -> None:
-        item_id = selected_item_widget.item_id
-        self.load_widget.show()
-        db_edit_product = DBDeleteItem(self.handler, item_id)
-        db_edit_product.signals.error.connect(self.__connection_error)
-        db_edit_product.signals.complete.connect(self.__deleted_item_complete)
-        self.thread_pool.start(db_edit_product)
+        result = DelMessageBox(self).exec()
+        if result == QMessageBox.Yes:
+            item_id = selected_item_widget.item_id
+            pd_data = db_schemas.ItemFormDel(id=item_id)
+            self.load_widget.show()
+            db_edit_product = DBDeleteItem(self.handler, pd_data)
+            db_edit_product.signals.error.connect(self.__connection_error)
+            db_edit_product.signals.complete.connect(self.__deleted_item_complete)
+            self.thread_pool.start(db_edit_product)
 
     def __deleted_item_complete(self):
         self.selected_item_widget.hide()
