@@ -20,6 +20,7 @@ class UI_ItemWidget:
 
         self.label_desc = LabelItemDescription(cut=370)
         self.label_desc.setObjectName('LabelDesc')
+        self.label_desc.setStyleSheet('QToolTip {color: #2F303B; background-color: #F8F8F2;}')
         self.label_desc.setFixedWidth(80)
 
         self.spicer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Expanding)
