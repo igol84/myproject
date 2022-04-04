@@ -1,3 +1,5 @@
+import datetime
+
 from prjstore.ui.pyside.utils.qt_core import *
 from prjstore.ui.pyside.utils.widgets import ItemFrame
 
@@ -6,13 +8,16 @@ class UI_ItemWidget:
     def setup_ui(self, item_widget: ItemFrame):
         self.item_widget = item_widget
         item_widget.setCursor(Qt.PointingHandCursor)
-        item_widget.setFixedHeight(item_widget.height_)
+        item_widget.setMinimumHeight(item_widget.height_)
         item_widget.setMinimumWidth(500)
         if not item_widget.objectName():
             item_widget.setObjectName('ItemWidget')
-        self.layuot = QHBoxLayout(item_widget)
-        self.layuot.setObjectName('LayoutItemHBox')
-        self.layuot.setContentsMargins(5, 0, 5, 0)
+        self.layout = QVBoxLayout(item_widget)
+        self.layout.setContentsMargins(5, 5, 5, 5)
+
+        self.layout_item = QHBoxLayout()
+        self.layout_item.setObjectName('LayoutItemHBox')
+        self.layout_item.setContentsMargins(0, 0, 0, 0)
 
         self.label_prod_id = QLabel()
         self.label_prod_id.setObjectName('LabelProdId')
@@ -68,17 +73,22 @@ class UI_ItemWidget:
         self.button_del.hide()
 
         # Add to layout
-        self.layuot.addWidget(self.label_prod_id)
-        self.layuot.addWidget(self.label_desc)
-        self.layuot.addItem(self.spicer)
-        self.layuot.addWidget(self.label_qty)
-        self.layuot.addWidget(self.qty_box)
-        self.layuot.addWidget(self.label_price_buy)
-        self.layuot.addWidget(self.line_edit_price_buy)
-        self.layuot.addWidget(self.label_date_buy)
-        self.layuot.addWidget(self.button_edit)
-        self.layuot.addWidget(self.button_del)
-        self.layuot.addWidget(self.empty_button)
+        self.layout_item.addWidget(self.label_prod_id)
+        self.layout_item.addWidget(self.label_desc)
+        self.layout_item.addItem(self.spicer)
+        self.layout_item.addWidget(self.label_qty)
+        self.layout_item.addWidget(self.qty_box)
+        self.layout_item.addWidget(self.label_price_buy)
+        self.layout_item.addWidget(self.line_edit_price_buy)
+        self.layout_item.addWidget(self.label_date_buy)
+        self.layout_item.addWidget(self.button_edit)
+        self.layout_item.addWidget(self.button_del)
+        self.layout_item.addWidget(self.empty_button)
+
+        self.list_sales = ListWidget()
+
+        self.layout.addLayout(self.layout_item)
+        self.layout.addWidget(self.list_sales)
 
 
 class LabelItemDescription(QLabel):
@@ -96,3 +106,22 @@ class LabelItemDescription(QLabel):
         pixels_text = metrics.elidedText(self.text(), Qt.ElideRight, self.parent().width() - self.cut)
         self.resize(metrics.size(0, pixels_text).width(), self.parent().height_)
         painter.drawText(self.rect(), self.alignment(), pixels_text)
+
+
+class ListWidget(QListWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setStyleSheet(f'background-color: #EEE; color: #000')
+        self.setCursor(Qt.ArrowCursor)
+        self.setSelectionMode(QListWidget.SingleSelection)
+        self.setContentsMargins(0, 0, 5, 0)
+        self.setMaximumHeight(90)
+        self.setCursor(Qt.PointingHandCursor)
+        self.hide()
+
+
+class WidgetItem(QListWidgetItem):
+    def __init__(self, text: str, date: datetime.date, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setText(text)
+        self.setData(Qt.UserRole, date)

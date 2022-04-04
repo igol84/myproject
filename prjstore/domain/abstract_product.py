@@ -1,4 +1,4 @@
-from typing import Union, Optional, Protocol
+from typing import Union, Optional
 
 from pydantic import validate_arguments
 from pydantic.dataclasses import dataclass
@@ -9,7 +9,7 @@ from util.money import Money, Decimal
 
 
 @dataclass
-class AbstractProduct(Protocol):
+class AbstractProduct:
     prod_id: Optional[str] = None
     product_type: str = 'product'
     name: str = 'item'

@@ -53,17 +53,38 @@ class DBDeleteItem(QRunnable):
         error = Signal(str)
         complete = Signal()
 
-    def __init__(self, handler: ItemsEditorHandler, pd_data: schemas.ItemFormDel):
+    def __init__(self, handler: ItemsEditorHandler, item_id: int):
         super().__init__()
         self.handler = handler
-        self.pd_data = pd_data
+        self.item_id = item_id
         self.signals = self.Signals()
 
     @Slot()
     def run(self):
         try:
-            self.handler.delete_item(self.pd_data)
+            self.handler.delete_item(self.item_id)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:
             self.signals.complete.emit()
+
+
+class DBGetSales(QRunnable):
+    class Signals(QObject):
+        error = Signal(str)
+        result = Signal(list)
+
+    def __init__(self, handler: ItemsEditorHandler, item_id: int):
+        super().__init__()
+        self.handler = handler
+        self.item_id = item_id
+        self.signals = self.Signals()
+
+    @Slot()
+    def run(self):
+        try:
+            pd_sales: list[schemas.SaleDetail] = self.handler.get_item_sales(self.item_id)
+        except OSError:
+            self.signals.error.emit('Нет подключения к интернету.')
+        else:
+            self.signals.result.emit(pd_sales)

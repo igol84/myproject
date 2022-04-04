@@ -44,7 +44,7 @@ class ItemsEditorHandler:
                 desc += f' {item.product.width.short_name}' if item.product.width else ''
                 desc += f' {item.product.size:g}'
             price = item.buy_price.amount
-            date_buy = str(item.date_buy)
+            date_buy = item.date_buy
             pd_item = schemas.ViewItem(item_id=item.id, desc=desc, price_buy=price, qty=item.qty, date_buy=date_buy)
             list_pd_items.append(pd_item)
             list_pd_items.sort(key=lambda k: k.item_id, reverse=True)
@@ -64,8 +64,11 @@ class ItemsEditorHandler:
         item.buy_price.amount = data.new_price
         return new_data
 
-    def delete_item(self, data: db_schemas.ItemFormDel) -> None:
+    def delete_item(self, item_id: int) -> None:
         # edit on DB
-        self.__db.handler_items_editor.del_item(data)
+        self.__db.handler_items_editor.del_item(item_id)
         # edit in Domain Model
-        del self.__store.items[data.id]
+        del self.__store.items[item_id]
+
+    def get_item_sales(self, item_id: int) -> list[db_schemas.SaleDetail]:
+        return self.__db.handler_items_editor.get_item_sales(item_id)

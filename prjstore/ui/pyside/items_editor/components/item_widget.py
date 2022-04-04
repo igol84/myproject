@@ -1,5 +1,4 @@
-import datetime
-
+from prjstore.db.schemas import handler_items_editor as db_schemas
 from prjstore.ui.pyside.items_editor.components.ui_item_widget import *
 from prjstore.ui.pyside.items_editor.schemas import ViewItem
 from prjstore.ui.pyside.utils.format_price import format_price
@@ -13,7 +12,7 @@ class ItemWidget(ItemFrame):
     __sign: str
     __qty: int
     __date_buy: datetime.date
-    __dates_of_sale: list[datetime.date]
+    __sale_details: list[db_schemas.SaleDetail]
 
     __selected: bool
 
@@ -22,77 +21,94 @@ class ItemWidget(ItemFrame):
         self.__parent = parent
         self.__selected = False
         self.__sign = item_pd.sign
+
         self.ui = UI_ItemWidget()
         self.ui.setup_ui(self)
+
         self.item_id = item_pd.item_id
         self.desc = item_pd.desc
         self.price_buy = item_pd.price_buy
         self.qty = item_pd.qty
         self.date_buy = item_pd.date_buy
-        self.__dates_of_sale = item_pd.dates_of_sale
+        self.sale_details = item_pd.dates_of_sale
         self.set_default_style()
         self.ui.button_edit.clicked.connect(self.on_clicked_edit)
         self.ui.button_del.clicked.connect(self.on_clicked_del)
+        self.ui.list_sales.clicked.connect(self.on_clicked_sale)
 
-    def get_parent(self):
+    def __get_parent(self):
         return self.__parent
 
-    parent_widget = property(get_parent)
+    parent_widget = property(__get_parent)
 
-    def get_item_id(self) -> int:
+    def __get_item_id(self) -> int:
         return self.__item_id
 
-    def sat_item_id(self, item_id: int) -> None:
+    def __sat_item_id(self, item_id: int) -> None:
         self.__item_id = item_id
         self.ui.label_prod_id.setText(str(item_id))
 
-    item_id = property(get_item_id, sat_item_id)
+    item_id = property(__get_item_id, __sat_item_id)
 
-    def get_desc(self) -> str:
+    def __get_desc(self) -> str:
         return self.__desc
 
-    def sat_desc(self, desc: str) -> None:
+    def __sat_desc(self, desc: str) -> None:
         self.__desc = desc
         self.ui.label_desc.setText(desc)
 
-    desc = property(get_desc, sat_desc)
+    desc = property(__get_desc, __sat_desc)
 
-    def get_price_buy(self) -> float:
+    def __get_price_buy(self) -> float:
         return self.__price_buy
 
-    def sat_price_buy(self, price_buy: float) -> None:
+    def __sat_price_buy(self, price_buy: float) -> None:
         self.__price_buy = price_buy
         self.ui.label_price_buy.setText(self.get_price_format())
         self.ui.line_edit_price_buy.setText(format_price(price_buy))
 
-    price_buy = property(get_price_buy, sat_price_buy)
+    price_buy = property(__get_price_buy, __sat_price_buy)
 
     def get_price_format(self) -> str:
         return f'{format_price(self.price_buy, dot=True)}{self.__sign}'
 
-    def get_qty(self) -> int:
+    def __get_qty(self) -> int:
         return self.__qty
 
-    def sat_qty(self, qty: int) -> None:
+    def __sat_qty(self, qty: int) -> None:
         self.__qty = qty
         self.ui.label_qty.setText(f'{qty:,}шт.')
         self.ui.qty_box.setValue(qty)
 
-    qty = property(get_qty, sat_qty)
+    qty = property(__get_qty, __sat_qty)
 
-    def get_date_buy(self) -> str:
+    def __get_date_buy(self) -> datetime.date:
         return self.__date_buy
 
-    def sat_date_buy(self, date_buy: str) -> None:
+    def __sat_date_buy(self, date_buy: datetime.date) -> None:
         self.__date_buy = date_buy
-        self.ui.label_date_buy.setText(date_buy)
+        text = date_buy.strftime("%d-%m-%Y")
+        self.ui.label_date_buy.setText(text)
 
-    date_buy = property(get_date_buy, sat_date_buy)
+    date_buy = property(__get_date_buy, __sat_date_buy)
 
-    def get_selected(self) -> bool:
+    def __get_sale_details(self) -> list[db_schemas.SaleDetail]:
+        return self.__sale_details
+
+    def __set_sale_details(self, dales_detail: list[db_schemas.SaleDetail]) -> None:
+        self.ui.list_sales.clear()
+        self.__sale_details = dales_detail
+        if dales_detail is not None:
+            for sale_detail in dales_detail:
+                text = sale_detail.get_text(self.__sign)
+                self.ui.list_sales.addItem(WidgetItem(text=text, date=sale_detail.date))
+
+    sale_details = property(__get_sale_details, __set_sale_details)
+
+    def __get_selected(self) -> bool:
         return self.__selected
 
-    def set_selected(self, flag: bool = True) -> None:
+    def __set_selected(self, flag: bool = True) -> None:
         self.__selected = flag
         if flag:
             self.set_selected_style()
@@ -103,6 +119,7 @@ class ItemWidget(ItemFrame):
             self.ui.empty_button.hide()
             self.ui.button_edit.show()
             self.ui.button_del.show()
+            self.ui.list_sales.show()
         else:
             self.set_default_style()
             self.ui.qty_box.hide()
@@ -112,8 +129,9 @@ class ItemWidget(ItemFrame):
             self.ui.empty_button.show()
             self.ui.button_edit.hide()
             self.ui.button_del.hide()
+            self.ui.list_sales.hide()
 
-    selected = property(get_selected, set_selected)
+    selected = property(__get_selected, __set_selected)
 
     def enterEvent(self, event):
         if not self.selected:
@@ -151,16 +169,24 @@ class ItemWidget(ItemFrame):
         else:
             self.selected = False
 
+    # TODO
+    def on_clicked_sale(self, item: QListWidgetItem):
+        if self.parent_widget:
+            print(item.data(Qt.UserRole))
+
 
 if __name__ == '__main__':
     pd_item = ViewItem(item_id=5, desc='shoes nike 24 shoes nike 24 shoes nike 24 shoes nike 24', price_buy=2400.5,
-                       qty=20000, date_buy='24.05.2021')
+                       qty=20000, date_buy=datetime.datetime(2020, 5, 17).date())
     import sys
 
     app = QApplication(sys.argv)
     win = QWidget()
+    win.resize(480, 320)
     v_box = QVBoxLayout(win)
     frame = ItemWidget(item_pd=pd_item)
+    frame.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
     v_box.addWidget(frame)
+    v_box.addItem(QSpacerItem(0, 100, QSizePolicy.Expanding, QSizePolicy.Expanding))
     win.show()
     sys.exit(app.exec())

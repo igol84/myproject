@@ -5,7 +5,7 @@ from prjstore.handlers.items_editor_handler import ItemsEditorHandler
 from prjstore.ui.pyside.interface_observer import ObserverInterface
 from prjstore.ui.pyside.items_editor import schemas
 from prjstore.ui.pyside.items_editor.components.item_widget import ItemWidget
-from prjstore.ui.pyside.items_editor.thread import DbConnect, DBEditItem, DBDeleteItem
+from prjstore.ui.pyside.items_editor import thread
 from prjstore.ui.pyside.items_editor.ui_items_editor import UI_ItemsEditor, DelMessageBox
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
@@ -43,7 +43,7 @@ class ItemsEditor(QWidget, ObserverInterface):
 
         if not self.parent:
             if not self.test:
-                db_connector = DbConnect(self.user_data, self.db)
+                db_connector = thread.DbConnect(self.user_data, self.db)
                 db_connector.signals.error.connect(self.__connection_error)
                 db_connector.signals.result.connect(self.__connected_complete)
                 self.thread_pool.start(db_connector)
@@ -58,13 +58,23 @@ class ItemsEditor(QWidget, ObserverInterface):
         return self.__selected_item_widget
 
     def set_selected_item_widget(self, selected_item_widget: ItemWidget) -> None:
-        if selected_item_widget is not self.__selected_item_widget:
+        if selected_item_widget is not self.selected_item_widget:
             selected_item_widget.selected = True
-            if self.__selected_item_widget:
-                self.__selected_item_widget.selected = False
+            if self.selected_item_widget:
+                self.selected_item_widget.selected = False
             self.__selected_item_widget = selected_item_widget
+            if selected_item_widget.sale_details is None:
+                self.load_widget.show()
+                db_get_sales = thread.DBGetSales(self.handler, selected_item_widget.item_id)
+                db_get_sales.signals.error.connect(self.__connection_error)
+                db_get_sales.signals.result.connect(self._completed_getting_sales)
+                self.thread_pool.start(db_get_sales)
         else:
             del self.selected_item_widget
+
+    def _completed_getting_sales(self, sales: list[db_schemas.SaleDetail]):
+        self.selected_item_widget.sale_details = sales
+        self.load_widget.hide()
 
     def del_selected_item_widget(self) -> None:
         self.__selected_item_widget.selected = False
@@ -115,7 +125,7 @@ class ItemsEditor(QWidget, ObserverInterface):
         price = selected_item_widget.ui.line_edit_price_buy.text()
         pd_data = db_schemas.ItemFormEdit(id=item_id, new_qty=qty, new_price=price)
         self.load_widget.show()
-        db_edit_item = DBEditItem(self.handler, pd_data)
+        db_edit_item = thread.DBEditItem(self.handler, pd_data)
         db_edit_item.signals.error.connect(self.__connection_error)
         db_edit_item.signals.result.connect(self.__update_item_complete)
         self.thread_pool.start(db_edit_item)
@@ -130,9 +140,8 @@ class ItemsEditor(QWidget, ObserverInterface):
         result = DelMessageBox(self).exec()
         if result == QMessageBox.Yes:
             item_id = selected_item_widget.item_id
-            pd_data = db_schemas.ItemFormDel(id=item_id)
             self.load_widget.show()
-            db_edit_product = DBDeleteItem(self.handler, pd_data)
+            db_edit_product = thread.DBDeleteItem(self.handler, item_id)
             db_edit_product.signals.error.connect(self.__connection_error)
             db_edit_product.signals.complete.connect(self.__deleted_item_complete)
             self.thread_pool.start(db_edit_product)

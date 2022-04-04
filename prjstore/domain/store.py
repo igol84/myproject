@@ -23,8 +23,11 @@ class Store:
 
     ###############################################################################################
     @validate_arguments
-    def get_items_by_pr_id(self, pr_id: str) -> list[Item]:
-        items = [_item for _item in self.items.values() if _item.product.prod_id == pr_id]
+    def get_items_by_pr_id(self, pr_id: str, in_stock: bool = True) -> list[Item]:
+        if in_stock:
+            items = [_item for _item in self.items.values() if _item.product.prod_id == pr_id and _item.qty > 0]
+        else:
+            items = [_item for _item in self.items.values() if _item.product.prod_id == pr_id]
         if items:
             return items
         raise IndexError(f"Invalid product id: {pr_id}")
