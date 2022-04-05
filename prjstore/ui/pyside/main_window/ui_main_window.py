@@ -131,11 +131,22 @@ class UI_MainWindow(object):
         self.pages.setObjectName(u"SaleForm")
         self.pages.setStyleSheet('#SaleForm {background-color: #2F303B;}')
 
-        self.page_items_form = pages['items_form']
-        self.page_items_form.setMaximumWidth(340)
-        self.page_items_form.setMinimumWidth(340)
-        self.page_items_form.setObjectName(u"page_2")
-        self.pages.addWidget(self.page_items_form)
+        self.new_items_form = pages['new_items_form']
+        self.new_items_form.setMaximumWidth(340)
+        self.new_items_form.setObjectName(u"NewItemsForm")
+
+        self.edit_items_form = pages['edit_items_form']
+
+        self.edit_items_form.setObjectName(u"EditItemsForm")
+
+        self.items_form = QFrame()
+        self.items_form_layout = QHBoxLayout(self.items_form)
+        self.items_form_layout.setContentsMargins(0, 0, 0, 0)
+        self.items_form_layout.setSpacing(0)
+        self.items_form_layout.addWidget(self.new_items_form)
+        self.items_form_layout.addWidget(self.edit_items_form)
+
+        self.pages.addWidget(self.items_form)
 
         self.page_product_price_editor = pages['price_editor_form']
         self.page_product_price_editor.setMaximumWidth(600)

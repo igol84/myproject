@@ -13,7 +13,7 @@ class UI_ItemWidget:
         if not item_widget.objectName():
             item_widget.setObjectName('ItemWidget')
         self.layout = QVBoxLayout(item_widget)
-        self.layout.setContentsMargins(5, 5, 5, 5)
+        self.layout.setContentsMargins(0, 2, 0, 2)
 
         self.layout_item = QHBoxLayout()
         self.layout_item.setObjectName('LayoutItemHBox')

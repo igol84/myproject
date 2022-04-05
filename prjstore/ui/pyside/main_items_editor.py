@@ -1,11 +1,12 @@
+import datetime
 import sys
 
 from prjstore.db.schemas import handler_items_editor as db_schemas
 from prjstore.handlers.items_editor_handler import ItemsEditorHandler
 from prjstore.ui.pyside.interface_observer import ObserverInterface
 from prjstore.ui.pyside.items_editor import schemas
-from prjstore.ui.pyside.items_editor.components.item_widget import ItemWidget
 from prjstore.ui.pyside.items_editor import thread
+from prjstore.ui.pyside.items_editor.components.item_widget import ItemWidget
 from prjstore.ui.pyside.items_editor.ui_items_editor import UI_ItemsEditor, DelMessageBox
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
@@ -59,7 +60,6 @@ class ItemsEditor(QWidget, ObserverInterface):
 
     def set_selected_item_widget(self, selected_item_widget: ItemWidget) -> None:
         if selected_item_widget is not self.selected_item_widget:
-            selected_item_widget.selected = True
             if self.selected_item_widget:
                 self.selected_item_widget.selected = False
             self.__selected_item_widget = selected_item_widget
@@ -69,11 +69,14 @@ class ItemsEditor(QWidget, ObserverInterface):
                 db_get_sales.signals.error.connect(self.__connection_error)
                 db_get_sales.signals.result.connect(self._completed_getting_sales)
                 self.thread_pool.start(db_get_sales)
+            else:
+                selected_item_widget.selected = True
         else:
             del self.selected_item_widget
 
     def _completed_getting_sales(self, sales: list[db_schemas.SaleDetail]):
         self.selected_item_widget.sale_details = sales
+        self.selected_item_widget.selected = True
         self.load_widget.hide()
 
     def del_selected_item_widget(self) -> None:
@@ -134,6 +137,8 @@ class ItemsEditor(QWidget, ObserverInterface):
         self.selected_item_widget.qty = data.new_qty
         self.selected_item_widget.price_buy = data.new_price
         del self.selected_item_widget
+        if self.parent:
+            self.parent.data_changed(self)
         self.load_widget.hide()
 
     def on_press_del_item(self, selected_item_widget: ItemWidget) -> None:
@@ -149,7 +154,13 @@ class ItemsEditor(QWidget, ObserverInterface):
     def __deleted_item_complete(self):
         self.selected_item_widget.hide()
         del self.selected_item_widget
+        if self.parent:
+            self.parent.data_changed(self)
         self.load_widget.hide()
+
+    def on_click_item_sale(self, date: datetime.date):
+        if self.parent:
+            self.parent.on_click_item_sale(date)
 
 
 if __name__ == "__main__":

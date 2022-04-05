@@ -1,7 +1,9 @@
+import datetime
 import sys
 
 from prjstore.db import API_DB
 from prjstore.handlers.main_handler import MainHandler
+from prjstore.ui.pyside.main_items_editor import ItemsEditor
 from prjstore.ui.pyside.main_login import LoginFrame
 from prjstore.ui.pyside.main_product_price_editor import PriceEditor
 from prjstore.ui.pyside.main_receiving_the_items import ItemForm
@@ -23,7 +25,8 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.__db = None
         self.handler = None
         self.ui = None
-        self.items_form: ItemForm = None
+        self.new_items_form: ItemForm = None
+        self.edit_items_form: ItemsEditor = None
         self.sale_form: SaleForm = None
         self.price_editor_form: PriceEditor = None
         self.thread_pool = QThreadPool()
@@ -53,20 +56,23 @@ class MainWindow(QMainWindow, MainWindowInterface):
             self.handler = MainHandler(db)
             self.sale_form = SaleForm(self, dark_style=True, db=db)
             self.price_editor_form = PriceEditor(self, dark_style=True, db=db)
-            self.items_form = ItemForm(self, dark_style=True, db=db)
+            self.new_items_form = ItemForm(self, dark_style=True, db=db)
+            self.edit_items_form = ItemsEditor(self, dark_style=True, db=db)
             self.sale_form.setup_dark_style()
             self.setWindowTitle(f'Shop - {self.login_form.name}')
         else:
             self.setWindowTitle(f'Shop')
             self.sale_form = QWidget()
             self.price_editor_form = QWidget()
-            self.items_form = QWidget()
+            self.new_items_form = QWidget()
+            self.edit_items_form = QWidget()
 
         moduls: dict[QWidget] = dict()
         moduls['login_form'] = self.login_form
         moduls['sale_form'] = self.sale_form
         moduls['price_editor_form'] = self.price_editor_form
-        moduls['items_form'] = self.items_form
+        moduls['new_items_form'] = self.new_items_form
+        moduls['edit_items_form'] = self.edit_items_form
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self, moduls)
         self.ui.load_widget = LoadWidget(parent=self.ui.pages, path='utils/loading.gif')
@@ -92,7 +98,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
     def __connected_complete(self, db: API_DB):
         self.setup_ui(db)
 
-        self.ui.btn_new_items.clicked.connect(self.show_receiving_the_items_page)
+        self.ui.btn_new_items.clicked.connect(self.show_items_page)
         self.ui.btn_price_editor.clicked.connect(self.show_product_price_editor_page)
         self.ui.btn_sale.clicked.connect(self.show_sale_registration_page)
         self.ui.login_button.clicked.connect(self.show_login_page)
@@ -110,10 +116,10 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.ui.btn_price_editor.set_active(True)
         self.ui.pages.setCurrentWidget(self.ui.page_product_price_editor)
 
-    def show_receiving_the_items_page(self):
+    def show_items_page(self):
         self.reset_selection()
         self.ui.btn_new_items.set_active(True)
-        self.ui.pages.setCurrentWidget(self.ui.page_items_form)
+        self.ui.pages.setCurrentWidget(self.ui.items_form)
 
     def show_sale_registration_page(self):
         self.reset_selection()
@@ -129,6 +135,10 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.reset_selection()
         self.ui.settings_button.set_active(True)
         self.ui.pages.setCurrentWidget(self.ui.page_settings)
+
+    def on_click_item_sale(self, date: datetime.date):
+        self.show_sale_registration_page()
+        self.sale_form.ui.date_edit.setDate(date)
 
 
 if __name__ == '__main__':

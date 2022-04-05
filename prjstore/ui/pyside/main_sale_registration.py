@@ -1,6 +1,5 @@
 import sys
 
-from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
@@ -17,7 +16,7 @@ from prjstore.ui.pyside.utils.qt_utils import clearLayout
 class SaleForm(QWidget):
     items: list[ModelProduct]
     sli_list: dict[tuple[ProductId, Price]: ModelProduct]
-    old_sales: list[ShowSaleWithSLIs]
+    old_sales: list[ViewSale]
     selected_item_widget: AbstractSoldItem
     selected_sli_widget: SLI_Frame
     handler: SaleRegistrationHandler

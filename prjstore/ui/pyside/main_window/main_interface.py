@@ -10,3 +10,6 @@ class MainWindowInterface(SubjectInterface):
 
     def data_changed(self, this_observer) -> None:
         ...
+
+    def on_click_item_sale(self, date) -> None:
+        ...
