@@ -28,6 +28,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.new_items_form: ItemForm = None
         self.edit_items_form: ItemsEditor = None
         self.sale_form: SaleForm = None
+        self.sellers_form = None
         self.price_editor_form: PriceEditor = None
         self.thread_pool = QThreadPool()
         self.login_form = LoginFrame(self)
@@ -58,6 +59,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
             self.price_editor_form = PriceEditor(self, dark_style=True, db=db)
             self.new_items_form = ItemForm(self, dark_style=True, db=db)
             self.edit_items_form = ItemsEditor(self, dark_style=True, db=db)
+            self.sellers_form = QWidget()
             self.sale_form.setup_dark_style()
             self.setWindowTitle(f'Shop - {self.login_form.name}')
         else:
@@ -66,6 +68,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
             self.price_editor_form = QWidget()
             self.new_items_form = QWidget()
             self.edit_items_form = QWidget()
+            self.sellers_form = QWidget()
 
         moduls: dict[QWidget] = dict()
         moduls['login_form'] = self.login_form
@@ -73,6 +76,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         moduls['price_editor_form'] = self.price_editor_form
         moduls['new_items_form'] = self.new_items_form
         moduls['edit_items_form'] = self.edit_items_form
+        moduls['sellers_form'] = self.sellers_form
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self, moduls)
         self.ui.load_widget = LoadWidget(parent=self.ui.pages, path='utils/loading.gif')
@@ -101,6 +105,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.ui.btn_new_items.clicked.connect(self.show_items_page)
         self.ui.btn_price_editor.clicked.connect(self.show_product_price_editor_page)
         self.ui.btn_sale.clicked.connect(self.show_sale_registration_page)
+        self.ui.btn_sellers.clicked.connect(self.show_sellers_page)
         self.ui.login_button.clicked.connect(self.show_login_page)
         self.ui.settings_button.clicked.connect(self.show_settings_page_page)
         self.show_sale_registration_page()
@@ -125,6 +130,11 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.reset_selection()
         self.ui.btn_sale.set_active(True)
         self.ui.pages.setCurrentWidget(self.ui.page_sale_form)
+
+    def show_sellers_page(self):
+        self.reset_selection()
+        self.ui.btn_sellers.set_active(True)
+        self.ui.pages.setCurrentWidget(self.ui.page_sellers_form)
 
     def show_login_page(self):
         self.reset_selection()

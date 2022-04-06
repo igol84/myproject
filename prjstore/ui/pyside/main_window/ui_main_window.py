@@ -49,12 +49,14 @@ class UI_MainWindow(object):
         self.btn_price_editor = PyPushBottom(text='Редактор товаров', icon_path='icon_product_price_editor.svg')
         self.btn_new_items = PyPushBottom(text='Новый товар', icon_path='icon_new_items.svg', is_active=True)
         self.btn_sale = PyPushBottom(text='Продажа', icon_path='icon_sale.svg')
+        self.btn_sellers = PyPushBottom(text='Продавцы', icon_path='icon_seller.svg')
 
         # ADD BUTTONS TO LAYOUT
         self.left_menu_top_layout.addWidget(self.toggle_button)
         self.left_menu_top_layout.addWidget(self.btn_new_items)
         self.left_menu_top_layout.addWidget(self.btn_price_editor)
         self.left_menu_top_layout.addWidget(self.btn_sale)
+        self.left_menu_top_layout.addWidget(self.btn_sellers)
 
         # MENU SPICER
         # //////////////////////////////////////////////////////////////////
@@ -155,6 +157,9 @@ class UI_MainWindow(object):
 
         self.page_sale_form = pages['sale_form']
         self.pages.addWidget(self.page_sale_form)
+
+        self.page_sellers_form = pages['sellers_form']
+        self.pages.addWidget(self.page_sellers_form)
 
         self.page_login_form = QFrame()
         self.verticalLayout_3 = QVBoxLayout(self.page_login_form)
