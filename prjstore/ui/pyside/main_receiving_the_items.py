@@ -216,6 +216,7 @@ class ItemForm(QWidget):
                     self.ui.sizes_table.setItem(i, 1, QTableWidgetItem(f'{pd_sizes[size].qty}'))
                 length = pd_sizes[size].length if pd_sizes[size].length else ''
                 self.ui.sizes_table.setItem(i, 2, QTableWidgetItem(f'{length}'))
+        self.ui.sizes_table.setItemDelegateForColumn(1, LineEditDelegate())
 
     def on_table_item_edit(self, item):
         if item.row() == 0 and item.column() == 0 and item.text() and item.text() != self.last_added_size:
@@ -317,6 +318,14 @@ class ItemForm(QWidget):
                                                  price_buy=buy_price,
                                                  price_sell=price_sell, qty=qty, module=pd_shoes)
             return pd_product
+
+
+class LineEditDelegate(QStyledItemDelegate):
+    def createEditor(self, parent: QWidget, option: QStyleOptionViewItem, index: QModelIndex) -> QWidget:
+        editor = QLineEdit(parent)
+        validator_reg = QRegularExpressionValidator(QRegularExpression("[0-9]+"))
+        editor.setValidator(validator_reg)
+        return editor
 
 
 if __name__ == "__main__":
