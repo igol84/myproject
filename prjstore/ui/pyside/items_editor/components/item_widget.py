@@ -118,9 +118,10 @@ class ItemWidget(ItemFrame):
             self.ui.label_price_buy.hide()
             self.ui.empty_button.hide()
             self.ui.button_edit.show()
-            self.ui.button_del.show()
             if self.sale_details:
                 self.ui.list_sales.show()
+            else:
+                self.ui.button_del.show()
         else:
             self.set_default_style()
             self.ui.qty_box.hide()
@@ -173,8 +174,7 @@ class ItemWidget(ItemFrame):
     def on_clicked_sale(self, item: QListWidgetItem):
         if self.parent_widget:
             date: datetime.date = item.data(Qt.UserRole)
-            item_id = self.item_id
-            self.parent_widget.on_click_item_sale(date, item_id)
+            self.parent_widget.on_click_item_sale(date)
 
 
 if __name__ == '__main__':

@@ -11,6 +11,7 @@ class UI_Frame(object):
         # Searcher
         self.src_products = QLineEdit()
         self.src_products.setObjectName('ProductLineEdit')
+        self.src_products.setClearButtonEnabled(True)
 
         # Scroll Area
         self.scroll = QScrollArea()

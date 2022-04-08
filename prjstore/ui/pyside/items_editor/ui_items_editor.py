@@ -13,6 +13,8 @@ class UI_ItemsEditor:
         # Searcher
         self.src_items = QLineEdit()
         self.src_items.setObjectName('LineEditStcItems')
+        self.src_items.setClearButtonEnabled(True)
+
 
         # Scroll Area
         self.scroll = QScrollArea()
