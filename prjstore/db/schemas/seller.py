@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class BaseSeller(BaseModel):
     store_id: int
     name: str
-    hidden: bool
+    active: bool
 
 
 class CreateSeller(BaseSeller):
@@ -20,6 +20,16 @@ class Seller(BaseSeller):
 
     class Config:
         orm_mode = True
+
+
+class EditSellerName(BaseModel):
+    seller_id: int
+    new_name: str
+
+
+class EditSellerActive(BaseModel):
+    seller_id: int
+    active: bool
 
 
 class ListSeller(BaseModel):

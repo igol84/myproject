@@ -133,6 +133,8 @@ class UI_MainWindow(object):
         self.pages.setObjectName(u"SaleForm")
         self.pages.setStyleSheet('#SaleForm {background-color: #2F303B;}')
 
+
+        # =================== Items page ===================
         self.new_items_form = pages['new_items_form']
         self.new_items_form.setMaximumWidth(340)
         self.new_items_form.setObjectName(u"NewItemsForm")
@@ -150,23 +152,42 @@ class UI_MainWindow(object):
 
         self.pages.addWidget(self.items_form)
 
+        # =================== Price page ===================
         self.page_product_price_editor = pages['price_editor_form']
         self.page_product_price_editor.setMaximumWidth(600)
         self.page_product_price_editor.setMinimumWidth(600)
         self.pages.addWidget(self.page_product_price_editor)
 
+        # =================== Sale page ===================
         self.page_sale_form = pages['sale_form']
         self.pages.addWidget(self.page_sale_form)
 
-        self.page_sellers_form = pages['sellers_form']
-        self.pages.addWidget(self.page_sellers_form)
+        # =================== Sellers page ===================
+        # self.page_sellers_form = pages['sellers_form']
+        # self.pages.addWidget(self.page_sellers_form)
 
+        self.sellers_form = pages['sellers_form']
+        self.sellers_form.setObjectName(u"SellersForm")
+
+        self.places_form = pages['places_form']
+        self.places_form.setObjectName(u"PlacesForm")
+
+        self.sellers_and_places_form = QFrame()
+        self.sellers_and_places_layout = QHBoxLayout(self.sellers_and_places_form)
+        self.sellers_and_places_layout.addWidget(self.sellers_form)
+        self.sellers_and_places_layout.addWidget(self.places_form)
+        self.sellers_and_places_layout.addItem(QSpacerItem(0, 100, QSizePolicy.Expanding, QSizePolicy.Expanding))
+
+        self.pages.addWidget(self.sellers_and_places_form)
+
+        # =================== Login page ===================
         self.page_login_form = QFrame()
         self.verticalLayout_3 = QVBoxLayout(self.page_login_form)
         self.login_frame = pages['login_form']
         self.verticalLayout_3.addWidget(self.login_frame)
         self.pages.addWidget(self.page_login_form)
 
+        # =================== Settings page ===================
         self.page_settings = QWidget()
         self.page_settings.setObjectName(u"page_3")
         self.verticalLayout_4 = QVBoxLayout(self.page_settings)

@@ -22,7 +22,7 @@ class TestPlace:
 
     @classmethod
     def setup_class(cls):
-        pd_place = schemas.place.CreatePlace(store_id=1, name="Место")
+        pd_place = schemas.place.CreatePlace(store_id=1, name="Место", active=True)
         new_place = PlaceOfSale.create_from_schema(db.place.create(pd_place))
         cls.obj_id = new_place.id
 
@@ -31,7 +31,7 @@ class TestPlace:
         assert place.name == 'Место'
 
     def test_case02_update(self):
-        pd_place = schemas.place.UpdatePlace(id=self.obj_id, store_id=1, name="Точка")
+        pd_place = schemas.place.UpdatePlace(id=self.obj_id, store_id=1, name="Точка", active=True)
         place = PlaceOfSale.create_from_schema(db.place.update(pd_place))
         assert place.name == 'Точка'
 

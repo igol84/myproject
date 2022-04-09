@@ -180,10 +180,11 @@ class SaleRegistrationHandler:
         self.__sale = tmp_sale
 
     def get_store_places_of_sale_names(self) -> dict[int, str]:
-        return {sale_id: place_of_sale.name for sale_id, place_of_sale in list(self.store.places_of_sale.items())}
+        return {sale_id: place_of_sale.name for sale_id, place_of_sale in list(self.store.places_of_sale.items())
+                if place_of_sale.active}
 
     def get_store_sellers_names(self) -> dict[int, str]:
-        return {seller_id: seller.name for seller_id, seller in list(self.store.sellers.items())}
+        return {seller_id: seller.name for seller_id, seller in list(self.store.sellers.items()) if seller.active}
 
     def get_total(self, date: datetime.date) -> str:
         total: Money = None

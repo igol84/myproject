@@ -11,6 +11,7 @@ class PlaceOfSale:
     id: int
     name: str
     ledger: dict[int, Sale] = field(default_factory=dict)
+    active: bool = False
     sale: Sale = None
 
     def __hash__(self):
@@ -18,4 +19,4 @@ class PlaceOfSale:
 
     @staticmethod
     def create_from_schema(schema: schemas.place.Place) -> 'PlaceOfSale':
-        return PlaceOfSale(id=schema.id, name=schema.name)
+        return PlaceOfSale(id=schema.id, name=schema.name, active=schema.active)

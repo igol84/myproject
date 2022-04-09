@@ -5,9 +5,11 @@ from prjstore.db import API_DB
 from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.main_items_editor import ItemsEditor
 from prjstore.ui.pyside.main_login import LoginFrame
+from prjstore.ui.pyside.main_places import PlacesEditor
 from prjstore.ui.pyside.main_product_price_editor import PriceEditor
 from prjstore.ui.pyside.main_receiving_the_items import ItemForm
 from prjstore.ui.pyside.main_sale_registration import SaleForm
+from prjstore.ui.pyside.main_sellers import SellersEditor
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.main_window.thread import DbConnect
 from prjstore.ui.pyside.main_window.ui_main_window import UI_MainWindow
@@ -29,6 +31,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.edit_items_form: ItemsEditor = None
         self.sale_form: SaleForm = None
         self.sellers_form = None
+        self.places_form = None
         self.price_editor_form: PriceEditor = None
         self.thread_pool = QThreadPool()
         self.login_form = LoginFrame(self)
@@ -59,7 +62,8 @@ class MainWindow(QMainWindow, MainWindowInterface):
             self.price_editor_form = PriceEditor(self, dark_style=True, db=db)
             self.new_items_form = ItemForm(self, dark_style=True, db=db)
             self.edit_items_form = ItemsEditor(self, dark_style=True, db=db)
-            self.sellers_form = QWidget()
+            self.sellers_form = SellersEditor(self, dark_style=True, db=db)
+            self.places_form = PlacesEditor(self, dark_style=True, db=db)
             self.sale_form.setup_dark_style()
             self.setWindowTitle(f'Shop - {self.login_form.name}')
         else:
@@ -69,6 +73,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
             self.new_items_form = QWidget()
             self.edit_items_form = QWidget()
             self.sellers_form = QWidget()
+            self.places_form = QWidget()
 
         moduls: dict[QWidget] = dict()
         moduls['login_form'] = self.login_form
@@ -77,6 +82,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         moduls['new_items_form'] = self.new_items_form
         moduls['edit_items_form'] = self.edit_items_form
         moduls['sellers_form'] = self.sellers_form
+        moduls['places_form'] = self.places_form
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self, moduls)
         self.ui.load_widget = LoadWidget(parent=self.ui.pages, path='utils/loading.gif')
@@ -134,7 +140,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
     def show_sellers_page(self):
         self.reset_selection()
         self.ui.btn_sellers.set_active(True)
-        self.ui.pages.setCurrentWidget(self.ui.page_sellers_form)
+        self.ui.pages.setCurrentWidget(self.ui.sellers_and_places_form)
 
     def show_login_page(self):
         self.reset_selection()

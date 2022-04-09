@@ -22,7 +22,7 @@ class TestSeller:
 
     @classmethod
     def setup_class(cls):
-        pd_seller = schemas.seller.CreateSeller(store_id=1, name="Igor")
+        pd_seller = schemas.seller.CreateSeller(store_id=1, name="Igor", active=True)
         new_seller = Seller.create_from_schema(db.seller.create(pd_seller))
         cls.obj_id = new_seller.id
 
@@ -31,7 +31,7 @@ class TestSeller:
         assert seller.name == 'Igor'
 
     def test_case02_update(self):
-        pd_seller = schemas.seller.UpdateSeller(id=self.obj_id, store_id=1, name="Anna")
+        pd_seller = schemas.seller.UpdateSeller(id=self.obj_id, store_id=1, name="Anna", active=True)
         seller = Seller.create_from_schema(db.seller.update(pd_seller))
         assert seller.name == 'Anna'
 
