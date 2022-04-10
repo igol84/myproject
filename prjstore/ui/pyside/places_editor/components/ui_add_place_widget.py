@@ -25,8 +25,6 @@ class UI_AddPlaceWidget:
         self.layout.addWidget(self.line_edit_name)
         self.layout.addWidget(self.btn_add)
 
-        self.layout.addLayout(self.layout)
-
 
 class LineEdit(QLineEdit):
     escaped = Signal()

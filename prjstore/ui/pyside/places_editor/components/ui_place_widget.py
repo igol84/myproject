@@ -31,8 +31,6 @@ class UI_PlaceWidget:
         self.layout.addWidget(self.line_edit_name)
         self.layout.addWidget(self.active_box)
 
-        self.layout.addLayout(self.layout)
-
 
 class LabelClicked(QLabel):
     clicked = Signal()
