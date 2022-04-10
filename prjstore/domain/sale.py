@@ -14,7 +14,7 @@ from prjstore.domain.sale_line_item import SaleLineItem
 from prjstore.domain.seller import Seller
 from util.money import Money
 
-locale.setlocale(locale.LC_TIME, 'ru_RU')
+locale.setlocale(locale.LC_TIME, 'ru-RU')
 
 
 @dataclass
