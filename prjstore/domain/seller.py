@@ -1,29 +1,16 @@
-from contracts import contract
+from pydantic.dataclasses import dataclass
+from prjstore.db import schemas
 
 
+@dataclass
 class Seller:
-    """
->>> seller = Seller('Igor')
->>> seller
-<Seller: name=Igor>
->>> seller.name = 'Anna'
->>> seller.name
-'Anna'
-    """
+    id: int
+    name: str
+    active: bool = False
 
-    def __init__(self, name: str):
-        self.name: str = name
+    def __hash__(self):
+        return hash(self.id)
 
-    ###############################################################################################
-    # name
-    def __get_name(self) -> str:
-        return self.__name
-
-    @contract(name=str)
-    def __set_name(self, name: str) -> None:
-        self.__name = name
-
-    name = property(__get_name, __set_name)
-
-    def __repr__(self):
-        return f'<{self.__class__.__name__}: name={self.name}>'
+    @staticmethod
+    def create_from_schema(schema: schemas.seller.Seller) -> 'Seller':
+        return Seller(id=schema.id, name=schema.name, active=schema.active)

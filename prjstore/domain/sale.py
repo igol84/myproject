@@ -1,208 +1,124 @@
-from decimal import Decimal
-from typing import Optional, overload
-
-from contracts import contract
-from datetime import datetime
 import locale
+from dataclasses import field
+from datetime import datetime
+from decimal import Decimal
+from typing import overload
 
-from prjstore.domain.item import Item, get_items_for_test
-from prjstore.domain.sale_line_item import SaleLineItem
+from pydantic import conint, validate_arguments
+from pydantic.dataclasses import dataclass
+
+from prjstore.db import schemas
 from prjstore.domain.abstract_product import AbstractProduct
+from prjstore.domain.item import Item
+from prjstore.domain.sale_line_item import SaleLineItem
 from prjstore.domain.seller import Seller
+from util.money import Money
 
-locale.setlocale(locale.LC_TIME, 'ru_RU')
+locale.setlocale(locale.LC_TIME, 'ru-RU')
 
 
+@dataclass
 class Sale:
-    """
->>> items: list[Item] = get_items_for_test()                                               # get items
->>> items
-[<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>,\
- <Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=1>,\
- <Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=2>]
->>> sale = Sale(Seller('Igor'), items[1])                                                    # Create sale
->>> sale.date_time = datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')    # set time
->>> sale.date_time.strftime("%m/%d/%Y, %H:%M:%S")                                            # get time
-'06/06/2020, 12:19:55'
->>> sale
-<Sale: seller:Igor, date_time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=0>, sale_price=UAH 300.00, qty=1>>
-
->>> sale.seller = Seller('Anna')
->>> sale.seller.name
-'Anna'
-
->>> sale.add_line_item(items[0])                                          # Add product to sale
->>> sale.add_line_item(items[2])
->>> sale
-<Sale: seller:Anna, date_time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=0>, sale_price=UAH 300.00, qty=1>
- <SaleLineItem: item=\
-<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=2>, sale_price=UAH 600.00, qty=1>
- <SaleLineItem: item=\
-<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=1>, sale_price=UAH 500.00, qty=1>>
->>> sale.add_line_item(item=items[0], sale_price=800, qty=2)      # Add same product to sale
->>> sale
-<Sale: seller:Anna, date_time: 06/06/2020, 12:19:55, not completed, line items:
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=0>, sale_price=UAH 300.00, qty=1>
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 600.00, qty=1>
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=1>, sale_price=UAH 500.00, qty=1>
- <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 800.00, qty=2>>
->>> sale[('2', 800)]                                                    # get line item by product id "4"
-<SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 800.00, qty=2>
->>> sale.unset_line_item_by_pr_id_and_sale_price('2', 800, 1) # unset sale line pr id ='2'# items 3-2=1
->>> sale.line_items                                                                   # get sale line items
-[<SaleLineItem: item=<Item: product=<SimpleProduct: id=4, name=item5, price=UAH 300.00>, qty=0>, \
-sale_price=UAH 300.00, qty=1>, <SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
- qty=0>, sale_price=UAH 600.00, qty=1>, <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, name=item2, \
-price=UAH 500.00>, qty=1>, sale_price=UAH 500.00, qty=1>, <SaleLineItem: item=<Item: product=\
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 800.00, qty=1>]
->>> del sale[('4', 300)]                                            # del sale line item by product id='4'
->>> sale.line_items
-[<SaleLineItem: item=<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, \
-sale_price=UAH 600.00, qty=1>, <SaleLineItem: item=<Item: product=<SimpleProduct: id=6, name=item2, \
-price=UAH 500.00>, qty=1>, sale_price=UAH 500.00, qty=1>, <SaleLineItem: item=\
-<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 800.00, qty=1>]
->>> sale.completed()                                                                  # completed
->>> sale.is_complete()
-True
->>> sale
-<Sale: seller:Anna, date_time: 06/06/2020, 12:19:55, completed, line items:
- <SaleLineItem: item=\
-<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 600.00, qty=1>
- <SaleLineItem: item=\
-<Item: product=<SimpleProduct: id=6, name=item2, price=UAH 500.00>, qty=1>, sale_price=UAH 500.00, qty=1>
- <SaleLineItem: item=\
-<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=0>, sale_price=UAH 800.00, qty=1>>
-"""
-
-    def __init__(self,
-                 seller: Seller = None,
-                 item: Item = None,
-                 sale_price: float = None,
-                 gty: int = 1
-                 ) -> None:
-        self.seller: Seller = seller
-        self.__list_sli: list[SaleLineItem] = []
-        self.__is_complete: bool = False
-        self.__date_time: datetime = datetime.now()
-
-        if item:
-            self.add_line_item(item=item, sale_price=sale_price, qty=gty)
-
-    ###############################################################################################
-    # seller
-    def __get_seller(self) -> Seller:
-        return self.__seller
-
-    @contract(seller='None | $Seller')
-    def __set_seller(self, seller: Optional[Seller]) -> None:
-        self.__seller = seller
-
-    seller = property(__get_seller, __set_seller)
-
-    ###############################################################################################
-    # line_items
-    def __get_list_sli(self) -> list[SaleLineItem]:
-        return self.__list_sli
-
-    line_items = property(__get_list_sli)
-
-    ###############################################################################################
-    # time
-    def __get_date_time(self) -> datetime:
-        return self.__date_time
-
-    @contract(date_time=datetime)
-    def __set_date_time(self, date_time: datetime) -> None:
-        self.__date_time = date_time
-
-    date_time = property(__get_date_time, __set_date_time)
+    id: int = None
+    seller: Seller = None
+    list_sli: list[SaleLineItem] = field(default_factory=list)
+    date_time: datetime = datetime.now()
+    complete: bool = False
 
     ###############################################################################################
     # add new line items
-    @contract(item=Item, qty="int, >0")
-    def add_line_item(self, item: Item, sale_price: float = None, qty: int = 1) -> None:
-        sale_price = sale_price if sale_price else item.product.price.amount
+    @validate_arguments
+    def add_line_item(self, item: Item, sale_price: float = None, qty: conint(ge=0) = 1) -> None:
+        sale_price = sale_price if sale_price is not None else item.product.price.amount
         assert qty <= item.qty, f"qty({qty}) should not be more than item.qty({item.qty})!"
         # a same product in line items
-        if self[(item.product.id, sale_price)]:
-            self[(item.product.id, sale_price)].qty += qty
+        if self[item.id, sale_price]:
+            self[item.id, sale_price].qty += qty
         # is a new product in line items
         else:
-            self.__list_sli.append(SaleLineItem(item, sale_price=sale_price, qty=qty))
+            self.list_sli.append(SaleLineItem(item=item, sale_price=(sale_price,), qty=qty))
         item.qty -= qty
 
-    @contract(pr_id=str)
+    @validate_arguments
     def get_line_items_by_product_id(self, pr_id: str) -> list[SaleLineItem]:
         list_sli = []
-        for sli in self.__list_sli:
-            if sli.item.product.id == pr_id:
+        for sli in self.list_sli:
+            if sli.item.product.prod_id == pr_id:
                 list_sli.append(sli)
         return list_sli
 
-    @contract(pr_id=str, sale_price='int | float | $Decimal')
-    def get_line_item_by_product_id_and_sale_price(self, pr_id: str, sale_price: float) -> SaleLineItem:
-        for sli in self.__list_sli:
-            if sli.item.product.id == pr_id and sli.sale_price.amount == sale_price:
+    @validate_arguments
+    def get_line_items_by(self, pr_id: str, sale_price: float) -> list[SaleLineItem]:
+        list_sli = []
+        for sli in self.list_sli:
+            if sli.item.product.prod_id == pr_id and sli.sale_price.amount == sale_price:
+                list_sli.append(sli)
+        return list_sli
+
+    @validate_arguments
+    def get_line_items_by_item_id(self, item_id: int) -> list[SaleLineItem]:
+        list_sli = []
+        for sli in self.list_sli:
+            if sli.item.id == item_id:
+                list_sli.append(sli)
+        return list_sli
+
+    @validate_arguments
+    def get_line_item_by_item_id_and_sale_price(self, item_id: int, sale_price: float) -> SaleLineItem:
+        for sli in self.list_sli:
+            if sli.item.id == item_id and sli.sale_price.amount == sale_price:
                 return sli
 
-    @contract(sli=SaleLineItem, sale_price='int | float | $Decimal')
-    def edit_sale_price(self, sli: SaleLineItem, sale_price: float):
-        old_same_sli = self.get_line_item_by_product_id_and_sale_price(sli.item.product.id, sale_price)
+    @validate_arguments
+    def edit_sale_price(self, sli: SaleLineItem, new_sale_price: float):
+        old_same_sli = self.get_line_item_by_item_id_and_sale_price(sli.item.id, new_sale_price)
         if old_same_sli:
-            self.line_items.remove(sli)
+            self.list_sli.remove(sli)
             old_same_sli.qty += sli.qty
         else:
-            sli.sale_price = sale_price
+            sli.sale_price.amount = new_sale_price
 
-    # unset line items
-    @contract(sli=SaleLineItem)
+    @validate_arguments
     def unset_line_item(self, sli: SaleLineItem, qty: int = 1) -> None:
-        qty = qty
         sale_price = sli.sale_price.amount
-        pr_id = sli.item.product.id
-        if not sli:
-            raise ValueError(f"Invalid pr_id: {pr_id}, price: {sale_price}")
-        assert sli and qty <= sli.qty, f"qty({qty}) should not be more than item.qty({self[(pr_id, sale_price)].qty})!"
-        # a same product in line items
+        assert sli and qty <= sli.qty, f"qty({qty}) should not be more " \
+                                       f"than item.qty({self[(sli.item.id, sale_price)].qty})!"
         if qty < sli.qty:
-            self[(pr_id, sale_price)].qty -= qty
+            self[(sli.item.id, sale_price)].qty -= qty
         elif qty == sli.qty:
-            del self[(pr_id, sale_price)]
+            del self[(sli.item.id, sale_price)]
 
-    # unset line items
-    @contract(pr_id=str, qty='int, >0')
-    def unset_line_item_by_pr_id_and_sale_price(self, pr_id: str, sale_price: float, qty: int = 1) -> None:
-        sli = self[(pr_id, sale_price)]
-        self.unset_line_item(sli, qty)
+    @validate_arguments
+    def unset_line_items_by_pr_id_and_sale_price(self, pr_id: str, sale_price: float, qty: int = 1) -> None:
+        list_sli = self.get_line_items_by(pr_id, sale_price)
+        for sli in list_sli:
+            self.unset_line_item(sli, qty)
 
-    @contract(pr_id=str)
-    def del_line_item_by_product_id_and_sale_price(self, pr_id: str, sale_price: float) -> None:
-        for key, sli in enumerate(self.__list_sli):
-            if sli.item.product.id == pr_id and sli.sale_price.amount == sale_price:
-                del self.__list_sli[key]
+    @validate_arguments
+    def del_line_items_by_product_id_and_sale_price(self, pr_id: str, sale_price: float) -> None:
+        for key, sli in enumerate(self.list_sli):
+            if sli.item.product.prod_id == pr_id and sli.sale_price.amount == sale_price:
+                del self.list_sli[key]
+
+    @validate_arguments
+    def del_line_items_by_item_id_and_sale_price(self, item_id: int, sale_price: float) -> None:
+        for key, sli in enumerate(self.list_sli):
+            if sli.item.id == item_id and sli.sale_price.amount == sale_price:
+                del self.list_sli[key]
 
     def is_complete(self) -> bool:
-        return self.__is_complete
+        return self.complete
 
     def completed(self) -> None:
-        self.__is_complete = True
+        self.complete = True
 
-    @contract(item=Item)
+    @validate_arguments
     def is_item_in_sale(self, item: Item) -> bool:
         return item.product in self
 
-    @contract(product=AbstractProduct)
+    @validate_arguments
     def is_product_in_sale(self, product: AbstractProduct, sale_price: float = None) -> bool:
-        for sli in self.__list_sli:
+        for sli in self.list_sli:
             if sale_price:
                 if sli.item.product == product and sli.sale_price.amount == sale_price:
                     return True
@@ -211,39 +127,65 @@ True
                     return True
         return False
 
-    def __repr__(self) -> str:
-        sale_line_items = '\n ' + '\n '.join([str(sli) for sli in self.line_items])
-        completed = 'completed' if self.is_complete() else 'not completed'
-        time = self.date_time.strftime("%m/%d/%Y, %H:%M:%S")
-        seller_name = self.seller.name if self.seller else None
-        return f"<{self.__class__.__name__}: " \
-               f"seller:{seller_name}, date_time: {time}, {completed}, line items:{sale_line_items}>"
+    def get_total(self) -> Money:
+        total = Money(0)
+        for sli in self.list_sli:
+            total += sli.sale_price * sli.qty
+        return total
+
+    def get_total_purchase(self) -> Money:
+        total = Money(0)
+        for sli in self.list_sli:
+            total += sli.item.buy_price * sli.qty
+        return total
+
+    def get_total_profit(self) -> Money:
+        return self.get_total() - self.get_total_purchase()
 
     @overload
-    def __getitem__(self, key: str) -> list[SaleLineItem]:
+    def __getitem__(self, key: int) -> list[SaleLineItem]:
         ...
 
     @overload
-    def __getitem__(self, key: tuple[str, float]) -> SaleLineItem:
+    def __getitem__(self, key: tuple[int, float]) -> SaleLineItem:
         ...
 
-    def __getitem__(self, key):  # get line item by product id
-        if isinstance(key, str):
-            pr_id = key
-            return self.get_line_items_by_product_id(pr_id)
-        elif isinstance(key, tuple) and isinstance(key[0], str) and \
+    def __getitem__(self, key) -> list[SaleLineItem]:  # get line item by product id
+        if isinstance(key, int):
+            item_id = key
+            return self.get_line_items_by_item_id(item_id)
+        elif isinstance(key, tuple) and isinstance(key[0], int) and \
                 (isinstance(key[1], int) or isinstance(key[1], float) or isinstance(key[1], Decimal)):
-            pr_id, sale_price = key
-            return self.get_line_item_by_product_id_and_sale_price(pr_id, sale_price)
+            item_id, sale_price = key
+            return self.get_line_item_by_item_id_and_sale_price(item_id, sale_price)
         else:
             raise ValueError('invalid key', key)
 
-    def __delitem__(self, key: tuple[str, float]):  # del sale line item by product id
-        pr_id, sale_price = key
-        self.del_line_item_by_product_id_and_sale_price(pr_id, sale_price)
+    def __delitem__(self, key: tuple[int, float]):  # del sale line item by product id
+        item_id, sale_price = key
+        self.del_line_items_by_item_id_and_sale_price(item_id, sale_price)
 
     def __contains__(self, product: AbstractProduct) -> bool:  # Does Sale contain this product in line items?
         return self.is_product_in_sale(product)
 
     def __len__(self):
-        return len(self.line_items)
+        return len(self.list_sli)
+
+    @staticmethod
+    def create_from_schema(schema: schemas.sale.ShowSaleWithSLIs) -> 'Sale':
+        seller = Seller.create_from_schema(schema.seller)
+        list_sli = [SaleLineItem.create_from_schema(sli) for sli in schema.sale_line_items]
+        return Sale(id=schema.id, seller=seller, list_sli=list_sli, date_time=schema.date_time, complete=True)
+
+    @validate_arguments
+    def schema_create(self, place_id: int) -> schemas.sale.CreateSale:
+        sli_pd_list = [schemas.sale.CreateSaleLineItemForSale(qty=sli.qty, item_id=sli.item.id,
+                                                              sale_price=sli.sale_price.amount)
+                       for sli in self.list_sli]
+        return schemas.sale.CreateSale(place_id=place_id, seller_id=self.seller.id, date_time=self.date_time,
+                                       sale_line_items=sli_pd_list)
+
+    @validate_arguments
+    def schema_update(self, place_id: int) -> schemas.sale.UpdateSale:
+        return schemas.sale.UpdateSale(id=self.id, place_id=place_id, seller_id=self.seller.id,
+                                       date_time=self.date_time, sale_line_items=self.list_sli)

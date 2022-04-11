@@ -1,0 +1,3 @@
+class AbstractItem:
+    def hide_elements(self) -> None:
+        ...

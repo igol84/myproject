@@ -1,105 +1,39 @@
-from typing import Union, Optional
+from datetime import date
 
-from contracts import contract
+from pydantic import conint, validate_arguments
+from pydantic.dataclasses import dataclass
 
-from prjstore.domain.product_catalog import get_products_for_test
+from prjstore.db import schemas
 from prjstore.domain.abstract_product import AbstractProduct
-from util.money import Money, Decimal
+from prjstore.domain.product_catalog import ProductCatalog
+from prjstore.domain.product_factory import ProductFactory
+from util.money import Money
 
 
+@dataclass
 class Item:
-    """
->>> test_product_catalog=get_products_for_test() # Get test product catalog
->>> test_product_catalog
-[<Shoes: id=1, name=item1, price=UAH 100.00, color=default, size=36.0, length_of_insole=11.0, width=Medium>,\
- <SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
- <Shoes: id=3, name=item4, price=UAH 700.00, color=red, size=43.3, length_of_insole=28.0, width=Medium>,\
- <SimpleProduct: id=4, name=item5, price=UAH 300.00>,\
- <SimpleProduct: id=6, name=item2, price=UAH 500.00>]
+    product: AbstractProduct
+    id: int = None
+    qty: conint(ge=0) = 1
+    buy_price: Money = Money(0)
+    date_buy: date = date.today()
 
->>> item = Item(pr=test_product_catalog['2'], qty=3)              # Create new item
->>> item                                                          # get item
-<Item: product=<SimpleProduct: id=2, name=item23, price=UAH 600.00>, qty=3>
->>> item.product                                                  # get items product
-<SimpleProduct: id=2, name=item23, price=UAH 600.00>
->>> item.product=test_product_catalog['3']                        # edit items product
->>> item.product
-<Shoes: id=3, name=item4, price=UAH 700.00, color=red, size=43.3, length_of_insole=28.0, width=Medium>
->>> item.qty                                                      # get items quantity
-3
->>> item.qty=2                                                    # edit items quantity
->>> item.qty
-2
->>> item.buy_price=100                                                    # edit items quantity
->>> item.buy_price
-UAH 100.00
+    @staticmethod
+    def create_from_schema(schema: schemas.item.ShowItemWithProduct, pc: ProductCatalog = None) -> 'Item':
+        product = ProductFactory.create_from_schema(schema.product)
+        if pc and schema.product.id in pc.products:
+            product = pc[schema.product.id]
+        return Item(id=schema.id, product=product, qty=schema.qty, buy_price=Money(schema.buy_price),
+                    date_buy=schema.date_buy)
 
-    """
-    _default_curr: str = Money.default_currency
+    @staticmethod
+    def create_from_schema_with_product(schema: schemas.item.Item, product: AbstractProduct) -> 'Item':
+        return Item(id=schema.id, product=product, qty=schema.qty, buy_price=Money(schema.buy_price),
+                    date_buy=schema.date_buy)
 
-    def __init__(self, pr: AbstractProduct, qty: int = 1, buy_price=0, currency=_default_curr):
-        self.product: AbstractProduct = pr
-        self.qty: int = qty
-        self.__buy_price: Money = None
-        self.__set__buy_price(buy_price, currency)
-
-    ###############################################################################################
-    # product
-    def __get_product(self) -> AbstractProduct:
-        return self.__product
-
-    @contract(pr=AbstractProduct)
-    def __set_product(self, pr: AbstractProduct) -> None:
-        self.__product = pr
-
-    product = property(__get_product, __set_product)
-
-    ###############################################################################################
-    # qty
-    def __get_qty(self) -> int:
-        return self.__qty
-
-    @contract(qty='int, >=0')
-    def __set_qty(self, qty: int) -> None:
-        self.__qty = qty
-
-    qty = property(__get_qty, __set_qty)
-
-    ###############################################################################################
-    # buy_price
-    def __get__buy_price(self) -> Money:
-        return self.__buy_price
-
-    @contract(buy_price='$Money | int | float | $Decimal', currency='None | str')
-    def __set__buy_price(self,
-                         buy_price: Union[Money, int, float, Decimal],
-                         currency: Optional[str] = None
-                         ) -> None:
-        if isinstance(buy_price, Money):
-            self.__buy_price = buy_price
-        else:
-            curr = currency if currency else self.__buy_price.currency
-            self.__buy_price = Money(amount=buy_price, currency=curr)
-
-    buy_price = property(__get__buy_price, __set__buy_price)
-
-    ###############################################################################################
-    def __repr__(self) -> str:
-        return f'<{self.__class__.__name__}: product={self.__product}, qty={self.__qty}>'
-
-
-def get_items_for_test() -> list[Item]:
-    test_pc = get_products_for_test()
-    # [<SimpleProduct: id=1, name=item1, price=UAH 100.00>,\
-    #  <SimpleProduct: id=2, name=item23, price=UAH 600.00>,\
-    #  <SimpleProduct: id=3, name=item4, price=UAH 700.00>,\
-    #  <SimpleProduct: id=4, name=item5, price=UAH 300.00>,\
-    #  <SimpleProduct: id=6, name=item2, price=UAH 500.00>]
-
-    items = [Item(pr=test_pc['2'], qty=3),
-             Item(pr=test_pc['4'], qty=1),
-             Item(pr=test_pc['6'], qty=2)]
-    # [ < Item: product = < Product: id = 2, name = item23, price = UAH 600.00 >, qty = 3 >, \
-    #   < Item: product = < Product: id = 4, name = item5, price = UAH 300.00 >, qty = 1 >, \
-    #   < Item: product = < Product: id = 6, name = item2, price = UAH 500.00 >, qty = 2 >]
-    return items
+    @validate_arguments
+    def schema_create(self, store_id: int) -> schemas.item.ShowItemWithProduct:
+        product = self.product.schema_create()
+        return schemas.item.ShowItemWithProduct(
+            id=self.id, prod_id=self.product.prod_id, store_id=store_id, qty=self.qty, buy_price=self.buy_price.amount,
+            product=product, date_buy=self.date_buy)
