@@ -1,4 +1,3 @@
-import locale
 from dataclasses import field
 from datetime import datetime
 from decimal import Decimal
@@ -13,8 +12,6 @@ from prjstore.domain.item import Item
 from prjstore.domain.sale_line_item import SaleLineItem
 from prjstore.domain.seller import Seller
 from util.money import Money
-
-locale.setlocale(locale.LC_TIME, 'ru-RU')
 
 
 @dataclass

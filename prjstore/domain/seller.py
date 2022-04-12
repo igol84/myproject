@@ -6,7 +6,7 @@ from prjstore.db import schemas
 class Seller:
     id: int
     name: str
-    active: bool = False
+    active: bool = True
 
     def __hash__(self):
         return hash(self.id)

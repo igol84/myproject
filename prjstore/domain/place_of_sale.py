@@ -11,7 +11,7 @@ class PlaceOfSale:
     id: int
     name: str
     ledger: dict[int, Sale] = field(default_factory=dict)
-    active: bool = False
+    active: bool = True
     sale: Sale = None
 
     def __hash__(self):
