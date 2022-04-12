@@ -85,10 +85,11 @@ class MainWindow(QMainWindow, MainWindowInterface):
         moduls['places_form'] = self.places_form
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self, moduls)
-        self.ui.load_widget = LoadWidget(parent=self.ui.pages, path='utils/loading.gif')
+        self.ui.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
         self.ui.load_widget.show()
 
     def start_connection(self):
+        self.ui.load_widget.show()
         db_connector = DbConnect(self.login_form.get_user_data())
         db_connector.signals.connection_error.connect(self.__connection_error)
         db_connector.signals.authentication_error.connect(self.__authentication_error)
