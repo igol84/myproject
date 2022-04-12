@@ -102,7 +102,6 @@ class SellerWidget(ItemFrame):
             self.parent_widget.on_changed_active(self.seller_id, state)
 
 
-
 if __name__ == '__main__':
     import sys
 

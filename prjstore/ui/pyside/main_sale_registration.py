@@ -145,10 +145,8 @@ class SaleForm(QWidget):
         self._update_items_layout()
 
     def update_data(self, store=None):
-        self.load_widget.show()
         self.handler.update_data(store)
         self.update_ui()
-        self.load_widget.hide()
 
     def put_on_sale(self):
         pr_id = self.selected_item_widget.pr_id

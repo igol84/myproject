@@ -1,3 +1,5 @@
+import re
+
 from prjstore.db.schemas import handler_receiving_the_items as db_schemas
 from prjstore.handlers.receiving_the_items_handler import ReceivingTheItemsHandler
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
@@ -199,6 +201,7 @@ class ItemForm(QWidget):
 
     def update_size_table(self, pd_sizes: Optional[list[ModelSizeShoes]] = None, show_qty=False):
         self.ui.sizes_table.clear()
+        self.last_added_size = ''
         self.ui.sizes_table.setHorizontalHeaderLabels(self.keywords['shoes']['header_shoes'])
         count_sizes = self.keywords['shoes']['count_sizes']
         min_size = self.keywords['shoes']['min_size']
@@ -301,7 +304,8 @@ class ItemForm(QWidget):
                 if table.item(num_row, 2).text() and is_digit(table.item(num_row, 2).text()):
                     length = table.item(num_row, 2).text()
                 qty_shoes = table.item(num_row, 1).text()
-                if size.isdigit() and qty_shoes.isdigit() and int(qty_shoes) > 0:
+                p = re.compile('\d+(\.\d+)?')
+                if p.match(size) and qty_shoes.isdigit() and int(qty_shoes) > 0:
                     list_of_sizes.append(db_schemas.ModelSizeShoes(size=size, length=length, qty=qty_shoes))
             if not list_of_sizes:
                 warning_texts.append('Не указано количество ниодного размера!')
@@ -321,9 +325,9 @@ class ItemForm(QWidget):
 
 
 class LineEditDelegate(QStyledItemDelegate):
-    def createEditor(self, parent: QWidget, option: QStyleOptionViewItem, index: QModelIndex) -> QWidget:
+    def createEditor(self, parent, option: QStyleOptionViewItem, index: QModelIndex, *args, **kwargs) -> QWidget:
         editor = QLineEdit(parent)
-        validator_reg = QRegularExpressionValidator(QRegularExpression("[0-9]+"))
+        validator_reg = QRegularExpressionValidator(QRegularExpression("[0-9]*"))
         editor.setValidator(validator_reg)
         return editor
 
