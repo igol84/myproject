@@ -169,7 +169,7 @@ class ItemForm(QWidget):
     def on_name_combo_box_changed(self):
         self.update_product(self.ui.name_combo_box.currentData())
 
-    def update_product(self, pd_product: Optional[ModelProductShow]):
+    def update_product(self, pd_product: Optional[ModelProductShow] = None):
         self.ui.qty_spin_box.setValue(1)
         if pd_product:
             self.ui.price_line_edit.setText(f'{pd_product.price_sell: g}')
@@ -204,16 +204,17 @@ class ItemForm(QWidget):
         self.last_added_size = ''
         self.ui.sizes_table.setHorizontalHeaderLabels(self.keywords['shoes']['header_shoes'])
         count_sizes = self.keywords['shoes']['count_sizes']
+        self.ui.sizes_table.setRowCount(count_sizes + 2)
         min_size = self.keywords['shoes']['min_size']
         item = QTableWidgetItem('')
         self.ui.sizes_table.setItem(0, 0, item)
-        self.ui.sizes_table.setItem(0, 1, QTableWidgetItem())
-        self.ui.sizes_table.setItem(0, 2, QTableWidgetItem())
+        self.ui.sizes_table.setItem(0, 1, QTableWidgetItem(''))
+        self.ui.sizes_table.setItem(0, 2, QTableWidgetItem(''))
         item.setBackground(QColor('#85ff8b'))
         for i, size in enumerate(range(min_size, min_size + count_sizes + 1), start=1):
             self.ui.sizes_table.setItem(i, 0, QTableWidgetItem(f'{size}'))
-            self.ui.sizes_table.setItem(i, 1, QTableWidgetItem())
-            self.ui.sizes_table.setItem(i, 2, QTableWidgetItem())
+            self.ui.sizes_table.setItem(i, 1, QTableWidgetItem(''))
+            self.ui.sizes_table.setItem(i, 2, QTableWidgetItem(''))
             if pd_sizes and size in pd_sizes:
                 if show_qty:
                     self.ui.sizes_table.setItem(i, 1, QTableWidgetItem(f'{pd_sizes[size].qty}'))
@@ -230,8 +231,8 @@ class ItemForm(QWidget):
             item = QTableWidgetItem('')
             self.ui.sizes_table.setItem(0, 0, item)
             item.setBackground(QColor('#85ff8b'))
-            self.ui.sizes_table.setItem(0, 1, QTableWidgetItem())
-            self.ui.sizes_table.setItem(0, 2, QTableWidgetItem())
+            self.ui.sizes_table.setItem(0, 1, QTableWidgetItem(''))
+            self.ui.sizes_table.setItem(0, 2, QTableWidgetItem(''))
         self.ui.sizes_table.sortByColumn(0, Qt.AscendingOrder)
 
     def update_item(self):
@@ -299,7 +300,7 @@ class ItemForm(QWidget):
             rows = table.rowCount()
             list_of_sizes = []
             for num_row in range(rows):
-                size = table.item(num_row, 0).text()
+                size = table.item(num_row, 0).text().replace(',', '.')
                 length = None
                 if table.item(num_row, 2).text() and is_digit(table.item(num_row, 2).text()):
                     length = table.item(num_row, 2).text()
