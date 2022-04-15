@@ -137,9 +137,6 @@ class ItemForm(QWidget):
 
     def show_all_colors(self):
         colors = set()
-        for pd_prod in self.list_pd_prod:
-            if pd_prod.type.name == 'shoes' and pd_prod.module.colors:
-                colors |= pd_prod.module.colors
         unics_colors = list(set(colors))
         self.ui.color_combo_box.clear()
         self.ui.color_combo_box.addItem('')
@@ -335,9 +332,10 @@ class LineEditDelegate(QStyledItemDelegate):
 
 if __name__ == "__main__":
     import sys
+    from prjstore.db.api import settings
 
     app = QApplication(sys.argv)
     pd_item = ModelItem()
-    w = ItemForm(item=pd_item, test=False, dark_style=True, user_data={'username': 'qwe', 'password': 'qwe'})
+    w = ItemForm(item=pd_item, test=False, dark_style=True, user_data=settings.user_data)
     w.show()
     sys.exit(app.exec())

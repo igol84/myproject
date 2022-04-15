@@ -233,7 +233,9 @@ class SaleForm(QWidget):
 
 
 if __name__ == "__main__":
+    from prjstore.db.api import settings
+
     app = QApplication(sys.argv)
-    w = SaleForm(test=False, dark_style=True, user_data={'username': 'qwe', 'password': 'qwe'})
+    w = SaleForm(test=False, dark_style=True, user_data=settings.user_data)
     w.show()
     sys.exit(app.exec())

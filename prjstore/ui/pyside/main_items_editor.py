@@ -12,15 +12,18 @@ from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 from prjstore.ui.pyside.utils.qt_core import *
 from prjstore.ui.pyside.utils.qt_utils import clearLayout
+from util.pages import Pages
 
 
-class ItemsEditor(QWidget, ObserverInterface):
+class ItemsEditor(QWidget, Pages, ObserverInterface):
     __pd_items: list[schemas.ViewItem]
     __selected_item_widget: ItemWidget
     __handler: ItemsEditorHandler
 
     def __init__(self, parent=None, test=False, user_data=None, list_pd_items=None, db=None, dark_style=False):
         super().__init__()
+        Pages.__init__(self)
+
         self.parent: MainWindowInterface = parent
         if parent:
             self.parent.register_observer(self)
@@ -28,6 +31,7 @@ class ItemsEditor(QWidget, ObserverInterface):
         self.test = test
         self.ui = UI_ItemsEditor()
         self.ui.setup_ui(self)
+        self.register_observer(self.ui.pages_frame)
         self.user_data = user_data
         self.db = db
         self.thread_pool = QThreadPool()
@@ -96,6 +100,7 @@ class ItemsEditor(QWidget, ObserverInterface):
 
     def on_search_text_changed(self):
         self.load_widget.show()
+        self.selected_page = 1
         self.update_ui()
         self.load_widget.hide()
 
@@ -116,11 +121,18 @@ class ItemsEditor(QWidget, ObserverInterface):
 
     def update_ui(self):
         self.__pd_items = self.handler.get_store_items(search=self.ui.src_items.text())
+        self.count_elements = len(self.__pd_items)
+        self.update_items_ui()
+
+    def update_items_ui(self):
         clearLayout(self.ui.layout_items)
         self.__selected_item_widget = None
-        for pd_item in self.__pd_items:
-            item_frame = ItemWidget(item_pd=pd_item, parent=self)
+        for i in self.items_on_page:
+            item_frame = ItemWidget(item_pd=self.__pd_items[i], parent=self)
             self.ui.layout_items.addWidget(item_frame)
+
+    def page_number_changed(self):
+        self.update_items_ui()
 
     def on_press_edit_item(self, selected_item_widget: ItemWidget) -> None:
         item_id = selected_item_widget.item_id
@@ -164,7 +176,9 @@ class ItemsEditor(QWidget, ObserverInterface):
 
 
 if __name__ == "__main__":
+    from prjstore.db.api import settings
+
     app = QApplication(sys.argv)
-    w = ItemsEditor(test=False, user_data={'username': 'qwe', 'password': 'qwe'}, dark_style=True)
+    w = ItemsEditor(test=False, user_data=settings.user_data, dark_style=True)
     w.show()
     sys.exit(app.exec())

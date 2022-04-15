@@ -178,7 +178,8 @@ class PriceEditor(QWidget, ObserverInterface):
 
 
 if __name__ == "__main__":
+    from prjstore.db.api import settings
     app = QApplication(sys.argv)
-    w = PriceEditor(test=False, user_data={'username': 'qwe', 'password': 'qwe'}, dark_style=True)
+    w = PriceEditor(test=False, user_data=settings.user_data, dark_style=True)
     w.show()
     sys.exit(app.exec())

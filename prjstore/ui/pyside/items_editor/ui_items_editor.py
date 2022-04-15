@@ -1,3 +1,4 @@
+from prjstore.ui.pyside.utils.pages import PagesFrame
 from prjstore.ui.pyside.utils.qt_core import *
 
 
@@ -5,7 +6,7 @@ class UI_ItemsEditor:
     def setup_ui(self, items_editor_frame: QFrame):
         if not items_editor_frame.objectName():
             items_editor_frame.setObjectName('ItemsEditor')
-        items_editor_frame.resize(500, 600)
+        items_editor_frame.resize(500, 660)
         items_editor_frame.setMinimumWidth(600)
         self.layout = QVBoxLayout(items_editor_frame)
         self.layout.setObjectName('VBoxLayout')
@@ -14,7 +15,6 @@ class UI_ItemsEditor:
         self.src_items = QLineEdit()
         self.src_items.setObjectName('LineEditStcItems')
         self.src_items.setClearButtonEnabled(True)
-
 
         # Scroll Area
         self.scroll = QScrollArea()
@@ -38,9 +38,12 @@ class UI_ItemsEditor:
         # Add to frame layout
         self.scroll.setWidget(self.scroll_frame)
 
+        self.pages_frame = PagesFrame(parent=items_editor_frame)
+
         # Add to layout
         self.layout.addWidget(self.src_items)
         self.layout.addWidget(self.scroll)
+        self.layout.addWidget(self.pages_frame)
 
 
 class DelMessageBox(QMessageBox):
