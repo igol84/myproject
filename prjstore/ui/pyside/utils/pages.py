@@ -71,28 +71,22 @@ class PagesFrame(QFrame):
         self.line_edit.update_text()
 
     def on_clicked_first(self):
-        if self.parent:
-            self.parent.selected_page = 1
-        else:
-            self.selected_page = 1
+        self.numer_changed(1)
 
     def on_clicked_previous(self):
-        if self.parent:
-            self.parent.selected_page = self.selected_page - 1
-        else:
-            self.selected_page -= 1
+        self.numer_changed(self.selected_page - 1)
 
     def on_clicked_next(self):
-        if self.parent:
-            self.parent.selected_page = self.selected_page + 1
-        else:
-            self.selected_page += 1
+        self.numer_changed(self.selected_page + 1)
 
     def on_clicked_last(self):
+        self.numer_changed(self.count_pages)
+
+    def numer_changed(self, num: int):
         if self.parent:
-            self.parent.selected_page = self.count_pages
+            self.parent.selected_page = num
         else:
-            self.selected_page = self.count_pages
+            self.selected_page = num
 
     def update_pages(self, count_pages, selected_page):
         self.__count_pages = count_pages
@@ -113,6 +107,9 @@ class LineEdit(QLineEdit):
         super().__init__(*args, **kwargs)
         self.parent: PagesFrame = parent
         self.setFixedWidth(100)
+        validator_reg = QRegularExpressionValidator(QRegularExpression("[1-9][0-9]*"))
+        self.setValidator(validator_reg)
+        self.returnPressed.connect(self.text_edited)
 
     def update_text(self) -> None:
         text = f'{self.parent.selected_page} из {self.parent.count_pages}'
@@ -124,9 +121,20 @@ class LineEdit(QLineEdit):
         self.setText(text)
         QLineEdit.focusInEvent(self, arg__1)
 
+    def mousePressEvent(self, e):
+        self.selectAll()
+
     def focusOutEvent(self, arg__1: QFocusEvent) -> None:
         self.update_text()
         QLineEdit.focusOutEvent(self, arg__1)
+
+    def text_edited(self):
+        text = self.text()
+        if text.isdigit():
+            num = int(text)
+            if num > self.parent.count_pages:
+                num = self.parent.count_pages
+            self.parent.numer_changed(num)
 
 
 if __name__ == '__main__':

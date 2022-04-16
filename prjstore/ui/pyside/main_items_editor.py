@@ -168,6 +168,7 @@ class ItemsEditor(QWidget, Pages, ObserverInterface):
         del self.selected_item_widget
         if self.parent:
             self.parent.data_changed(self)
+        self.update_ui()
         self.load_widget.hide()
 
     def on_click_item_sale(self, date: datetime.date):
