@@ -119,20 +119,19 @@ class ItemsEditor(QWidget, Pages, ObserverInterface):
         self.update_ui()
         self.load_widget.hide()
 
-    def update_ui(self):
-        self.__pd_items = self.handler.get_store_items(search=self.ui.src_items.text())
-        self.count_elements = len(self.__pd_items)
-        self.update_items_ui()
-
-    def update_items_ui(self):
+    def update_ui(self, update_data: bool = True):
+        if update_data:
+            self.__pd_items = self.handler.get_store_items(search=self.ui.src_items.text())
+            self.count_elements = len(self.__pd_items)
         clearLayout(self.ui.layout_items)
         self.__selected_item_widget = None
         for i in self.items_on_page:
             item_frame = ItemWidget(item_pd=self.__pd_items[i], parent=self)
             self.ui.layout_items.addWidget(item_frame)
 
-    def page_number_changed(self):
-        self.update_items_ui()
+    def page_number_changed(self, data_page):
+        if data_page:
+            self.update_ui(update_data=False)
 
     def on_press_edit_item(self, selected_item_widget: ItemWidget) -> None:
         item_id = selected_item_widget.item_id

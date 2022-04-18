@@ -10,9 +10,11 @@ class PagesFrame(QFrame):
     __count_pages: int
     __selected_page: int
 
-    def __init__(self, parent=None, count_pages: int = 1, selected_page: int = 1, *args, **kwargs):
+    def __init__(self, parent=None, data_page=None, count_pages: int = 1, selected_page: int = 1, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.parent: ParentInterface = parent
+        self.data_page = data_page if data_page else parent
+
         self.__count_pages = count_pages
         self.__selected_page = selected_page
 
@@ -83,15 +85,15 @@ class PagesFrame(QFrame):
         self.numer_changed(self.count_pages)
 
     def numer_changed(self, num: int):
-        if self.parent:
-            self.parent.selected_page = num
+        if self.data_page:
+            self.data_page.selected_page = num
         else:
             self.selected_page = num
 
     def update_pages(self, count_pages, selected_page):
         self.__count_pages = count_pages
         if self.parent and self.__selected_page != selected_page:
-            self.parent.page_number_changed()
+            self.parent.page_number_changed(self.data_page)
             self.__selected_page = selected_page
         self.__update()
 

@@ -5,16 +5,19 @@ from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
 from prjstore.ui.pyside.sale_registration.components.sale import Sale_Frame
 from prjstore.ui.pyside.sale_registration.components.sli import SLI_Frame
-from prjstore.ui.pyside.sale_registration.sale_registration_ui import Ui_Form
+from prjstore.ui.pyside.sale_registration.ui_sale_registration import Ui_SaleForm
 from prjstore.ui.pyside.sale_registration.schemas import *
 from prjstore.ui.pyside.sale_registration.thread import *
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
+from prjstore.ui.pyside.utils.pages import PagesFrame
 from prjstore.ui.pyside.utils.qt_core import *
 from prjstore.ui.pyside.utils.qt_utils import clearLayout
+from util.pages import Pages
 
 
 class SaleForm(QWidget):
     items: list[ModelProduct]
+    data_items_pages: Pages
     sli_list: dict[tuple[ProductId, Price]: ModelProduct]
     old_sales: list[ViewSale]
     selected_item_widget: AbstractSoldItem
@@ -31,8 +34,13 @@ class SaleForm(QWidget):
         self.thread_pool = QThreadPool()
         self.test = test
         self.resize(1200, 600)
-        self.ui = Ui_Form()
+        self.ui = Ui_SaleForm()
         self.ui.setupUi(self)
+        self.data_items_pages = Pages(count_elements_on_page=11)
+        self.ui.items_pages_frame = PagesFrame(parent=self, data_page=self.data_items_pages)
+        self.ui.main_items_layout.addWidget(self.ui.items_pages_frame)
+        self.data_items_pages.register_observer(self.ui.items_pages_frame)
+
         self.dark_style = dark_style
         if dark_style:
             self.setup_dark_style()
@@ -132,16 +140,21 @@ class SaleForm(QWidget):
         self.load_widget.hide()
 
     # Items -------------------- right panel --------------------------------
-    def _update_items_layout(self):
+    def _update_items_layout(self, update_data: bool = True):
+        if update_data:
+            self.items = self.handler.get_store_items(search=self.ui.src_items.text())
+            self.data_items_pages.count_elements = len(self.items)
         clearLayout(self.ui.items_layout)
         self.selected_item_widget = None
-        self.items = self.handler.get_store_items(search=self.ui.src_items.text())
-        for item in self.items:
+
+        for i in self.data_items_pages.items_on_page:
+            item = self.items[i]
             item_frame = FrameItemFactory.create(product_type=item.type, parent=self, item_pd=item)
             self.ui.items_layout.addWidget(item_frame)
         self.ui.items_layout.addStretch(0)
 
     def on_search_items_text_changed(self):
+        self.data_items_pages.selected_page = 1
         self._update_items_layout()
 
     def update_data(self, store=None):
@@ -164,6 +177,15 @@ class SaleForm(QWidget):
         if self.parent:
             self.parent.data_changed(self)
         self.ui.src_items.clear()
+
+    def _items_page_number_changed(self):
+        self._update_items_layout(update_data=False)
+
+    # _______________________________________
+
+    def page_number_changed(self, data_pages):
+        if data_pages is self.data_items_pages:
+            self._items_page_number_changed()
 
     def put_item_form_sli_to_items(self, sale_id=None):
         pr_id = self.selected_sli_widget.sli_product_id

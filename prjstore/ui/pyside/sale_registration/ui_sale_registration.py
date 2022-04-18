@@ -1,21 +1,31 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'sale_registrationuaQZYh.ui'
+## Form generated from reading UI file 'sale_registrationdzkngZ.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.2.1
+## Created by: Qt User Interface Compiler version 6.2.4
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-from prjstore.ui.pyside.utils.qt_core import *
 
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QAbstractButton, QApplication, QComboBox, QDateEdit,
+    QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout,
+    QLabel, QLayout, QLineEdit, QScrollArea,
+    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 
-class Ui_Form(object):
+class Ui_SaleForm(object):
     def setupUi(self, SaleForm):
         if not SaleForm.objectName():
             SaleForm.setObjectName(u"SaleForm")
         SaleForm.setWindowModality(Qt.WindowModal)
-        SaleForm.resize(1064, 796)
+        SaleForm.resize(1064, 829)
         self.verticalLayout_2 = QVBoxLayout(SaleForm)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.title = QLabel(SaleForm)
@@ -76,6 +86,7 @@ class Ui_Form(object):
 
         self.gridLayout.addWidget(self.label_3, 0, 0, 1, 1)
 
+
         self.verticalLayout_6.addLayout(self.gridLayout)
 
         self.scroll_slis = QScrollArea(self.sale)
@@ -86,20 +97,21 @@ class Ui_Form(object):
         self.scroll_slis.setWidgetResizable(True)
         self.widget_slis = QWidget()
         self.widget_slis.setObjectName(u"widget_slis")
-        self.widget_slis.setGeometry(QRect(0, 0, 508, 605))
+        self.widget_slis.setGeometry(QRect(0, 0, 508, 638))
         self.sli_layout = QVBoxLayout(self.widget_slis)
         self.sli_layout.setObjectName(u"sli_layout")
         self.scroll_slis.setWidget(self.widget_slis)
 
         self.verticalLayout_6.addWidget(self.scroll_slis)
 
+
         self.horizontalLayout.addWidget(self.sale)
 
         self.items = QWidget(self.widget_area)
         self.items.setObjectName(u"items")
-        self.verticalLayout_3 = QVBoxLayout(self.items)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(0, 29, 0, 0)
+        self.main_items_layout = QVBoxLayout(self.items)
+        self.main_items_layout.setObjectName(u"main_items_layout")
+        self.main_items_layout.setContentsMargins(0, 29, 0, 0)
         self.frame = QFrame(self.items)
         self.frame.setObjectName(u"frame")
         self.frame.setMaximumSize(QSize(16777215, 100))
@@ -125,14 +137,15 @@ class Ui_Form(object):
 
         self.verticalLayout_7.addWidget(self.src_items)
 
-        self.verticalLayout_3.addWidget(self.frame)
+
+        self.main_items_layout.addWidget(self.frame)
 
         self.scroll_items = QScrollArea(self.items)
         self.scroll_items.setObjectName(u"scroll_items")
         self.scroll_items.setWidgetResizable(True)
         self.widget_items = QWidget()
         self.widget_items.setObjectName(u"widget_items")
-        self.widget_items.setGeometry(QRect(0, 0, 508, 609))
+        self.widget_items.setGeometry(QRect(0, 0, 508, 642))
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -147,9 +160,11 @@ class Ui_Form(object):
 
         self.scroll_items.setWidget(self.widget_items)
 
-        self.verticalLayout_3.addWidget(self.scroll_items)
+        self.main_items_layout.addWidget(self.scroll_items)
+
 
         self.horizontalLayout.addWidget(self.items)
+
 
         self.verticalLayout.addWidget(self.widget_area)
 
@@ -170,28 +185,22 @@ class Ui_Form(object):
 
         self.verticalLayout.addWidget(self.buttonBox)
 
+
         self.verticalLayout_2.addLayout(self.verticalLayout)
+
 
         self.retranslateUi(SaleForm)
 
         QMetaObject.connectSlotsByName(SaleForm)
-
     # setupUi
 
     def retranslateUi(self, SaleForm):
-        SaleForm.setWindowTitle(QCoreApplication.translate("Form",
-                                                           u"\u041f\u0440\u043e\u0434\u0430\u0436\u0430 \u0442\u043e\u0432\u0430\u0440\u0430",
-                                                           None))
-        self.title.setText(QCoreApplication.translate("Form",
-                                                      u"\u041e\u0444\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435 \u043f\u0440\u043e\u0434\u0430\u0436",
-                                                      None))
-        self.label.setText(
-            QCoreApplication.translate("Form", u"\u0413\u0434\u0435 \u043f\u0440\u043e\u0434\u0430\u043b\u0438", None))
-        self.label_2.setText(
-            QCoreApplication.translate("Form", u"\u041a\u0442\u043e \u043f\u0440\u043e\u0434\u0430\u043b", None))
-        self.label_3.setText(
-            QCoreApplication.translate("Form", u"\u0414\u0430\u0442\u0430 \u043f\u0440\u043e\u0434\u0430\u0436\u0438",
-                                       None))
-        self.title_items.setText(QCoreApplication.translate("Form", u"\u0422\u043e\u0432\u0430\u0440\u044b", None))
+        SaleForm.setWindowTitle(QCoreApplication.translate("SaleForm", u"\u041f\u0440\u043e\u0434\u0430\u0436\u0430 \u0442\u043e\u0432\u0430\u0440\u0430", None))
+        self.title.setText(QCoreApplication.translate("SaleForm", u"\u041e\u0444\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435 \u043f\u0440\u043e\u0434\u0430\u0436", None))
+        self.label.setText(QCoreApplication.translate("SaleForm", u"\u0413\u0434\u0435 \u043f\u0440\u043e\u0434\u0430\u043b\u0438", None))
+        self.label_2.setText(QCoreApplication.translate("SaleForm", u"\u041a\u0442\u043e \u043f\u0440\u043e\u0434\u0430\u043b", None))
+        self.label_3.setText(QCoreApplication.translate("SaleForm", u"\u0414\u0430\u0442\u0430 \u043f\u0440\u043e\u0434\u0430\u0436\u0438", None))
+        self.title_items.setText(QCoreApplication.translate("SaleForm", u"\u0422\u043e\u0432\u0430\u0440\u044b", None))
         self.total.setText("")
     # retranslateUi
+

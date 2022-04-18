@@ -1,3 +1,4 @@
+from prjstore.ui.pyside.utils.pages import PagesFrame
 from prjstore.ui.pyside.utils.qt_core import *
 
 
@@ -35,6 +36,9 @@ class UI_Frame(object):
         # Add to frame layout
         self.scroll.setWidget(self.scroll_frame)
 
+        self.pages_frame = PagesFrame(parent=parent)
+
         # Add to layout
         self.layout.addWidget(self.src_products)
         self.layout.addWidget(self.scroll)
+        self.layout.addWidget(self.pages_frame)

@@ -11,15 +11,17 @@ from prjstore.ui.pyside.product_price_editor.ui_product_price_edit import UI_Fra
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 from prjstore.ui.pyside.utils.qt_core import *
 from prjstore.ui.pyside.utils.qt_utils import clearLayout
+from util.pages import Pages
 
 
-class PriceEditor(QWidget, ObserverInterface):
+class PriceEditor(QWidget, Pages, ObserverInterface):
     products: list[schemas.ModelProduct]
     selected_item_widget: AbstractItem
     handler: ProductPriceEditorHandler
 
     def __init__(self, parent=None, test=False, user_data=None, list_pd_product=None, db=None, dark_style=False):
         super().__init__()
+        Pages.__init__(self, count_elements_on_page=14)
         self.handler = None
         self.parent: MainWindowInterface = parent
         if parent:
@@ -35,6 +37,7 @@ class PriceEditor(QWidget, ObserverInterface):
         self.resize(500, 600)
         self.ui = UI_Frame()
         self.ui.setup_ui(self)
+        self.register_observer(self.ui.pages_frame)
         if self.dark_style:
             self.setup_dark_style()
         self.selected_product_frame: ProductFrame = None
@@ -66,6 +69,7 @@ class PriceEditor(QWidget, ObserverInterface):
 
     def on_search_text_changed(self):
         self.load_widget.show()
+        self.selected_page = 1
         self.update_ui()
         self.load_widget.hide()
 
@@ -84,13 +88,20 @@ class PriceEditor(QWidget, ObserverInterface):
         self.update_ui()
         self.load_widget.hide()
 
-    def update_ui(self):
-        self.products = self.handler.get_store_products(search=self.ui.src_products.text())
+    def update_ui(self, update_data: bool = True):
+        if update_data:
+            self.products = self.handler.get_store_products(search=self.ui.src_products.text())
+            self.count_elements = len(self.products)
         clearLayout(self.ui.layout_products)
         self.selected_item_widget = None
-        for item in self.products:
+        for i in self.items_on_page:
+            item = self.products[i]
             item_frame = FrameProductFactory.create(product_type=item.type, parent=self, item_pd=item)
             self.ui.layout_products.addWidget(item_frame)
+
+    def page_number_changed(self, data_page):
+        if data_page:
+            self.update_ui(update_data=False)
 
     def on_press_edit_simple_product(self, product_frame: ProductFrame):
         self.selected_product_frame = product_frame
