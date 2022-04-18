@@ -30,6 +30,7 @@ class PriceEditor(QWidget, Pages, ObserverInterface):
         self.db = db
         self.thread_pool = QThreadPool()
         self.test = test
+        self.need_update: bool = True
         self.dark_style = dark_style
         if list_pd_product is None:
             list_pd_product = []
@@ -83,10 +84,12 @@ class PriceEditor(QWidget, Pages, ObserverInterface):
         self.load_widget.hide()
 
     def update_data(self, store=None):
-        self.load_widget.show()
-        self.handler.update_data(store)
-        self.update_ui()
-        self.load_widget.hide()
+        if self.need_update:
+            self.load_widget.show()
+            self.handler.update_data(store)
+            self.update_ui()
+            self.need_update = False
+            self.load_widget.hide()
 
     def update_ui(self, update_data: bool = True):
         if update_data:

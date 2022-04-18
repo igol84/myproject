@@ -33,6 +33,7 @@ class SaleForm(QWidget):
         self.db = db
         self.thread_pool = QThreadPool()
         self.test = test
+        self.need_update: bool = True
         self.resize(1200, 600)
         self.ui = Ui_SaleForm()
         self.ui.setupUi(self)
@@ -158,8 +159,10 @@ class SaleForm(QWidget):
         self._update_items_layout()
 
     def update_data(self, store=None):
-        self.handler.update_data(store)
-        self.update_ui()
+        if self.need_update:
+            self.handler.update_data(store)
+            self.update_ui()
+            self.need_update = False
 
     def put_on_sale(self):
         pr_id = self.selected_item_widget.pr_id

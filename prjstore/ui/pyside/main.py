@@ -23,6 +23,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
 
     def __init__(self):
         super().__init__()
+        self.moduls: dict[QWidget] = dict()
         self.observers = []
         self.__db = None
         self.handler = None
@@ -48,7 +49,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
     def notify_observer(self, this_observer=None) -> None:
         for observer in self.observers:
             if observer is not this_observer:
-                observer.update_data(store=self.handler.store)
+                observer.need_update = True
 
     def data_changed(self, this_observer=None) -> None:
         self.handler.update_data(this_observer.handler.store)
@@ -75,16 +76,15 @@ class MainWindow(QMainWindow, MainWindowInterface):
             self.sellers_form = QWidget()
             self.places_form = QWidget()
 
-        moduls: dict[QWidget] = dict()
-        moduls['login_form'] = self.login_form
-        moduls['sale_form'] = self.sale_form
-        moduls['price_editor_form'] = self.price_editor_form
-        moduls['new_items_form'] = self.new_items_form
-        moduls['edit_items_form'] = self.edit_items_form
-        moduls['sellers_form'] = self.sellers_form
-        moduls['places_form'] = self.places_form
+        self.moduls['login_form'] = self.login_form
+        self.moduls['sale_form'] = self.sale_form
+        self.moduls['price_editor_form'] = self.price_editor_form
+        self.moduls['new_items_form'] = self.new_items_form
+        self.moduls['edit_items_form'] = self.edit_items_form
+        self.moduls['sellers_form'] = self.sellers_form
+        self.moduls['places_form'] = self.places_form
         self.ui = UI_MainWindow()
-        self.ui.setup_ui(self, moduls)
+        self.ui.setup_ui(self, self.moduls)
         self.ui.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
         self.ui.load_widget.show()
 
@@ -123,35 +123,34 @@ class MainWindow(QMainWindow, MainWindowInterface):
             if isinstance(btn, PyPushBottom):
                 btn.set_active(False)
 
-    def show_product_price_editor_page(self):
+    def show_page(self, btn, form, data_update=True):
         self.reset_selection()
-        self.ui.btn_price_editor.set_active(True)
-        self.ui.pages.setCurrentWidget(self.ui.page_product_price_editor)
+        btn.set_active(True)
+        if data_update:
+            form.update_data(store=self.handler.store)
+        self.ui.pages.setCurrentWidget(form)
 
     def show_items_page(self):
         self.reset_selection()
         self.ui.btn_new_items.set_active(True)
+        self.ui.new_items_form.update_data(store=self.handler.store)
+        self.ui.edit_items_form.update_data(store=self.handler.store)
         self.ui.pages.setCurrentWidget(self.ui.items_form)
 
+    def show_product_price_editor_page(self):
+        self.show_page(self.ui.btn_price_editor, self.ui.page_product_price_editor)
+
     def show_sale_registration_page(self):
-        self.reset_selection()
-        self.ui.btn_sale.set_active(True)
-        self.ui.pages.setCurrentWidget(self.ui.page_sale_form)
+        self.show_page(self.ui.btn_sale, self.ui.page_sale_form)
 
     def show_sellers_page(self):
-        self.reset_selection()
-        self.ui.btn_sellers.set_active(True)
-        self.ui.pages.setCurrentWidget(self.ui.sellers_and_places_form)
+        self.show_page(self.ui.btn_sellers, self.ui.sellers_and_places_form, False)
 
     def show_login_page(self):
-        self.reset_selection()
-        self.ui.login_button.set_active(True)
-        self.ui.pages.setCurrentWidget(self.ui.page_login_form)
+        self.show_page(self.ui.login_button, self.ui.page_login_form, False)
 
     def show_settings_page_page(self):
-        self.reset_selection()
-        self.ui.settings_button.set_active(True)
-        self.ui.pages.setCurrentWidget(self.ui.page_settings)
+        self.show_page(self.ui.settings_button, self.ui.page_settings, False)
 
     def on_click_item_sale(self, date: datetime.date):
         self.show_sale_registration_page()

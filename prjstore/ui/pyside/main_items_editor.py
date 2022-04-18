@@ -29,6 +29,7 @@ class ItemsEditor(QWidget, Pages, ObserverInterface):
             self.parent.register_observer(self)
         self.__handler = None
         self.test = test
+        self.need_update: bool = True
         self.ui = UI_ItemsEditor()
         self.ui.setup_ui(self)
         self.register_observer(self.ui.pages_frame)
@@ -114,10 +115,12 @@ class ItemsEditor(QWidget, Pages, ObserverInterface):
         self.load_widget.hide()
 
     def update_data(self, store=None):
-        self.load_widget.show()
-        self.handler.update_data(store)
-        self.update_ui()
-        self.load_widget.hide()
+        if self.need_update:
+            self.load_widget.show()
+            self.handler.update_data(store)
+            self.update_ui()
+            self.need_update = False
+            self.load_widget.hide()
 
     def update_ui(self, update_data: bool = True):
         if update_data:

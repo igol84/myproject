@@ -37,6 +37,7 @@ class ItemForm(QWidget):
                              'shoes': {'count_sizes': 12, 'min_size': 35,
                                        'header_shoes': ["Размеры", "Количество", "Длина стельки"]}}
         self.test = test
+        self.need_update: bool = True
         self.last_added_size = ''
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
@@ -89,10 +90,12 @@ class ItemForm(QWidget):
         self.ui.sizes_table.itemChanged.connect(self.on_table_item_edit)
 
     def update_data(self, store=None):
-        self.load_widget.show()
-        self.handler.update_data(store)
-        self.update_ui()
-        self.load_widget.hide()
+        if self.need_update:
+            self.load_widget.show()
+            self.handler.update_data(store)
+            self.update_ui()
+            self.need_update = False
+            self.load_widget.hide()
 
     def update_ui(self):
         self.load_widget.show()
