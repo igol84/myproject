@@ -163,7 +163,7 @@ class ItemForm(QWidget):
     def __completed_save(self):
         self.update_ui()
         if self.parent:
-            self.parent.data_changed(self)
+            self.parent.on_receiving_data_change(self)
         self.load_widget.hide()
 
     def on_name_combo_box_changed(self):

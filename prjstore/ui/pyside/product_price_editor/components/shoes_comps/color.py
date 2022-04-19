@@ -137,15 +137,15 @@ if __name__ == '__main__':
     import sys
 
     E_sizes = [
-        ViewSize(prod_id='2', size=43, price=4000, price_format='4.000грн', qty=5),
-        ViewSize(prod_id='3', size=44, price=4000, price_format='4.000грн', qty=2),
-        ViewSize(prod_id='4', size=45, price=2000, price_format='2.000грн', qty=1),
+        ViewSize(prod_id='2', size=43, price=4000, price_format='4.000грн', qty=5, length_of_insole=27),
+        ViewSize(prod_id='3', size=44, price=4000, price_format='4.000грн', qty=2, length_of_insole=28.5),
+        ViewSize(prod_id='4', size=45, price=2000, price_format='2.000грн', qty=1, length_of_insole=29),
     ]
     D_sizes = [
-        ViewSize(prod_id='5', size=41, price=4000, price_format='3.000грн', qty=1),
-        ViewSize(prod_id='6', size=42.5, price=4000, price_format='2.000грн', qty=2),
-        ViewSize(prod_id='7', size=43, price=2000, price_format='2.000грн', qty=1),
-        ViewSize(prod_id='8', size=44, price=2000, price_format='2.000грн', qty=1),
+        ViewSize(prod_id='5', size=41, price=4000, price_format='3.000грн', qty=1, length_of_insole=26),
+        ViewSize(prod_id='6', size=42.5, price=4000, price_format='2.000грн', qty=2, length_of_insole=26.5),
+        ViewSize(prod_id='7', size=43, price=2000, price_format='2.000грн', qty=1, length_of_insole=27.5),
+        ViewSize(prod_id='8', size=44, price=2000, price_format='2.000грн', qty=1, length_of_insole=28.5),
     ]
     widths = [
         ViewWidth(width='E', sizes=E_sizes),

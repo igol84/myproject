@@ -175,8 +175,10 @@ class PriceEditor(QWidget, Pages, ObserverInterface):
         self.selected_size_frame = size_frame
         pr_id = size_frame.pr_id
         size = size_frame.line_edit_size.text()
+        length = size_frame.line_edit_length.text()
+        length = length if length else None
         price = size_frame.line_edit_price.text()
-        pd_size = ModelSizeForm(id=pr_id, size=size, price_for_sale=price)
+        pd_size = ModelSizeForm(id=pr_id, size=size, price_for_sale=price, length=length)
         self.load_widget.show()
         db_edit_size = DBEditSize(self.handler, pd_size)
         db_edit_size.signals.error.connect(self.__connection_error)
@@ -186,6 +188,7 @@ class PriceEditor(QWidget, Pages, ObserverInterface):
     def __update_size_complete(self, pd_size: ModelSizeForm):
         self.selected_size_frame.size = pd_size.size
         self.selected_size_frame.price = pd_size.price_for_sale
+        self.selected_size_frame.length = pd_size.length
         self.load_widget.hide()
         if self.parent:
             self.parent.data_changed(self)

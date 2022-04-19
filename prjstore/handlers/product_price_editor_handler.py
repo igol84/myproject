@@ -3,6 +3,7 @@ from pydantic import validate_arguments
 from prjstore.db import API_DB
 from prjstore.db.schemas.handler_product_price_editor import *
 from prjstore.domain.item import Item
+from prjstore.domain.products.shoes import Shoes
 from prjstore.domain.store import Store
 from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_store
 from prjstore.ui.pyside.product_price_editor.schemas import create_product_schemas_by_items, ViewProduct
@@ -59,11 +60,13 @@ class ProductPriceEditorHandler:
         # edit on DB
         new_data: ModelSizeForm = self.__db.handler_product_price_editor.edit_size(data)
         # edit in Domain Model
-        product = self.store.pc[data.id]
+        product: Shoes = self.store.pc[data.id]
         if data.price_for_sale is not None:
             product.price.amount = data.price_for_sale
         if data.size is not None:
             product.size = data.size
+        if data.length is not None:
+            product.length_of_insole = data.length
         return new_data
 
     def edit_shoes(self, data: ModelShoesForm) -> ModelShoesForm:

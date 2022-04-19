@@ -5,18 +5,20 @@ from prjstore.ui.pyside.utils.widgets import ItemFrame
 
 
 class SizeFrame(ItemFrame):
-    pr_id: str
+    __pr_id: str
     __price: float
     __size: float
+    __length_of_insole: float
     __selected: bool
     height_ = 30
 
     def __init__(self, pd_size: ViewSize, shoes_frame=None):
         super().__init__()
         self.shoes_frame: ShoesFrameInterface = shoes_frame
-        self.__id = pd_size.prod_id
+        self.__pr_id = pd_size.prod_id
         self.__size = pd_size.size
         self.__price = pd_size.price
+        self.__length_of_insole = pd_size.length_of_insole
         self.pr_price_format = pd_size.price_format
         self.pr_qty = pd_size.qty
         self.__selected = False
@@ -39,6 +41,21 @@ class SizeFrame(ItemFrame):
         self.line_edit_size.setFixedWidth(50)
         validator_reg = QRegularExpressionValidator(QRegularExpression("[0-9]{1,7}[.]*[0-9]{0,2}"))
         self.line_edit_size.setValidator(validator_reg)
+
+        text_length = f'{self.__length_of_insole:g}' if self.__length_of_insole else ''
+        self.label_length = QLabel(text_length)
+        self.label_length.setContentsMargins(5, 0, 5, 0)
+        self.label_length.setFixedWidth(50)
+        self.label_length.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.label_length.setStyleSheet(f'font-size: {self.font_size}pt;')
+
+        self.line_edit_length = QLineEdit(text_length)
+        self.line_edit_length.setStyleSheet(f'background-color: #EEE; color: #000')
+        self.line_edit_length.hide()
+        self.line_edit_length.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.line_edit_length.setFixedWidth(50)
+        validator_reg = QRegularExpressionValidator(QRegularExpression("[0-9]{1,7}[.]*[0-9]{0,2}"))
+        self.line_edit_length.setValidator(validator_reg)
 
         self.label_qty = QLabel(f'{self.pr_qty}')
         self.label_qty.setContentsMargins(0, 0, 10, 0)
@@ -70,6 +87,8 @@ class SizeFrame(ItemFrame):
 
         layer.addWidget(self.label_size)
         layer.addWidget(self.line_edit_size)
+        layer.addWidget(self.label_length)
+        layer.addWidget(self.line_edit_length)
         layer.addWidget(self.label_qty)
         layer.addSpacerItem(QSpacerItem(0, 10, QSizePolicy.Expanding, QSizePolicy.Expanding))
         layer.addWidget(self.label_price)
@@ -79,7 +98,7 @@ class SizeFrame(ItemFrame):
         self.setLayout(layer)
 
     def get_id(self) -> str:
-        return self.__id
+        return self.__pr_id
 
     pr_id = property(get_id)
 
@@ -102,6 +121,17 @@ class SizeFrame(ItemFrame):
         self.__size = size
 
     size = property(get_size, set_size)
+
+    def get_length(self) -> float | None:
+        return self.__length_of_insole
+
+    def set_length(self, length: float | None) -> None:
+        text = f'{length:g}' if length else ''
+        self.label_length.setText(text)
+        self.line_edit_length.setText(text)
+        self.__length_of_insole = length
+
+    length = property(get_length, set_length)
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         self.set_selected()
@@ -138,7 +168,9 @@ class SizeFrame(ItemFrame):
             self.__selected = True
             self.label_price.hide()
             self.label_size.hide()
+            self.label_length.hide()
             self.line_edit_size.show()
+            self.line_edit_length.show()
             self.line_edit_price.show()
             self.line_edit_price.setFocus()
             self.line_edit_price.selectAll()
@@ -148,7 +180,9 @@ class SizeFrame(ItemFrame):
             self.__selected = False
             self.label_price.show()
             self.label_size.show()
+            self.label_length.show()
             self.line_edit_size.hide()
+            self.line_edit_length.hide()
             self.line_edit_price.hide()
             self.btn.hide()
             self.set_default_style()
@@ -162,7 +196,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     win = QWidget()
     v_box = QVBoxLayout(win)
-    view_size = ViewSize(prod_id='14', size=43.5, price=2000, price_format='2.000грн', qty=2)
+    view_size = ViewSize(prod_id='14', size=43.5, price=2000, price_format='2.000грн', qty=2, length_of_insole=23.0)
     frame = SizeFrame(pd_size=view_size)
     v_box.addWidget(frame)
     win.show()

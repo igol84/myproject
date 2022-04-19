@@ -127,31 +127,31 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     red_E_sizes = [
-        ViewSize(prod_id='2', size=43, price=4000, price_format='4.000грн', qty=5),
-        ViewSize(prod_id='3', size=44, price=4000, price_format='4.000грн', qty=2),
-        ViewSize(prod_id='4', size=45, price=2000, price_format='2.000грн', qty=1),
+        ViewSize(prod_id='2', size=43, price=4000, price_format='4.000грн', qty=5, length_of_insole=27.5),
+        ViewSize(prod_id='3', size=44, price=4000, price_format='4.000грн', qty=2, length_of_insole=28),
+        ViewSize(prod_id='4', size=45, price=2000, price_format='2.000грн', qty=1, length_of_insole=28.5),
     ]
     red_D_sizes = [
-        ViewSize(prod_id='5', size=41, price=4000, price_format='3.000грн', qty=1),
-        ViewSize(prod_id='6', size=42, price=4000, price_format='2.000грн', qty=2),
-        ViewSize(prod_id='7', size=43, price=2000, price_format='2.000грн', qty=1),
-        ViewSize(prod_id='8', size=44, price=2000, price_format='2.000грн', qty=1),
+        ViewSize(prod_id='5', size=41, price=4000, price_format='3.000грн', qty=1, length_of_insole=25.5),
+        ViewSize(prod_id='6', size=42, price=4000, price_format='2.000грн', qty=2, length_of_insole=26),
+        ViewSize(prod_id='7', size=43, price=2000, price_format='2.000грн', qty=1, length_of_insole=26.5),
+        ViewSize(prod_id='8', size=44, price=2000, price_format='2.000грн', qty=1, length_of_insole=27),
     ]
     red_widths = [
         ViewWidth(width='E', sizes=red_E_sizes),
         ViewWidth(width='D', sizes=red_D_sizes),
     ]
     black_E_sizes = [
-        ViewSize(prod_id='9', size=38, price=4000, price_format='4.000грн', qty=5),
-        ViewSize(prod_id='10', size=39, price=4000, price_format='4.000грн', qty=2),
-        ViewSize(prod_id='11', size=40, price=2000, price_format='2.000грн', qty=1),
-        ViewSize(prod_id='12', size=41, price=4000, price_format='3.000грн', qty=1),
-        ViewSize(prod_id='13', size=42, price=4000, price_format='2.000грн', qty=2),
+        ViewSize(prod_id='9', size=38, price=4000, price_format='4.000грн', qty=5, length_of_insole=24.5),
+        ViewSize(prod_id='10', size=39, price=4000, price_format='4.000грн', qty=2, length_of_insole=25),
+        ViewSize(prod_id='11', size=40, price=2000, price_format='2.000грн', qty=1, length_of_insole=25.5),
+        ViewSize(prod_id='12', size=41, price=4000, price_format='3.000грн', qty=1, length_of_insole=26),
+        ViewSize(prod_id='13', size=42, price=4000, price_format='2.000грн', qty=2, length_of_insole=26.5),
 
     ]
     black_D_sizes = [
-        ViewSize(prod_id='14', size=43, price=2000, price_format='2.000грн', qty=1),
-        ViewSize(prod_id='15', size=44, price=2000, price_format='2.000грн', qty=1),
+        ViewSize(prod_id='14', size=43, price=2000, price_format='2.000грн', qty=1, length_of_insole=27.5),
+        ViewSize(prod_id='15', size=44, price=2000, price_format='2.000грн', qty=1, length_of_insole=28.5),
     ]
     black_widths = [
         ViewWidth(width='E', sizes=black_E_sizes),

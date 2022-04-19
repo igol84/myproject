@@ -51,9 +51,13 @@ class MainWindow(QMainWindow, MainWindowInterface):
             if observer is not this_observer:
                 observer.need_update = True
 
-    def data_changed(self, this_observer=None) -> None:
+    def data_changed(self, this_observer) -> None:
         self.handler.update_data(this_observer.handler.store)
         self.notify_observer(this_observer)
+
+    def on_receiving_data_change(self, this_observer):
+        self.data_changed(this_observer)
+        self.edit_items_form.update_data(store=self.handler.store)
 
     def setup_ui(self, db=None):
         if db:

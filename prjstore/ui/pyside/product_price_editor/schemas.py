@@ -49,6 +49,7 @@ class ViewProduct(ModelProduct):
 class ViewSize(BaseModel):
     prod_id: str
     size: float
+    length_of_insole: float | None
     price: float
     price_format: str
     qty: int
@@ -105,8 +106,8 @@ def create_product_schemas_by_items(items: dict[int: Item]) -> list[ViewProduct]
     for product in sorted_products:
         if product.type == 'shoes':
             last_item_type = products[-1].type if products else None
-            size = ViewSize(prod_id=product.prod_id, size=product.shoes.size, price=product.price,
-                            price_format=product.price_format, qty=product.qty)
+            size = ViewSize(prod_id=product.prod_id, size=product.shoes.size, length_of_insole=product.shoes.length,
+                            price=product.price, price_format=product.price_format, qty=product.qty)
             width = ViewWidth(width=product.shoes.width, sizes=[size])
             color = ViewColor(color=product.shoes.color, widths=[width])
             if last_item_type != 'shoes' or (last_item_type == 'shoes' and products[-1].name != product.name):
