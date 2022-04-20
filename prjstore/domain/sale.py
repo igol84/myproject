@@ -130,14 +130,20 @@ class Sale:
             total += sli.sale_price * sli.qty
         return total
 
+    total = property(get_total)
+
     def get_total_purchase(self) -> Money:
         total = Money(0)
         for sli in self.list_sli:
             total += sli.item.buy_price * sli.qty
         return total
 
+    purchase = property(get_total_purchase)
+
     def get_total_profit(self) -> Money:
-        return self.get_total() - self.get_total_purchase()
+        return self.total - self.purchase
+
+    profit = property(get_total_profit)
 
     @overload
     def __getitem__(self, key: int) -> list[SaleLineItem]:

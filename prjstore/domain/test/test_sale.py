@@ -17,6 +17,27 @@ class TestSale:
         self.sale.add_line_item(self.items[2], sale_price=200)
         self.sale.date_time = datetime.datetime.strptime('6/6/20, 12:19:55', '%m/%d/%y, %H:%M:%S')
 
+    def setup_ledger(self, place):
+        self.items = []
+        TestItem.setup(self)
+        sale = Sale(id=1, seller=Seller(1, 'Igor'))
+        sale.add_line_item(self.items[1])
+        sale.add_line_item(self.items[4], qty=2)
+        sale.add_line_item(self.items[2], sale_price=200)
+        sale.date_time = datetime.datetime(2022, 2, 14, 10, 30)
+        sale.complete = True
+        place.ledger[1] = sale
+        sale = Sale(id=1, seller=Seller(1, 'Igor'))
+        sale.add_line_item(self.items[3], sale_price=200)
+        sale.date_time = datetime.datetime(2022, 2, 14, 10, 30)
+        sale.complete = True
+        place.ledger[2] = sale
+        sale = Sale(id=1, seller=Seller(1, 'Igor'))
+        sale.add_line_item(self.items[2], sale_price=100)
+        sale.date_time = datetime.datetime(2022, 3, 14, 10, 30)
+        sale.complete = True
+        place.ledger[3] = sale
+
 
 class Test_Sale(TestSale):
     def test_01_initial(self):
