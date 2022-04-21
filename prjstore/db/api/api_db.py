@@ -1,3 +1,4 @@
+from prjstore.db.api import settings
 from prjstore.db import schemas
 from prjstore.db.api.authorizations import auth
 from prjstore.db.api.components.seller import API_Seller
@@ -7,6 +8,7 @@ from prjstore.db.api.components.item import API_Item
 from prjstore.db.api.components.sale import API_Sale
 from prjstore.db.api.components.sale_line_item import API_SaleLineItem
 from prjstore.db.api.components.place import API_Place
+from prjstore.db.api.components.expense import API_Expense
 from prjstore.db.api.components.store import API_Store
 from prjstore.db.api.components.handler_sale_registration import API_HandlerSaleRegistration
 from prjstore.db.api.components.handler_receiving_the_items import API_HandlerReceivingTheItems
@@ -15,7 +17,7 @@ from prjstore.db.api.components.handler_items_editor import API_HandlerItemEdito
 
 
 class API_DB:
-    def __init__(self, user_data):
+    def __init__(self, user_data=settings.user_data):
         self.headers = auth(user_data)
         self.seller = API_Seller(self.headers)
         self.product = API_Product(self.headers)
@@ -23,6 +25,7 @@ class API_DB:
         self.item = API_Item(self.headers)
         self.sale = API_Sale(self.headers)
         self.place = API_Place(self.headers)
+        self.expense = API_Expense(self.headers)
         self.sale_line_item = API_SaleLineItem(self.headers)
         self.store = API_Store(self.headers)
         self.header_sale_registration = API_HandlerSaleRegistration(self.headers)
