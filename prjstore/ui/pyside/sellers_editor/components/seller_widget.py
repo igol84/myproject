@@ -22,8 +22,8 @@ class SellerWidget(ItemFrame):
         self.active = seller_pd.active
 
         self.set_default_style()
-        self.ui.line_edit_name.editingFinished.connect(self.on_pressed_line_name)
         self.ui.label_name.clicked.connect(self.on_clicked_name)
+        self.ui.line_edit_name.editingFinished.connect(self.on_pressed_line_name)
         self.ui.line_edit_name.escaped.connect(self.on_escaped_line_name)
         self.ui.active_box.toggled.connect(self.on_changed_active)
 
