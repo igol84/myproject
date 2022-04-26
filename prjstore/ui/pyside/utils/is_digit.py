@@ -1,4 +1,4 @@
-def is_digit(string):
+def is_digit(string: str) -> bool:
     if string.isdigit():
         return True
     else:

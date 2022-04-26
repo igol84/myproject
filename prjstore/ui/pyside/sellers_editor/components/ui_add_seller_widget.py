@@ -4,7 +4,6 @@ from prjstore.ui.pyside.utils.widgets import ItemFrame
 
 class UI_AddSellerWidget:
     def setup_ui(self, seller_widget: ItemFrame):
-        self.item_widget = seller_widget
         seller_widget.setMinimumHeight(seller_widget.height_)
         seller_widget.setFixedWidth(200)
         if not seller_widget.objectName():
