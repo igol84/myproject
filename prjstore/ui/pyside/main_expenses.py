@@ -7,7 +7,7 @@ from prjstore.ui.pyside.expenses_editor.components.add_expense_widget import Add
 from prjstore.ui.pyside.expenses_editor import schemas
 from prjstore.ui.pyside.expenses_editor.components.expense_widget import ExpenseWidget
 from prjstore.ui.pyside.expenses_editor.schemas import ViewNewExpense
-from prjstore.ui.pyside.expenses_editor.ui_expenses import UI_Expenses
+from prjstore.ui.pyside.expenses_editor.ui_expenses import UI_Expenses, DelMessageBox
 from prjstore.ui.pyside.interface_observer import ObserverInterface
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
@@ -115,7 +115,7 @@ class ExpensesEditor(QWidget, ObserverInterface):
 
         self.__pd_expenses = self.handler.get_store_expenses()
         for pd_expense in self.__pd_expenses:
-            item_frame = ExpenseWidget(pd_expense, self)
+            item_frame = ExpenseWidget(expense_pd=pd_expense, parent=self)
             self.__expense_widgets[pd_expense.id] = item_frame
             self.ui.layout_expenses.addWidget(item_frame)
         if self.selected_expense_id:
@@ -129,10 +129,40 @@ class ExpensesEditor(QWidget, ObserverInterface):
         self.thread_pool.start(db_expense)
 
     def __adding_expense_complete(self, pd_new_expense: schemas.ViewExpense):
-        self.__add_expense_widget.clear()
+        self.__add_expense_widget.clear_form()
         item_frame = ExpenseWidget(pd_new_expense, self)
         self.__expense_widgets[pd_new_expense.id] = item_frame
         self.ui.layout_expenses.insertWidget(1, item_frame)
+        if self.parent:
+            self.parent.data_changed(self)
+        self.load_widget.hide()
+
+    def edit_expense(self, pd_expense: schemas.ViewExpense):
+        self.load_widget.show()
+        db_expense = thread.DBEditExpense(self.handler, pd_expense)
+        db_expense.signals.error.connect(self.__connection_error)
+        db_expense.signals.result.connect(self.__edit_expense_complete)
+        self.thread_pool.start(db_expense)
+
+    def __edit_expense_complete(self, pd_expense: schemas.ViewExpense):
+        self.selected_widget.data = pd_expense
+        self.selected_expense_id = None
+        if self.parent:
+            self.parent.data_changed(self)
+        self.load_widget.hide()
+
+    def delete_expense(self, expense_id: int):
+        result = DelMessageBox(self).exec()
+        if result == QMessageBox.Yes:
+            self.load_widget.show()
+            db_expense = thread.DBDelExpense(self.handler, expense_id)
+            db_expense.signals.error.connect(self.__connection_error)
+            db_expense.signals.complete.connect(self.__delete_expense_complete)
+            self.thread_pool.start(db_expense)
+
+    def __delete_expense_complete(self):
+        self.selected_widget.hide()
+        self.selected_expense_id = None
         if self.parent:
             self.parent.data_changed(self)
         self.load_widget.hide()

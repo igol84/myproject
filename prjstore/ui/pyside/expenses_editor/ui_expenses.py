@@ -40,3 +40,16 @@ class UI_Expenses:
         # Add to layout
         self.layout.addWidget(self.handler)
         self.layout.addWidget(self.scroll)
+
+
+class DelMessageBox(QMessageBox):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setIcon(QMessageBox.Question)
+        self.setWindowTitle('Удалить!')
+        self.setText('Вы действительно хотите удалить?')
+        self.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        buttonY = self.button(QMessageBox.Yes)
+        buttonY.setText('Да')
+        buttonN = self.button(QMessageBox.No)
+        buttonN.setText('Нет')

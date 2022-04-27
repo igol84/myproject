@@ -44,7 +44,6 @@ class AddExpenseWidget(ItemFrame):
         date = self.get_date()
         if date and self.parent_widget:
             self.parent_widget.on_add_expense(date)
-        self.clear()
 
     def __get_place_id(self) -> Optional[int]:
         if self.ui.combo_box_places.currentData():
@@ -68,7 +67,7 @@ class AddExpenseWidget(ItemFrame):
 
     cost = property(__get_cost)
 
-    def clear(self):
+    def clear_form(self):
         self.ui.combo_box_places.setCurrentIndex(0)
         self.ui.line_edit_desc.setText('')
         self.ui.date_edit.setDate(datetime.date.today())
