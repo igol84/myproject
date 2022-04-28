@@ -2,10 +2,11 @@ from prjstore.db.schemas import handler_items_editor as db_schemas
 from prjstore.ui.pyside.items_editor.components.ui_item_widget import *
 from prjstore.ui.pyside.items_editor.schemas import ViewItem
 from prjstore.ui.pyside.utils.format_price import format_price
-from prjstore.ui.pyside.utils.widgets import ItemFrame
+from prjstore.ui.pyside.utils.widgets import SelectableItemFrame
 
 
-class ItemWidget(ItemFrame):
+class ItemWidget(SelectableItemFrame):
+
     __item_id: int
     __desc: str
     __price_buy: float
@@ -31,7 +32,6 @@ class ItemWidget(ItemFrame):
         self.qty = item_pd.qty
         self.date_buy = item_pd.date_buy
         self.sale_details = item_pd.dates_of_sale
-        self.set_default_style()
         self.ui.button_edit.clicked.connect(self.on_clicked_edit)
         self.ui.button_del.clicked.connect(self.on_clicked_del)
         self.ui.list_sales.clicked.connect(self.on_clicked_sale)
@@ -134,23 +134,6 @@ class ItemWidget(ItemFrame):
             self.ui.list_sales.hide()
 
     selected = property(__get_selected, __set_selected)
-
-    def enterEvent(self, event):
-        if not self.selected:
-            self.set_hover_style()
-
-    def leaveEvent(self, event):
-        if not self.selected:
-            self.set_default_style()
-
-    def set_default_style(self) -> None:
-        self.setStyleSheet(f'background-color: {self.default_color_bg}; color: {self.default_color_text};')
-
-    def set_hover_style(self) -> None:
-        self.setStyleSheet(f'background-color: {self.color_fon_on_enter}; color: {self.default_color_text};')
-
-    def set_selected_style(self) -> None:
-        self.setStyleSheet(f'background-color: {self.current_color_bg}; color: {self.current_color_text}')
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
         if self.parent_widget:

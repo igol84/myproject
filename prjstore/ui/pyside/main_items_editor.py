@@ -93,10 +93,8 @@ class ItemsEditor(QWidget, Pages, ObserverInterface):
     def setup_dark_style(self):
         self.setStyleSheet(
             '#ItemsEditor, #ItemsFrame {background-color: #2F303B; color: #F8F8F2;}\n'
-            'QLabel {color: #F8F8F2;}\n'
             'QComboBox, QDateEdit {background-color: #121212; color: #dcdcdc; border:2px solid #484B5E;}\n'
-            'QLineEdit {background-color: #121212; color: #dcdcdc;}\n'
-            'QMessageBox {background-color: #121212; color: #dcdcdc;}'
+            '#LineEditStcItems {background-color: #121212; color: #dcdcdc;}\n'
         )
 
     def on_search_text_changed(self):

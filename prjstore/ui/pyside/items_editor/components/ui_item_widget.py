@@ -11,7 +11,7 @@ class UI_ItemWidget:
         item_widget.setMinimumHeight(item_widget.height_)
         item_widget.setMinimumWidth(500)
         if not item_widget.objectName():
-            item_widget.setObjectName('ItemWidget')
+            item_widget.setObjectName('SelectableFrame')
         self.layout = QVBoxLayout(item_widget)
         self.layout.setContentsMargins(0, 2, 0, 2)
 
@@ -25,7 +25,6 @@ class UI_ItemWidget:
 
         self.label_desc = LabelItemDescription(cut=370)
         self.label_desc.setObjectName('LabelDesc')
-        self.label_desc.setStyleSheet('QToolTip {color: #2F303B; background-color: #F8F8F2;}')
         self.label_desc.setFixedWidth(80)
 
         self.spicer = QSpacerItem(0, 0, QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -36,7 +35,6 @@ class UI_ItemWidget:
 
         self.qty_box = QSpinBox()
         self.qty_box.setObjectName('BoxGty')
-        self.qty_box.setStyleSheet(f'background-color: #EEE; color: #000')
         self.qty_box.setRange(0, 100000000)
         self.qty_box.setFixedWidth(80)
         self.qty_box.hide()
@@ -47,7 +45,6 @@ class UI_ItemWidget:
 
         self.line_edit_price_buy = QLineEdit()
         self.line_edit_price_buy.setObjectName('LineEditPriceBuy')
-        self.line_edit_price_buy.setStyleSheet(f'background-color: #EEE; color: #000')
         self.line_edit_price_buy.setFixedWidth(80)
         self.line_edit_price_buy.hide()
 
@@ -61,13 +58,11 @@ class UI_ItemWidget:
         self.empty_button.setFixedWidth(70)
 
         self.button_edit = QPushButton('ok')
-        self.button_edit.setStyleSheet(f'background-color: #EEE; color: #000')
         self.button_edit.setObjectName('LabelButton')
         self.button_edit.setFixedWidth(30)
         self.button_edit.hide()
 
         self.button_del = QPushButton('del')
-        self.button_del.setStyleSheet(f'background-color: #EEE; color: #000')
         self.button_del.setObjectName('LabelButton')
         self.button_del.setFixedWidth(35)
         self.button_del.hide()
@@ -111,7 +106,6 @@ class LabelItemDescription(QLabel):
 class ListWidget(QListWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.setStyleSheet(f'background-color: #EEE; color: #000')
         self.setCursor(Qt.ArrowCursor)
         self.setSelectionMode(QListWidget.SingleSelection)
         self.setContentsMargins(0, 0, 5, 0)

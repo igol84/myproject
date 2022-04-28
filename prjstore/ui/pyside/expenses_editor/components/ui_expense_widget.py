@@ -20,7 +20,6 @@ class UI_ExpenseWidget:
         self.combo_box_place = QComboBox()
         self.combo_box_place.addItem('')
         self.combo_box_place.setObjectName('ComboBoxPlace')
-        self.combo_box_place.setStyleSheet(f'background-color: #fff; color: #000')
         self.combo_box_place.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.combo_box_place.hide()
 
@@ -34,7 +33,6 @@ class UI_ExpenseWidget:
 
         self.line_edit_desc = LineEdit()
         self.line_edit_desc.setObjectName('LineEditName')
-        self.line_edit_desc.setStyleSheet(f'background-color: #fff; color: #000')
         self.line_edit_desc.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.line_edit_desc.hide()
 
@@ -49,7 +47,6 @@ class UI_ExpenseWidget:
         self.date_edit = QDateEdit()
         self.date_edit.setObjectName('DateEdit')
         self.date_edit.setCalendarPopup(True)
-        self.date_edit.setStyleSheet(f'background-color: #fff; color: #000')
         self.date_edit.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.date_edit.hide()
 
@@ -63,7 +60,6 @@ class UI_ExpenseWidget:
 
         self.line_edit_cost = LineEdit()
         self.line_edit_cost.setObjectName('LineEditCost')
-        self.line_edit_cost.setStyleSheet(f'background-color: #fff; color: #000')
         validator_reg = QRegularExpressionValidator(QRegularExpression("[0-9]{1,7}[.]*[0-9]{0,2}"))
         self.line_edit_cost.setValidator(validator_reg)
         self.line_edit_cost.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)

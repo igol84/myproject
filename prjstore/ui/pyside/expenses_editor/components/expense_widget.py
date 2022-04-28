@@ -3,10 +3,10 @@ import datetime
 from prjstore.ui.pyside.expenses_editor.components.ui_expense_widget import *
 from prjstore.ui.pyside.expenses_editor.schemas import ViewExpense
 from prjstore.ui.pyside.utils.format_price import format_price
-from prjstore.ui.pyside.utils.widgets import ItemFrame
+from prjstore.ui.pyside.utils.widgets import SelectableItemFrame
 
 
-class ExpenseWidget(ItemFrame):
+class ExpenseWidget(SelectableItemFrame):
     __data: ViewExpense
     __selected: bool
 
@@ -18,28 +18,10 @@ class ExpenseWidget(ItemFrame):
         self.ui.setup_ui(self)
         self.__selected = False
 
-        self.set_default_style()
         self.data = expense_pd
 
         self.ui.btn_del.clicked.connect(self.on_click_del)
         self.ui.btn_ok.clicked.connect(self.on_click_ok)
-
-    def enterEvent(self, event):
-        if not self.selected:
-            self.set_hover_style()
-
-    def leaveEvent(self, event):
-        if not self.selected:
-            self.set_default_style()
-
-    def set_default_style(self) -> None:
-        self.setStyleSheet(f'background-color: {self.default_color_bg}; color: {self.default_color_text};')
-
-    def set_hover_style(self) -> None:
-        self.setStyleSheet(f'background-color: {self.color_fon_on_enter}; color: {self.default_color_text};')
-
-    def set_selected_style(self) -> None:
-        self.setStyleSheet(f'background-color: {self.current_color_bg}; color: {self.current_color_text}')
 
     def __get_parent(self):
         return self.__parent
@@ -134,6 +116,7 @@ class ExpenseWidget(ItemFrame):
     def __set_selected(self, flag: bool = True) -> None:
         self.__selected = flag
         if flag:
+            self.set_selected_style()
             self.update_ui()
             self.ui.label_place.hide()
             self.ui.combo_box_place.show()
@@ -146,6 +129,7 @@ class ExpenseWidget(ItemFrame):
             self.ui.btn_del.show()
             self.ui.btn_ok.show()
         else:
+            self.set_default_style()
             self.ui.label_place.show()
             self.ui.combo_box_place.hide()
             self.ui.label_desc.show()
