@@ -13,9 +13,10 @@ from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 from prjstore.ui.pyside.utils.qt_core import *
 from prjstore.ui.pyside.utils.qt_utils import clearLayout
+from util.pages import Pages
 
 
-class ExpensesEditor(QWidget, ObserverInterface):
+class ExpensesEditor(QWidget, Pages, ObserverInterface):
     __pd_expenses: list[schemas.ViewExpense]
     __selected_expense_id: Optional[int]
     __add_expense_widget: AddExpenseWidget
@@ -25,6 +26,8 @@ class ExpensesEditor(QWidget, ObserverInterface):
 
     def __init__(self, parent=None, test=False, user_data=None, list_pd_expenses=None, db=None, dark_style=False):
         super().__init__()
+        Pages.__init__(self)
+
         self.parent: MainWindowInterface = parent
         if parent:
             self.parent.register_observer(self)
@@ -33,6 +36,7 @@ class ExpensesEditor(QWidget, ObserverInterface):
         self.need_update: bool = True
         self.ui = UI_Expenses()
         self.ui.setup_ui(self)
+        self.register_observer(self.ui.pages_frame)
         self.user_data = user_data
         self.db = db
         self.thread_pool = QThreadPool()
@@ -106,20 +110,27 @@ class ExpensesEditor(QWidget, ObserverInterface):
             self.need_update = False
             self.load_widget.hide()
 
-    def update_ui(self) -> None:
+    def update_ui(self, updating_data: bool = True) -> None:
         clearLayout(self.ui.layout_expenses)
+        self.selected_expense_id = None
         places = self.handler.get_places()
         data = ViewNewExpense(places=places)
         self.__add_expense_widget = AddExpenseWidget(self, data)
         self.ui.layout_expenses.addWidget(self.__add_expense_widget)
 
-        self.__pd_expenses = self.handler.get_store_expenses()
-        for pd_expense in self.__pd_expenses:
-            item_frame = ExpenseWidget(expense_pd=pd_expense, parent=self)
-            self.__expense_widgets[pd_expense.id] = item_frame
+        if updating_data:
+            self.__pd_expenses = self.handler.get_store_expenses()
+            self.count_elements = len(self.__pd_expenses)
+        for i in self.items_on_page:
+            item_frame = ExpenseWidget(expense_pd=self.__pd_expenses[i], parent=self)
+            self.__expense_widgets[self.__pd_expenses[i].id] = item_frame
             self.ui.layout_expenses.addWidget(item_frame)
         if self.selected_expense_id:
             self.set_selected_expense_id(self.selected_expense_id)
+
+    def page_number_changed(self, data_page):
+        if data_page:
+            self.update_ui(updating_data=False)
 
     def on_add_expense(self, pd_data: schemas.FormNewExpense):
         self.load_widget.show()

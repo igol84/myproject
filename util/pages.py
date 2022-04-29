@@ -46,7 +46,7 @@ class Pages(SubjectInterface):
         return self.__count_elements_on_page
 
     def __set_count_elements_on_page(self, count_elements_on_page: int) -> None:
-        self.__count_elements = count_elements_on_page
+        self.__count_elements_on_page = count_elements_on_page
         self.update_pages_data()
 
     count_elements_on_page = property(__get_count_elements_on_page, __set_count_elements_on_page)
