@@ -17,12 +17,10 @@ class ItemForm(QWidget):
     list_pd_prod: list[ModelProductShow]
     handler: ReceivingTheItemsHandler
 
-    def __init__(self, parent=None, item: ModelItem = ModelItem(), list_pd_product=None, keywords=None, test=False,
-                 dark_style=False, user_data=None, db=None):
+    def __init__(self, parent: MainWindowInterface = None, item: ModelItem = ModelItem(), list_pd_product=None,
+                 keywords=None, test=False, dark_style=False, user_data=None, db=None):
         super().__init__()
         self.parent: MainWindowInterface = parent
-        if parent:
-            self.parent.register_observer(self)
         self.user_data = user_data
         self.db = db
         self.thread_pool = QThreadPool()
@@ -50,17 +48,20 @@ class ItemForm(QWidget):
         self.ui.name_combo_box.currentTextChanged.connect(self.on_edit_name_combo_box)
         self.ui.type_combo_box.currentIndexChanged.connect(self.on_change_product_type)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
-        if not self.parent:
-            if not self.test:
-                db_connector = DbConnect(self.user_data, self.db)
+
+        if parent:
+            parent.register_observer(self)
+            if parent.dark_style:
+                self.setup_dark_style()
+            self.__connected_complete(ReceivingTheItemsHandler(main_handler=parent.handler))
+        else:
+            if not test:
+                db_connector = DbConnect(user_data, db)
                 db_connector.signals.error.connect(self.__connection_error)
                 db_connector.signals.result.connect(self.__connected_complete)
                 self.thread_pool.start(db_connector)
             else:
                 self.__connected_complete(ReceivingTheItemsHandler(test=True))
-        else:
-            store = self.parent.handler.store
-            self.__connected_complete(ReceivingTheItemsHandler(db=self.db, store=store))
 
     def __connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
@@ -89,10 +90,9 @@ class ItemForm(QWidget):
             self.ui.width_combo_box.addItem(width, width_name)
         self.ui.sizes_table.itemChanged.connect(self.on_table_item_edit)
 
-    def update_data(self, store=None):
+    def update_data(self):
         if self.need_update:
             self.load_widget.show()
-            self.handler.update_data(store)
             self.update_ui()
             self.need_update = False
             self.load_widget.hide()

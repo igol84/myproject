@@ -6,36 +6,54 @@ from prjstore.domain.item import Item
 from prjstore.domain.products.shoes import Shoes
 from prjstore.domain.store import Store
 from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_store
+from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.product_price_editor.schemas import create_product_schemas_by_items, ViewProduct
 
 
 class ProductPriceEditorHandler:
+    __main_handler: Optional[MainHandler]
     __db: API_DB
     __store: Store
 
-    def __init__(self, db: API_DB = None, test=False, store=None):
+    def __init__(self, db: API_DB = None, test=False, main_handler=None):
+        self.__main_handler = main_handler
         self.__db = db
-        self.store_id = db.headers['store_id']
+        self.store_id = self.db.headers['store_id']
         self.test = test
         if test:
             self.__store = Store(id=self.store_id, name='test')
             put_test_data_to_store(self.__store)
-        else:
-            self.update_data(store)
-
-    def get_store(self):
-        return self.__store
-
-    store = property(get_store)
-
-    def update_data(self, store: Store):
-        if not store:
+        if not main_handler:
             self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
+
+    def __get_main_handler(self) -> Optional[MainHandler]:
+        return self.__main_handler
+
+    def __set_main_handler(self, main_handler: MainHandler) -> None:
+        self.__main_handler = main_handler
+
+    main_handler = property(__get_main_handler, __set_main_handler)
+
+    def __get_store(self):
+        if self.main_handler:
+            store = self.main_handler.store
         else:
-            self.__store = store
+            store = self.__store
+        return store
+
+    store = property(__get_store)
+
+    def __get_db(self):
+        if self.main_handler:
+            db = self.main_handler.db
+        else:
+            db = self.__db
+        return db
+
+    db = property(__get_db)
 
     def get_store_id(self):
-        return self.__store.id
+        return self.store.id
 
     def get_store_products(self, search: Optional[str] = None) -> list[ViewProduct]:
         products: dict[int: Item] = self.store.items if not search else self.search_items(search)
@@ -47,7 +65,7 @@ class ProductPriceEditorHandler:
 
     def edit_product(self, data: ModelProductForm) -> ModelProductForm:
         # edit on DB
-        new_data: ModelSizeForm = self.__db.handler_product_price_editor.edit_product(data)
+        new_data: ModelSizeForm = self.db.handler_product_price_editor.edit_product(data)
         # edit in Domain Model
         product = self.store.pc[data.id]
         if data.new_name is not None:
@@ -58,7 +76,7 @@ class ProductPriceEditorHandler:
 
     def edit_size(self, data: ModelSizeForm) -> ModelSizeForm:
         # edit on DB
-        new_data: ModelSizeForm = self.__db.handler_product_price_editor.edit_size(data)
+        new_data: ModelSizeForm = self.db.handler_product_price_editor.edit_size(data)
         # edit in Domain Model
         product: Shoes = self.store.pc[data.id]
         if data.price_for_sale is not None:
@@ -71,7 +89,7 @@ class ProductPriceEditorHandler:
 
     def edit_shoes(self, data: ModelShoesForm) -> ModelShoesForm:
         # edit on DB
-        new_data: ModelShoesForm = self.__db.handler_product_price_editor.edit_shoes(data)
+        new_data: ModelShoesForm = self.db.handler_product_price_editor.edit_shoes(data)
         # edit in Domain Model
         products = self.store.pc.find(name=data.name)
         for product in products:
@@ -83,7 +101,7 @@ class ProductPriceEditorHandler:
 
     def edit_color(self, data: ModelColorForm) -> ModelColorForm:
         # edit on DB
-        new_data: ModelShoesForm = self.__db.handler_product_price_editor.edit_color(data)
+        new_data: ModelShoesForm = self.db.handler_product_price_editor.edit_color(data)
         # edit in Domain Model
         products = self.store.pc.find(name=data.name, shoes={'color': data.color})
         for product in products:

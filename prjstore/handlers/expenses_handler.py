@@ -1,35 +1,55 @@
+from typing import Optional
+
 from prjstore.db import API_DB
 from prjstore.db.schemas import expense as db_schemas
 from prjstore.domain.store import Store
 from prjstore.domain.expense import Expense
 from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_store
+from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.expenses_editor import schemas
 from util.money import Money
 
 
 class ExpenseHandler:
+    __main_handler: Optional[MainHandler]
     __db: API_DB
     __store: Store
 
-    def __init__(self, db: API_DB = None, test=False, store=None):
+    def __init__(self, db: API_DB = None, test=False, main_handler=None):
+        self.__main_handler = main_handler
         self.__db = db
+        self.store_id = self.db.headers['store_id']
         if test:
             self.__store = Store(id=1, name='test')
             put_test_data_to_store(self.__store)
-        else:
-            self.store_id = db.headers['store_id']
-            self.update_data(store)
-
-    def get_store(self):
-        return self.__store
-
-    store = property(get_store)
-
-    def update_data(self, store: Store):
-        if not store:
+        if not main_handler:
             self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
+
+    def __get_main_handler(self) -> Optional[MainHandler]:
+        return self.__main_handler
+
+    def __set_main_handler(self, main_handler: MainHandler) -> None:
+        self.__main_handler = main_handler
+
+    main_handler = property(__get_main_handler, __set_main_handler)
+
+    def __get_store(self):
+        if self.main_handler:
+            store = self.main_handler.store
         else:
-            self.__store = store
+            store = self.__store
+        return store
+
+    store = property(__get_store)
+
+    def __get_db(self):
+        if self.main_handler:
+            db = self.main_handler.db
+        else:
+            db = self.__db
+        return db
+
+    db = property(__get_db)
 
     def get_places(self) -> dict[int, str]:
         return {place.id: place.name for place in self.store.places_of_sale.values()}
@@ -38,7 +58,7 @@ class ExpenseHandler:
         # edit on DB
         pd_create_expense = db_schemas.CreateExpense(place_id=pd_expense.place_id, desc=pd_expense.desc,
                                                      date_cost=pd_expense.date_cost, cost=pd_expense.cost)
-        pd_expense: db_schemas.Expense = self.__db.expense.create(pd_create_expense)
+        pd_expense: db_schemas.Expense = self.db.expense.create(pd_create_expense)
         # edit in Domain Model
         expense = Expense(id=pd_expense.id, desc=pd_expense.desc, date_cost=pd_expense.date_cost,
                           cost=Money(pd_expense.cost))
@@ -54,7 +74,7 @@ class ExpenseHandler:
             date_cost=pd_expense.date_cost,
             cost=pd_expense.cost
         )
-        pd_expense: db_schemas.Expense = self.__db.expense.update(pd_update_expense)
+        pd_expense: db_schemas.Expense = self.db.expense.update(pd_update_expense)
         # edit in Domain Model
         expense = Expense(id=pd_expense.id, desc=pd_expense.desc, date_cost=pd_expense.date_cost,
                           cost=Money(pd_expense.cost))
@@ -64,7 +84,7 @@ class ExpenseHandler:
     def get_store_expenses(self) -> list[schemas.ViewExpense]:
         places = self.get_places()
         list_view = []
-        list_pd_expenses = self.__db.expense.get_by_store_id(store_id=self.store_id)
+        list_pd_expenses = self.db.expense.get_by_store_id(store_id=self.store_id)
         for pd_expense in list_pd_expenses:
             expense = Expense.create_from_schema(pd_expense)
             # update domain
@@ -78,9 +98,9 @@ class ExpenseHandler:
 
     def delete_expense(self, expense_id: int):
         # edit on DB
-        self.__db.expense.delete(expense_id)
+        self.db.expense.delete(expense_id)
         # edit in Domain Model
-        for place in self.__store.places_of_sale.values():
+        for place in self.store.places_of_sale.values():
             if expense_id in place.expenses:
                 del place.expenses[expense_id]
                 break

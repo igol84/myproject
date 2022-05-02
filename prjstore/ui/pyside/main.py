@@ -28,6 +28,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.observers = []
         self.__db = None
         self.handler = None
+        self.dark_style = True
         self.ui = None
         self.new_items_form: ItemForm = None
         self.edit_items_form: ItemsEditor = None
@@ -54,24 +55,23 @@ class MainWindow(QMainWindow, MainWindowInterface):
                 observer.need_update = True
 
     def data_changed(self, this_observer) -> None:
-        self.handler.update_data(this_observer.handler.store)
         self.notify_observer(this_observer)
 
     def on_receiving_data_change(self, this_observer):
         self.data_changed(this_observer)
-        self.edit_items_form.update_data(store=self.handler.store)
+        self.edit_items_form.update_data()
 
     def setup_ui(self, db=None):
         if db:
             self.__db = db
             self.handler = MainHandler(db)
-            self.sale_form = SaleForm(self, dark_style=True, db=db)
-            self.price_editor_form = PriceEditor(self, dark_style=True, db=db)
-            self.new_items_form = ItemForm(self, dark_style=True, db=db)
-            self.edit_items_form = ItemsEditor(self, dark_style=True, db=db)
-            self.sellers_form = SellersEditor(self, dark_style=True, db=db)
-            self.places_form = PlacesEditor(self, dark_style=True, db=db)
-            self.expenses_form = ExpensesEditor(self, dark_style=True, db=db)
+            self.sale_form = SaleForm(self)
+            self.price_editor_form = PriceEditor(self)
+            self.new_items_form = ItemForm(self)
+            self.edit_items_form = ItemsEditor(self)
+            self.sellers_form = SellersEditor(self)
+            self.places_form = PlacesEditor(self)
+            self.expenses_form = ExpensesEditor(self)
             self.sale_form.setup_dark_style()
             self.setWindowTitle(f'Shop - {self.login_form.name}')
         else:
@@ -137,14 +137,14 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.reset_selection()
         btn.set_active(True)
         if data_update:
-            form.update_data(store=self.handler.store)
+            form.update_data()
         self.ui.pages.setCurrentWidget(form)
 
     def show_items_page(self):
         self.reset_selection()
         self.ui.btn_new_items.set_active(True)
-        self.ui.new_items_form.update_data(store=self.handler.store)
-        self.ui.edit_items_form.update_data(store=self.handler.store)
+        self.ui.new_items_form.update_data()
+        self.ui.edit_items_form.update_data()
         self.ui.pages.setCurrentWidget(self.ui.items_form)
 
     def show_product_price_editor_page(self):

@@ -10,6 +10,7 @@ from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
 from prjstore.domain.store import Store
 from prjstore.handlers.data_for_test.sale_registration import put_test_data
+from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.sale_registration.schemas import (
     ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items, ProductId, Price,
     create_sale_schemas_by_places, ViewSale, ViewProduct
@@ -18,39 +19,54 @@ from util.money import Money
 
 
 class SaleRegistrationHandler:
+    __main_handler: Optional[MainHandler]
     __db: API_DB
     __store: Store
     __sale: Sale
 
-    def __init__(self, db: API_DB = None, test=False, store: Store = None):
+    def __init__(self, db: API_DB = None, test=False, main_handler=None):
         self.__db = db
         self.__sale = Sale()
+        self.__main_handler = main_handler
         self.test_mode = test
         self.store_id = None
-        if db:
-            self.store_id = db.headers['store_id']
+        self.store_id = self.db.headers['store_id']
         if test:
             self.__store = Store(id=self.store_id, name='test')
             put_test_data(self)
-        else:
-            self.update_data(store)
+        if not main_handler:
+            self.__store = Store.create_from_schema(self.db.store.get(id=self.store_id))
 
-    def get_sale(self):
+    def __get_main_handler(self) -> Optional[MainHandler]:
+        return self.__main_handler
+
+    def __set_main_handler(self, main_handler: MainHandler) -> None:
+        self.__main_handler = main_handler
+
+    main_handler = property(__get_main_handler, __set_main_handler)
+
+    def __get_store(self):
+        if self.main_handler:
+            store = self.main_handler.store
+        else:
+            store = self.__store
+        return store
+
+    store = property(__get_store)
+
+    def __get_db(self):
+        if self.main_handler:
+            db = self.main_handler.db
+        else:
+            db = self.__db
+        return db
+
+    db = property(__get_db)
+
+    def __get_sale(self):
         return self.__sale
 
-    sale = property(get_sale)
-
-    def get_store(self):
-        return self.__store
-
-    store = property(get_store)
-
-    def update_data(self, store: Store):
-        self.__sale = Sale()
-        if not store:
-            self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
-        else:
-            self.__store = store
+    sale = property(__get_sale)
 
     @validate_arguments
     def get_store_items(self, search: Optional[str] = None) -> list[ViewProduct]:
@@ -64,7 +80,7 @@ class SaleRegistrationHandler:
             for sale in place.ledger.values():
                 if sale.date_time.date() == date:
                     return None
-        pd_sales = self.__db.sale.get_all(store_id=self.store.id, date=date, place_id=place_id, seller_id=seller_id)
+        pd_sales = self.db.sale.get_all(store_id=self.store.id, date=date, place_id=place_id, seller_id=seller_id)
         for pd_sale in pd_sales:
             sale = Sale.create_from_schema(pd_sale)
             self.store.places_of_sale[pd_sale.place.id].ledger[sale.id] = sale
@@ -153,7 +169,7 @@ class SaleRegistrationHandler:
         data = handler_schemas.PutItemFromOldSale(
             sale_id=sale_id, list_del_sli=list_del_items, list_new_items=list_new_items,
             list_update_items=list_update_items, delete=delete)
-        self.__db.header_sale_registration.put_items_from_old_sale(data=data)
+        self.db.header_sale_registration.put_items_from_old_sale(data=data)
         self.__sale = tmp_sale
 
     @validate_arguments
@@ -175,7 +191,7 @@ class SaleRegistrationHandler:
             pd_sli_old = sli_schema(sale_id=self.sale.id, item_id=sli.item.id, sale_price=old_price, qty=sli.qty)
             pd_sli_new = sli_schema(sale_id=self.sale.id, item_id=sli.item.id, sale_price=new_price, qty=sli.qty)
             pd_data = schemas.handler_sale_registration.EditSLIPrice(old_sli=pd_sli_old, new_sli=pd_sli_new)
-            self.__db.header_sale_registration.edit_sli_price(data=pd_data)
+            self.db.header_sale_registration.edit_sli_price(data=pd_data)
             self.sale.edit_sale_price(sli, new_price)
         self.__sale = tmp_sale
 
@@ -217,7 +233,7 @@ class SaleRegistrationHandler:
             db_end_sale = handler_schemas.EndSale(sale=pd_sale)
             if self.test_mode:
                 return True
-            new_sale: handler_schemas.OutputEndSale = self.__db.header_sale_registration.end_sale(db_end_sale)
+            new_sale: handler_schemas.OutputEndSale = self.db.header_sale_registration.end_sale(db_end_sale)
             if new_sale.sale:
                 current_place = self.store.places_of_sale[current_place_of_sale_id]
                 sale = Sale.create_from_schema(new_sale.sale)

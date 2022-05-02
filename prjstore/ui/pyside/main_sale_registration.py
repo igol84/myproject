@@ -24,11 +24,9 @@ class SaleForm(QWidget):
     selected_sli_widget: SLI_Frame
     handler: SaleRegistrationHandler
 
-    def __init__(self, parent=None, dark_style=False, test=False, user_data=None, db=None):
+    def __init__(self, parent: MainWindowInterface = None, dark_style=False, test=False, user_data=None, db=None):
         super().__init__()
-        self.parent: MainWindowInterface = parent
-        if parent:
-            self.parent.register_observer(self)
+        self.parent = parent
         self.user_data = user_data
         self.db = db
         self.thread_pool = QThreadPool()
@@ -50,17 +48,19 @@ class SaleForm(QWidget):
         self.ui.date_edit.dateChanged.connect(self.on_change_data)
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
-        if not self.parent:
-            if not self.test:
-                db_connector = DbConnect(self.user_data, self.db)
+        if parent:
+            self.parent.register_observer(self)
+            if parent.dark_style:
+                self.setup_dark_style()
+            self.connected_complete(SaleRegistrationHandler(main_handler=self.parent.handler))
+        else:
+            if not test:
+                db_connector = DbConnect(user_data, db)
                 db_connector.signals.error.connect(self._connection_error)
                 db_connector.signals.result.connect(self.connected_complete)
                 self.thread_pool.start(db_connector)
             else:
                 self.connected_complete(SaleRegistrationHandler(test=True))
-        else:
-            store = self.parent.handler.store
-            self.connected_complete(SaleRegistrationHandler(db=self.db, store=store))
 
     def setup_dark_style(self):
         self.setStyleSheet(
@@ -158,9 +158,8 @@ class SaleForm(QWidget):
         self.data_items_pages.selected_page = 1
         self._update_items_layout()
 
-    def update_data(self, store=None):
+    def update_data(self):
         if self.need_update:
-            self.handler.update_data(store)
             self.update_ui()
             self.need_update = False
 

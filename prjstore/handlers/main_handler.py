@@ -7,7 +7,13 @@ class MainHandler:
 
     def __init__(self, db: API_DB):
         self.__db = db
-        self.update_data()
+        store_id = self.__db.headers['store_id']
+        self.__store = Store.create_from_schema(self.__db.store.get(id=store_id))
+
+    def get_db(self) -> API_DB:
+        return self.__db
+
+    db = property(get_db)
 
     def get_store(self) -> Store:
         return self.__store
@@ -16,10 +22,3 @@ class MainHandler:
         self.__store = store
 
     store = property(get_store, set_store)
-
-    def update_data(self, store=None):
-        if not store:
-            store_id = self.__db.headers['store_id']
-            self.__store = Store.create_from_schema(self.__db.store.get(id=store_id))
-        else:
-            self.__store = store

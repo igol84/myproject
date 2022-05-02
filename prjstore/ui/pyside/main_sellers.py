@@ -21,11 +21,10 @@ class SellersEditor(QWidget, ObserverInterface):
     __handler: SellersEditorHandler
     __dark_style: bool
 
-    def __init__(self, parent=None, test=False, user_data=None, list_pd_sellers=None, db=None, dark_style=False):
+    def __init__(self, parent: MainWindowInterface = None, test=False, user_data=None, list_pd_sellers=None, db=None,
+                 dark_style=False):
         super().__init__()
-        self.parent: MainWindowInterface = parent
-        if parent:
-            self.parent.register_observer(self)
+        self.parent = parent
         self.__handler = None
         self.test = test
         self.need_update: bool = True
@@ -42,17 +41,18 @@ class SellersEditor(QWidget, ObserverInterface):
         self.__seller_widgets = {}
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
-        if not self.parent:
-            if not self.test:
-                db_connector = thread.DbConnect(self.user_data, self.db)
+        if parent:
+            self.parent.register_observer(self)
+            self.dark_style = parent.dark_style
+            self.__connected_complete(SellersEditorHandler(main_handler=self.parent.handler))
+        else:
+            if not test:
+                db_connector = thread.DbConnect(user_data, db)
                 db_connector.signals.error.connect(self.__connection_error)
                 db_connector.signals.result.connect(self.__connected_complete)
                 self.thread_pool.start(db_connector)
             else:
                 self.__connected_complete(SellersEditorHandler(db=None, test=True))
-        else:
-            store = self.parent.handler.store
-            self.__connected_complete(SellersEditorHandler(db=self.db, store=store))
 
     def get_selected_seller_id(self) -> int:
         return self.__selected_seller_id
@@ -96,10 +96,9 @@ class SellersEditor(QWidget, ObserverInterface):
         self.update_ui()
         self.load_widget.hide()
 
-    def update_data(self, store=None) -> None:
+    def update_data(self) -> None:
         if self.need_update:
             self.load_widget.show()
-            self.handler.update_data(store)
             self.update_ui()
             self.need_update = False
             self.load_widget.hide()

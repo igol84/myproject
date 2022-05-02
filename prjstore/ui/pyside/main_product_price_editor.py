@@ -19,13 +19,12 @@ class PriceEditor(QWidget, Pages, ObserverInterface):
     selected_item_widget: AbstractItem
     handler: ProductPriceEditorHandler
 
-    def __init__(self, parent=None, test=False, user_data=None, list_pd_product=None, db=None, dark_style=False):
+    def __init__(self, parent: MainWindowInterface = None, test=False, user_data=None, list_pd_product=None, db=None,
+                 dark_style=False):
         super().__init__()
         Pages.__init__(self, count_elements_on_page=14)
         self.handler = None
-        self.parent: MainWindowInterface = parent
-        if parent:
-            self.parent.register_observer(self)
+        self.parent = parent
         self.user_data = user_data
         self.db = db
         self.thread_pool = QThreadPool()
@@ -48,16 +47,18 @@ class PriceEditor(QWidget, Pages, ObserverInterface):
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
         self.ui.src_products.textChanged.connect(self.on_search_text_changed)
 
-        if not self.parent:
-            if not self.test:
-                db_connector = DbConnect(self.user_data, self.db)
+        if parent:
+            parent.register_observer(self)
+            if parent.dark_style:
+                self.setup_dark_style()
+            handler = ProductPriceEditorHandler(main_handler=parent.handler)
+            self.connected_complete(handler)
+        else:
+            if not test:
+                db_connector = DbConnect(user_data, db)
                 db_connector.signals.error.connect(self.__connection_error)
                 db_connector.signals.result.connect(self.connected_complete)
                 self.thread_pool.start(db_connector)
-        else:
-            store = self.parent.handler.store
-            handler = ProductPriceEditorHandler(db=self.db, store=store)
-            self.connected_complete(handler)
 
     def setup_dark_style(self):
         self.setStyleSheet(
@@ -83,10 +84,9 @@ class PriceEditor(QWidget, Pages, ObserverInterface):
         self.update_ui()
         self.load_widget.hide()
 
-    def update_data(self, store=None):
+    def update_data(self):
         if self.need_update:
             self.load_widget.show()
-            self.handler.update_data(store)
             self.update_ui()
             self.need_update = False
             self.load_widget.hide()
@@ -196,6 +196,7 @@ class PriceEditor(QWidget, Pages, ObserverInterface):
 
 if __name__ == "__main__":
     from prjstore.db.api import settings
+
     app = QApplication(sys.argv)
     w = PriceEditor(test=False, user_data=settings.user_data, dark_style=True)
     w.show()

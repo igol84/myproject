@@ -1,3 +1,5 @@
+from typing import Optional
+
 from prjstore.db import API_DB, schemas as db_schemas
 from prjstore.db.schemas import handler_receiving_the_items as db_schema
 from prjstore.domain.abstract_product import AbstractProduct
@@ -6,36 +8,54 @@ from prjstore.domain.product_factory import ProductFactory
 from prjstore.domain.products.shoes import Shoes
 from prjstore.domain.store import Store
 from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_store
+from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.receiving_the_items import schemas
 
 
 class ReceivingTheItemsHandler:
+    __main_handler: Optional[MainHandler]
     __db: API_DB
     __store: Store
 
-    def __init__(self, db: API_DB = None, test=False, store: Store = None):
+    def __init__(self, db: API_DB = None, test=False, main_handler=None):
+        self.__main_handler = main_handler
         self.__db = db
-        self.store_id = db.headers['store_id']
+        self.store_id = self.db.headers['store_id']
         self.test = test
         if test:
             self.__store = Store(id=self.store_id, name='test')
             put_test_data_to_store(self.__store)
+        if not main_handler:
+            self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
+
+    def __get_main_handler(self) -> Optional[MainHandler]:
+        return self.__main_handler
+
+    def __set_main_handler(self, main_handler: MainHandler) -> None:
+        self.__main_handler = main_handler
+
+    main_handler = property(__get_main_handler, __set_main_handler)
+
+    def __get_store(self):
+        if self.main_handler:
+            store = self.main_handler.store
         else:
-            self.update_data(store)
+            store = self.__store
+        return store
 
-    def get_store(self):
-        return self.__store
+    store = property(__get_store)
 
-    store = property(get_store)
+    def __get_db(self):
+        if self.main_handler:
+            db = self.main_handler.db
+        else:
+            db = self.__db
+        return db
+
+    db = property(__get_db)
 
     def get_store_id(self):
-        return self.__store.id
-
-    def update_data(self, store):
-        if not store:
-            self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
-        else:
-            self.__store = store
+        return self.store.id
 
     @staticmethod
     def get_shoes_widths():
@@ -46,7 +66,7 @@ class ReceivingTheItemsHandler:
         return self.convert_pc_to_pd_model_show()
 
     def convert_pc_to_pd_model_show(self) -> list[schemas.ModelProductShow]:
-        prods: dict[str, AbstractProduct] = self.__store.pc.products
+        prods: dict[str, AbstractProduct] = self.store.pc.products
         pd_products = {}
         sorted_products = sorted(prods.values(), key=lambda k: k.prod_id)
         for prod in sorted_products:
@@ -71,21 +91,21 @@ class ReceivingTheItemsHandler:
         return [pr for pr in pd_products.values()]
 
     def save_data(self, data: db_schemas.handler_receiving_the_items.ModelProduct) -> None:
-        data.store_id = self.__store.id
-        output_items: db_schema.OutputItems = self.__db.header_receiving_the_items.receiving_the_items(data)
+        data.store_id = self.store.id
+        output_items: db_schema.OutputItems = self.db.header_receiving_the_items.receiving_the_items(data)
         pd_products = output_items.products
         pd_items = output_items.items
         for pd_product in pd_products:
             product = ProductFactory.create_from_schema(pd_product)
-            self.__store.pc.set_product(product)
+            self.store.pc.set_product(product)
 
         for pd_item in pd_items:
-            product = self.__store.pc[pd_item.prod_id]
+            product = self.store.pc[pd_item.prod_id]
             item = Item.create_from_schema_with_product(pd_item, product)
-            self.__store.set_item(item)
+            self.store.set_item(item)
 
     def find_shoes(self, keys):
-        products: dict[str, AbstractProduct] = self.__store.pc.search(keys[0])
+        products: dict[str, AbstractProduct] = self.store.pc.search(keys[0])
         for prod_id, prod in products.items():
             if prod.product_type == 'shoes':
                 width = getattr(prod.width, 'short_name', '')

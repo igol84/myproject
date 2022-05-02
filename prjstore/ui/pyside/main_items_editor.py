@@ -20,13 +20,12 @@ class ItemsEditor(QWidget, Pages, ObserverInterface):
     __selected_item_widget: ItemWidget
     __handler: ItemsEditorHandler
 
-    def __init__(self, parent=None, test=False, user_data=None, list_pd_items=None, db=None, dark_style=False):
+    def __init__(self, parent: MainWindowInterface = None, test=False, user_data=None, list_pd_items=None, db=None,
+                 dark_style=False):
         super().__init__()
         Pages.__init__(self)
 
-        self.parent: MainWindowInterface = parent
-        if parent:
-            self.parent.register_observer(self)
+        self.parent = parent
         self.__handler = None
         self.test = test
         self.need_update: bool = True
@@ -47,18 +46,20 @@ class ItemsEditor(QWidget, Pages, ObserverInterface):
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
         self.ui.src_items.textChanged.connect(self.on_search_text_changed)
 
-        if not self.parent:
-            if not self.test:
-                db_connector = thread.DbConnect(self.user_data, self.db)
+        if parent:
+            parent.register_observer(self)
+            if parent.dark_style:
+                self.setup_dark_style()
+            handler = ItemsEditorHandler(main_handler=parent.handler)
+            self.__connected_complete(handler)
+        else:
+            if not test:
+                db_connector = thread.DbConnect(user_data, db)
                 db_connector.signals.error.connect(self.__connection_error)
                 db_connector.signals.result.connect(self.__connected_complete)
                 self.thread_pool.start(db_connector)
             else:
                 self.__connected_complete(ItemsEditorHandler(db=None, test=True))
-        else:
-            store = self.parent.handler.store
-            handler = ItemsEditorHandler(db=self.db, store=store)
-            self.__connected_complete(handler)
 
     def get_selected_item_widget(self) -> ItemWidget:
         return self.__selected_item_widget
@@ -112,10 +113,9 @@ class ItemsEditor(QWidget, Pages, ObserverInterface):
         self.update_ui()
         self.load_widget.hide()
 
-    def update_data(self, store=None):
+    def update_data(self):
         if self.need_update:
             self.load_widget.show()
-            self.handler.update_data(store)
             self.update_ui()
             self.need_update = False
             self.load_widget.hide()
