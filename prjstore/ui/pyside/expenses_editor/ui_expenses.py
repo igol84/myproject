@@ -7,7 +7,7 @@ class UI_Expenses:
         if not expenses_frame.objectName():
             expenses_frame.setObjectName('ExpensesEditor')
         expenses_frame.setFixedWidth(600)
-        expenses_frame.setMinimumHeight(700)
+        expenses_frame.setMinimumHeight(500)
         self.layout = QVBoxLayout(expenses_frame)
         self.layout.setObjectName('VBoxLayout')
 

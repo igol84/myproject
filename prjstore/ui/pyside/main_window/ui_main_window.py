@@ -50,6 +50,7 @@ class UI_MainWindow(object):
         self.btn_new_items = PyPushBottom(text='Новый товар', icon_path='icon_new_items.svg', is_active=True)
         self.btn_sale = PyPushBottom(text='Продажа', icon_path='icon_sale.svg')
         self.btn_sellers = PyPushBottom(text='Продавцы', icon_path='icon_seller.svg')
+        self.btn_expenses = PyPushBottom(text='Затраты', icon_path='icon_expenses.svg')
 
         # ADD BUTTONS TO LAYOUT
         self.left_menu_top_layout.addWidget(self.toggle_button)
@@ -57,6 +58,7 @@ class UI_MainWindow(object):
         self.left_menu_top_layout.addWidget(self.btn_price_editor)
         self.left_menu_top_layout.addWidget(self.btn_sale)
         self.left_menu_top_layout.addWidget(self.btn_sellers)
+        self.left_menu_top_layout.addWidget(self.btn_expenses)
 
         # MENU SPICER
         # //////////////////////////////////////////////////////////////////
@@ -179,6 +181,10 @@ class UI_MainWindow(object):
         self.sellers_and_places_layout.addItem(QSpacerItem(0, 100, QSizePolicy.Expanding, QSizePolicy.Expanding))
 
         self.pages.addWidget(self.sellers_and_places_form)
+
+        # =================== Expenses page ===================
+        self.page_expenses_form = pages['expenses_form']
+        self.pages.addWidget(self.page_expenses_form)
 
         # =================== Login page ===================
         self.page_login_form = QFrame()

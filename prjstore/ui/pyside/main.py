@@ -6,6 +6,7 @@ from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.main_items_editor import ItemsEditor
 from prjstore.ui.pyside.main_login import LoginFrame
 from prjstore.ui.pyside.main_places import PlacesEditor
+from prjstore.ui.pyside.main_expenses import ExpensesEditor
 from prjstore.ui.pyside.main_product_price_editor import PriceEditor
 from prjstore.ui.pyside.main_receiving_the_items import ItemForm
 from prjstore.ui.pyside.main_sale_registration import SaleForm
@@ -33,6 +34,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.sale_form: SaleForm = None
         self.sellers_form = None
         self.places_form = None
+        self.expenses_form = None
         self.price_editor_form: PriceEditor = None
         self.thread_pool = QThreadPool()
         self.login_form = LoginFrame(self)
@@ -69,6 +71,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
             self.edit_items_form = ItemsEditor(self, dark_style=True, db=db)
             self.sellers_form = SellersEditor(self, dark_style=True, db=db)
             self.places_form = PlacesEditor(self, dark_style=True, db=db)
+            self.expenses_form = ExpensesEditor(self, dark_style=True, db=db)
             self.sale_form.setup_dark_style()
             self.setWindowTitle(f'Shop - {self.login_form.name}')
         else:
@@ -79,6 +82,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
             self.edit_items_form = QWidget()
             self.sellers_form = QWidget()
             self.places_form = QWidget()
+            self.expenses_form = QWidget()
 
         self.moduls['login_form'] = self.login_form
         self.moduls['sale_form'] = self.sale_form
@@ -87,6 +91,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.moduls['edit_items_form'] = self.edit_items_form
         self.moduls['sellers_form'] = self.sellers_form
         self.moduls['places_form'] = self.places_form
+        self.moduls['expenses_form'] = self.expenses_form
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self, self.moduls)
         self.ui.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
@@ -117,6 +122,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.ui.btn_price_editor.clicked.connect(self.show_product_price_editor_page)
         self.ui.btn_sale.clicked.connect(self.show_sale_registration_page)
         self.ui.btn_sellers.clicked.connect(self.show_sellers_page)
+        self.ui.btn_expenses.clicked.connect(self.show_expenses_page)
         self.ui.login_button.clicked.connect(self.show_login_page)
         self.ui.settings_button.clicked.connect(self.show_settings_page_page)
         self.show_sale_registration_page()
@@ -149,6 +155,9 @@ class MainWindow(QMainWindow, MainWindowInterface):
 
     def show_sellers_page(self):
         self.show_page(self.ui.btn_sellers, self.ui.sellers_and_places_form, False)
+
+    def show_expenses_page(self):
+        self.show_page(self.ui.btn_expenses, self.ui.page_expenses_form, False)
 
     def show_login_page(self):
         self.show_page(self.ui.login_button, self.ui.page_login_form, False)
