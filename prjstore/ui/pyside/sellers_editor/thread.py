@@ -74,7 +74,7 @@ class DBEditSellerActive(QRunnable):
 class DBAddSeller(QRunnable):
     class Signals(QObject):
         error = Signal(str)
-        result = Signal(view_schemas.ViewSeller)
+        complete = Signal()
 
     def __init__(self, handler: SellersEditorHandler, name: str):
         super().__init__()
@@ -85,9 +85,8 @@ class DBAddSeller(QRunnable):
     @Slot()
     def run(self):
         try:
-            pd_data: schemas.Seller = self.handler.add_seller(self.name)
+            self.handler.add_seller(self.name)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:
-            pd_view = view_schemas.ViewSeller(seller_id=pd_data.id, name=pd_data.name, active=pd_data.active)
-            self.signals.result.emit(pd_view)
+            self.signals.complete.emit()

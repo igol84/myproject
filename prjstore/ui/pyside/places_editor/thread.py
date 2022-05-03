@@ -75,7 +75,7 @@ class DBEditPlaceActive(QRunnable):
 class DBAddPlace(QRunnable):
     class Signals(QObject):
         error = Signal(str)
-        result = Signal(view_schemas.ViewPlace)
+        complete = Signal()
 
     def __init__(self, handler: PlacesEditorHandler, name: str):
         super().__init__()
@@ -86,9 +86,8 @@ class DBAddPlace(QRunnable):
     @Slot()
     def run(self):
         try:
-            pd_data: schemas.Place = self.handler.add_place(self.name)
+            self.handler.add_place(self.name)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         else:
-            pd_view = view_schemas.ViewPlace(place_id=pd_data.id, name=pd_data.name, active=pd_data.active)
-            self.signals.result.emit(pd_view)
+            self.signals.complete.emit()

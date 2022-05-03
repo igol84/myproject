@@ -46,6 +46,7 @@ class UI_Expenses:
         self.layout.addWidget(self.pages_frame)
 
 
+
 class DelMessageBox(QMessageBox):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -57,3 +58,4 @@ class DelMessageBox(QMessageBox):
         buttonY.setText('Да')
         buttonN = self.button(QMessageBox.No)
         buttonN.setText('Нет')
+

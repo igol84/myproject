@@ -1,8 +1,9 @@
 import sys
 from typing import Optional
 
+from prjstore.db.api import settings
 from prjstore.handlers.sellers_editor_handler import SellersEditorHandler
-from prjstore.ui.pyside.interface_observer import ObserverInterface
+from prjstore.ui.pyside.abstract_module import AbstractModule
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.sellers_editor import schemas
 from prjstore.ui.pyside.sellers_editor import thread
@@ -12,47 +13,42 @@ from prjstore.ui.pyside.sellers_editor.ui_sellers_editor import UI_SellersEditor
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 from prjstore.ui.pyside.utils.qt_core import *
 from prjstore.ui.pyside.utils.qt_utils import clearLayout
+from util.pages import Pages
 
 
-class SellersEditor(QWidget, ObserverInterface):
+class SellersEditor(AbstractModule, QWidget, Pages):
+    __handler: SellersEditorHandler
+    __parent: MainWindowInterface
     __pd_sellers: list[schemas.ViewSeller]
     __selected_seller_id: Optional[int]
     __seller_widgets: dict[int, SellerWidget]
-    __handler: SellersEditorHandler
     __dark_style: bool
 
-    def __init__(self, parent: MainWindowInterface = None, test=False, user_data=None, list_pd_sellers=None, db=None,
-                 dark_style=False):
-        super().__init__()
-        self.parent = parent
+    def __init__(self, parent=None, user_data=None, dark_style=False):
+        AbstractModule.__init__(self, parent)
+        QWidget.__init__(self)
         self.__handler = None
-        self.test = test
-        self.need_update: bool = True
         self.ui = UI_SellersEditor()
         self.ui.setup_ui(self)
-        self.user_data = user_data
-        self.db = db
+
+        Pages.__init__(self)
+        self.register_observer(self.ui.pages_frame)
+
         self.thread_pool = QThreadPool()
-        self.dark_style = dark_style
-        if list_pd_sellers is None:
-            list_pd_sellers = []
-        self.list_pd_sellers: list = list_pd_sellers
         self.__selected_seller_id = None
         self.__seller_widgets = {}
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
-
+        if dark_style:
+            self.setup_dark_style()
         if parent:
-            self.parent.register_observer(self)
-            self.dark_style = parent.dark_style
+            if parent.dark_style:
+                self.setup_dark_style()
             self.__connected_complete(SellersEditorHandler(main_handler=self.parent.handler))
         else:
-            if not test:
-                db_connector = thread.DbConnect(user_data, db)
-                db_connector.signals.error.connect(self.__connection_error)
-                db_connector.signals.result.connect(self.__connected_complete)
-                self.thread_pool.start(db_connector)
-            else:
-                self.__connected_complete(SellersEditorHandler(db=None, test=True))
+            db_connector = thread.DbConnect(user_data)
+            db_connector.signals.error.connect(self.__connection_error)
+            db_connector.signals.result.connect(self.__connected_complete)
+            self.thread_pool.start(db_connector)
 
     def get_selected_seller_id(self) -> int:
         return self.__selected_seller_id
@@ -74,18 +70,11 @@ class SellersEditor(QWidget, ObserverInterface):
 
     selected_widget = property(get_selected_widget)
 
-    def get_dark_style(self) -> bool:
-        return self.__dark_style
-
-    def set_dark_style(self, flag: bool) -> None:
-        self.__dark_style = flag
-        if flag:
-            self.setStyleSheet(
-                '#SellersEditor, #SellersFrame {background-color: #2F303B; color: #F8F8F2;}\n'
-                'QLabel {color: #F8F8F2;}\n'
-            )
-
-    dark_style = property(get_dark_style, set_dark_style)
+    def setup_dark_style(self) -> None:
+        self.setStyleSheet(
+            '#SellersEditor, #SellersFrame {background-color: #2F303B; color: #F8F8F2;}\n'
+            'QLabel {color: #F8F8F2;}\n'
+        )
 
     def __connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
@@ -103,13 +92,15 @@ class SellersEditor(QWidget, ObserverInterface):
             self.need_update = False
             self.load_widget.hide()
 
-    def update_ui(self) -> None:
+    def update_ui(self, updating_data: bool = True) -> None:
         clearLayout(self.ui.layout_sellers)
-        self.__pd_sellers = self.handler.get_store_sellers()
+        if updating_data:
+            self.__pd_sellers = self.handler.get_store_sellers()
+            self.count_elements = len(self.__pd_sellers)
         self.ui.layout_sellers.addWidget(AddSellerWidget(self))
-        for pd_seller in self.__pd_sellers:
-            item_frame = SellerWidget(pd_seller, self)
-            self.__seller_widgets[pd_seller.seller_id] = item_frame
+        for i in self.items_on_page:
+            item_frame = SellerWidget(self.__pd_sellers[i], self)
+            self.__seller_widgets[self.__pd_sellers[i].seller_id] = item_frame
             self.ui.layout_sellers.addWidget(item_frame)
         if self.selected_seller_id:
             self.set_selected_seller_id(self.selected_seller_id)
@@ -147,20 +138,23 @@ class SellersEditor(QWidget, ObserverInterface):
         self.load_widget.show()
         db_seller = thread.DBAddSeller(self.handler, name)
         db_seller.signals.error.connect(self.__connection_error)
-        db_seller.signals.result.connect(self.__adding_seller_complete)
+        db_seller.signals.complete.connect(self.__adding_seller_complete)
         self.thread_pool.start(db_seller)
 
-    def __adding_seller_complete(self, pd_new_seller: schemas.ViewSeller):
-        item_frame = SellerWidget(pd_new_seller, self)
-        self.__seller_widgets[pd_new_seller.seller_id] = item_frame
-        self.ui.layout_sellers.insertWidget(1, item_frame)
+    def __adding_seller_complete(self):
+        self.update_ui()
+        self.selected_page = 1
         if self.parent:
             self.parent.data_changed(self)
         self.load_widget.hide()
 
+    def page_number_changed(self, data_page):
+        if data_page:
+            self.update_ui(updating_data=False)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    w = SellersEditor(test=False, user_data={'username': 'qwe', 'password': 'qwe'}, dark_style=True)
+    w = SellersEditor(user_data=settings.user_data, dark_style=True)
     w.show()
     sys.exit(app.exec())

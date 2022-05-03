@@ -1,6 +1,6 @@
 import sys
 
-from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
+from prjstore.ui.pyside.abstract_module import AbstractModule
 from prjstore.ui.pyside.sale_registration.components import FrameItemFactory
 from prjstore.ui.pyside.sale_registration.components.abstract_product import AbstractSoldItem
 from prjstore.ui.pyside.sale_registration.components.sale import Sale_Frame
@@ -15,7 +15,7 @@ from prjstore.ui.pyside.utils.qt_utils import clearLayout
 from util.pages import Pages
 
 
-class SaleForm(QWidget):
+class SaleForm(AbstractModule, QWidget):
     items: list[ModelProduct]
     data_items_pages: Pages
     sli_list: dict[tuple[ProductId, Price]: ModelProduct]
@@ -24,15 +24,10 @@ class SaleForm(QWidget):
     selected_sli_widget: SLI_Frame
     handler: SaleRegistrationHandler
 
-    def __init__(self, parent: MainWindowInterface = None, dark_style=False, test=False, user_data=None, db=None):
-        super().__init__()
-        self.parent = parent
-        self.user_data = user_data
-        self.db = db
+    def __init__(self, parent=None, dark_style=False, user_data=None):
+        AbstractModule.__init__(self, parent)
+        QWidget.__init__(self)
         self.thread_pool = QThreadPool()
-        self.test = test
-        self.need_update: bool = True
-        self.resize(1200, 600)
         self.ui = Ui_SaleForm()
         self.ui.setupUi(self)
         self.data_items_pages = Pages(count_elements_on_page=11)
@@ -49,18 +44,14 @@ class SaleForm(QWidget):
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
         if parent:
-            self.parent.register_observer(self)
             if parent.dark_style:
                 self.setup_dark_style()
             self.connected_complete(SaleRegistrationHandler(main_handler=self.parent.handler))
         else:
-            if not test:
-                db_connector = DbConnect(user_data, db)
-                db_connector.signals.error.connect(self._connection_error)
-                db_connector.signals.result.connect(self.connected_complete)
-                self.thread_pool.start(db_connector)
-            else:
-                self.connected_complete(SaleRegistrationHandler(test=True))
+            db_connector = DbConnect(user_data)
+            db_connector.signals.error.connect(self._connection_error)
+            db_connector.signals.result.connect(self.connected_complete)
+            self.thread_pool.start(db_connector)
 
     def setup_dark_style(self):
         self.setStyleSheet(
@@ -260,6 +251,6 @@ if __name__ == "__main__":
     from prjstore.db.api import settings
 
     app = QApplication(sys.argv)
-    w = SaleForm(test=False, dark_style=True, user_data=settings.user_data)
+    w = SaleForm(dark_style=True, user_data=settings.user_data)
     w.show()
     sys.exit(app.exec())

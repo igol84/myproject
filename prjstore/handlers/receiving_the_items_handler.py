@@ -7,7 +7,6 @@ from prjstore.domain.item import Item
 from prjstore.domain.product_factory import ProductFactory
 from prjstore.domain.products.shoes import Shoes
 from prjstore.domain.store import Store
-from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_store
 from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.receiving_the_items import schemas
 
@@ -17,14 +16,10 @@ class ReceivingTheItemsHandler:
     __db: API_DB
     __store: Store
 
-    def __init__(self, db: API_DB = None, test=False, main_handler=None):
+    def __init__(self, db: API_DB = None, main_handler=None):
         self.__main_handler = main_handler
         self.__db = db
         self.store_id = self.db.headers['store_id']
-        self.test = test
-        if test:
-            self.__store = Store(id=self.store_id, name='test')
-            put_test_data_to_store(self.__store)
         if not main_handler:
             self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
 

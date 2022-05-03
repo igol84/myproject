@@ -9,7 +9,6 @@ from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
 from prjstore.domain.store import Store
-from prjstore.handlers.data_for_test.sale_registration import put_test_data
 from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.sale_registration.schemas import (
     ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items, ProductId, Price,
@@ -24,16 +23,11 @@ class SaleRegistrationHandler:
     __store: Store
     __sale: Sale
 
-    def __init__(self, db: API_DB = None, test=False, main_handler=None):
+    def __init__(self, db: API_DB = None, main_handler=None):
         self.__db = db
         self.__sale = Sale()
         self.__main_handler = main_handler
-        self.test_mode = test
-        self.store_id = None
         self.store_id = self.db.headers['store_id']
-        if test:
-            self.__store = Store(id=self.store_id, name='test')
-            put_test_data(self)
         if not main_handler:
             self.__store = Store.create_from_schema(self.db.store.get(id=self.store_id))
 
@@ -231,8 +225,6 @@ class SaleRegistrationHandler:
             self.sale.completed()
             pd_sale = self.sale.schema_create(place_id=current_place_of_sale_id)
             db_end_sale = handler_schemas.EndSale(sale=pd_sale)
-            if self.test_mode:
-                return True
             new_sale: handler_schemas.OutputEndSale = self.db.header_sale_registration.end_sale(db_end_sale)
             if new_sale.sale:
                 current_place = self.store.places_of_sale[current_place_of_sale_id]

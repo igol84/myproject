@@ -1,3 +1,4 @@
+from prjstore.ui.pyside.utils.pages import PagesFrame
 from prjstore.ui.pyside.utils.qt_core import *
 
 
@@ -32,9 +33,12 @@ class UI_PlacesEditor:
         self.scroll_layout.addWidget(self.places_frame)
         self.scroll_layout.addItem(QSpacerItem(0, 100, QSizePolicy.Expanding, QSizePolicy.Expanding))
 
+        self.pages_frame = PagesFrame(parent=places_editor_frame)
+
         # Add to frame layout
         self.scroll.setWidget(self.scroll_frame)
 
         # Add to layout
         self.layout.addWidget(self.handler)
         self.layout.addWidget(self.scroll)
+        self.layout.addWidget(self.pages_frame)

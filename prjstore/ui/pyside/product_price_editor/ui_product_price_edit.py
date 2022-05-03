@@ -6,6 +6,7 @@ class UI_Frame(object):
     def setup_ui(self, parent: QFrame):
         if not parent.objectName():
             parent.setObjectName('ProductPriceEdit')
+        parent.resize(500, 600)
         self.layout = QVBoxLayout(parent)
         self.layout.setObjectName('VBoxLayout')
 

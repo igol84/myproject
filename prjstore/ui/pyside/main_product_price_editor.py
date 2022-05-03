@@ -1,7 +1,6 @@
 import sys
 
-from prjstore.ui.pyside.interface_observer import ObserverInterface
-from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
+from prjstore.ui.pyside.abstract_module import AbstractModule
 from prjstore.ui.pyside.product_price_editor import schemas
 from prjstore.ui.pyside.product_price_editor.components import FrameProductFactory, ShoesFrame, ProductFrame
 from prjstore.ui.pyside.product_price_editor.components.abstract_product import AbstractItem
@@ -14,32 +13,24 @@ from prjstore.ui.pyside.utils.qt_utils import clearLayout
 from util.pages import Pages
 
 
-class PriceEditor(QWidget, Pages, ObserverInterface):
+class PriceEditor(AbstractModule, QWidget, Pages):
+    handler: ProductPriceEditorHandler
     products: list[schemas.ModelProduct]
     selected_item_widget: AbstractItem
-    handler: ProductPriceEditorHandler
 
-    def __init__(self, parent: MainWindowInterface = None, test=False, user_data=None, list_pd_product=None, db=None,
-                 dark_style=False):
-        super().__init__()
-        Pages.__init__(self, count_elements_on_page=14)
+    def __init__(self, parent=None, user_data=None, dark_style=False):
+        AbstractModule.__init__(self, parent)
+        QWidget.__init__(self)
         self.handler = None
-        self.parent = parent
-        self.user_data = user_data
-        self.db = db
         self.thread_pool = QThreadPool()
-        self.test = test
-        self.need_update: bool = True
-        self.dark_style = dark_style
-        if list_pd_product is None:
-            list_pd_product = []
-        self.list_pd_prod: list = list_pd_product
-        self.resize(500, 600)
+
         self.ui = UI_Frame()
         self.ui.setup_ui(self)
-        self.register_observer(self.ui.pages_frame)
-        if self.dark_style:
+        if dark_style:
             self.setup_dark_style()
+        Pages.__init__(self, count_elements_on_page=14)
+        self.register_observer(self.ui.pages_frame)
+
         self.selected_product_frame: ProductFrame = None
         self.selected_shoes_frame: ShoesFrame = None
         self.selected_color_frame: ColorFrame = None
@@ -48,17 +39,15 @@ class PriceEditor(QWidget, Pages, ObserverInterface):
         self.ui.src_products.textChanged.connect(self.on_search_text_changed)
 
         if parent:
-            parent.register_observer(self)
             if parent.dark_style:
                 self.setup_dark_style()
             handler = ProductPriceEditorHandler(main_handler=parent.handler)
             self.connected_complete(handler)
         else:
-            if not test:
-                db_connector = DbConnect(user_data, db)
-                db_connector.signals.error.connect(self.__connection_error)
-                db_connector.signals.result.connect(self.connected_complete)
-                self.thread_pool.start(db_connector)
+            db_connector = DbConnect(user_data)
+            db_connector.signals.error.connect(self.__connection_error)
+            db_connector.signals.result.connect(self.connected_complete)
+            self.thread_pool.start(db_connector)
 
     def setup_dark_style(self):
         self.setStyleSheet(
@@ -198,6 +187,6 @@ if __name__ == "__main__":
     from prjstore.db.api import settings
 
     app = QApplication(sys.argv)
-    w = PriceEditor(test=False, user_data=settings.user_data, dark_style=True)
+    w = PriceEditor(user_data=settings.user_data, dark_style=True)
     w.show()
     sys.exit(app.exec())

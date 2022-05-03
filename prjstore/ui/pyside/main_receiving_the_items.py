@@ -2,7 +2,7 @@ import re
 
 from prjstore.db.schemas import handler_receiving_the_items as db_schemas
 from prjstore.handlers.receiving_the_items_handler import ReceivingTheItemsHandler
-from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
+from prjstore.ui.pyside.abstract_module import AbstractModule
 from prjstore.ui.pyside.receiving_the_items.schemas import *
 from prjstore.ui.pyside.receiving_the_items.thread import DbConnect, DBSaveData
 from prjstore.ui.pyside.receiving_the_items.ui_item import Ui_Dialog
@@ -12,35 +12,22 @@ from prjstore.ui.pyside.utils.load_widget import LoadWidget
 from prjstore.ui.pyside.utils.qt_core import *
 
 
-class ItemForm(QWidget):
+class ItemForm(AbstractModule, QWidget):
     pd_item: ModelItem
     list_pd_prod: list[ModelProductShow]
     handler: ReceivingTheItemsHandler
 
-    def __init__(self, parent: MainWindowInterface = None, item: ModelItem = ModelItem(), list_pd_product=None,
-                 keywords=None, test=False, dark_style=False, user_data=None, db=None):
-        super().__init__()
-        self.parent: MainWindowInterface = parent
-        self.user_data = user_data
-        self.db = db
+    def __init__(self, parent=None, dark_style=False, user_data=None):
+        AbstractModule.__init__(self, parent)
+        QWidget.__init__(self)
         self.thread_pool = QThreadPool()
-        if list_pd_product is None:
-            list_pd_product = []
-        self.list_pd_prod: list[ModelProductShow] = list_pd_product
-        self.pd_item: ModelItem = item
-        if keywords:
-            self.keywords = keywords
-        else:
-            self.keywords = {'header': 'Получение товара', 'types': (('', 'product'), ('обувь', 'shoes')),
-                             'shoes': {'count_sizes': 12, 'min_size': 35,
-                                       'header_shoes': ["Размеры", "Количество", "Длина стельки"]}}
-        self.test = test
-        self.need_update: bool = True
+        self.keywords = {'header': 'Получение товара', 'types': (('', 'product'), ('обувь', 'shoes')),
+                         'shoes': {'count_sizes': 12, 'min_size': 35,
+                                   'header_shoes': ["Размеры", "Количество", "Длина стельки"]}}
         self.last_added_size = ''
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
-        self.dark_style = dark_style
-        if self.dark_style:
+        if dark_style:
             self.setup_dark_style()
         self.ui.button_save.clicked.connect(self.on_clicked_button)
         self.ui.name_combo_box.clear()
@@ -50,18 +37,14 @@ class ItemForm(QWidget):
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
 
         if parent:
-            parent.register_observer(self)
             if parent.dark_style:
                 self.setup_dark_style()
             self.__connected_complete(ReceivingTheItemsHandler(main_handler=parent.handler))
         else:
-            if not test:
-                db_connector = DbConnect(user_data, db)
-                db_connector.signals.error.connect(self.__connection_error)
-                db_connector.signals.result.connect(self.__connected_complete)
-                self.thread_pool.start(db_connector)
-            else:
-                self.__connected_complete(ReceivingTheItemsHandler(test=True))
+            db_connector = DbConnect(user_data)
+            db_connector.signals.error.connect(self.__connection_error)
+            db_connector.signals.result.connect(self.__connected_complete)
+            self.thread_pool.start(db_connector)
 
     def __connection_error(self, err: str):
         QMessageBox.warning(self, err, err)
@@ -153,12 +136,11 @@ class ItemForm(QWidget):
 
     def on_clicked_button(self):
         if data := self.get_data():
-            if not self.test:
-                self.load_widget.show()
-                db_save_data = DBSaveData(self.handler, data)
-                db_save_data.signals.error.connect(self.__connection_error)
-                db_save_data.signals.complete.connect(self.__completed_save)
-                self.thread_pool.start(db_save_data)
+            self.load_widget.show()
+            db_save_data = DBSaveData(self.handler, data)
+            db_save_data.signals.error.connect(self.__connection_error)
+            db_save_data.signals.complete.connect(self.__completed_save)
+            self.thread_pool.start(db_save_data)
 
     def __completed_save(self):
         self.update_ui()
@@ -339,6 +321,6 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
     pd_item = ModelItem()
-    w = ItemForm(item=pd_item, test=False, dark_style=True, user_data=settings.user_data)
+    w = ItemForm(dark_style=True, user_data=settings.user_data)
     w.show()
     sys.exit(app.exec())

@@ -61,12 +61,12 @@ items = {
 
 
 def put_test_data(handler):
-    handler.__store.pc = pc
-    handler.__store.items = items
-    handler.__store.sellers = {1: Seller(1, 'Igor'), 2: Seller(2, 'Anna'), 3: Seller(3, 'Sasha')}
+    handler.store.pc = pc
+    handler.store.items = items
+    handler.store.sellers = {1: Seller(1, 'Igor'), 2: Seller(2, 'Anna'), 3: Seller(3, 'Sasha')}
     places_of_sale = {1: PlaceOfSale(1, 'Интернет'), 2: PlaceOfSale(2, 'Бокс 47'),
                       3: PlaceOfSale(3, 'Магазин 1-й этаж'), 4: PlaceOfSale(4, 'Магазин 2-й этаж')}
-    handler.__store.places_of_sale = places_of_sale
+    handler.store.places_of_sale = places_of_sale
 
 
 def put_test_data_to_store(store):

@@ -5,7 +5,6 @@ from prjstore.db.schemas.handler_product_price_editor import *
 from prjstore.domain.item import Item
 from prjstore.domain.products.shoes import Shoes
 from prjstore.domain.store import Store
-from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_store
 from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.product_price_editor.schemas import create_product_schemas_by_items, ViewProduct
 
@@ -15,14 +14,10 @@ class ProductPriceEditorHandler:
     __db: API_DB
     __store: Store
 
-    def __init__(self, db: API_DB = None, test=False, main_handler=None):
+    def __init__(self, db: API_DB = None, main_handler=None):
         self.__main_handler = main_handler
         self.__db = db
         self.store_id = self.db.headers['store_id']
-        self.test = test
-        if test:
-            self.__store = Store(id=self.store_id, name='test')
-            put_test_data_to_store(self.__store)
         if not main_handler:
             self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
 

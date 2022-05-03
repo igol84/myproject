@@ -32,7 +32,7 @@ class DbConnect(QRunnable):
 class DBAddExpense(QRunnable):
     class Signals(QObject):
         error = Signal(str)
-        result = Signal(schemas.ViewExpense)
+        complete = Signal()
 
     def __init__(self, handler: ExpenseHandler, pd_data: schemas.FormNewExpense):
         super().__init__()
@@ -43,7 +43,7 @@ class DBAddExpense(QRunnable):
     @Slot()
     def run(self):
         try:
-            pd_data: schemas.Expense = self.handler.add_expense(self.pd_data)
+            self.handler.add_expense(self.pd_data)
         except OSError:
             self.signals.error.emit('Нет подключения к интернету.')
         except ValidationError as e:
@@ -55,10 +55,7 @@ class DBAddExpense(QRunnable):
                         warning += f'Поле "{fields[field]}" не выбрано\n'
             self.signals.error.emit(warning)
         else:
-            places = self.handler.get_places()
-            pd_view = schemas.ViewExpense(id=pd_data.id, place_id=pd_data.place_id, desc=pd_data.desc,
-                                          date_cost=pd_data.date_cost, cost=pd_data.cost, places=places)
-            self.signals.result.emit(pd_view)
+            self.signals.complete.emit()
 
 
 class DBDelExpense(QRunnable):

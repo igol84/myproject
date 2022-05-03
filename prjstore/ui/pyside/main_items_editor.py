@@ -3,63 +3,50 @@ import sys
 
 from prjstore.db.schemas import handler_items_editor as db_schemas
 from prjstore.handlers.items_editor_handler import ItemsEditorHandler
-from prjstore.ui.pyside.interface_observer import ObserverInterface
+from prjstore.ui.pyside.abstract_module import AbstractModule
 from prjstore.ui.pyside.items_editor import schemas
 from prjstore.ui.pyside.items_editor import thread
 from prjstore.ui.pyside.items_editor.components.item_widget import ItemWidget
 from prjstore.ui.pyside.items_editor.ui_items_editor import UI_ItemsEditor, DelMessageBox
-from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
 from prjstore.ui.pyside.utils.qt_core import *
 from prjstore.ui.pyside.utils.qt_utils import clearLayout
 from util.pages import Pages
 
 
-class ItemsEditor(QWidget, Pages, ObserverInterface):
+class ItemsEditor(AbstractModule, QWidget, Pages):
+    __handler: ItemsEditorHandler
     __pd_items: list[schemas.ViewItem]
     __selected_item_widget: ItemWidget
-    __handler: ItemsEditorHandler
 
-    def __init__(self, parent: MainWindowInterface = None, test=False, user_data=None, list_pd_items=None, db=None,
-                 dark_style=False):
-        super().__init__()
-        Pages.__init__(self)
-
-        self.parent = parent
+    def __init__(self, parent=None, user_data=None, dark_style=False):
+        AbstractModule.__init__(self, parent)
+        QWidget.__init__(self)
         self.__handler = None
-        self.test = test
-        self.need_update: bool = True
         self.ui = UI_ItemsEditor()
         self.ui.setup_ui(self)
-        self.register_observer(self.ui.pages_frame)
-        self.user_data = user_data
-        self.db = db
-        self.thread_pool = QThreadPool()
-        self.dark_style = dark_style
-        if list_pd_items is None:
-            list_pd_items = []
-        self.list_pd_items: list = list_pd_items
 
-        if self.dark_style:
+        Pages.__init__(self)
+        self.register_observer(self.ui.pages_frame)
+
+        self.thread_pool = QThreadPool()
+
+        if dark_style:
             self.setup_dark_style()
         self.__selected_item_widget = None
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
         self.ui.src_items.textChanged.connect(self.on_search_text_changed)
 
         if parent:
-            parent.register_observer(self)
             if parent.dark_style:
                 self.setup_dark_style()
             handler = ItemsEditorHandler(main_handler=parent.handler)
             self.__connected_complete(handler)
         else:
-            if not test:
-                db_connector = thread.DbConnect(user_data, db)
-                db_connector.signals.error.connect(self.__connection_error)
-                db_connector.signals.result.connect(self.__connected_complete)
-                self.thread_pool.start(db_connector)
-            else:
-                self.__connected_complete(ItemsEditorHandler(db=None, test=True))
+            db_connector = thread.DbConnect(user_data)
+            db_connector.signals.error.connect(self.__connection_error)
+            db_connector.signals.result.connect(self.__connected_complete)
+            self.thread_pool.start(db_connector)
 
     def get_selected_item_widget(self) -> ItemWidget:
         return self.__selected_item_widget
@@ -70,7 +57,6 @@ class ItemsEditor(QWidget, Pages, ObserverInterface):
                 self.selected_item_widget.selected = False
             self.__selected_item_widget = selected_item_widget
             if selected_item_widget.sale_details is None:
-                self.load_widget.show()
                 db_get_sales = thread.DBGetSales(self.handler, selected_item_widget.item_id)
                 db_get_sales.signals.error.connect(self.__connection_error)
                 db_get_sales.signals.result.connect(self._completed_getting_sales)
@@ -83,7 +69,6 @@ class ItemsEditor(QWidget, Pages, ObserverInterface):
     def _completed_getting_sales(self, sales: list[db_schemas.SaleDetail]):
         self.selected_item_widget.sale_details = sales
         self.selected_item_widget.selected = True
-        self.load_widget.hide()
 
     def del_selected_item_widget(self) -> None:
         self.__selected_item_widget.selected = False
@@ -164,8 +149,6 @@ class ItemsEditor(QWidget, Pages, ObserverInterface):
             self.thread_pool.start(db_edit_product)
 
     def __deleted_item_complete(self):
-        self.selected_item_widget.hide()
-        del self.selected_item_widget
         if self.parent:
             self.parent.data_changed(self)
         self.update_ui()
@@ -180,6 +163,6 @@ if __name__ == "__main__":
     from prjstore.db.api import settings
 
     app = QApplication(sys.argv)
-    w = ItemsEditor(test=False, user_data=settings.user_data, dark_style=True)
+    w = ItemsEditor(user_data=settings.user_data, dark_style=True)
     w.show()
     sys.exit(app.exec())

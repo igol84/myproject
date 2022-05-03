@@ -4,7 +4,6 @@ from prjstore.db import API_DB
 from prjstore.db.schemas import expense as db_schemas
 from prjstore.domain.store import Store
 from prjstore.domain.expense import Expense
-from prjstore.handlers.data_for_test.sale_registration import put_test_data_to_store
 from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.expenses_editor import schemas
 from util.money import Money
@@ -15,13 +14,10 @@ class ExpenseHandler:
     __db: API_DB
     __store: Store
 
-    def __init__(self, db: API_DB = None, test=False, main_handler=None):
+    def __init__(self, db: API_DB = None, main_handler=None):
         self.__main_handler = main_handler
         self.__db = db
         self.store_id = self.db.headers['store_id']
-        if test:
-            self.__store = Store(id=1, name='test')
-            put_test_data_to_store(self.__store)
         if not main_handler:
             self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
 
