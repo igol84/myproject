@@ -1,51 +1,19 @@
-from typing import Optional
-
 from prjstore.db import API_DB
 from prjstore.db.schemas import expense as db_schemas
 from prjstore.domain.store import Store
 from prjstore.domain.expense import Expense
+from prjstore.handlers.abstract_module_handler import AbstractModuleHandler
 from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.expenses_editor import schemas
 from util.money import Money
 
 
-class ExpenseHandler:
-    __main_handler: Optional[MainHandler]
-    __db: API_DB
-    __store: Store
+class ExpenseHandler(AbstractModuleHandler):
+    db: API_DB
+    store: Store
 
-    def __init__(self, db: API_DB = None, main_handler=None):
-        self.__main_handler = main_handler
-        self.__db = db
-        self.store_id = self.db.headers['store_id']
-        if not main_handler:
-            self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
-
-    def __get_main_handler(self) -> Optional[MainHandler]:
-        return self.__main_handler
-
-    def __set_main_handler(self, main_handler: MainHandler) -> None:
-        self.__main_handler = main_handler
-
-    main_handler = property(__get_main_handler, __set_main_handler)
-
-    def __get_store(self):
-        if self.main_handler:
-            store = self.main_handler.store
-        else:
-            store = self.__store
-        return store
-
-    store = property(__get_store)
-
-    def __get_db(self):
-        if self.main_handler:
-            db = self.main_handler.db
-        else:
-            db = self.__db
-        return db
-
-    db = property(__get_db)
+    def __init__(self, db: API_DB = None, main_handler: MainHandler = None):
+        super().__init__(db, main_handler)
 
     def get_places(self) -> dict[int, str]:
         return {place.id: place.name for place in self.store.places_of_sale.values()}
@@ -80,7 +48,7 @@ class ExpenseHandler:
     def get_store_expenses(self) -> list[schemas.ViewExpense]:
         places = self.get_places()
         list_view = []
-        list_pd_expenses = self.db.expense.get_by_store_id(store_id=self.store_id)
+        list_pd_expenses = self.db.expense.get_by_store_id(store_id=self.store.id)
         for pd_expense in list_pd_expenses:
             expense = Expense.create_from_schema(pd_expense)
             # update domain

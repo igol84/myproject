@@ -30,15 +30,9 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.handler = None
         self.dark_style = True
         self.ui = None
-        self.new_items_form: ItemForm = None
-        self.edit_items_form: ItemsEditor = None
-        self.sale_form: SaleForm = None
-        self.sellers_form = None
-        self.places_form = None
-        self.expenses_form = None
-        self.price_editor_form: PriceEditor = None
+
         self.thread_pool = QThreadPool()
-        self.login_form = LoginFrame(self)
+        self.moduls['login_form'] = LoginFrame(self)
         self.setup_ui()
         self.show()
         self.start_connection()
@@ -59,39 +53,31 @@ class MainWindow(QMainWindow, MainWindowInterface):
 
     def on_receiving_data_change(self, this_observer):
         self.data_changed(this_observer)
-        self.edit_items_form.update_data()
+        self.moduls['edit_items_form'].update_data()
 
     def setup_ui(self, db=None):
         if db:
             self.__db = db
             self.handler = MainHandler(db)
-            self.sale_form = SaleForm(self)
-            self.price_editor_form = PriceEditor(self)
-            self.new_items_form = ItemForm(self)
-            self.edit_items_form = ItemsEditor(self)
-            self.sellers_form = SellersEditor(self)
-            self.places_form = PlacesEditor(self)
-            self.expenses_form = ExpensesEditor(self)
-            self.sale_form.setup_dark_style()
-            self.setWindowTitle(f'Shop - {self.login_form.name}')
+            self.moduls['sale_form'] = SaleForm(self)
+            self.moduls['price_editor_form'] = PriceEditor(self)
+            self.moduls['new_items_form'] = ItemForm(self)
+            self.moduls['edit_items_form'] = ItemsEditor(self)
+            self.moduls['sellers_form'] = SellersEditor(self)
+            self.moduls['places_form'] = PlacesEditor(self)
+            self.moduls['expenses_form'] = ExpensesEditor(self)
+            self.moduls['sale_form'].setup_dark_style()
+            self.setWindowTitle(f'Shop - {self.moduls["login_form"].name}')
         else:
             self.setWindowTitle(f'Shop')
-            self.sale_form = QWidget()
-            self.price_editor_form = QWidget()
-            self.new_items_form = QWidget()
-            self.edit_items_form = QWidget()
-            self.sellers_form = QWidget()
-            self.places_form = QWidget()
-            self.expenses_form = QWidget()
+            self.moduls['sale_form'] = QWidget()
+            self.moduls['price_editor_form'] = QWidget()
+            self.moduls['new_items_form'] = QWidget()
+            self.moduls['edit_items_form'] = QWidget()
+            self.moduls['sellers_form'] = QWidget()
+            self.moduls['places_form'] = QWidget()
+            self.moduls['expenses_form'] = QWidget()
 
-        self.moduls['login_form'] = self.login_form
-        self.moduls['sale_form'] = self.sale_form
-        self.moduls['price_editor_form'] = self.price_editor_form
-        self.moduls['new_items_form'] = self.new_items_form
-        self.moduls['edit_items_form'] = self.edit_items_form
-        self.moduls['sellers_form'] = self.sellers_form
-        self.moduls['places_form'] = self.places_form
-        self.moduls['expenses_form'] = self.expenses_form
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self, self.moduls)
         self.ui.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
@@ -99,7 +85,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
 
     def start_connection(self):
         self.ui.load_widget.show()
-        db_connector = DbConnect(self.login_form.get_user_data())
+        db_connector = DbConnect(self.moduls['login_form'].get_user_data())
         db_connector.signals.connection_error.connect(self.__connection_error)
         db_connector.signals.authentication_error.connect(self.__authentication_error)
         db_connector.signals.result.connect(self.__connected_complete)
@@ -133,12 +119,12 @@ class MainWindow(QMainWindow, MainWindowInterface):
             if isinstance(btn, PyPushBottom):
                 btn.set_active(False)
 
-    def show_page(self, btn, form, data_update=True):
+    def show_page(self, btn,  module, data_update=True):
         self.reset_selection()
         btn.set_active(True)
         if data_update:
-            form.update_data()
-        self.ui.pages.setCurrentWidget(form)
+            module.update_data()
+        self.ui.pages.setCurrentWidget(module)
 
     def show_items_page(self):
         self.reset_selection()
@@ -167,7 +153,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
 
     def on_click_item_sale(self, date: datetime.date):
         self.show_sale_registration_page()
-        self.sale_form.ui.date_edit.setDate(date)
+        self.moduls['sale_form'].ui.date_edit.setDate(date)
 
 
 if __name__ == '__main__':

@@ -4,7 +4,6 @@ from prjstore.ui.pyside.interface_subject import SubjectInterface
 
 class MainWindowInterface(SubjectInterface):
     handler: MainHandler
-    dark_style: bool
 
     def start_connection(self):
         ...

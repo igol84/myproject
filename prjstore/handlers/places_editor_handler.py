@@ -1,51 +1,18 @@
-from typing import Optional
-
 from prjstore.db import API_DB
 from prjstore.db.schemas import place as db_schemas
 from prjstore.domain.place_of_sale import PlaceOfSale
 from prjstore.domain.store import Store
+from prjstore.handlers.abstract_module_handler import AbstractModuleHandler
 from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.places_editor import schemas
 
 
-class PlacesEditorHandler:
-    __main_handler: Optional[MainHandler]
-    __db: API_DB
-    __store: Store
+class PlacesEditorHandler(AbstractModuleHandler):
+    db: API_DB
+    store: Store
 
-    def __init__(self, db: API_DB = None, main_handler=None):
-        self.__main_handler = main_handler
-        self.__db = db
-
-        self.store_id = self.db.headers['store_id']
-        if not main_handler:
-            self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
-
-    def __get_main_handler(self) -> Optional[MainHandler]:
-        return self.__main_handler
-
-    def __set_main_handler(self, main_handler: MainHandler) -> None:
-        self.__main_handler = main_handler
-
-    main_handler = property(__get_main_handler, __set_main_handler)
-
-    def __get_store(self):
-        if self.main_handler:
-            store = self.main_handler.store
-        else:
-            store = self.__store
-        return store
-
-    store = property(__get_store)
-
-    def __get_db(self):
-        if self.main_handler:
-            db = self.main_handler.db
-        else:
-            db = self.__db
-        return db
-
-    db = property(__get_db)
+    def __init__(self, db: API_DB = None, main_handler: MainHandler = None):
+        super().__init__(db, main_handler)
 
     def get_store_places(self) -> list[schemas.ViewPlace]:
         places: dict[int: PlaceOfSale] = self.store.places_of_sale
@@ -72,7 +39,7 @@ class PlacesEditorHandler:
 
     def add_place(self, name: str):
         # edit on DB
-        store_id = self.store_id
+        store_id = self.store.id
         pd_create_place = db_schemas.CreatePlace(store_id=store_id, name=name, active=True)
         pd_place: db_schemas.Place = self.db.place.create(pd_create_place)
         # edit in Domain Model

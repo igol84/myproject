@@ -31,7 +31,7 @@ class SellersEditor(AbstractModule, QWidget, Pages):
         self.ui = UI_SellersEditor()
         self.ui.setup_ui(self)
 
-        Pages.__init__(self)
+        Pages.__init__(self, count_elements_on_page=13)
         self.register_observer(self.ui.pages_frame)
 
         self.thread_pool = QThreadPool()

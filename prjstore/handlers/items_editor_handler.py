@@ -6,48 +6,17 @@ from prjstore.db import API_DB
 from prjstore.db.schemas import handler_items_editor as db_schemas
 from prjstore.domain.item import Item
 from prjstore.domain.store import Store
+from prjstore.handlers.abstract_module_handler import AbstractModuleHandler
 from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.items_editor import schemas
 
 
-class ItemsEditorHandler:
-    __main_handler: Optional[MainHandler]
-    __db: API_DB
-    __store: Store
+class ItemsEditorHandler(AbstractModuleHandler):
+    db: API_DB
+    store: Store
 
-    def __init__(self, db: API_DB = None, main_handler=None):
-        self.__main_handler = main_handler
-        self.__db = db
-
-        self.store_id = self.db.headers['store_id']
-        if not main_handler:
-            self.__store = Store.create_from_schema(self.__db.store.get(id=self.store_id))
-
-    def __get_main_handler(self) -> Optional[MainHandler]:
-        return self.__main_handler
-
-    def __set_main_handler(self, main_handler: MainHandler) -> None:
-        self.__main_handler = main_handler
-
-    main_handler = property(__get_main_handler, __set_main_handler)
-
-    def __get_store(self):
-        if self.main_handler:
-            store = self.main_handler.store
-        else:
-            store = self.__store
-        return store
-
-    store = property(__get_store)
-
-    def __get_db(self):
-        if self.main_handler:
-            db = self.main_handler.db
-        else:
-            db = self.__db
-        return db
-
-    db = property(__get_db)
+    def __init__(self, db: API_DB = None, main_handler: MainHandler = None):
+        super().__init__(db, main_handler)
 
     def get_store_items(self, search: Optional[str] = None) -> list[schemas.ViewItem]:
         items: dict[int: Item] = self.store.items if not search else self.search_items(search)

@@ -9,6 +9,7 @@ from prjstore.db.schemas.sale import ShowSaleWithSLIs
 from prjstore.domain.item import Item
 from prjstore.domain.sale import Sale
 from prjstore.domain.store import Store
+from prjstore.handlers.abstract_module_handler import AbstractModuleHandler
 from prjstore.handlers.main_handler import MainHandler
 from prjstore.ui.pyside.sale_registration.schemas import (
     ModelProduct, create_product_schemas_by_items, create_sli_schemas_by_items, ProductId, Price,
@@ -17,45 +18,14 @@ from prjstore.ui.pyside.sale_registration.schemas import (
 from util.money import Money
 
 
-class SaleRegistrationHandler:
-    __main_handler: Optional[MainHandler]
-    __db: API_DB
-    __store: Store
-    __sale: Sale
+class SaleRegistrationHandler(AbstractModuleHandler):
+    db: API_DB
+    store: Store
+    sale: Sale
 
-    def __init__(self, db: API_DB = None, main_handler=None):
-        self.__db = db
+    def __init__(self, db: API_DB = None, main_handler: MainHandler = None):
+        super().__init__(db, main_handler)
         self.__sale = Sale()
-        self.__main_handler = main_handler
-        self.store_id = self.db.headers['store_id']
-        if not main_handler:
-            self.__store = Store.create_from_schema(self.db.store.get(id=self.store_id))
-
-    def __get_main_handler(self) -> Optional[MainHandler]:
-        return self.__main_handler
-
-    def __set_main_handler(self, main_handler: MainHandler) -> None:
-        self.__main_handler = main_handler
-
-    main_handler = property(__get_main_handler, __set_main_handler)
-
-    def __get_store(self):
-        if self.main_handler:
-            store = self.main_handler.store
-        else:
-            store = self.__store
-        return store
-
-    store = property(__get_store)
-
-    def __get_db(self):
-        if self.main_handler:
-            db = self.main_handler.db
-        else:
-            db = self.__db
-        return db
-
-    db = property(__get_db)
 
     def __get_sale(self):
         return self.__sale
