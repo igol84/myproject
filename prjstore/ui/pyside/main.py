@@ -36,14 +36,10 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.ui = None
 
         self.thread_pool = QThreadPool()
-        self.moduls['login_form'] = LoginFrame(self)
-        self.moduls['new_items_form'] = None
-        self.moduls['edit_items_form'] = None
-        self.moduls['price_editor_form'] = None
-        self.moduls['sale_form'] = None
-        self.moduls['sellers_form'] = None
-        self.moduls['places_form'] = None
-        self.moduls['expenses_form'] = None
+        self.login_form = LoginFrame(self)
+        module_names = ['new_items_form', 'edit_items_form', 'price_editor_form', 'sale_form', 'sellers_form',
+                        'places_form', 'expenses_form']
+        self.moduls = dict.fromkeys(module_names)
         self.setup_ui()
         self.start_connection()
 
@@ -69,13 +65,13 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.setWindowTitle('Shop')
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self)
-        self.ui.setup_login_module(self.moduls['login_form'])
+        self.ui.setup_login_module(self.login_form)
         self.ui.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
         self.show()
 
     def start_connection(self):
         self.ui.load_widget.show()
-        db_connector = DbConnect(self.moduls['login_form'].get_user_data())
+        db_connector = DbConnect(self.login_form.get_user_data())
         db_connector.signals.connection_error.connect(self.__connection_error)
         db_connector.signals.authentication_error.connect(self.__authentication_error)
         db_connector.signals.result.connect(self.__connected_complete)
@@ -92,8 +88,10 @@ class MainWindow(QMainWindow, MainWindowInterface):
         QMessageBox.warning(self, err, err)
 
     def __connected_complete(self, db: API_DB):
+        for module in self.moduls:
+            self.moduls[module] = None
         self.handler = MainHandler(db)
-        self.setWindowTitle(f'Shop - {self.moduls["login_form"].name}')
+        self.setWindowTitle(f'Shop - {self.login_form.name}')
 
         self.ui.btn_new_items.clicked.connect(self.show_items_page)
         self.ui.btn_price_editor.clicked.connect(self.show_product_price_editor_page)

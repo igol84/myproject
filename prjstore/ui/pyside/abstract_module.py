@@ -16,7 +16,7 @@ class AbstractModule(ObserverInterface):
             self.parent.register_observer(self)
             self.__name = ''
             self.__observer_module_names = []
-            self.__need_update = True
+            self.__need_update = False
 
     def __get_name(self) -> str:
         return self.__name
