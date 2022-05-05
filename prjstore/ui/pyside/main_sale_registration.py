@@ -27,6 +27,8 @@ class SaleForm(AbstractModule, QWidget):
     def __init__(self, parent=None, dark_style=False, user_data=None):
         AbstractModule.__init__(self, parent)
         QWidget.__init__(self)
+        self.name = 'sale_form'
+        self.observer_module_names = ['price_editor_form', 'new_items_form', 'edit_items_form']
         self.thread_pool = QThreadPool()
         self.ui = Ui_SaleForm()
         self.ui.setupUi(self)

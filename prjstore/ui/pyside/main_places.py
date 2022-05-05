@@ -23,6 +23,8 @@ class PlacesEditor(AbstractModule, QWidget, Pages):
     def __init__(self, parent=None, user_data=None, dark_style=False):
         AbstractModule.__init__(self, parent)
         QWidget.__init__(self)
+        self.name = 'places_form'
+        self.observer_module_names = ['sale_form']
         self.__handler = None
         self.ui = UI_PlacesEditor()
         self.ui.setup_ui(self)

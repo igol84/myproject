@@ -21,6 +21,8 @@ class PriceEditor(AbstractModule, QWidget, Pages):
     def __init__(self, parent=None, user_data=None, dark_style=False):
         AbstractModule.__init__(self, parent)
         QWidget.__init__(self)
+        self.name = 'price_editor_form'
+        self.observer_module_names = ['sale_form', 'new_items_form', 'edit_items_form']
         self.handler = None
         self.thread_pool = QThreadPool()
 

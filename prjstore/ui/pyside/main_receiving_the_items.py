@@ -20,6 +20,8 @@ class ItemForm(AbstractModule, QWidget):
     def __init__(self, parent=None, dark_style=False, user_data=None):
         AbstractModule.__init__(self, parent)
         QWidget.__init__(self)
+        self.name = 'new_items_form'
+        self.observer_module_names = ['sale_form', 'price_editor_form', 'edit_items_form']
         self.thread_pool = QThreadPool()
         self.keywords = {'header': 'Получение товара', 'types': (('', 'product'), ('обувь', 'shoes')),
                          'shoes': {'count_sizes': 12, 'min_size': 35,

@@ -3,6 +3,7 @@ import sys
 
 from prjstore.db import API_DB
 from prjstore.handlers.main_handler import MainHandler
+from prjstore.ui.pyside.abstract_module import AbstractModule
 from prjstore.ui.pyside.main_items_editor import ItemsEditor
 from prjstore.ui.pyside.main_login import LoginFrame
 from prjstore.ui.pyside.main_places import PlacesEditor
@@ -21,11 +22,14 @@ from prjstore.ui.pyside.utils.qt_core import *
 
 class MainWindow(QMainWindow, MainWindowInterface):
     handler: MainHandler
+    moduls: dict[AbstractModule]
+    observers: list
+    dark_style: bool
     ui: UI_MainWindow
 
     def __init__(self):
         super().__init__()
-        self.moduls: dict[QWidget] = dict()
+        self.moduls = {}
         self.observers = []
         self.handler = None
         self.dark_style = True
@@ -33,6 +37,13 @@ class MainWindow(QMainWindow, MainWindowInterface):
 
         self.thread_pool = QThreadPool()
         self.moduls['login_form'] = LoginFrame(self)
+        self.moduls['new_items_form'] = None
+        self.moduls['edit_items_form'] = None
+        self.moduls['price_editor_form'] = None
+        self.moduls['sale_form'] = None
+        self.moduls['sellers_form'] = None
+        self.moduls['places_form'] = None
+        self.moduls['expenses_form'] = None
         self.setup_ui()
         self.start_connection()
 
@@ -42,9 +53,9 @@ class MainWindow(QMainWindow, MainWindowInterface):
     def remove_observer(self, observer) -> None:
         del self.observers[observer]
 
-    def notify_observer(self, this_observer=None) -> None:
+    def notify_observer(self, this_observer: AbstractModule) -> None:
         for observer in self.observers:
-            if observer is not this_observer:
+            if observer.name in this_observer.observer_module_names:
                 observer.need_update = True
 
     def data_changed(self, this_observer) -> None:
@@ -105,35 +116,47 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.ui.pages.setCurrentWidget(page)
 
     def show_items_page(self):
-        if 'new_items_form' not in self.moduls and 'edit_items_form' not in self.moduls:
+        if self.moduls['new_items_form'] is None and self.moduls['edit_items_form'] is None:
             self.moduls['new_items_form'] = ItemForm(self)
             self.moduls['edit_items_form'] = ItemsEditor(self)
             self.ui.setup_items_form(self.moduls['new_items_form'], self.moduls['edit_items_form'])
+        else:
+            self.moduls['new_items_form'].update_data()
+            self.moduls['edit_items_form'].update_data()
         self.show_page(self.ui.btn_new_items, self.ui.items_form)
 
     def show_product_price_editor_page(self):
-        if 'price_editor_form' not in self.moduls:
+        if self.moduls['price_editor_form'] is None:
             self.moduls['price_editor_form'] = PriceEditor(self)
             self.ui.setup_price_editor(self.moduls['price_editor_form'])
+        else:
+            self.moduls['price_editor_form'].update_data()
         self.show_page(self.ui.btn_price_editor, self.ui.price_editor_form)
 
     def show_sale_registration_page(self):
-        if 'sale_form' not in self.moduls:
+        if self.moduls['sale_form'] is None:
             self.moduls['sale_form'] = SaleForm(self)
             self.ui.setup_sale_module(self.moduls['sale_form'])
+        else:
+            self.moduls['sale_form'].update_data()
         self.show_page(self.ui.btn_sale, self.ui.page_sale_form)
 
     def show_sellers_places_page(self):
-        if 'sellers_form' not in self.moduls and 'places_form' not in self.moduls:
+        if self.moduls['sellers_form'] is None and self.moduls['places_form'] is None:
             self.moduls['sellers_form'] = SellersEditor(self)
             self.moduls['places_form'] = PlacesEditor(self)
             self.ui.setup_sellers_and_places_module(self.moduls['sellers_form'], self.moduls['places_form'])
+        else:
+            self.moduls['sellers_form'].update_data()
+            self.moduls['places_form'].update_data()
         self.show_page(self.ui.btn_sellers, self.ui.sellers_and_places_form)
 
     def show_expenses_page(self):
-        if 'expenses_form' not in self.moduls:
+        if self.moduls['expenses_form'] is None:
             self.moduls['expenses_form'] = ExpensesEditor(self)
             self.ui.setup_expenses_module(self.moduls['expenses_form'])
+        else:
+            self.moduls['expenses_form'].update_data()
         self.show_page(self.ui.btn_expenses, self.ui.page_expenses_form)
 
     def show_login_page(self):

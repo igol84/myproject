@@ -132,8 +132,8 @@ class UI_MainWindow(object):
 
         # application pages
         self.pages = QStackedWidget()
-        self.pages.setObjectName(u"SaleForm")
-        self.pages.setStyleSheet('#SaleForm {background-color: #2F303B;}')
+        self.pages.setObjectName(u"StackedWidget")
+        self.pages.setStyleSheet('#StackedWidget {background-color: #2F303B;}')
 
         # =================== Settings page ===================
         self.page_settings = QWidget()
@@ -197,9 +197,9 @@ class UI_MainWindow(object):
 
     def setup_login_module(self, module):
         self.page_login_form = QFrame()
-        self.verticalLayout_3 = QVBoxLayout(self.page_login_form)
-        self.login_frame = module
-        self.verticalLayout_3.addWidget(self.login_frame)
+        layout = QVBoxLayout(self.page_login_form)
+        login_frame = module
+        layout.addWidget(login_frame)
         self.pages.addWidget(self.page_login_form)
 
     def setup_sale_module(self, module):
@@ -217,33 +217,33 @@ class UI_MainWindow(object):
         self.pages.addWidget(self.page_expenses_form)
 
     def setup_sellers_and_places_module(self, sellers_form, places_form):
-        self.sellers_form = sellers_form
-        self.sellers_form.setObjectName(u"SellersForm")
+        sellers_form = sellers_form
+        sellers_form.setObjectName(u"SellersForm")
 
-        self.places_form = places_form
-        self.places_form.setObjectName(u"PlacesForm")
+        places_form = places_form
+        places_form.setObjectName(u"PlacesForm")
 
         self.sellers_and_places_form = QFrame()
-        self.sellers_and_places_layout = QHBoxLayout(self.sellers_and_places_form)
-        self.sellers_and_places_layout.addWidget(self.sellers_form)
-        self.sellers_and_places_layout.addWidget(self.places_form)
-        self.sellers_and_places_layout.addItem(QSpacerItem(0, 100, QSizePolicy.Expanding, QSizePolicy.Expanding))
+        layout = QHBoxLayout(self.sellers_and_places_form)
+        layout.addWidget(sellers_form)
+        layout.addWidget(places_form)
+        layout.addItem(QSpacerItem(0, 100, QSizePolicy.Expanding, QSizePolicy.Expanding))
 
         self.pages.addWidget(self.sellers_and_places_form)
 
     def setup_items_form(self, new_items_module, items_module):
-        self.new_items_form = new_items_module
-        self.new_items_form.setMaximumWidth(340)
-        self.new_items_form.setObjectName(u"NewItemsForm")
+        new_items_form = new_items_module
+        new_items_form.setMaximumWidth(340)
+        new_items_form.setObjectName(u"NewItemsForm")
 
-        self.edit_items_form = items_module
-        self.edit_items_form.setObjectName(u"EditItemsForm")
+        edit_items_form = items_module
+        edit_items_form.setObjectName(u"EditItemsForm")
 
         self.items_form = QFrame()
-        self.items_form_layout = QHBoxLayout(self.items_form)
-        self.items_form_layout.setContentsMargins(0, 0, 0, 0)
-        self.items_form_layout.setSpacing(0)
-        self.items_form_layout.addWidget(self.new_items_form)
-        self.items_form_layout.addWidget(self.edit_items_form)
+        layout = QHBoxLayout(self.items_form)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+        layout.addWidget(new_items_form)
+        layout.addWidget(edit_items_form)
 
         self.pages.addWidget(self.items_form)

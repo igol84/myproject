@@ -23,6 +23,8 @@ class ItemsEditor(AbstractModule, QWidget, Pages):
         AbstractModule.__init__(self, parent)
         QWidget.__init__(self)
         self.__handler = None
+        self.name = 'edit_items_form'
+        self.observer_module_names = ['price_editor_form', 'sale_form']
         self.ui = UI_ItemsEditor()
         self.ui.setup_ui(self)
 
