@@ -4,7 +4,7 @@ from prjstore.ui.pyside.utils.qt_core import *
 
 
 class UI_MainWindow(object):
-    def setup_ui(self, parent: QMainWindow, pages: dict):
+    def setup_ui(self, parent: QMainWindow):
         if not parent.objectName():
             parent.setObjectName('MainWindow')
 
@@ -135,64 +135,6 @@ class UI_MainWindow(object):
         self.pages.setObjectName(u"SaleForm")
         self.pages.setStyleSheet('#SaleForm {background-color: #2F303B;}')
 
-
-        # =================== Items page ===================
-        self.new_items_form = pages['new_items_form']
-        self.new_items_form.setMaximumWidth(340)
-        self.new_items_form.setObjectName(u"NewItemsForm")
-
-        self.edit_items_form = pages['edit_items_form']
-
-        self.edit_items_form.setObjectName(u"EditItemsForm")
-
-        self.items_form = QFrame()
-        self.items_form_layout = QHBoxLayout(self.items_form)
-        self.items_form_layout.setContentsMargins(0, 0, 0, 0)
-        self.items_form_layout.setSpacing(0)
-        self.items_form_layout.addWidget(self.new_items_form)
-        self.items_form_layout.addWidget(self.edit_items_form)
-
-        self.pages.addWidget(self.items_form)
-
-        # =================== Price page ===================
-        self.page_product_price_editor = pages['price_editor_form']
-        self.page_product_price_editor.setMaximumWidth(600)
-        self.page_product_price_editor.setMinimumWidth(600)
-        self.pages.addWidget(self.page_product_price_editor)
-
-        # =================== Sale page ===================
-        self.page_sale_form = pages['sale_form']
-        self.pages.addWidget(self.page_sale_form)
-
-        # =================== Sellers page ===================
-        # self.page_sellers_form = pages['sellers_form']
-        # self.pages.addWidget(self.page_sellers_form)
-
-        self.sellers_form = pages['sellers_form']
-        self.sellers_form.setObjectName(u"SellersForm")
-
-        self.places_form = pages['places_form']
-        self.places_form.setObjectName(u"PlacesForm")
-
-        self.sellers_and_places_form = QFrame()
-        self.sellers_and_places_layout = QHBoxLayout(self.sellers_and_places_form)
-        self.sellers_and_places_layout.addWidget(self.sellers_form)
-        self.sellers_and_places_layout.addWidget(self.places_form)
-        self.sellers_and_places_layout.addItem(QSpacerItem(0, 100, QSizePolicy.Expanding, QSizePolicy.Expanding))
-
-        self.pages.addWidget(self.sellers_and_places_form)
-
-        # =================== Expenses page ===================
-        self.page_expenses_form = pages['expenses_form']
-        self.pages.addWidget(self.page_expenses_form)
-
-        # =================== Login page ===================
-        self.page_login_form = QFrame()
-        self.verticalLayout_3 = QVBoxLayout(self.page_login_form)
-        self.login_frame = pages['login_form']
-        self.verticalLayout_3.addWidget(self.login_frame)
-        self.pages.addWidget(self.page_login_form)
-
         # =================== Settings page ===================
         self.page_settings = QWidget()
         self.page_settings.setObjectName(u"page_3")
@@ -252,3 +194,56 @@ class UI_MainWindow(object):
         self.animation.setDuration(500)
         self.animation.setEasingCurve(QEasingCurve.InOutCirc)
         self.animation.start()
+
+    def setup_login_module(self, module):
+        self.page_login_form = QFrame()
+        self.verticalLayout_3 = QVBoxLayout(self.page_login_form)
+        self.login_frame = module
+        self.verticalLayout_3.addWidget(self.login_frame)
+        self.pages.addWidget(self.page_login_form)
+
+    def setup_sale_module(self, module):
+        self.page_sale_form = module
+        self.pages.addWidget(self.page_sale_form)
+
+    def setup_price_editor(self, module):
+        self.price_editor_form = module
+        self.price_editor_form.setMaximumWidth(600)
+        self.price_editor_form.setMinimumWidth(600)
+        self.pages.addWidget(self.price_editor_form)
+
+    def setup_expenses_module(self, module):
+        self.page_expenses_form = module
+        self.pages.addWidget(self.page_expenses_form)
+
+    def setup_sellers_and_places_module(self, sellers_form, places_form):
+        self.sellers_form = sellers_form
+        self.sellers_form.setObjectName(u"SellersForm")
+
+        self.places_form = places_form
+        self.places_form.setObjectName(u"PlacesForm")
+
+        self.sellers_and_places_form = QFrame()
+        self.sellers_and_places_layout = QHBoxLayout(self.sellers_and_places_form)
+        self.sellers_and_places_layout.addWidget(self.sellers_form)
+        self.sellers_and_places_layout.addWidget(self.places_form)
+        self.sellers_and_places_layout.addItem(QSpacerItem(0, 100, QSizePolicy.Expanding, QSizePolicy.Expanding))
+
+        self.pages.addWidget(self.sellers_and_places_form)
+
+    def setup_items_form(self, new_items_module, items_module):
+        self.new_items_form = new_items_module
+        self.new_items_form.setMaximumWidth(340)
+        self.new_items_form.setObjectName(u"NewItemsForm")
+
+        self.edit_items_form = items_module
+        self.edit_items_form.setObjectName(u"EditItemsForm")
+
+        self.items_form = QFrame()
+        self.items_form_layout = QHBoxLayout(self.items_form)
+        self.items_form_layout.setContentsMargins(0, 0, 0, 0)
+        self.items_form_layout.setSpacing(0)
+        self.items_form_layout.addWidget(self.new_items_form)
+        self.items_form_layout.addWidget(self.edit_items_form)
+
+        self.pages.addWidget(self.items_form)

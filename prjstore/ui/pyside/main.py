@@ -21,12 +21,12 @@ from prjstore.ui.pyside.utils.qt_core import *
 
 class MainWindow(QMainWindow, MainWindowInterface):
     handler: MainHandler
+    ui: UI_MainWindow
 
     def __init__(self):
         super().__init__()
         self.moduls: dict[QWidget] = dict()
         self.observers = []
-        self.__db = None
         self.handler = None
         self.dark_style = True
         self.ui = None
@@ -34,7 +34,6 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.thread_pool = QThreadPool()
         self.moduls['login_form'] = LoginFrame(self)
         self.setup_ui()
-        self.show()
         self.start_connection()
 
     def register_observer(self, observer) -> None:
@@ -55,33 +54,13 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.data_changed(this_observer)
         self.moduls['edit_items_form'].update_data()
 
-    def setup_ui(self, db=None):
-        if db:
-            self.__db = db
-            self.handler = MainHandler(db)
-            self.moduls['sale_form'] = SaleForm(self)
-            self.moduls['price_editor_form'] = PriceEditor(self)
-            self.moduls['new_items_form'] = ItemForm(self)
-            self.moduls['edit_items_form'] = ItemsEditor(self)
-            self.moduls['sellers_form'] = SellersEditor(self)
-            self.moduls['places_form'] = PlacesEditor(self)
-            self.moduls['expenses_form'] = ExpensesEditor(self)
-            self.moduls['sale_form'].setup_dark_style()
-            self.setWindowTitle(f'Shop - {self.moduls["login_form"].name}')
-        else:
-            self.setWindowTitle(f'Shop')
-            self.moduls['sale_form'] = QWidget()
-            self.moduls['price_editor_form'] = QWidget()
-            self.moduls['new_items_form'] = QWidget()
-            self.moduls['edit_items_form'] = QWidget()
-            self.moduls['sellers_form'] = QWidget()
-            self.moduls['places_form'] = QWidget()
-            self.moduls['expenses_form'] = QWidget()
-
+    def setup_ui(self):
+        self.setWindowTitle('Shop')
         self.ui = UI_MainWindow()
-        self.ui.setup_ui(self, self.moduls)
+        self.ui.setup_ui(self)
+        self.ui.setup_login_module(self.moduls['login_form'])
         self.ui.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
-        self.ui.load_widget.show()
+        self.show()
 
     def start_connection(self):
         self.ui.load_widget.show()
@@ -102,12 +81,13 @@ class MainWindow(QMainWindow, MainWindowInterface):
         QMessageBox.warning(self, err, err)
 
     def __connected_complete(self, db: API_DB):
-        self.setup_ui(db)
+        self.handler = MainHandler(db)
+        self.setWindowTitle(f'Shop - {self.moduls["login_form"].name}')
 
         self.ui.btn_new_items.clicked.connect(self.show_items_page)
         self.ui.btn_price_editor.clicked.connect(self.show_product_price_editor_page)
         self.ui.btn_sale.clicked.connect(self.show_sale_registration_page)
-        self.ui.btn_sellers.clicked.connect(self.show_sellers_page)
+        self.ui.btn_sellers.clicked.connect(self.show_sellers_places_page)
         self.ui.btn_expenses.clicked.connect(self.show_expenses_page)
         self.ui.login_button.clicked.connect(self.show_login_page)
         self.ui.settings_button.clicked.connect(self.show_settings_page_page)
@@ -119,37 +99,48 @@ class MainWindow(QMainWindow, MainWindowInterface):
             if isinstance(btn, PyPushBottom):
                 btn.set_active(False)
 
-    def show_page(self, btn,  module, data_update=True):
+    def show_page(self, btn, page):
         self.reset_selection()
         btn.set_active(True)
-        if data_update:
-            module.update_data()
-        self.ui.pages.setCurrentWidget(module)
+        self.ui.pages.setCurrentWidget(page)
 
     def show_items_page(self):
-        self.reset_selection()
-        self.ui.btn_new_items.set_active(True)
-        self.ui.new_items_form.update_data()
-        self.ui.edit_items_form.update_data()
-        self.ui.pages.setCurrentWidget(self.ui.items_form)
+        if 'new_items_form' not in self.moduls and 'edit_items_form' not in self.moduls:
+            self.moduls['new_items_form'] = ItemForm(self)
+            self.moduls['edit_items_form'] = ItemsEditor(self)
+            self.ui.setup_items_form(self.moduls['new_items_form'], self.moduls['edit_items_form'])
+        self.show_page(self.ui.btn_new_items, self.ui.items_form)
 
     def show_product_price_editor_page(self):
-        self.show_page(self.ui.btn_price_editor, self.ui.page_product_price_editor)
+        if 'price_editor_form' not in self.moduls:
+            self.moduls['price_editor_form'] = PriceEditor(self)
+            self.ui.setup_price_editor(self.moduls['price_editor_form'])
+        self.show_page(self.ui.btn_price_editor, self.ui.price_editor_form)
 
     def show_sale_registration_page(self):
+        if 'sale_form' not in self.moduls:
+            self.moduls['sale_form'] = SaleForm(self)
+            self.ui.setup_sale_module(self.moduls['sale_form'])
         self.show_page(self.ui.btn_sale, self.ui.page_sale_form)
 
-    def show_sellers_page(self):
-        self.show_page(self.ui.btn_sellers, self.ui.sellers_and_places_form, False)
+    def show_sellers_places_page(self):
+        if 'sellers_form' not in self.moduls and 'places_form' not in self.moduls:
+            self.moduls['sellers_form'] = SellersEditor(self)
+            self.moduls['places_form'] = PlacesEditor(self)
+            self.ui.setup_sellers_and_places_module(self.moduls['sellers_form'], self.moduls['places_form'])
+        self.show_page(self.ui.btn_sellers, self.ui.sellers_and_places_form)
 
     def show_expenses_page(self):
-        self.show_page(self.ui.btn_expenses, self.ui.page_expenses_form, False)
+        if 'expenses_form' not in self.moduls:
+            self.moduls['expenses_form'] = ExpensesEditor(self)
+            self.ui.setup_expenses_module(self.moduls['expenses_form'])
+        self.show_page(self.ui.btn_expenses, self.ui.page_expenses_form)
 
     def show_login_page(self):
-        self.show_page(self.ui.login_button, self.ui.page_login_form, False)
+        self.show_page(self.ui.login_button, self.ui.page_login_form)
 
     def show_settings_page_page(self):
-        self.show_page(self.ui.settings_button, self.ui.page_settings, False)
+        self.show_page(self.ui.settings_button, self.ui.page_settings)
 
     def on_click_item_sale(self, date: datetime.date):
         self.show_sale_registration_page()

@@ -8,7 +8,7 @@ class AbstractModule(ObserverInterface):
     __parent: Optional[MainWindowInterface]
     __need_update: bool
 
-    def __init__(self, parent = None):
+    def __init__(self, parent=None):
         self.__parent = parent
         if parent:
             self.parent.register_observer(self)
