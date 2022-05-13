@@ -10,6 +10,7 @@ from prjstore.ui.pyside.main_places import PlacesEditor
 from prjstore.ui.pyside.main_expenses import ExpensesEditor
 from prjstore.ui.pyside.main_product_price_editor import PriceEditor
 from prjstore.ui.pyside.main_receiving_the_items import ItemForm
+from prjstore.ui.pyside.main_report import ReportPage
 from prjstore.ui.pyside.main_sale_registration import SaleForm
 from prjstore.ui.pyside.main_sellers import SellersEditor
 from prjstore.ui.pyside.main_window.main_interface import MainWindowInterface
@@ -38,7 +39,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.thread_pool = QThreadPool()
         self.login_form = LoginFrame(self)
         module_names = ['new_items_form', 'edit_items_form', 'price_editor_form', 'sale_form', 'sellers_form',
-                        'places_form', 'expenses_form']
+                        'places_form', 'expenses_form', 'report_page']
         self.moduls = dict.fromkeys(module_names)
         self.setup_ui()
         self.start_connection()
@@ -98,6 +99,7 @@ class MainWindow(QMainWindow, MainWindowInterface):
         self.ui.btn_sale.clicked.connect(self.show_sale_registration_page)
         self.ui.btn_sellers.clicked.connect(self.show_sellers_places_page)
         self.ui.btn_expenses.clicked.connect(self.show_expenses_page)
+        self.ui.btn_report.clicked.connect(self.show_report_page)
         self.ui.login_button.clicked.connect(self.show_login_page)
         self.ui.settings_button.clicked.connect(self.show_settings_page_page)
         self.show_sale_registration_page()
@@ -156,6 +158,14 @@ class MainWindow(QMainWindow, MainWindowInterface):
         else:
             self.moduls['expenses_form'].update_data()
         self.show_page(self.ui.btn_expenses, self.ui.page_expenses_form)
+
+    def show_report_page(self):
+        if self.moduls['report_page'] is None:
+            self.moduls['report_page'] = ReportPage(self)
+            self.ui.setup_report_module(self.moduls['report_page'])
+        else:
+            self.moduls['report_page'].update_data()
+        self.show_page(self.ui.btn_report, self.ui.page_report)
 
     def show_login_page(self):
         self.show_page(self.ui.login_button, self.ui.page_login_form)

@@ -51,6 +51,7 @@ class UI_MainWindow(object):
         self.btn_sale = PyPushBottom(text='Продажа', icon_path='icon_sale.svg')
         self.btn_sellers = PyPushBottom(text='Продавцы', icon_path='icon_seller.svg')
         self.btn_expenses = PyPushBottom(text='Затраты', icon_path='icon_expenses.svg')
+        self.btn_report = PyPushBottom(text='Отчет', icon_path='icon_report.svg')
 
         # ADD BUTTONS TO LAYOUT
         self.left_menu_top_layout.addWidget(self.toggle_button)
@@ -59,6 +60,7 @@ class UI_MainWindow(object):
         self.left_menu_top_layout.addWidget(self.btn_sale)
         self.left_menu_top_layout.addWidget(self.btn_sellers)
         self.left_menu_top_layout.addWidget(self.btn_expenses)
+        self.left_menu_top_layout.addWidget(self.btn_report)
 
         # MENU SPICER
         # //////////////////////////////////////////////////////////////////
@@ -215,6 +217,10 @@ class UI_MainWindow(object):
     def setup_expenses_module(self, module):
         self.page_expenses_form = module
         self.pages.addWidget(self.page_expenses_form)
+
+    def setup_report_module(self, module):
+        self.page_report = module
+        self.pages.addWidget(self.page_report)
 
     def setup_sellers_and_places_module(self, sellers_form, places_form):
         sellers_form = sellers_form

@@ -58,6 +58,13 @@ class ReportPage(AbstractModule, QWidget):
 
     handler = property(get_handler)
 
+    def update_data(self) -> None:
+        if self.need_update:
+            self.load_widget.show()
+            self.update_ui()
+            self.need_update = False
+            self.load_widget.hide()
+
     def update_ui(self, updating_data: bool = True) -> None:
         if updating_data:
             self.handler.setup_store_expenses()

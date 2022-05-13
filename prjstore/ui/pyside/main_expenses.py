@@ -27,7 +27,7 @@ class ExpensesEditor(AbstractModule, QWidget, Pages):
         AbstractModule.__init__(self, parent)
         QWidget.__init__(self)
         self.name = 'expenses_form'
-        self.observer_module_names = []
+        self.observer_module_names = ['report_form']
         self.__handler = None
         self.ui = UI_Expenses()
         self.ui.setup_ui(self)

@@ -204,7 +204,7 @@ class Ui_Dialog(object):
         self.sizes_table.setItem(11, 0, __qtablewidgetitem33)
         self.sizes_table.setObjectName(u"sizes_table")
         self.sizes_table.setEnabled(True)
-        self.sizes_table.setMinimumSize(QSize(0, 310))
+        self.sizes_table.setMinimumSize(QSize(0, 410))
         font = QFont()
         font.setPointSize(8)
         font.setKerning(True)
