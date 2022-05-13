@@ -30,7 +30,7 @@ class ItemForm(AbstractModule, QWidget):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         if dark_style:
-            self.setup_dark_style()
+            self.ui.setup_dark_style()
         self.ui.button_save.clicked.connect(self.on_clicked_button)
         self.ui.name_combo_box.clear()
         self.ui.name_combo_box.currentIndexChanged.connect(self.on_name_combo_box_changed)
@@ -40,7 +40,7 @@ class ItemForm(AbstractModule, QWidget):
 
         if parent:
             if parent.dark_style:
-                self.setup_dark_style()
+                self.ui.setup_dark_style()
             self.__connected_complete(ReceivingTheItemsHandler(main_handler=parent.handler))
         else:
             db_connector = DbConnect(user_data)
@@ -88,15 +88,6 @@ class ItemForm(AbstractModule, QWidget):
         self.keywords['shoes']['widths'] = self.handler.get_shoes_widths()
         self.setup_ui()
         self.load_widget.hide()
-
-    def setup_dark_style(self):
-        self.setStyleSheet(
-            '#Dialog {background-color: #2F303B; color: #F8F8F2;}\n'
-            'QLabel {color: #F8F8F2;}\n'
-            'QComboBox, QDateEdit {background-color: #121212; color: #dcdcdc; border:2px solid #484B5E;}\n'
-            'QLineEdit {background-color: #121212; color: #dcdcdc;}\n'
-            '#widget_slis, #widget_items {background-color: #2F303B; border:2px solid #484B5E;  color: #F8F8F2;}'
-        )
 
     def setup_types(self):
         self.ui.type_combo_box.clear()

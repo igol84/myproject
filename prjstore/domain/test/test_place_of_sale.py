@@ -23,4 +23,4 @@ class Test_PlaceOfSale(TestPlaceOfSale):
         assert str(self.places_of_sale[1].sale.list_sli[0].item.product.name) == "item1"
 
     def test_report(self):
-        assert self.places_of_sale[1].get_monthly_report()[(2, 2022)] == Money(909.0)
+        assert self.places_of_sale[1].get_monthly_report()[(2, 2022)].profit == Money(909.0)

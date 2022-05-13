@@ -158,6 +158,8 @@ imports:
  &#8226;   <a href="#operator">operator</a>
  &#8226;   <a href="#prjstore.db">prjstore.db</a>
  &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_login">prjstore.ui.pyside.main_login</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
@@ -349,7 +351,7 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>'org.python'</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#pickle">pickle</a>
+    <a href="#copy">copy</a>
  &#8226;   <a href="#xml.sax">xml.sax</a>
 
   </div>
@@ -406,9 +408,7 @@ imported by:
 <span class="moduletype">Package</span>  <div class="import">
 imports:
     <a href="#PySide6">PySide6</a>
- &#8226;   <a href="#PySide6.QtCore">PySide6.QtCore</a>
  &#8226;   <a href="#PySide6.QtNetwork">PySide6.QtNetwork</a>
- &#8226;   <a href="#PySide6.QtWidgets">PySide6.QtWidgets</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#shiboken6">shiboken6</a>
@@ -424,7 +424,6 @@ imported by:
  &#8226;   <a href="#PySide6.QtGui">PySide6.QtGui</a>
  &#8226;   <a href="#PySide6.QtNetwork">PySide6.QtNetwork</a>
  &#8226;   <a href="#PySide6.QtWidgets">PySide6.QtWidgets</a>
- &#8226;   <a href="#prjstore">prjstore</a>
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.components.shoes_comps.description">prjstore.ui.pyside.product_price_editor.components.shoes_comps.description</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.sale">prjstore.ui.pyside.sale_registration.components.sale</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.shoes">prjstore.ui.pyside.sale_registration.components.shoes</a>
@@ -436,6 +435,7 @@ imported by:
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.sli">prjstore.ui.pyside.sale_registration.components.sli</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.custom_combo_box">prjstore.ui.pyside.utils.custom_combo_box</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.load_widget">prjstore.ui.pyside.utils.load_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.pages">prjstore.ui.pyside.utils.pages</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.widgets">prjstore.ui.pyside.utils.widgets</a>
 
   </div>
@@ -452,12 +452,11 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#PySide6">PySide6</a>
- &#8226;   <a href="#PySide6.QtCore">PySide6.QtCore</a>
+    <a href="#PySide6.QtCore">PySide6.QtCore</a>
  &#8226;   <a href="#PySide6.QtGui">PySide6.QtGui</a>
  &#8226;   <a href="#PySide6.QtNetwork">PySide6.QtNetwork</a>
  &#8226;   <a href="#PySide6.QtWidgets">PySide6.QtWidgets</a>
- &#8226;   <a href="#prjstore">prjstore</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.thread">prjstore.ui.pyside.expenses_editor.thread</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.thread">prjstore.ui.pyside.items_editor.thread</a>
  &#8226;   <a href="#prjstore.ui.pyside.login.ui_login">prjstore.ui.pyside.login.ui_login</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_window.thread">prjstore.ui.pyside.main_window.thread</a>
@@ -472,6 +471,7 @@ imported by:
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.simple_product">prjstore.ui.pyside.sale_registration.components.simple_product</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.sli">prjstore.ui.pyside.sale_registration.components.sli</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.thread">prjstore.ui.pyside.sale_registration.thread</a>
+ &#8226;   <a href="#prjstore.ui.pyside.sale_registration.ui_sale_registration">prjstore.ui.pyside.sale_registration.ui_sale_registration</a>
  &#8226;   <a href="#prjstore.ui.pyside.sellers_editor.thread">prjstore.ui.pyside.sellers_editor.thread</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.custom_combo_box">prjstore.ui.pyside.utils.custom_combo_box</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.load_widget">prjstore.ui.pyside.utils.load_widget</a>
@@ -501,6 +501,7 @@ imported by:
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.shoes_comps.size">prjstore.ui.pyside.sale_registration.components.shoes_comps.size</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.simple_product">prjstore.ui.pyside.sale_registration.components.simple_product</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.sli">prjstore.ui.pyside.sale_registration.components.sli</a>
+ &#8226;   <a href="#prjstore.ui.pyside.sale_registration.ui_sale_registration">prjstore.ui.pyside.sale_registration.ui_sale_registration</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.load_widget">prjstore.ui.pyside.utils.load_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.widgets">prjstore.ui.pyside.utils.widgets</a>
@@ -539,9 +540,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#PySide6">PySide6</a>
- &#8226;   <a href="#PySide6.QtWidgets">PySide6.QtWidgets</a>
- &#8226;   <a href="#prjstore">prjstore</a>
+    <a href="#PySide6.QtWidgets">PySide6.QtWidgets</a>
  &#8226;   <a href="#prjstore.ui.pyside.login.ui_login">prjstore.ui.pyside.login.ui_login</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_login">prjstore.ui.pyside.main_login</a>
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.components.shoes">prjstore.ui.pyside.product_price_editor.components.shoes</a>
@@ -555,8 +554,10 @@ imported by:
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.shoes_comps.width">prjstore.ui.pyside.sale_registration.components.shoes_comps.width</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.simple_product">prjstore.ui.pyside.sale_registration.components.simple_product</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.sli">prjstore.ui.pyside.sale_registration.components.sli</a>
+ &#8226;   <a href="#prjstore.ui.pyside.sale_registration.ui_sale_registration">prjstore.ui.pyside.sale_registration.ui_sale_registration</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.custom_combo_box">prjstore.ui.pyside.utils.custom_combo_box</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.load_widget">prjstore.ui.pyside.utils.load_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.pages">prjstore.ui.pyside.utils.pages</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.widgets">prjstore.ui.pyside.utils.widgets</a>
 
@@ -3640,8 +3641,8 @@ imported by:
   <a target="code" href="///C:/Users/igolu/AppData/Local/Programs/Python/Python310/lib/copy.py" type="text/plain"><tt>copy</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#copyreg">copyreg</a>
- &#8226;   <a href="#org">org</a>
+    <a href="#'org.python'">'org.python'</a>
+ &#8226;   <a href="#copyreg">copyreg</a>
  &#8226;   <a href="#types">types</a>
  &#8226;   <a href="#weakref">weakref</a>
 
@@ -3817,13 +3818,17 @@ imported by:
  &#8226;   <a href="#main.py">main.py</a>
  &#8226;   <a href="#plistlib">plistlib</a>
  &#8226;   <a href="#prjstore.db.api.api_db">prjstore.db.api.api_db</a>
+ &#8226;   <a href="#prjstore.db.schemas.expense">prjstore.db.schemas.expense</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_items_editor">prjstore.db.schemas.handler_items_editor</a>
  &#8226;   <a href="#prjstore.db.schemas.item">prjstore.db.schemas.item</a>
  &#8226;   <a href="#prjstore.db.schemas.sale">prjstore.db.schemas.sale</a>
+ &#8226;   <a href="#prjstore.domain.expense">prjstore.domain.expense</a>
  &#8226;   <a href="#prjstore.domain.item">prjstore.domain.item</a>
  &#8226;   <a href="#prjstore.domain.sale">prjstore.domain.sale</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
  &#8226;   <a href="#prjstore.handlers.sale_registration_handler">prjstore.handlers.sale_registration_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.add_expense_widget">prjstore.ui.pyside.expenses_editor.components.add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.expense_widget">prjstore.ui.pyside.expenses_editor.components.expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.schemas">prjstore.ui.pyside.expenses_editor.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.components.ui_item_widget">prjstore.ui.pyside.items_editor.components.ui_item_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.schemas">prjstore.ui.pyside.items_editor.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
@@ -8506,7 +8511,6 @@ imported by:
  &#8226;   <a href="#calendar">calendar</a>
  &#8226;   <a href="#gettext">gettext</a>
  &#8226;   <a href="#main.py">main.py</a>
- &#8226;   <a href="#prjstore.domain.sale">prjstore.domain.sale</a>
  &#8226;   <a href="#test.support">test.support</a>
  &#8226;   <a href="#xml.etree.ElementTree">xml.etree.ElementTree</a>
 
@@ -8607,6 +8611,7 @@ imported by:
  &#8226;   <a href="#random">random</a>
  &#8226;   <a href="#selectors">selectors</a>
  &#8226;   <a href="#statistics">statistics</a>
+ &#8226;   <a href="#util.pages">util.pages</a>
 
   </div>
 
@@ -9655,7 +9660,7 @@ imported by:
   <a target="code" href="" type="text/plain"><tt>org</tt></a>
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
-    <a href="#copy">copy</a>
+    <a href="#pickle">pickle</a>
 
   </div>
 
@@ -9898,8 +9903,7 @@ imported by:
   <a target="code" href="///C:/Users/igolu/AppData/Local/Programs/Python/Python310/lib/pickle.py" type="text/plain"><tt>pickle</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#'org.python'">'org.python'</a>
- &#8226;   <a href="#_compat_pickle">_compat_pickle</a>
+    <a href="#_compat_pickle">_compat_pickle</a>
  &#8226;   <a href="#_pickle">_pickle</a>
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#copyreg">copyreg</a>
@@ -9907,6 +9911,7 @@ imports:
  &#8226;   <a href="#functools">functools</a>
  &#8226;   <a href="#io">io</a>
  &#8226;   <a href="#itertools">itertools</a>
+ &#8226;   <a href="#org">org</a>
  &#8226;   <a href="#pprint">pprint</a>
  &#8226;   <a href="#re">re</a>
  &#8226;   <a href="#struct">struct</a>
@@ -10092,14 +10097,6 @@ imported by:
   <a name="prjstore"></a>
   <a target="code" href="///C:/Projects/prjstore/__init__.py" type="text/plain"><tt>prjstore</tt></a>
 <span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#PySide6">PySide6</a>
- &#8226;   <a href="#PySide6.QtCore">PySide6.QtCore</a>
- &#8226;   <a href="#PySide6.QtWidgets">PySide6.QtWidgets</a>
- &#8226;   <a href="#sys">sys</a>
-
-  </div>
-  <div class="import">
 imported by:
     <a href="#prjstore.db">prjstore.db</a>
  &#8226;   <a href="#prjstore.domain">prjstore.domain</a>
@@ -10130,6 +10127,7 @@ imported by:
  &#8226;   <a href="#prjstore.db.db">prjstore.db.db</a>
  &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
  &#8226;   <a href="#prjstore.domain.abstract_product">prjstore.domain.abstract_product</a>
+ &#8226;   <a href="#prjstore.domain.expense">prjstore.domain.expense</a>
  &#8226;   <a href="#prjstore.domain.item">prjstore.domain.item</a>
  &#8226;   <a href="#prjstore.domain.place_of_sale">prjstore.domain.place_of_sale</a>
  &#8226;   <a href="#prjstore.domain.product_catalog">prjstore.domain.product_catalog</a>
@@ -10139,6 +10137,8 @@ imported by:
  &#8226;   <a href="#prjstore.domain.sale_line_item">prjstore.domain.sale_line_item</a>
  &#8226;   <a href="#prjstore.domain.seller">prjstore.domain.seller</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
+ &#8226;   <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
+ &#8226;   <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
  &#8226;   <a href="#prjstore.handlers.items_editor_handler">prjstore.handlers.items_editor_handler</a>
  &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
  &#8226;   <a href="#prjstore.handlers.places_editor_handler">prjstore.handlers.places_editor_handler</a>
@@ -10146,6 +10146,7 @@ imported by:
  &#8226;   <a href="#prjstore.handlers.receiving_the_items_handler">prjstore.handlers.receiving_the_items_handler</a>
  &#8226;   <a href="#prjstore.handlers.sale_registration_handler">prjstore.handlers.sale_registration_handler</a>
  &#8226;   <a href="#prjstore.handlers.sellers_editor_handler">prjstore.handlers.sellers_editor_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.thread">prjstore.ui.pyside.expenses_editor.thread</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.thread">prjstore.ui.pyside.items_editor.thread</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_window.thread">prjstore.ui.pyside.main_window.thread</a>
  &#8226;   <a href="#prjstore.ui.pyside.places_editor.thread">prjstore.ui.pyside.places_editor.thread</a>
@@ -10164,15 +10165,18 @@ imported by:
 <span class="moduletype">Package</span>  <div class="import">
 imports:
     <a href="#prjstore.db">prjstore.db</a>
+ &#8226;   <a href="#prjstore.db.api">prjstore.db.api</a>
  &#8226;   <a href="#prjstore.db.api.settings">prjstore.db.api.settings</a>
 
   </div>
   <div class="import">
 imported by:
-    <a href="#prjstore.db.api.api_db">prjstore.db.api.api_db</a>
+    <a href="#prjstore.db.api">prjstore.db.api</a>
+ &#8226;   <a href="#prjstore.db.api.api_db">prjstore.db.api.api_db</a>
  &#8226;   <a href="#prjstore.db.api.authorizations">prjstore.db.api.authorizations</a>
  &#8226;   <a href="#prjstore.db.api.components">prjstore.db.api.components</a>
  &#8226;   <a href="#prjstore.db.api.components.base">prjstore.db.api.components.base</a>
+ &#8226;   <a href="#prjstore.db.api.components.expense">prjstore.db.api.components.expense</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_items_editor">prjstore.db.api.components.handler_items_editor</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_product_price_editor">prjstore.db.api.components.handler_product_price_editor</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_receiving_the_items">prjstore.db.api.components.handler_receiving_the_items</a>
@@ -10181,6 +10185,13 @@ imported by:
  &#8226;   <a href="#prjstore.db.api.components.product_catalog">prjstore.db.api.components.product_catalog</a>
  &#8226;   <a href="#prjstore.db.api.components.seller">prjstore.db.api.components.seller</a>
  &#8226;   <a href="#prjstore.db.api.settings">prjstore.db.api.settings</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_product_price_editor">prjstore.ui.pyside.main_product_price_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_receiving_the_items">prjstore.ui.pyside.main_receiving_the_items</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_sale_registration">prjstore.ui.pyside.main_sale_registration</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_sellers">prjstore.ui.pyside.main_sellers</a>
 
   </div>
 
@@ -10195,6 +10206,7 @@ imports:
  &#8226;   <a href="#prjstore.db">prjstore.db</a>
  &#8226;   <a href="#prjstore.db.api">prjstore.db.api</a>
  &#8226;   <a href="#prjstore.db.api.authorizations">prjstore.db.api.authorizations</a>
+ &#8226;   <a href="#prjstore.db.api.components.expense">prjstore.db.api.components.expense</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_items_editor">prjstore.db.api.components.handler_items_editor</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_product_price_editor">prjstore.db.api.components.handler_product_price_editor</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_receiving_the_items">prjstore.db.api.components.handler_receiving_the_items</a>
@@ -10207,6 +10219,7 @@ imports:
  &#8226;   <a href="#prjstore.db.api.components.sale_line_item">prjstore.db.api.components.sale_line_item</a>
  &#8226;   <a href="#prjstore.db.api.components.seller">prjstore.db.api.components.seller</a>
  &#8226;   <a href="#prjstore.db.api.components.store">prjstore.db.api.components.store</a>
+ &#8226;   <a href="#prjstore.db.api.settings">prjstore.db.api.settings</a>
  &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
  &#8226;   <a href="#prjstore.db.schemas.sale_line_item">prjstore.db.schemas.sale_line_item</a>
 
@@ -10249,6 +10262,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#prjstore.db.api.components.base">prjstore.db.api.components.base</a>
+ &#8226;   <a href="#prjstore.db.api.components.expense">prjstore.db.api.components.expense</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_items_editor">prjstore.db.api.components.handler_items_editor</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_product_price_editor">prjstore.db.api.components.handler_product_price_editor</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_receiving_the_items">prjstore.db.api.components.handler_receiving_the_items</a>
@@ -10283,7 +10297,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#prjstore.db.api.components.item">prjstore.db.api.components.item</a>
+    <a href="#prjstore.db.api.components.expense">prjstore.db.api.components.expense</a>
+ &#8226;   <a href="#prjstore.db.api.components.item">prjstore.db.api.components.item</a>
  &#8226;   <a href="#prjstore.db.api.components.place">prjstore.db.api.components.place</a>
  &#8226;   <a href="#prjstore.db.api.components.product">prjstore.db.api.components.product</a>
  &#8226;   <a href="#prjstore.db.api.components.product_catalog">prjstore.db.api.components.product_catalog</a>
@@ -10291,6 +10306,27 @@ imported by:
  &#8226;   <a href="#prjstore.db.api.components.sale_line_item">prjstore.db.api.components.sale_line_item</a>
  &#8226;   <a href="#prjstore.db.api.components.seller">prjstore.db.api.components.seller</a>
  &#8226;   <a href="#prjstore.db.api.components.store">prjstore.db.api.components.store</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.db.api.components.expense"></a>
+  <a target="code" href="///C:/Projects/prjstore/db/api/components/expense.py" type="text/plain"><tt>prjstore.db.api.components.expense</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#prjstore.db.api">prjstore.db.api</a>
+ &#8226;   <a href="#prjstore.db.api.components">prjstore.db.api.components</a>
+ &#8226;   <a href="#prjstore.db.api.components.base">prjstore.db.api.components.base</a>
+ &#8226;   <a href="#prjstore.db.api.settings">prjstore.db.api.settings</a>
+ &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
+ &#8226;   <a href="#prjstore.db.schemas.expense">prjstore.db.schemas.expense</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.db.api.api_db">prjstore.db.api.api_db</a>
 
   </div>
 
@@ -10552,8 +10588,10 @@ imports:
   <div class="import">
 imported by:
     <a href="#prjstore.db.api">prjstore.db.api</a>
+ &#8226;   <a href="#prjstore.db.api.api_db">prjstore.db.api.api_db</a>
  &#8226;   <a href="#prjstore.db.api.authorizations">prjstore.db.api.authorizations</a>
  &#8226;   <a href="#prjstore.db.api.components.base">prjstore.db.api.components.base</a>
+ &#8226;   <a href="#prjstore.db.api.components.expense">prjstore.db.api.components.expense</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_items_editor">prjstore.db.api.components.handler_items_editor</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_product_price_editor">prjstore.db.api.components.handler_product_price_editor</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_receiving_the_items">prjstore.db.api.components.handler_receiving_the_items</a>
@@ -10561,6 +10599,13 @@ imported by:
  &#8226;   <a href="#prjstore.db.api.components.place">prjstore.db.api.components.place</a>
  &#8226;   <a href="#prjstore.db.api.components.product_catalog">prjstore.db.api.components.product_catalog</a>
  &#8226;   <a href="#prjstore.db.api.components.seller">prjstore.db.api.components.seller</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_product_price_editor">prjstore.ui.pyside.main_product_price_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_receiving_the_items">prjstore.ui.pyside.main_receiving_the_items</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_sale_registration">prjstore.ui.pyside.main_sale_registration</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_sellers">prjstore.ui.pyside.main_sellers</a>
 
   </div>
 
@@ -10591,6 +10636,7 @@ imports:
     <a href="#prjstore.db">prjstore.db</a>
  &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
  &#8226;   <a href="#prjstore.db.schemas.error">prjstore.db.schemas.error</a>
+ &#8226;   <a href="#prjstore.db.schemas.expense">prjstore.db.schemas.expense</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_items_editor">prjstore.db.schemas.handler_items_editor</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_product_price_editor">prjstore.db.schemas.handler_product_price_editor</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_receiving_the_items">prjstore.db.schemas.handler_receiving_the_items</a>
@@ -10610,6 +10656,7 @@ imports:
 imported by:
     <a href="#prjstore.db">prjstore.db</a>
  &#8226;   <a href="#prjstore.db.api.api_db">prjstore.db.api.api_db</a>
+ &#8226;   <a href="#prjstore.db.api.components.expense">prjstore.db.api.components.expense</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_items_editor">prjstore.db.api.components.handler_items_editor</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_product_price_editor">prjstore.db.api.components.handler_product_price_editor</a>
  &#8226;   <a href="#prjstore.db.api.components.handler_receiving_the_items">prjstore.db.api.components.handler_receiving_the_items</a>
@@ -10623,6 +10670,7 @@ imported by:
  &#8226;   <a href="#prjstore.db.api.components.store">prjstore.db.api.components.store</a>
  &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
  &#8226;   <a href="#prjstore.db.schemas.error">prjstore.db.schemas.error</a>
+ &#8226;   <a href="#prjstore.db.schemas.expense">prjstore.db.schemas.expense</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_items_editor">prjstore.db.schemas.handler_items_editor</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_product_price_editor">prjstore.db.schemas.handler_product_price_editor</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_receiving_the_items">prjstore.db.schemas.handler_receiving_the_items</a>
@@ -10637,6 +10685,7 @@ imported by:
  &#8226;   <a href="#prjstore.db.schemas.shoes">prjstore.db.schemas.shoes</a>
  &#8226;   <a href="#prjstore.db.schemas.store">prjstore.db.schemas.store</a>
  &#8226;   <a href="#prjstore.domain.abstract_product">prjstore.domain.abstract_product</a>
+ &#8226;   <a href="#prjstore.domain.expense">prjstore.domain.expense</a>
  &#8226;   <a href="#prjstore.domain.item">prjstore.domain.item</a>
  &#8226;   <a href="#prjstore.domain.place_of_sale">prjstore.domain.place_of_sale</a>
  &#8226;   <a href="#prjstore.domain.product_catalog">prjstore.domain.product_catalog</a>
@@ -10646,11 +10695,13 @@ imported by:
  &#8226;   <a href="#prjstore.domain.sale_line_item">prjstore.domain.sale_line_item</a>
  &#8226;   <a href="#prjstore.domain.seller">prjstore.domain.seller</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
+ &#8226;   <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
  &#8226;   <a href="#prjstore.handlers.items_editor_handler">prjstore.handlers.items_editor_handler</a>
  &#8226;   <a href="#prjstore.handlers.places_editor_handler">prjstore.handlers.places_editor_handler</a>
  &#8226;   <a href="#prjstore.handlers.receiving_the_items_handler">prjstore.handlers.receiving_the_items_handler</a>
  &#8226;   <a href="#prjstore.handlers.sale_registration_handler">prjstore.handlers.sale_registration_handler</a>
  &#8226;   <a href="#prjstore.handlers.sellers_editor_handler">prjstore.handlers.sellers_editor_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.thread">prjstore.ui.pyside.expenses_editor.thread</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.components.item_widget">prjstore.ui.pyside.items_editor.components.item_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.thread">prjstore.ui.pyside.items_editor.thread</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
@@ -10676,6 +10727,28 @@ imports:
   <div class="import">
 imported by:
     <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.db.schemas.expense"></a>
+  <a target="code" href="///C:/Projects/prjstore/db/schemas/expense.py" type="text/plain"><tt>prjstore.db.schemas.expense</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#datetime">datetime</a>
+ &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
+ &#8226;   <a href="#pydantic">pydantic</a>
+ &#8226;   <a href="#pydantic.BaseModel">pydantic.BaseModel</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.db.api.components.expense">prjstore.db.api.components.expense</a>
+ &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
+ &#8226;   <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.thread">prjstore.ui.pyside.expenses_editor.thread</a>
 
   </div>
 
@@ -10996,6 +11069,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#prjstore.domain.abstract_product">prjstore.domain.abstract_product</a>
+ &#8226;   <a href="#prjstore.domain.expense">prjstore.domain.expense</a>
  &#8226;   <a href="#prjstore.domain.item">prjstore.domain.item</a>
  &#8226;   <a href="#prjstore.domain.place_of_sale">prjstore.domain.place_of_sale</a>
  &#8226;   <a href="#prjstore.domain.product_catalog">prjstore.domain.product_catalog</a>
@@ -11040,6 +11114,28 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="prjstore.domain.expense"></a>
+  <a target="code" href="///C:/Projects/prjstore/domain/expense.py" type="text/plain"><tt>prjstore.domain.expense</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#datetime">datetime</a>
+ &#8226;   <a href="#prjstore.db">prjstore.db</a>
+ &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
+ &#8226;   <a href="#prjstore.domain">prjstore.domain</a>
+ &#8226;   <a href="#pydantic.dataclasses">pydantic.dataclasses</a>
+ &#8226;   <a href="#util.money">util.money</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.domain.place_of_sale">prjstore.domain.place_of_sale</a>
+ &#8226;   <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="prjstore.domain.item"></a>
   <a target="code" href="///C:/Projects/prjstore/domain/item.py" type="text/plain"><tt>prjstore.domain.item</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
@@ -11063,7 +11159,6 @@ imported by:
     <a href="#prjstore.domain.sale">prjstore.domain.sale</a>
  &#8226;   <a href="#prjstore.domain.sale_line_item">prjstore.domain.sale_line_item</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
  &#8226;   <a href="#prjstore.handlers.items_editor_handler">prjstore.handlers.items_editor_handler</a>
  &#8226;   <a href="#prjstore.handlers.product_price_editor_handler">prjstore.handlers.product_price_editor_handler</a>
  &#8226;   <a href="#prjstore.handlers.receiving_the_items_handler">prjstore.handlers.receiving_the_items_handler</a>
@@ -11084,14 +11179,15 @@ imports:
  &#8226;   <a href="#prjstore.db">prjstore.db</a>
  &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
  &#8226;   <a href="#prjstore.domain">prjstore.domain</a>
+ &#8226;   <a href="#prjstore.domain.expense">prjstore.domain.expense</a>
  &#8226;   <a href="#prjstore.domain.sale">prjstore.domain.sale</a>
  &#8226;   <a href="#pydantic.dataclasses">pydantic.dataclasses</a>
+ &#8226;   <a href="#util.money">util.money</a>
 
   </div>
   <div class="import">
 imported by:
     <a href="#prjstore.domain.store">prjstore.domain.store</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
  &#8226;   <a href="#prjstore.handlers.places_editor_handler">prjstore.handlers.places_editor_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.schemas">prjstore.ui.pyside.sale_registration.schemas</a>
 
@@ -11119,7 +11215,6 @@ imports:
 imported by:
     <a href="#prjstore.domain.item">prjstore.domain.item</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
 
   </div>
 
@@ -11147,7 +11242,6 @@ imported by:
     <a href="#prjstore.domain.item">prjstore.domain.item</a>
  &#8226;   <a href="#prjstore.domain.product_catalog">prjstore.domain.product_catalog</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
  &#8226;   <a href="#prjstore.handlers.receiving_the_items_handler">prjstore.handlers.receiving_the_items_handler</a>
 
   </div>
@@ -11192,7 +11286,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#prjstore.domain.product_factory">prjstore.domain.product_factory</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
+ &#8226;   <a href="#prjstore.handlers.product_price_editor_handler">prjstore.handlers.product_price_editor_handler</a>
  &#8226;   <a href="#prjstore.handlers.receiving_the_items_handler">prjstore.handlers.receiving_the_items_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.schemas">prjstore.ui.pyside.product_price_editor.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.schemas">prjstore.ui.pyside.sale_registration.schemas</a>
@@ -11263,7 +11357,6 @@ imports:
     <a href="#dataclasses">dataclasses</a>
  &#8226;   <a href="#datetime">datetime</a>
  &#8226;   <a href="#decimal">decimal</a>
- &#8226;   <a href="#locale">locale</a>
  &#8226;   <a href="#prjstore.db">prjstore.db</a>
  &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
  &#8226;   <a href="#prjstore.domain">prjstore.domain</a>
@@ -11325,7 +11418,6 @@ imports:
 imported by:
     <a href="#prjstore.domain.sale">prjstore.domain.sale</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
  &#8226;   <a href="#prjstore.handlers.sellers_editor_handler">prjstore.handlers.sellers_editor_handler</a>
 
   </div>
@@ -11353,7 +11445,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
+    <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
+ &#8226;   <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
  &#8226;   <a href="#prjstore.handlers.items_editor_handler">prjstore.handlers.items_editor_handler</a>
  &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
  &#8226;   <a href="#prjstore.handlers.places_editor_handler">prjstore.handlers.places_editor_handler</a>
@@ -11376,7 +11469,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#prjstore.handlers.data_for_test">prjstore.handlers.data_for_test</a>
+    <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
+ &#8226;   <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
  &#8226;   <a href="#prjstore.handlers.items_editor_handler">prjstore.handlers.items_editor_handler</a>
  &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
  &#8226;   <a href="#prjstore.handlers.places_editor_handler">prjstore.handlers.places_editor_handler</a>
@@ -11390,46 +11484,53 @@ imported by:
 </div>
 
 <div class="node">
-  <a name="prjstore.handlers.data_for_test"></a>
-  <a target="code" href="-" type="text/plain"><tt>prjstore.handlers.data_for_test</tt></a>
-<span class="moduletype">NamespacePackage</span>  <div class="import">
+  <a name="prjstore.handlers.abstract_module_handler"></a>
+  <a target="code" href="///C:/Projects/prjstore/handlers/abstract_module_handler.py" type="text/plain"><tt>prjstore.handlers.abstract_module_handler</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#prjstore.handlers">prjstore.handlers</a>
+    <a href="#prjstore.db">prjstore.db</a>
+ &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
+ &#8226;   <a href="#prjstore.handlers">prjstore.handlers</a>
+ &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
+ &#8226;   <a href="#typing">typing</a>
 
   </div>
   <div class="import">
 imported by:
-    <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
+    <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
+ &#8226;   <a href="#prjstore.handlers.items_editor_handler">prjstore.handlers.items_editor_handler</a>
+ &#8226;   <a href="#prjstore.handlers.places_editor_handler">prjstore.handlers.places_editor_handler</a>
+ &#8226;   <a href="#prjstore.handlers.product_price_editor_handler">prjstore.handlers.product_price_editor_handler</a>
+ &#8226;   <a href="#prjstore.handlers.receiving_the_items_handler">prjstore.handlers.receiving_the_items_handler</a>
+ &#8226;   <a href="#prjstore.handlers.sale_registration_handler">prjstore.handlers.sale_registration_handler</a>
+ &#8226;   <a href="#prjstore.handlers.sellers_editor_handler">prjstore.handlers.sellers_editor_handler</a>
 
   </div>
 
 </div>
 
 <div class="node">
-  <a name="prjstore.handlers.data_for_test.sale_registration"></a>
-  <a target="code" href="///C:/Projects/prjstore/handlers/data_for_test/sale_registration.py" type="text/plain"><tt>prjstore.handlers.data_for_test.sale_registration</tt></a>
+  <a name="prjstore.handlers.expenses_handler"></a>
+  <a target="code" href="///C:/Projects/prjstore/handlers/expenses_handler.py" type="text/plain"><tt>prjstore.handlers.expenses_handler</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#datetime">datetime</a>
- &#8226;   <a href="#prjstore.domain.item">prjstore.domain.item</a>
- &#8226;   <a href="#prjstore.domain.place_of_sale">prjstore.domain.place_of_sale</a>
- &#8226;   <a href="#prjstore.domain.product_catalog">prjstore.domain.product_catalog</a>
- &#8226;   <a href="#prjstore.domain.product_factory">prjstore.domain.product_factory</a>
- &#8226;   <a href="#prjstore.domain.products.shoes">prjstore.domain.products.shoes</a>
- &#8226;   <a href="#prjstore.domain.seller">prjstore.domain.seller</a>
+    <a href="#prjstore.db">prjstore.db</a>
+ &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
+ &#8226;   <a href="#prjstore.db.schemas.expense">prjstore.db.schemas.expense</a>
+ &#8226;   <a href="#prjstore.domain.expense">prjstore.domain.expense</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test">prjstore.handlers.data_for_test</a>
+ &#8226;   <a href="#prjstore.handlers">prjstore.handlers</a>
+ &#8226;   <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
+ &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor">prjstore.ui.pyside.expenses_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.schemas">prjstore.ui.pyside.expenses_editor.schemas</a>
  &#8226;   <a href="#util.money">util.money</a>
 
   </div>
   <div class="import">
 imported by:
-    <a href="#prjstore.handlers.items_editor_handler">prjstore.handlers.items_editor_handler</a>
- &#8226;   <a href="#prjstore.handlers.places_editor_handler">prjstore.handlers.places_editor_handler</a>
- &#8226;   <a href="#prjstore.handlers.product_price_editor_handler">prjstore.handlers.product_price_editor_handler</a>
- &#8226;   <a href="#prjstore.handlers.receiving_the_items_handler">prjstore.handlers.receiving_the_items_handler</a>
- &#8226;   <a href="#prjstore.handlers.sale_registration_handler">prjstore.handlers.sale_registration_handler</a>
- &#8226;   <a href="#prjstore.handlers.sellers_editor_handler">prjstore.handlers.sellers_editor_handler</a>
+    <a href="#prjstore.ui.pyside.expenses_editor.thread">prjstore.ui.pyside.expenses_editor.thread</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
 
   </div>
 
@@ -11446,7 +11547,8 @@ imports:
  &#8226;   <a href="#prjstore.domain.item">prjstore.domain.item</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
  &#8226;   <a href="#prjstore.handlers">prjstore.handlers</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
+ &#8226;   <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
+ &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor">prjstore.ui.pyside.items_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.schemas">prjstore.ui.pyside.items_editor.schemas</a>
  &#8226;   <a href="#pydantic">pydantic</a>
@@ -11476,6 +11578,14 @@ imports:
   <div class="import">
 imported by:
     <a href="#main.py">main.py</a>
+ &#8226;   <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
+ &#8226;   <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
+ &#8226;   <a href="#prjstore.handlers.items_editor_handler">prjstore.handlers.items_editor_handler</a>
+ &#8226;   <a href="#prjstore.handlers.places_editor_handler">prjstore.handlers.places_editor_handler</a>
+ &#8226;   <a href="#prjstore.handlers.product_price_editor_handler">prjstore.handlers.product_price_editor_handler</a>
+ &#8226;   <a href="#prjstore.handlers.receiving_the_items_handler">prjstore.handlers.receiving_the_items_handler</a>
+ &#8226;   <a href="#prjstore.handlers.sale_registration_handler">prjstore.handlers.sale_registration_handler</a>
+ &#8226;   <a href="#prjstore.handlers.sellers_editor_handler">prjstore.handlers.sellers_editor_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_window.main_interface">prjstore.ui.pyside.main_window.main_interface</a>
 
   </div>
@@ -11493,7 +11603,8 @@ imports:
  &#8226;   <a href="#prjstore.domain.place_of_sale">prjstore.domain.place_of_sale</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
  &#8226;   <a href="#prjstore.handlers">prjstore.handlers</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
+ &#8226;   <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
+ &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside.places_editor">prjstore.ui.pyside.places_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.places_editor.schemas">prjstore.ui.pyside.places_editor.schemas</a>
 
@@ -11515,9 +11626,11 @@ imports:
     <a href="#prjstore.db">prjstore.db</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_product_price_editor">prjstore.db.schemas.handler_product_price_editor</a>
  &#8226;   <a href="#prjstore.domain.item">prjstore.domain.item</a>
+ &#8226;   <a href="#prjstore.domain.products.shoes">prjstore.domain.products.shoes</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
  &#8226;   <a href="#prjstore.handlers">prjstore.handlers</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
+ &#8226;   <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
+ &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.schemas">prjstore.ui.pyside.product_price_editor.schemas</a>
  &#8226;   <a href="#pydantic">pydantic</a>
  &#8226;   <a href="#pydantic.validate_arguments">pydantic.validate_arguments</a>
@@ -11545,7 +11658,8 @@ imports:
  &#8226;   <a href="#prjstore.domain.products.shoes">prjstore.domain.products.shoes</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
  &#8226;   <a href="#prjstore.handlers">prjstore.handlers</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
+ &#8226;   <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
+ &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside.receiving_the_items">prjstore.ui.pyside.receiving_the_items</a>
  &#8226;   <a href="#prjstore.ui.pyside.receiving_the_items.schemas">prjstore.ui.pyside.receiving_the_items.schemas</a>
 
@@ -11573,7 +11687,8 @@ imports:
  &#8226;   <a href="#prjstore.domain.sale">prjstore.domain.sale</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
  &#8226;   <a href="#prjstore.handlers">prjstore.handlers</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
+ &#8226;   <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
+ &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.schemas">prjstore.ui.pyside.sale_registration.schemas</a>
  &#8226;   <a href="#pydantic">pydantic</a>
  &#8226;   <a href="#pydantic.validate_arguments">pydantic.validate_arguments</a>
@@ -11600,7 +11715,8 @@ imports:
  &#8226;   <a href="#prjstore.domain.seller">prjstore.domain.seller</a>
  &#8226;   <a href="#prjstore.domain.store">prjstore.domain.store</a>
  &#8226;   <a href="#prjstore.handlers">prjstore.handlers</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
+ &#8226;   <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
+ &#8226;   <a href="#prjstore.handlers.main_handler">prjstore.handlers.main_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside.sellers_editor">prjstore.ui.pyside.sellers_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.sellers_editor.schemas">prjstore.ui.pyside.sellers_editor.schemas</a>
 
@@ -11640,10 +11756,13 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#prjstore.ui.pyside.interface_observer">prjstore.ui.pyside.interface_observer</a>
+    <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor">prjstore.ui.pyside.expenses_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.interface_observer">prjstore.ui.pyside.interface_observer</a>
  &#8226;   <a href="#prjstore.ui.pyside.interface_subject">prjstore.ui.pyside.interface_subject</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor">prjstore.ui.pyside.items_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.login">prjstore.ui.pyside.login</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_login">prjstore.ui.pyside.main_login</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
@@ -11664,6 +11783,225 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="prjstore.ui.pyside.abstract_module"></a>
+  <a target="code" href="///C:/Projects/prjstore/ui/pyside/abstract_module.py" type="text/plain"><tt>prjstore.ui.pyside.abstract_module</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#prjstore.ui.pyside">prjstore.ui.pyside</a>
+ &#8226;   <a href="#prjstore.ui.pyside.interface_observer">prjstore.ui.pyside.interface_observer</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_window.main_interface">prjstore.ui.pyside.main_window.main_interface</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#main.py">main.py</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_product_price_editor">prjstore.ui.pyside.main_product_price_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_receiving_the_items">prjstore.ui.pyside.main_receiving_the_items</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_sale_registration">prjstore.ui.pyside.main_sale_registration</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_sellers">prjstore.ui.pyside.main_sellers</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.ui.pyside.expenses_editor"></a>
+  <a target="code" href="-" type="text/plain"><tt>prjstore.ui.pyside.expenses_editor</tt></a>
+<span class="moduletype">NamespacePackage</span>  <div class="import">
+imports:
+    <a href="#prjstore.ui.pyside">prjstore.ui.pyside</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.schemas">prjstore.ui.pyside.expenses_editor.schemas</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.thread">prjstore.ui.pyside.expenses_editor.thread</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components">prjstore.ui.pyside.expenses_editor.components</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.add_expense_widget">prjstore.ui.pyside.expenses_editor.components.add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.schemas">prjstore.ui.pyside.expenses_editor.schemas</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.thread">prjstore.ui.pyside.expenses_editor.thread</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.ui_expenses">prjstore.ui.pyside.expenses_editor.ui_expenses</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.ui.pyside.expenses_editor.components"></a>
+  <a target="code" href="-" type="text/plain"><tt>prjstore.ui.pyside.expenses_editor.components</tt></a>
+<span class="moduletype">NamespacePackage</span>  <div class="import">
+imports:
+    <a href="#prjstore.ui.pyside.expenses_editor">prjstore.ui.pyside.expenses_editor</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.ui.pyside.expenses_editor.components.add_expense_widget">prjstore.ui.pyside.expenses_editor.components.add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.expense_widget">prjstore.ui.pyside.expenses_editor.components.expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.ui_add_expense_widget">prjstore.ui.pyside.expenses_editor.components.ui_add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.ui_expense_widget">prjstore.ui.pyside.expenses_editor.components.ui_expense_widget</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.ui.pyside.expenses_editor.components.add_expense_widget"></a>
+  <a target="code" href="///C:/Projects/prjstore/ui/pyside/expenses_editor/components/add_expense_widget.py" type="text/plain"><tt>prjstore.ui.pyside.expenses_editor.components.add_expense_widget</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#datetime">datetime</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor">prjstore.ui.pyside.expenses_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components">prjstore.ui.pyside.expenses_editor.components</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.ui_add_expense_widget">prjstore.ui.pyside.expenses_editor.components.ui_add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.schemas">prjstore.ui.pyside.expenses_editor.schemas</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.is_digit">prjstore.ui.pyside.utils.is_digit</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.widgets">prjstore.ui.pyside.utils.widgets</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.ui.pyside.expenses_editor.components.expense_widget"></a>
+  <a target="code" href="///C:/Projects/prjstore/ui/pyside/expenses_editor/components/expense_widget.py" type="text/plain"><tt>prjstore.ui.pyside.expenses_editor.components.expense_widget</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#datetime">datetime</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components">prjstore.ui.pyside.expenses_editor.components</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.ui_expense_widget">prjstore.ui.pyside.expenses_editor.components.ui_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.schemas">prjstore.ui.pyside.expenses_editor.schemas</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.format_price">prjstore.ui.pyside.utils.format_price</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.widgets">prjstore.ui.pyside.utils.widgets</a>
+ &#8226;   <a href="#sys">sys</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.ui.pyside.expenses_editor.components.ui_add_expense_widget"></a>
+  <a target="code" href="///C:/Projects/prjstore/ui/pyside/expenses_editor/components/ui_add_expense_widget.py" type="text/plain"><tt>prjstore.ui.pyside.expenses_editor.components.ui_add_expense_widget</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#prjstore.ui.pyside.expenses_editor.components">prjstore.ui.pyside.expenses_editor.components</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.widgets">prjstore.ui.pyside.utils.widgets</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.ui.pyside.expenses_editor.components.add_expense_widget">prjstore.ui.pyside.expenses_editor.components.add_expense_widget</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.ui.pyside.expenses_editor.components.ui_expense_widget"></a>
+  <a target="code" href="///C:/Projects/prjstore/ui/pyside/expenses_editor/components/ui_expense_widget.py" type="text/plain"><tt>prjstore.ui.pyside.expenses_editor.components.ui_expense_widget</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#prjstore.ui.pyside.expenses_editor.components">prjstore.ui.pyside.expenses_editor.components</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.widgets">prjstore.ui.pyside.utils.widgets</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.ui.pyside.expenses_editor.components.expense_widget">prjstore.ui.pyside.expenses_editor.components.expense_widget</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.ui.pyside.expenses_editor.schemas"></a>
+  <a target="code" href="///C:/Projects/prjstore/ui/pyside/expenses_editor/schemas.py" type="text/plain"><tt>prjstore.ui.pyside.expenses_editor.schemas</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#datetime">datetime</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor">prjstore.ui.pyside.expenses_editor</a>
+ &#8226;   <a href="#pydantic">pydantic</a>
+ &#8226;   <a href="#pydantic.BaseModel">pydantic.BaseModel</a>
+ &#8226;   <a href="#typing">typing</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor">prjstore.ui.pyside.expenses_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.add_expense_widget">prjstore.ui.pyside.expenses_editor.components.add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.expense_widget">prjstore.ui.pyside.expenses_editor.components.expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.thread">prjstore.ui.pyside.expenses_editor.thread</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.ui.pyside.expenses_editor.thread"></a>
+  <a target="code" href="///C:/Projects/prjstore/ui/pyside/expenses_editor/thread.py" type="text/plain"><tt>prjstore.ui.pyside.expenses_editor.thread</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PySide6.QtCore">PySide6.QtCore</a>
+ &#8226;   <a href="#prjstore.db">prjstore.db</a>
+ &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
+ &#8226;   <a href="#prjstore.db.schemas.expense">prjstore.db.schemas.expense</a>
+ &#8226;   <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor">prjstore.ui.pyside.expenses_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.schemas">prjstore.ui.pyside.expenses_editor.schemas</a>
+ &#8226;   <a href="#pydantic">pydantic</a>
+ &#8226;   <a href="#pydantic.ValidationError">pydantic.ValidationError</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.ui.pyside.expenses_editor">prjstore.ui.pyside.expenses_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.ui.pyside.expenses_editor.ui_expenses"></a>
+  <a target="code" href="///C:/Projects/prjstore/ui/pyside/expenses_editor/ui_expenses.py" type="text/plain"><tt>prjstore.ui.pyside.expenses_editor.ui_expenses</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#prjstore.ui.pyside.expenses_editor">prjstore.ui.pyside.expenses_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.pages">prjstore.ui.pyside.utils.pages</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="prjstore.ui.pyside.interface_observer"></a>
   <a target="code" href="///C:/Projects/prjstore/ui/pyside/interface_observer.py" type="text/plain"><tt>prjstore.ui.pyside.interface_observer</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
@@ -11673,10 +12011,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_product_price_editor">prjstore.ui.pyside.main_product_price_editor</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_sellers">prjstore.ui.pyside.main_sellers</a>
+    <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
 
   </div>
 
@@ -11693,6 +12028,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#prjstore.ui.pyside.main_window.main_interface">prjstore.ui.pyside.main_window.main_interface</a>
+ &#8226;   <a href="#util.pages">util.pages</a>
 
   </div>
 
@@ -11831,6 +12167,7 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#prjstore.ui.pyside.items_editor">prjstore.ui.pyside.items_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.pages">prjstore.ui.pyside.utils.pages</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
 
   </div>
@@ -11878,26 +12215,60 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="prjstore.ui.pyside.main_expenses"></a>
+  <a target="code" href="///C:/Projects/prjstore/ui/pyside/main_expenses.py" type="text/plain"><tt>prjstore.ui.pyside.main_expenses</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#prjstore.db.api">prjstore.db.api</a>
+ &#8226;   <a href="#prjstore.db.api.settings">prjstore.db.api.settings</a>
+ &#8226;   <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside">prjstore.ui.pyside</a>
+ &#8226;   <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor">prjstore.ui.pyside.expenses_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.add_expense_widget">prjstore.ui.pyside.expenses_editor.components.add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.expense_widget">prjstore.ui.pyside.expenses_editor.components.expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.schemas">prjstore.ui.pyside.expenses_editor.schemas</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.thread">prjstore.ui.pyside.expenses_editor.thread</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.ui_expenses">prjstore.ui.pyside.expenses_editor.ui_expenses</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.load_widget">prjstore.ui.pyside.utils.load_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.qt_utils">prjstore.ui.pyside.utils.qt_utils</a>
+ &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#util.pages">util.pages</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#main.py">main.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="prjstore.ui.pyside.main_items_editor"></a>
   <a target="code" href="///C:/Projects/prjstore/ui/pyside/main_items_editor.py" type="text/plain"><tt>prjstore.ui.pyside.main_items_editor</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#datetime">datetime</a>
+ &#8226;   <a href="#prjstore.db.api">prjstore.db.api</a>
+ &#8226;   <a href="#prjstore.db.api.settings">prjstore.db.api.settings</a>
  &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_items_editor">prjstore.db.schemas.handler_items_editor</a>
  &#8226;   <a href="#prjstore.handlers.items_editor_handler">prjstore.handlers.items_editor_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside">prjstore.ui.pyside</a>
- &#8226;   <a href="#prjstore.ui.pyside.interface_observer">prjstore.ui.pyside.interface_observer</a>
+ &#8226;   <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor">prjstore.ui.pyside.items_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.components.item_widget">prjstore.ui.pyside.items_editor.components.item_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.schemas">prjstore.ui.pyside.items_editor.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.thread">prjstore.ui.pyside.items_editor.thread</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.ui_items_editor">prjstore.ui.pyside.items_editor.ui_items_editor</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_window.main_interface">prjstore.ui.pyside.main_window.main_interface</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.load_widget">prjstore.ui.pyside.utils.load_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_utils">prjstore.ui.pyside.utils.qt_utils</a>
  &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#util.pages">util.pages</a>
 
   </div>
   <div class="import">
@@ -11934,10 +12305,11 @@ imported by:
   <a target="code" href="///C:/Projects/prjstore/ui/pyside/main_places.py" type="text/plain"><tt>prjstore.ui.pyside.main_places</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#prjstore.handlers.places_editor_handler">prjstore.handlers.places_editor_handler</a>
+    <a href="#prjstore.db.api">prjstore.db.api</a>
+ &#8226;   <a href="#prjstore.db.api.settings">prjstore.db.api.settings</a>
+ &#8226;   <a href="#prjstore.handlers.places_editor_handler">prjstore.handlers.places_editor_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside">prjstore.ui.pyside</a>
- &#8226;   <a href="#prjstore.ui.pyside.interface_observer">prjstore.ui.pyside.interface_observer</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_window.main_interface">prjstore.ui.pyside.main_window.main_interface</a>
+ &#8226;   <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
  &#8226;   <a href="#prjstore.ui.pyside.places_editor">prjstore.ui.pyside.places_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.places_editor.components.add_place_widget">prjstore.ui.pyside.places_editor.components.add_place_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.places_editor.components.place_widget">prjstore.ui.pyside.places_editor.components.place_widget</a>
@@ -11949,6 +12321,7 @@ imports:
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_utils">prjstore.ui.pyside.utils.qt_utils</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#util.pages">util.pages</a>
 
   </div>
   <div class="import">
@@ -11964,9 +12337,10 @@ imported by:
   <a target="code" href="///C:/Projects/prjstore/ui/pyside/main_product_price_editor.py" type="text/plain"><tt>prjstore.ui.pyside.main_product_price_editor</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#prjstore.ui.pyside">prjstore.ui.pyside</a>
- &#8226;   <a href="#prjstore.ui.pyside.interface_observer">prjstore.ui.pyside.interface_observer</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_window.main_interface">prjstore.ui.pyside.main_window.main_interface</a>
+    <a href="#prjstore.db.api">prjstore.db.api</a>
+ &#8226;   <a href="#prjstore.db.api.settings">prjstore.db.api.settings</a>
+ &#8226;   <a href="#prjstore.ui.pyside">prjstore.ui.pyside</a>
+ &#8226;   <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor">prjstore.ui.pyside.product_price_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.components">prjstore.ui.pyside.product_price_editor.components</a>
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.components.abstract_product">prjstore.ui.pyside.product_price_editor.components.abstract_product</a>
@@ -11978,6 +12352,7 @@ imports:
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_utils">prjstore.ui.pyside.utils.qt_utils</a>
  &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#util.pages">util.pages</a>
 
   </div>
   <div class="import">
@@ -11993,11 +12368,13 @@ imported by:
   <a target="code" href="///C:/Projects/prjstore/ui/pyside/main_receiving_the_items.py" type="text/plain"><tt>prjstore.ui.pyside.main_receiving_the_items</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
+    <a href="#prjstore.db.api">prjstore.db.api</a>
+ &#8226;   <a href="#prjstore.db.api.settings">prjstore.db.api.settings</a>
+ &#8226;   <a href="#prjstore.db.schemas">prjstore.db.schemas</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_receiving_the_items">prjstore.db.schemas.handler_receiving_the_items</a>
  &#8226;   <a href="#prjstore.handlers.receiving_the_items_handler">prjstore.handlers.receiving_the_items_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside">prjstore.ui.pyside</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_window.main_interface">prjstore.ui.pyside.main_window.main_interface</a>
+ &#8226;   <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
  &#8226;   <a href="#prjstore.ui.pyside.receiving_the_items.schemas">prjstore.ui.pyside.receiving_the_items.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.receiving_the_items.thread">prjstore.ui.pyside.receiving_the_items.thread</a>
  &#8226;   <a href="#prjstore.ui.pyside.receiving_the_items.ui_item">prjstore.ui.pyside.receiving_the_items.ui_item</a>
@@ -12005,6 +12382,7 @@ imports:
  &#8226;   <a href="#prjstore.ui.pyside.utils.is_digit">prjstore.ui.pyside.utils.is_digit</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.load_widget">prjstore.ui.pyside.utils.load_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
+ &#8226;   <a href="#re">re</a>
  &#8226;   <a href="#sys">sys</a>
 
   </div>
@@ -12021,19 +12399,23 @@ imported by:
   <a target="code" href="///C:/Projects/prjstore/ui/pyside/main_sale_registration.py" type="text/plain"><tt>prjstore.ui.pyside.main_sale_registration</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#prjstore.ui.pyside">prjstore.ui.pyside</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_window.main_interface">prjstore.ui.pyside.main_window.main_interface</a>
+    <a href="#prjstore.db.api">prjstore.db.api</a>
+ &#8226;   <a href="#prjstore.db.api.settings">prjstore.db.api.settings</a>
+ &#8226;   <a href="#prjstore.ui.pyside">prjstore.ui.pyside</a>
+ &#8226;   <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components">prjstore.ui.pyside.sale_registration.components</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.abstract_product">prjstore.ui.pyside.sale_registration.components.abstract_product</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.sale">prjstore.ui.pyside.sale_registration.components.sale</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.components.sli">prjstore.ui.pyside.sale_registration.components.sli</a>
- &#8226;   <a href="#prjstore.ui.pyside.sale_registration.sale_registration_ui">prjstore.ui.pyside.sale_registration.sale_registration_ui</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.schemas">prjstore.ui.pyside.sale_registration.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.thread">prjstore.ui.pyside.sale_registration.thread</a>
+ &#8226;   <a href="#prjstore.ui.pyside.sale_registration.ui_sale_registration">prjstore.ui.pyside.sale_registration.ui_sale_registration</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.load_widget">prjstore.ui.pyside.utils.load_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.pages">prjstore.ui.pyside.utils.pages</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_utils">prjstore.ui.pyside.utils.qt_utils</a>
  &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#util.pages">util.pages</a>
 
   </div>
   <div class="import">
@@ -12049,9 +12431,11 @@ imported by:
   <a target="code" href="///C:/Projects/prjstore/ui/pyside/main_sellers.py" type="text/plain"><tt>prjstore.ui.pyside.main_sellers</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#prjstore.handlers.sellers_editor_handler">prjstore.handlers.sellers_editor_handler</a>
+    <a href="#prjstore.db.api">prjstore.db.api</a>
+ &#8226;   <a href="#prjstore.db.api.settings">prjstore.db.api.settings</a>
+ &#8226;   <a href="#prjstore.handlers.sellers_editor_handler">prjstore.handlers.sellers_editor_handler</a>
  &#8226;   <a href="#prjstore.ui.pyside">prjstore.ui.pyside</a>
- &#8226;   <a href="#prjstore.ui.pyside.interface_observer">prjstore.ui.pyside.interface_observer</a>
+ &#8226;   <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_window.main_interface">prjstore.ui.pyside.main_window.main_interface</a>
  &#8226;   <a href="#prjstore.ui.pyside.sellers_editor">prjstore.ui.pyside.sellers_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.sellers_editor.components.add_seller_widget">prjstore.ui.pyside.sellers_editor.components.add_seller_widget</a>
@@ -12064,6 +12448,7 @@ imports:
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_utils">prjstore.ui.pyside.utils.qt_utils</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#typing">typing</a>
+ &#8226;   <a href="#util.pages">util.pages</a>
 
   </div>
   <div class="import">
@@ -12105,12 +12490,8 @@ imports:
   <div class="import">
 imported by:
     <a href="#main.py">main.py</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_login">prjstore.ui.pyside.main_login</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_product_price_editor">prjstore.ui.pyside.main_product_price_editor</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_receiving_the_items">prjstore.ui.pyside.main_receiving_the_items</a>
- &#8226;   <a href="#prjstore.ui.pyside.main_sale_registration">prjstore.ui.pyside.main_sale_registration</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_sellers">prjstore.ui.pyside.main_sellers</a>
 
   </div>
@@ -12323,6 +12704,7 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#prjstore.ui.pyside.places_editor">prjstore.ui.pyside.places_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.pages">prjstore.ui.pyside.utils.pages</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
 
   </div>
@@ -12621,6 +13003,7 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#prjstore.ui.pyside.product_price_editor">prjstore.ui.pyside.product_price_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.pages">prjstore.ui.pyside.utils.pages</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
 
   </div>
@@ -12723,9 +13106,9 @@ imports:
   <div class="import">
 imported by:
     <a href="#prjstore.ui.pyside.sale_registration.components">prjstore.ui.pyside.sale_registration.components</a>
- &#8226;   <a href="#prjstore.ui.pyside.sale_registration.sale_registration_ui">prjstore.ui.pyside.sale_registration.sale_registration_ui</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.schemas">prjstore.ui.pyside.sale_registration.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.thread">prjstore.ui.pyside.sale_registration.thread</a>
+ &#8226;   <a href="#prjstore.ui.pyside.sale_registration.ui_sale_registration">prjstore.ui.pyside.sale_registration.ui_sale_registration</a>
 
   </div>
 
@@ -13020,23 +13403,6 @@ imported by:
 </div>
 
 <div class="node">
-  <a name="prjstore.ui.pyside.sale_registration.sale_registration_ui"></a>
-  <a target="code" href="///C:/Projects/prjstore/ui/pyside/sale_registration/sale_registration_ui.py" type="text/plain"><tt>prjstore.ui.pyside.sale_registration.sale_registration_ui</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#prjstore.ui.pyside.sale_registration">prjstore.ui.pyside.sale_registration</a>
- &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#prjstore.ui.pyside.main_sale_registration">prjstore.ui.pyside.main_sale_registration</a>
-
-  </div>
-
-</div>
-
-<div class="node">
   <a name="prjstore.ui.pyside.sale_registration.schemas"></a>
   <a target="code" href="///C:/Projects/prjstore/ui/pyside/sale_registration/schemas.py" type="text/plain"><tt>prjstore.ui.pyside.sale_registration.schemas</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
@@ -13077,6 +13443,25 @@ imports:
     <a href="#PySide6.QtCore">PySide6.QtCore</a>
  &#8226;   <a href="#prjstore.db">prjstore.db</a>
  &#8226;   <a href="#prjstore.handlers.sale_registration_handler">prjstore.handlers.sale_registration_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.sale_registration">prjstore.ui.pyside.sale_registration</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.ui.pyside.main_sale_registration">prjstore.ui.pyside.main_sale_registration</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.ui.pyside.sale_registration.ui_sale_registration"></a>
+  <a target="code" href="///C:/Projects/prjstore/ui/pyside/sale_registration/ui_sale_registration.py" type="text/plain"><tt>prjstore.ui.pyside.sale_registration.ui_sale_registration</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PySide6.QtCore">PySide6.QtCore</a>
+ &#8226;   <a href="#PySide6.QtGui">PySide6.QtGui</a>
+ &#8226;   <a href="#PySide6.QtWidgets">PySide6.QtWidgets</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration">prjstore.ui.pyside.sale_registration</a>
 
   </div>
@@ -13256,6 +13641,7 @@ imported by:
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#prjstore.ui.pyside.sellers_editor">prjstore.ui.pyside.sellers_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.pages">prjstore.ui.pyside.utils.pages</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
 
   </div>
@@ -13281,6 +13667,7 @@ imported by:
  &#8226;   <a href="#prjstore.ui.pyside.utils.format_price">prjstore.ui.pyside.utils.format_price</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.is_digit">prjstore.ui.pyside.utils.is_digit</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.load_widget">prjstore.ui.pyside.utils.load_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.pages">prjstore.ui.pyside.utils.pages</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.push_button">prjstore.ui.pyside.utils.push_button</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.qt_utils">prjstore.ui.pyside.utils.qt_utils</a>
@@ -13322,6 +13709,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#prjstore.db.schemas.handler_items_editor">prjstore.db.schemas.handler_items_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.expense_widget">prjstore.ui.pyside.expenses_editor.components.expense_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.components.item_widget">prjstore.ui.pyside.items_editor.components.item_widget</a>
 
   </div>
@@ -13338,7 +13726,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#prjstore.ui.pyside.main_receiving_the_items">prjstore.ui.pyside.main_receiving_the_items</a>
+    <a href="#prjstore.ui.pyside.expenses_editor.components.add_expense_widget">prjstore.ui.pyside.expenses_editor.components.add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_receiving_the_items">prjstore.ui.pyside.main_receiving_the_items</a>
 
   </div>
 
@@ -13360,12 +13749,38 @@ imports:
   <div class="import">
 imported by:
     <a href="#main.py">main.py</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_product_price_editor">prjstore.ui.pyside.main_product_price_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_receiving_the_items">prjstore.ui.pyside.main_receiving_the_items</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_sale_registration">prjstore.ui.pyside.main_sale_registration</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_sellers">prjstore.ui.pyside.main_sellers</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="prjstore.ui.pyside.utils.pages"></a>
+  <a target="code" href="///C:/Projects/prjstore/ui/pyside/utils/pages.py" type="text/plain"><tt>prjstore.ui.pyside.utils.pages</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#PySide6">PySide6</a>
+ &#8226;   <a href="#PySide6.QtWidgets">PySide6.QtWidgets</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils">prjstore.ui.pyside.utils</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.qt_core">prjstore.ui.pyside.utils.qt_core</a>
+ &#8226;   <a href="#sys">sys</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.ui.pyside.expenses_editor.ui_expenses">prjstore.ui.pyside.expenses_editor.ui_expenses</a>
+ &#8226;   <a href="#prjstore.ui.pyside.items_editor.ui_items_editor">prjstore.ui.pyside.items_editor.ui_items_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_sale_registration">prjstore.ui.pyside.main_sale_registration</a>
+ &#8226;   <a href="#prjstore.ui.pyside.places_editor.ui_places_editor">prjstore.ui.pyside.places_editor.ui_places_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.ui_product_price_edit">prjstore.ui.pyside.product_price_editor.ui_product_price_edit</a>
+ &#8226;   <a href="#prjstore.ui.pyside.sellers_editor.ui_sellers_editor">prjstore.ui.pyside.sellers_editor.ui_sellers_editor</a>
 
   </div>
 
@@ -13404,8 +13819,12 @@ imports:
   <div class="import">
 imported by:
     <a href="#main.py">main.py</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.ui_add_expense_widget">prjstore.ui.pyside.expenses_editor.components.ui_add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.ui_expense_widget">prjstore.ui.pyside.expenses_editor.components.ui_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.ui_expenses">prjstore.ui.pyside.expenses_editor.ui_expenses</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.components.ui_item_widget">prjstore.ui.pyside.items_editor.components.ui_item_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.ui_items_editor">prjstore.ui.pyside.items_editor.ui_items_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_product_price_editor">prjstore.ui.pyside.main_product_price_editor</a>
@@ -13423,10 +13842,10 @@ imported by:
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.components.simple_product">prjstore.ui.pyside.product_price_editor.components.simple_product</a>
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.ui_product_price_edit">prjstore.ui.pyside.product_price_editor.ui_product_price_edit</a>
  &#8226;   <a href="#prjstore.ui.pyside.receiving_the_items.ui_item">prjstore.ui.pyside.receiving_the_items.ui_item</a>
- &#8226;   <a href="#prjstore.ui.pyside.sale_registration.sale_registration_ui">prjstore.ui.pyside.sale_registration.sale_registration_ui</a>
  &#8226;   <a href="#prjstore.ui.pyside.sellers_editor.components.ui_add_seller_widget">prjstore.ui.pyside.sellers_editor.components.ui_add_seller_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.sellers_editor.components.ui_seller_widget">prjstore.ui.pyside.sellers_editor.components.ui_seller_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.sellers_editor.ui_sellers_editor">prjstore.ui.pyside.sellers_editor.ui_sellers_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.pages">prjstore.ui.pyside.utils.pages</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.push_button">prjstore.ui.pyside.utils.push_button</a>
 
   </div>
@@ -13443,7 +13862,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
+    <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_product_price_editor">prjstore.ui.pyside.main_product_price_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_sale_registration">prjstore.ui.pyside.main_sale_registration</a>
@@ -13468,7 +13888,11 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#prjstore.ui.pyside.items_editor.components.item_widget">prjstore.ui.pyside.items_editor.components.item_widget</a>
+    <a href="#prjstore.ui.pyside.expenses_editor.components.add_expense_widget">prjstore.ui.pyside.expenses_editor.components.add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.expense_widget">prjstore.ui.pyside.expenses_editor.components.expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.ui_add_expense_widget">prjstore.ui.pyside.expenses_editor.components.ui_add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.ui_expense_widget">prjstore.ui.pyside.expenses_editor.components.ui_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.items_editor.components.item_widget">prjstore.ui.pyside.items_editor.components.item_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.components.ui_item_widget">prjstore.ui.pyside.items_editor.components.ui_item_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.places_editor.components.add_place_widget">prjstore.ui.pyside.places_editor.components.add_place_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.places_editor.components.place_widget">prjstore.ui.pyside.places_editor.components.place_widget</a>
@@ -13546,6 +13970,7 @@ imports:
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#pydantic">pydantic</a>
  &#8226;   <a href="#pydantic.BaseModel">pydantic.BaseModel</a>
+ &#8226;   <a href="#pydantic.ValidationError">pydantic.ValidationError</a>
  &#8226;   <a href="#pydantic._hypothesis_plugin">pydantic._hypothesis_plugin</a>
  &#8226;   <a href="#pydantic.annotated_types">pydantic.annotated_types</a>
  &#8226;   <a href="#pydantic.class_validators">pydantic.class_validators</a>
@@ -13583,6 +14008,7 @@ imports:
 imported by:
     <a href="#prjstore.db.api.components.base">prjstore.db.api.components.base</a>
  &#8226;   <a href="#prjstore.db.schemas.error">prjstore.db.schemas.error</a>
+ &#8226;   <a href="#prjstore.db.schemas.expense">prjstore.db.schemas.expense</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_items_editor">prjstore.db.schemas.handler_items_editor</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_product_price_editor">prjstore.db.schemas.handler_product_price_editor</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_receiving_the_items">prjstore.db.schemas.handler_receiving_the_items</a>
@@ -13606,6 +14032,8 @@ imported by:
  &#8226;   <a href="#prjstore.handlers.items_editor_handler">prjstore.handlers.items_editor_handler</a>
  &#8226;   <a href="#prjstore.handlers.product_price_editor_handler">prjstore.handlers.product_price_editor_handler</a>
  &#8226;   <a href="#prjstore.handlers.sale_registration_handler">prjstore.handlers.sale_registration_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.schemas">prjstore.ui.pyside.expenses_editor.schemas</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.thread">prjstore.ui.pyside.expenses_editor.thread</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.schemas">prjstore.ui.pyside.items_editor.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.places_editor.schemas">prjstore.ui.pyside.places_editor.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.components">prjstore.ui.pyside.product_price_editor.components</a>
@@ -13653,6 +14081,7 @@ imported by:
 imported by:
     <a href="#prjstore.db.api.components.base">prjstore.db.api.components.base</a>
  &#8226;   <a href="#prjstore.db.schemas.error">prjstore.db.schemas.error</a>
+ &#8226;   <a href="#prjstore.db.schemas.expense">prjstore.db.schemas.expense</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_items_editor">prjstore.db.schemas.handler_items_editor</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_product_price_editor">prjstore.db.schemas.handler_product_price_editor</a>
  &#8226;   <a href="#prjstore.db.schemas.handler_receiving_the_items">prjstore.db.schemas.handler_receiving_the_items</a>
@@ -13666,12 +14095,25 @@ imported by:
  &#8226;   <a href="#prjstore.db.schemas.seller">prjstore.db.schemas.seller</a>
  &#8226;   <a href="#prjstore.db.schemas.shoes">prjstore.db.schemas.shoes</a>
  &#8226;   <a href="#prjstore.db.schemas.store">prjstore.db.schemas.store</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.schemas">prjstore.ui.pyside.expenses_editor.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.schemas">prjstore.ui.pyside.items_editor.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.places_editor.schemas">prjstore.ui.pyside.places_editor.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.schemas">prjstore.ui.pyside.product_price_editor.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.receiving_the_items.schemas">prjstore.ui.pyside.receiving_the_items.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.sale_registration.schemas">prjstore.ui.pyside.sale_registration.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.sellers_editor.schemas">prjstore.ui.pyside.sellers_editor.schemas</a>
+ &#8226;   <a href="#pydantic">pydantic</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="pydantic.ValidationError"></a>
+  <a target="code" href="" type="text/plain"><tt>pydantic.ValidationError</tt></a>
+<span class="moduletype">MissingModule</span>  <div class="import">
+imported by:
+    <a href="#prjstore.ui.pyside.expenses_editor.thread">prjstore.ui.pyside.expenses_editor.thread</a>
  &#8226;   <a href="#pydantic">pydantic</a>
 
   </div>
@@ -13801,6 +14243,7 @@ imports:
   <div class="import">
 imported by:
     <a href="#prjstore.domain.abstract_product">prjstore.domain.abstract_product</a>
+ &#8226;   <a href="#prjstore.domain.expense">prjstore.domain.expense</a>
  &#8226;   <a href="#prjstore.domain.item">prjstore.domain.item</a>
  &#8226;   <a href="#prjstore.domain.place_of_sale">prjstore.domain.place_of_sale</a>
  &#8226;   <a href="#prjstore.domain.product_catalog">prjstore.domain.product_catalog</a>
@@ -14418,6 +14861,7 @@ imported by:
  &#8226;   <a href="#plistlib">plistlib</a>
  &#8226;   <a href="#posixpath">posixpath</a>
  &#8226;   <a href="#pprint">pprint</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_receiving_the_items">prjstore.ui.pyside.main_receiving_the_items</a>
  &#8226;   <a href="#pydoc">pydoc</a>
  &#8226;   <a href="#requests.auth">requests.auth</a>
  &#8226;   <a href="#requests.utils">requests.utils</a>
@@ -15704,8 +16148,10 @@ imported by:
  &#8226;   <a href="#platform">platform</a>
  &#8226;   <a href="#posixpath">posixpath</a>
  &#8226;   <a href="#pprint">pprint</a>
- &#8226;   <a href="#prjstore">prjstore</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.add_expense_widget">prjstore.ui.pyside.expenses_editor.components.add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.expense_widget">prjstore.ui.pyside.expenses_editor.components.expense_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.components.item_widget">prjstore.ui.pyside.items_editor.components.item_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_login">prjstore.ui.pyside.main_login</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
@@ -15732,6 +16178,7 @@ imported by:
  &#8226;   <a href="#prjstore.ui.pyside.sellers_editor.components.seller_widget">prjstore.ui.pyside.sellers_editor.components.seller_widget</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.custom_combo_box">prjstore.ui.pyside.utils.custom_combo_box</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.load_widget">prjstore.ui.pyside.utils.load_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.utils.pages">prjstore.ui.pyside.utils.pages</a>
  &#8226;   <a href="#prjstore.ui.pyside.utils.widgets">prjstore.ui.pyside.utils.widgets</a>
  &#8226;   <a href="#py_compile">py_compile</a>
  &#8226;   <a href="#pydantic.generics">pydantic.generics</a>
@@ -16290,9 +16737,14 @@ imported by:
  &#8226;   <a href="#prjstore.domain.products.shoes">prjstore.domain.products.shoes</a>
  &#8226;   <a href="#prjstore.domain.products.shoes_components.width">prjstore.domain.products.shoes_components.width</a>
  &#8226;   <a href="#prjstore.domain.sale">prjstore.domain.sale</a>
+ &#8226;   <a href="#prjstore.handlers.abstract_module_handler">prjstore.handlers.abstract_module_handler</a>
  &#8226;   <a href="#prjstore.handlers.items_editor_handler">prjstore.handlers.items_editor_handler</a>
  &#8226;   <a href="#prjstore.handlers.sale_registration_handler">prjstore.handlers.sale_registration_handler</a>
+ &#8226;   <a href="#prjstore.ui.pyside.abstract_module">prjstore.ui.pyside.abstract_module</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.components.add_expense_widget">prjstore.ui.pyside.expenses_editor.components.add_expense_widget</a>
+ &#8226;   <a href="#prjstore.ui.pyside.expenses_editor.schemas">prjstore.ui.pyside.expenses_editor.schemas</a>
  &#8226;   <a href="#prjstore.ui.pyside.items_editor.schemas">prjstore.ui.pyside.items_editor.schemas</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
  &#8226;   <a href="#prjstore.ui.pyside.main_sellers">prjstore.ui.pyside.main_sellers</a>
  &#8226;   <a href="#prjstore.ui.pyside.product_price_editor.components">prjstore.ui.pyside.product_price_editor.components</a>
@@ -17833,6 +18285,7 @@ imported by:
 imported by:
     <a href="#util.currency">util.currency</a>
  &#8226;   <a href="#util.money">util.money</a>
+ &#8226;   <a href="#util.pages">util.pages</a>
 
   </div>
 
@@ -17873,13 +18326,38 @@ imports:
   <div class="import">
 imported by:
     <a href="#prjstore.domain.abstract_product">prjstore.domain.abstract_product</a>
+ &#8226;   <a href="#prjstore.domain.expense">prjstore.domain.expense</a>
  &#8226;   <a href="#prjstore.domain.item">prjstore.domain.item</a>
+ &#8226;   <a href="#prjstore.domain.place_of_sale">prjstore.domain.place_of_sale</a>
  &#8226;   <a href="#prjstore.domain.product_factory">prjstore.domain.product_factory</a>
  &#8226;   <a href="#prjstore.domain.products.shoes">prjstore.domain.products.shoes</a>
  &#8226;   <a href="#prjstore.domain.sale">prjstore.domain.sale</a>
  &#8226;   <a href="#prjstore.domain.sale_line_item">prjstore.domain.sale_line_item</a>
- &#8226;   <a href="#prjstore.handlers.data_for_test.sale_registration">prjstore.handlers.data_for_test.sale_registration</a>
+ &#8226;   <a href="#prjstore.handlers.expenses_handler">prjstore.handlers.expenses_handler</a>
  &#8226;   <a href="#prjstore.handlers.sale_registration_handler">prjstore.handlers.sale_registration_handler</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="util.pages"></a>
+  <a target="code" href="///C:/Projects/util/pages.py" type="text/plain"><tt>util.pages</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#math">math</a>
+ &#8226;   <a href="#prjstore.ui.pyside.interface_subject">prjstore.ui.pyside.interface_subject</a>
+ &#8226;   <a href="#util">util</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#prjstore.ui.pyside.main_expenses">prjstore.ui.pyside.main_expenses</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_items_editor">prjstore.ui.pyside.main_items_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_places">prjstore.ui.pyside.main_places</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_product_price_editor">prjstore.ui.pyside.main_product_price_editor</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_sale_registration">prjstore.ui.pyside.main_sale_registration</a>
+ &#8226;   <a href="#prjstore.ui.pyside.main_sellers">prjstore.ui.pyside.main_sellers</a>
 
   </div>
 

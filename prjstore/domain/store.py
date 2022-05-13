@@ -5,7 +5,7 @@ from pydantic.dataclasses import dataclass
 
 from prjstore.db import schemas
 from prjstore.domain.item import Item
-from prjstore.domain.place_of_sale import PlaceOfSale
+from prjstore.domain.place_of_sale import PlaceOfSale, Report
 from prjstore.domain.product_catalog import ProductCatalog
 from prjstore.domain.product_factory import ProductFactory
 from prjstore.domain.seller import Seller
@@ -62,3 +62,23 @@ class Store:
         sellers = {seller.id: seller for seller in
                    [Seller.create_from_schema(seller_pd) for seller_pd in schema.sellers]}
         return Store(id=schema.id, name=schema.name, pc=pc, items=items, places_of_sale=places, sellers=sellers)
+
+    def get_monthly_report(self) -> dict[(int, int), Report]:
+        new_report = {}
+        for place in self.places_of_sale.values():
+            for key, report in place.get_monthly_report().items():
+                if key in new_report:
+                    new_report[key] += report
+                else:
+                    new_report[key] = report
+        return new_report
+
+    def get_year_report(self) -> dict[(int, int), Report]:
+        new_report = {}
+        for place in self.places_of_sale.values():
+            for year, report in place.get_year_report().items():
+                if year in new_report:
+                    new_report[year] += report
+                else:
+                    new_report[year] = report
+        return new_report

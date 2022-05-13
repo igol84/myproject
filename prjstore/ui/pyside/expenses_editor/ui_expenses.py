@@ -11,7 +11,7 @@ class UI_Expenses:
         self.layout = QVBoxLayout(expenses_frame)
         self.layout.setObjectName('VBoxLayout')
 
-        self.handler = QLabel('Затраты')
+        self.handler = QLabel('Издержки')
         self.handler.setObjectName('Title')
         self.handler.setAlignment(Qt.AlignCenter)
         self.handler.setStyleSheet('font: 700 17pt "Segue UI"')
