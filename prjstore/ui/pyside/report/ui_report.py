@@ -28,13 +28,17 @@ class UI_Report:
         self.combo_box_place.setObjectName('ComboBoxPlace')
         self.combo_box_place.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
+        self.btn_toggle_page = QPushButton('График')
+
         self.menu_layout.addWidget(self.combo_box_range)
         self.menu_layout.addWidget(self.combo_box_place)
+        self.menu_layout.addWidget(self.btn_toggle_page)
 
+        self.pages = QStackedWidget()
         # Scroll Area
-        self.scroll = QScrollArea()
-        self.scroll.setWidgetResizable(True)
-        self.scroll.setObjectName('ScrollArea')
+        self.table = QScrollArea()
+        self.table.setWidgetResizable(True)
+        self.table.setObjectName('ScrollArea')
         # Report Frame
         self.scroll_frame = QFrame()
         self.scroll_frame.setObjectName('ReportFrame')
@@ -50,18 +54,25 @@ class UI_Report:
         self.scroll_layout.addWidget(self.report_frame)
 
         # Add to frame layout
-        self.scroll.setWidget(self.scroll_frame)
+        self.table.setWidget(self.scroll_frame)
+
+        self.chart = QFrame()
+        self.layout_chart = QVBoxLayout(self.chart)
+
+        self.pages.addWidget(self.table)
+        self.pages.addWidget(self.chart)
 
         # Add to layout
         self.layout.addWidget(self.handler)
         self.layout.addWidget(self.menu)
-        self.layout.addWidget(self.scroll)
+        self.layout.addWidget(self.pages)
 
     def setup_dark_style(self):
         self.frame.setStyleSheet(
             '#ReportPage, #ReportFrame {background-color: #2F303B; color: #F8F8F2;}\n'
             '#ReportPage #Title {color: #F8F8F2;}\n'
             'QComboBox, QDateEdit {background-color: #121212; color: #dcdcdc; border:2px solid #484B5E;}\n'
+            'QPushButton {background-color: #2F303B; color: #dcdcdc;}\n'
             'QTableWidget {background-color: #2F303B; color: #F8F8F2; selection-background-color: #F8F8F2}\n'
             'QTableWidget {selection-background-color: #F8F8F2; outline: none}\n'
             'QTableWidget::item {background-color: #404252; color: #fff}\n'

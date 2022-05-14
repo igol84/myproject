@@ -1,5 +1,7 @@
 from typing import Optional
 
+from PySide6.QtCharts import QBarSet, QBarSeries, QChart, QBarCategoryAxis, QValueAxis, QChartView
+
 from prjstore.domain.place_of_sale import Report
 from prjstore.ui.pyside.utils.format_price import format_price
 from prjstore.ui.pyside.utils.load_widget import LoadWidget
@@ -28,6 +30,7 @@ class ReportPage(AbstractModule, QWidget):
         self.ui.setup_ui(self)
         self.ui.combo_box_range.activated.connect(self.on_change_combo_box_range)
         self.ui.combo_box_place.activated.connect(self.on_change_combo_box_place)
+        self.ui.btn_toggle_page.clicked.connect(self.on_clicked_btn_toggle_page)
 
         self.thread_pool = QThreadPool()
         self.load_widget = LoadWidget(parent=self, path='utils/loading.gif')
@@ -73,7 +76,14 @@ class ReportPage(AbstractModule, QWidget):
             self.setup_combo_box_place()
 
         reports = self.handler.get_report(range=self.current_range, place_id=self.current_place_id)
-        self.setup_table(reports)
+
+        clearLayout(self.ui.layout_report)
+        table = self.init_table(reports)
+        self.ui.layout_report.addWidget(table)
+
+        clearLayout(self.ui.layout_chart)
+        chart_view = self.init_chart(reports)
+        self.ui.layout_chart.addWidget(chart_view)
 
     def setup_combo_box_range(self):
         self.ui.combo_box_range.clear()
@@ -103,8 +113,15 @@ class ReportPage(AbstractModule, QWidget):
     def on_change_combo_box_place(self):
         self.update_ui(updating_data=False)
 
-    def setup_table(self, reports: dict[tuple, Report]) -> None:
-        clearLayout(self.ui.layout_report)
+    def on_clicked_btn_toggle_page(self):
+        if self.ui.pages.currentIndex() == 0:
+            self.ui.pages.setCurrentIndex(1)
+            self.ui.btn_toggle_page.setText('Таблица')
+        else:
+            self.ui.pages.setCurrentIndex(0)
+            self.ui.btn_toggle_page.setText('График')
+
+    def init_table(self, reports: dict[tuple, Report]) -> QTableWidget:
         table = QTableWidget(self)
         table.setColumnCount(3)
         table.setRowCount(len(reports))
@@ -112,7 +129,7 @@ class ReportPage(AbstractModule, QWidget):
         keys = list(reports.keys())
         if self.current_range == ReportHandler.Range.month:
             keys.sort(key=lambda k: (k[1], k[0]), reverse=True)
-        elif self.current_range == ReportHandler.Range.year:
+        else:
             keys.sort(reverse=True)
         for i, key in enumerate(keys):
             table.setVerticalHeaderItem(i, QTableWidgetItem(reports[key].head))
@@ -122,7 +139,51 @@ class ReportPage(AbstractModule, QWidget):
             table.setItem(i, 0, QTableWidgetItem(total_text))
             table.setItem(i, 1, QTableWidgetItem(expense_text))
             table.setItem(i, 2, QTableWidgetItem(profit_text))
-        self.ui.layout_report.addWidget(table)
+        return table
+
+    def init_chart(self, reports: dict[tuple, Report]) -> QChartView:
+        clearLayout(self.ui.layout_chart)
+        chart_view = QChartView()
+        set0 = QBarSet('Выручка')
+        set1 = QBarSet('Издержки')
+        set2 = QBarSet('Прибыль')
+        categories = []
+        series = QBarSeries()
+
+        keys = list(reports.keys())
+        if self.current_range == ReportHandler.Range.month:
+            keys.sort(key=lambda k: (k[1], k[0]))
+        else:
+            keys.sort()
+        for i, key in enumerate(keys):
+            categories.append(reports[key].head)
+            set0.append(reports[key].total.amount)
+            set1.append(reports[key].expense.amount)
+            set2.append(reports[key].profit.amount)
+
+        series.append(set0)
+        series.append(set1)
+        series.append(set2)
+
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+
+        axisX = QBarCategoryAxis()
+        axisX.append(categories)
+        chart.addAxis(axisX, Qt.AlignBottom)
+        series.attachAxis(axisX)
+
+        axisY = QValueAxis()
+        chart.addAxis(axisY, Qt.AlignLeft)
+        series.attachAxis(axisY)
+
+        chart.legend().setAlignment(Qt.AlignBottom)
+
+        chart_view.setChart(chart)
+        chart_view.setRenderHint(QPainter.Antialiasing)
+
+        return chart_view
 
 
 if __name__ == "__main__":

@@ -102,7 +102,6 @@ class UI_MainWindow(object):
         # CONTENT
         # //////////////////////////////////////////////////////////////////
         self.content = QFrame()
-        # self.content.setStyleSheet('. {background-color: #2F303B}')
 
         # content layout
         self.content_layout = QVBoxLayout(self.content)
@@ -118,13 +117,13 @@ class UI_MainWindow(object):
         self.top_bar_layout.setContentsMargins(10, 0, 10, 0)
 
         # left label
-        self.top_label_left = QLabel('left text')
+        self.top_label_left = QLabel('')
 
         # top spicer
         self.top_spacer = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         # right label
-        self.top_label_right = QLabel('right text')
+        self.top_label_right = QLabel('')
         self.top_label_right.setStyleSheet('font: 700 9pt "Segue UI"')
 
         # Add to layout
