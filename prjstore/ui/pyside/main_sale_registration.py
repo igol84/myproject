@@ -153,6 +153,7 @@ class SaleForm(AbstractModule, QWidget):
 
     def update_data(self):
         if self.need_update:
+            self.handler.new_sale()
             self.update_ui()
             self.need_update = False
 
