@@ -14,9 +14,10 @@ class WidthFrame(QFrame):
         super().__init__()
         self.pr_width = pd_width.width
         self.pd_sizes = pd_width.sizes
+
         self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.adjustSize()
-        # self.setStyleSheet(f"background-color: #808000")
+
         layer_widths = QtWidgets.QVBoxLayout()
         layer_widths.setContentsMargins(0, 0, 0, 5)
 
@@ -24,7 +25,6 @@ class WidthFrame(QFrame):
             label_width = QLabel(f'{self.pr_width}')
             label_width.setStyleSheet("font-size: 12pt;")
             layer_widths.addWidget(label_width)
-
         layer_sizes = QtWidgets.QHBoxLayout()
         layer_sizes.setContentsMargins(5, 0, 0, 0)
         layer_sizes.setAlignment(QtCore.Qt.AlignLeft)
